@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--this fragment is shared by fragment_all_board & fragment_favorite_board-->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/recyclerview_item_bg"
+    android:paddingBottom="2dp"
+    android:paddingLeft="2dp"
+    android:paddingRight="8dp"
+    android:paddingTop="2dp"
+    >
+
+  <TextView
+      android:id="@+id/CategoryName"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:text="Category"
+      android:textColor="@color/colorPrimary"
+      />
+
+  <TextView
+      android:id="@+id/ModeratorID"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:gravity="right"
+      android:maxLength="25"
+      android:text="版主"
+      android:textColor="@color/blue_text_night"
+      />
+
+  <TextView
+      android:id="@+id/BoardName"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/CategoryName"
+      android:text="chsBoard[engBoard]"
+      android:textColor="@color/status_text_night"
+      android:textSize="@dimen/zsmth_font_size_medium"
+      />
+  <TextView
+      android:id="@+id/BoardEngName"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/CategoryName"
+      android:text="engBoard"
+      android:gravity="right"
+      android:textColor="@color/status_text_night"
+      android:textSize="@dimen/zsmth_font_size_medium"
+      />
+</RelativeLayout>

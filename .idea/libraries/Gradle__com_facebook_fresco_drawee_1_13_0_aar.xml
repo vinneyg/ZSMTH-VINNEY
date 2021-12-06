@@ -1,0 +1,50 @@
+<component name="libraryTable">
+  <library name="Gradle: com.facebook.fresco:drawee:1.13.0@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a17cb14682818add31e39bcc1484355b/jetified-drawee-1.13.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a17cb14682818add31e39bcc1484355b/jetified-drawee-1.13.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a17cb14682818add31e39bcc1484355b/jetified-drawee-1.13.0/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/baf0b9379a4864c22ce64c08c68ca188/jetified-drawee-1.13.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/baf0b9379a4864c22ce64c08c68ca188/jetified-drawee-1.13.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/baf0b9379a4864c22ce64c08c68ca188/jetified-drawee-1.13.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cc5b67404b289ec071ec5c2c318f76fc/transformed/jetified-drawee-1.13.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/cc5b67404b289ec071ec5c2c318f76fc/transformed/jetified-drawee-1.13.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cc5b67404b289ec071ec5c2c318f76fc/transformed/jetified-drawee-1.13.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/cc702193fd56cbcf40621fbcd071c75b/transformed/jetified-drawee-1.13.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cc702193fd56cbcf40621fbcd071c75b/transformed/jetified-drawee-1.13.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cc702193fd56cbcf40621fbcd071c75b/transformed/jetified-drawee-1.13.0/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/dc4d9c635739febee14c878c1d565139fa68333b/drawee-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/dc4d9c635739febee14c878c1d565139fa68333b/drawee-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/dc4d9c635739febee14c878c1d565139fa68333b/drawee-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/dc4d9c635739febee14c878c1d565139fa68333b/drawee-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/dc4d9c635739febee14c878c1d565139fa68333b/drawee-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/dc4d9c635739febee14c878c1d565139fa68333b/drawee-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/dc4d9c635739febee14c878c1d565139fa68333b/drawee-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/dc4d9c635739febee14c878c1d565139fa68333b/drawee-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/dc4d9c635739febee14c878c1d565139fa68333b/drawee-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/dc4d9c635739febee14c878c1d565139fa68333b/drawee-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/dc4d9c635739febee14c878c1d565139fa68333b/drawee-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/dc4d9c635739febee14c878c1d565139fa68333b/drawee-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/dc4d9c635739febee14c878c1d565139fa68333b/drawee-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/dc4d9c635739febee14c878c1d565139fa68333b/drawee-1.13.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/1299ee4b44abe47a0d5c0829c5145df327adf71c/drawee-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/1299ee4b44abe47a0d5c0829c5145df327adf71c/drawee-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/1299ee4b44abe47a0d5c0829c5145df327adf71c/drawee-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/1299ee4b44abe47a0d5c0829c5145df327adf71c/drawee-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/1299ee4b44abe47a0d5c0829c5145df327adf71c/drawee-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/1299ee4b44abe47a0d5c0829c5145df327adf71c/drawee-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/1299ee4b44abe47a0d5c0829c5145df327adf71c/drawee-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/1299ee4b44abe47a0d5c0829c5145df327adf71c/drawee-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/1299ee4b44abe47a0d5c0829c5145df327adf71c/drawee-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/1299ee4b44abe47a0d5c0829c5145df327adf71c/drawee-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/1299ee4b44abe47a0d5c0829c5145df327adf71c/drawee-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/1299ee4b44abe47a0d5c0829c5145df327adf71c/drawee-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/1299ee4b44abe47a0d5c0829c5145df327adf71c/drawee-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/drawee/1.13.0/1299ee4b44abe47a0d5c0829c5145df327adf71c/drawee-1.13.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

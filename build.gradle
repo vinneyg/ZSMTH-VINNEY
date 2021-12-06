@@ -1,0 +1,56 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply plugin: 'com.github.ben-manes.versions'
+
+buildscript {
+    repositories {
+        google()
+        maven {
+            allowInsecureProtocol = true
+            url "http://mvn.mob.com/android/"
+        }
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        mavenCentral()
+    }
+    dependencies {
+        // https://developer.android.com/studio/releases/gradle-plugin.html
+        classpath 'com.android.tools.build:gradle:7.0.3'
+
+        // https://github.com/ben-manes/gradle-versions-plugin
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.39.0'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+
+        // 注册MobSDK
+        classpath 'com.mob.sdk:MobSDK:2018.0319.1724'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter() //To be removed
+        google()
+        mavenCentral()
+        maven {
+            url "https://jitpack.io"
+        }
+
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+ext {
+    minSdkVersion = 24
+    targetSdkVersion = 30
+    compileSdkVersion = 30
+    // https://developer.android.com/studio/releases/build-tools
+    buildToolsVersion = '30.0.2'
+    FRESCO_VERSION = '1.13.0'
+    // https://developer.android.com/topic/libraries/support-library/revisions
+    RXJAVA2_VERSION = '2.2.20'
+    RXANDROID2_VERSION = '2.1.1'
+}

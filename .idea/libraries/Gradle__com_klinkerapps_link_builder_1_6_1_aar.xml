@@ -1,0 +1,50 @@
+<component name="libraryTable">
+  <library name="Gradle: com.klinkerapps:link_builder:1.6.1@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9bca672eda9b075dab9e6971030c5bf4/jetified-link_builder-1.6.1/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9bca672eda9b075dab9e6971030c5bf4/jetified-link_builder-1.6.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9bca672eda9b075dab9e6971030c5bf4/jetified-link_builder-1.6.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/70a721d3701fde20a9b89c132a4fe23d/jetified-link_builder-1.6.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/70a721d3701fde20a9b89c132a4fe23d/jetified-link_builder-1.6.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/70a721d3701fde20a9b89c132a4fe23d/jetified-link_builder-1.6.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/930cb6f2eb4a2020c27fe24f5beec95e/transformed/jetified-link_builder-1.6.1/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/930cb6f2eb4a2020c27fe24f5beec95e/transformed/jetified-link_builder-1.6.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/930cb6f2eb4a2020c27fe24f5beec95e/transformed/jetified-link_builder-1.6.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/14944dd92c153b03911e178273f67777/transformed/jetified-link_builder-1.6.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/14944dd92c153b03911e178273f67777/transformed/jetified-link_builder-1.6.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/14944dd92c153b03911e178273f67777/transformed/jetified-link_builder-1.6.1/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/d6ff7e904277fb8a1f88bcc10aeea852359bfdd8/link_builder-1.6.1-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/d6ff7e904277fb8a1f88bcc10aeea852359bfdd8/link_builder-1.6.1-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/d6ff7e904277fb8a1f88bcc10aeea852359bfdd8/link_builder-1.6.1-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/d6ff7e904277fb8a1f88bcc10aeea852359bfdd8/link_builder-1.6.1-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/d6ff7e904277fb8a1f88bcc10aeea852359bfdd8/link_builder-1.6.1-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/d6ff7e904277fb8a1f88bcc10aeea852359bfdd8/link_builder-1.6.1-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/d6ff7e904277fb8a1f88bcc10aeea852359bfdd8/link_builder-1.6.1-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/d6ff7e904277fb8a1f88bcc10aeea852359bfdd8/link_builder-1.6.1-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/d6ff7e904277fb8a1f88bcc10aeea852359bfdd8/link_builder-1.6.1-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/d6ff7e904277fb8a1f88bcc10aeea852359bfdd8/link_builder-1.6.1-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/d6ff7e904277fb8a1f88bcc10aeea852359bfdd8/link_builder-1.6.1-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/d6ff7e904277fb8a1f88bcc10aeea852359bfdd8/link_builder-1.6.1-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/d6ff7e904277fb8a1f88bcc10aeea852359bfdd8/link_builder-1.6.1-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/d6ff7e904277fb8a1f88bcc10aeea852359bfdd8/link_builder-1.6.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/6f1e63f9d2637a8c7d1682395c2f6ac37f0ce1bf/link_builder-1.6.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/6f1e63f9d2637a8c7d1682395c2f6ac37f0ce1bf/link_builder-1.6.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/6f1e63f9d2637a8c7d1682395c2f6ac37f0ce1bf/link_builder-1.6.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/6f1e63f9d2637a8c7d1682395c2f6ac37f0ce1bf/link_builder-1.6.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/6f1e63f9d2637a8c7d1682395c2f6ac37f0ce1bf/link_builder-1.6.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/6f1e63f9d2637a8c7d1682395c2f6ac37f0ce1bf/link_builder-1.6.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/6f1e63f9d2637a8c7d1682395c2f6ac37f0ce1bf/link_builder-1.6.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/6f1e63f9d2637a8c7d1682395c2f6ac37f0ce1bf/link_builder-1.6.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/6f1e63f9d2637a8c7d1682395c2f6ac37f0ce1bf/link_builder-1.6.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/6f1e63f9d2637a8c7d1682395c2f6ac37f0ce1bf/link_builder-1.6.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/6f1e63f9d2637a8c7d1682395c2f6ac37f0ce1bf/link_builder-1.6.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/6f1e63f9d2637a8c7d1682395c2f6ac37f0ce1bf/link_builder-1.6.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/6f1e63f9d2637a8c7d1682395c2f6ac37f0ce1bf/link_builder-1.6.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/6f1e63f9d2637a8c7d1682395c2f6ac37f0ce1bf/link_builder-1.6.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

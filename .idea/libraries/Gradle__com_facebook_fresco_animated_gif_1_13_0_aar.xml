@@ -1,0 +1,59 @@
+<component name="libraryTable">
+  <library name="Gradle: com.facebook.fresco:animated-gif:1.13.0@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d6313ed338ac27cf7672afd4b63c1d15/jetified-animated-gif-1.13.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ee07006038ec19f5e7e519ca8a11b7f0/jetified-animated-gif-1.13.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ee07006038ec19f5e7e519ca8a11b7f0/jetified-animated-gif-1.13.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ee07006038ec19f5e7e519ca8a11b7f0/jetified-animated-gif-1.13.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8b4898ab7f55fba30fc19c89feaf5f10/jetified-animated-gif-1.13.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d974f76b79ac0b85f9fcee37f9b751d5/jetified-animated-gif-1.13.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/49fa63c6db272f41ea78264e1ad71879/jetified-animated-gif-1.13.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/49fa63c6db272f41ea78264e1ad71879/jetified-animated-gif-1.13.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/49fa63c6db272f41ea78264e1ad71879/jetified-animated-gif-1.13.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1050836a7a4cce0c1fc2387dfb207238/jetified-animated-gif-1.13.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ea7eea3ad43a31ae6fff8de0f6467c45/transformed/jetified-animated-gif-1.13.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/0d7d3f8f449f04a9cbf80308d0ad72bc/transformed/jetified-animated-gif-1.13.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/da104a1a9c5e07c3ebff1f5dfb3bca42/transformed/jetified-animated-gif-1.13.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7b6788ad4f652c77061ffe9a430dc74c/transformed/jetified-animated-gif-1.13.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f3b9f55d9e1b14da8d19bb2d17c5d583/transformed/jetified-animated-gif-1.13.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7b6788ad4f652c77061ffe9a430dc74c/transformed/jetified-animated-gif-1.13.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/7b6788ad4f652c77061ffe9a430dc74c/transformed/jetified-animated-gif-1.13.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e7803614f140dde1b1fae62931643faa/transformed/jetified-animated-gif-1.13.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8b1a86afcb71998e7d32004151399149/transformed/jetified-animated-gif-1.13.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/8b1a86afcb71998e7d32004151399149/transformed/jetified-animated-gif-1.13.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8b1a86afcb71998e7d32004151399149/transformed/jetified-animated-gif-1.13.0/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/ca1cab59e2fbafd319b7a6f3801866df5b8f70bf/animated-gif-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/ca1cab59e2fbafd319b7a6f3801866df5b8f70bf/animated-gif-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/ca1cab59e2fbafd319b7a6f3801866df5b8f70bf/animated-gif-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/ca1cab59e2fbafd319b7a6f3801866df5b8f70bf/animated-gif-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/ca1cab59e2fbafd319b7a6f3801866df5b8f70bf/animated-gif-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/ca1cab59e2fbafd319b7a6f3801866df5b8f70bf/animated-gif-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/ca1cab59e2fbafd319b7a6f3801866df5b8f70bf/animated-gif-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/ca1cab59e2fbafd319b7a6f3801866df5b8f70bf/animated-gif-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/ca1cab59e2fbafd319b7a6f3801866df5b8f70bf/animated-gif-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/ca1cab59e2fbafd319b7a6f3801866df5b8f70bf/animated-gif-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/ca1cab59e2fbafd319b7a6f3801866df5b8f70bf/animated-gif-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/ca1cab59e2fbafd319b7a6f3801866df5b8f70bf/animated-gif-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/ca1cab59e2fbafd319b7a6f3801866df5b8f70bf/animated-gif-1.13.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/ca1cab59e2fbafd319b7a6f3801866df5b8f70bf/animated-gif-1.13.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/c36c0296408a4ea60a1dfa232ff2159805d91d7f/animated-gif-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/c36c0296408a4ea60a1dfa232ff2159805d91d7f/animated-gif-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/c36c0296408a4ea60a1dfa232ff2159805d91d7f/animated-gif-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/c36c0296408a4ea60a1dfa232ff2159805d91d7f/animated-gif-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/c36c0296408a4ea60a1dfa232ff2159805d91d7f/animated-gif-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/c36c0296408a4ea60a1dfa232ff2159805d91d7f/animated-gif-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/c36c0296408a4ea60a1dfa232ff2159805d91d7f/animated-gif-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/c36c0296408a4ea60a1dfa232ff2159805d91d7f/animated-gif-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/c36c0296408a4ea60a1dfa232ff2159805d91d7f/animated-gif-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/c36c0296408a4ea60a1dfa232ff2159805d91d7f/animated-gif-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/c36c0296408a4ea60a1dfa232ff2159805d91d7f/animated-gif-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/c36c0296408a4ea60a1dfa232ff2159805d91d7f/animated-gif-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/c36c0296408a4ea60a1dfa232ff2159805d91d7f/animated-gif-1.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/animated-gif/1.13.0/c36c0296408a4ea60a1dfa232ff2159805d91d7f/animated-gif-1.13.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

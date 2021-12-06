@@ -1,0 +1,162 @@
+apply plugin: 'com.android.application'
+apply from: 'MobSDK.gradle'
+
+// http://www.race604.com/android-auto-version/
+// use git count as build number, as current date as build version
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyy.MM.dd')
+    return formattedDate
+}
+def cmd = 'git rev-list HEAD --count'
+
+//def gitVersion = cmd.execute().text.trim().toInteger() //Starting 109
+def gitVersion =  2000
+def appVersion = getDate()
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+    ndkVersion "21.3.6528147"
+
+    defaultConfig {
+        applicationId "com.zfdang.zsmth_android"
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode gitVersion
+        versionName appVersion
+
+        // Enabling multidex support.
+        multiDexEnabled true
+    }
+    signingConfigs {
+        release {
+            storeFile file("zsmth.release.jks")
+            storePassword "zsmthdev"
+            keyAlias "zsmth-release"
+            keyPassword "zsmthdev"
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    // http://www.sollyu.com/android-apk-studio-generated-automatically-appends-a-version-number/
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            if(buildType.name == "release") {
+                output.outputFileName = new File("zSMTH-v" + "-" + buildType.name + "-v" + defaultConfig.versionName +"-"+ defaultConfig.versionCode+ ".apk" )
+            } else {
+                output.outputFileName = new File("zSMTH-v" + "-" + buildType.name + "-v" + defaultConfig.versionName + ".apk" )
+            }
+        }
+    }
+    // ...
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    // http://stackoverflow.com/questions/37586800/android-gradle-duplicate-files-copied-in-apk-meta-inf-license-txt
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+    }
+}
+
+dependencies {
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    final OKHTTP_VERSION = '3.14.9'
+    final RETROFIT_VERSION = '2.9.0'
+
+    implementation 'androidx.multidex:multidex:2.0.1'
+
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'junit:junit:4.13.1'
+
+    // Fresco
+    implementation "com.facebook.fresco:fresco:$rootProject.FRESCO_VERSION"
+    // For animated GIF support
+    implementation "com.facebook.fresco:animated-gif:$rootProject.FRESCO_VERSION"
+    // For WebP support, including animated WebP
+    implementation "com.facebook.fresco:webpsupport:$rootProject.FRESCO_VERSION"
+    implementation "com.facebook.fresco:animated-webp:$rootProject.FRESCO_VERSION"
+    implementation "com.facebook.fresco:imagepipeline-okhttp3:$rootProject.FRESCO_VERSION"
+
+    // Support library
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'com.google.android.material:material:1.4.0'
+   // implementation 'com.android.support:design:28.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    // http://stackoverflow.com/questions/9783368/alternatives-to-preferencefragment-with-android-support-v4
+    // https://github.com/Gericop/Android-Support-Preference-V7-Fix
+    implementation 'androidx.preference:preference:1.0.0'
+    implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+
+    // RX
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.RXJAVA2_VERSION"
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.RXANDROID2_VERSION"
+
+    // OkHttp
+    implementation 'com.github.franmontiel:PersistentCookieJar:1.0.1'
+    implementation "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
+    implementation "com.squareup.okhttp3:logging-interceptor:$OKHTTP_VERSION"
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
+    implementation "com.squareup.retrofit2:converter-scalars:$RETROFIT_VERSION"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$RETROFIT_VERSION"
+    implementation "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
+
+    // umeng analytics
+    //implementation  'com.umeng.sdk:common:latest.integration'
+    //implementation  'com.umeng.sdk:analytics:latest.integration'
+
+    implementation  'com.umeng.sdk:common:1.5.3'
+    implementation  'com.umeng.sdk:analytics:7.5.3'
+
+    // other dependencies
+    implementation 'com.github.maksim88:PasswordEditText:0.9'
+    implementation 'org.jsoup:jsoup:1.13.1'
+    implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
+    implementation 'com.jude:swipebackhelper:3.1.2'
+    implementation 'me.relex:circleindicator:2.1.6'
+    //implementation 'com.commit451:PhotoView:1.2.5'
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+    implementation('com.mikepenz:aboutlibraries:6.1.1@aar') {
+        transitive = true
+    } // do not upgrade, otherwise it will cause issue
+    implementation 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
+    implementation 'com.wx.wheelview:wheelview:1.3.4'
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.5.1'
+    implementation 'com.klinkerapps:link_builder:1.6.1'
+
+    implementation 'com.esotericsoftware:kryo:4.0.2'
+
+    implementation 'com.github.nisrulz:screenshott:2.0.0'
+
+    // my gradles
+    implementation project(':multiple-images-selector')
+   // implementation project(':device_model_to_marketing_name')
+
+
+}
+

@@ -1,0 +1,67 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.chrisbanes:PhotoView:2.3.0@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6eee1c19ada30c8d2eb41e3f940cc298/PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/cebaf5d4bd99c5c31dda038567555795/PhotoView-2.3.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/cebaf5d4bd99c5c31dda038567555795/PhotoView-2.3.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/cebaf5d4bd99c5c31dda038567555795/PhotoView-2.3.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/da2c9362d88dc3d5b28ee2c9669f08f8/jetified-PhotoView-2.3.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fa8558a3f04c2927f1374393e78b7afb/jetified-PhotoView-2.3.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fa8558a3f04c2927f1374393e78b7afb/jetified-PhotoView-2.3.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fa8558a3f04c2927f1374393e78b7afb/jetified-PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/993c8082f6cb980bc487d7a2c9cb872e/jetified-PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4192c9f6cf12f1617d953873cac7c82f/jetified-PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4192c9f6cf12f1617d953873cac7c82f/jetified-PhotoView-2.3.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4192c9f6cf12f1617d953873cac7c82f/jetified-PhotoView-2.3.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ad9328608ee155644cdd2a0f274aed4b/jetified-PhotoView-2.3.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/90e1e9cff8358d66385ce89d5b4d3c3c/jetified-PhotoView-2.3.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/90e1e9cff8358d66385ce89d5b4d3c3c/jetified-PhotoView-2.3.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/90e1e9cff8358d66385ce89d5b4d3c3c/jetified-PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e74484c8d12beb403929b400f235b938/jetified-PhotoView-2.3.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e74484c8d12beb403929b400f235b938/jetified-PhotoView-2.3.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e74484c8d12beb403929b400f235b938/jetified-PhotoView-2.3.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/60709ad59e14e52f49cacf9d4b2350aa/jetified-PhotoView-2.3.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/60709ad59e14e52f49cacf9d4b2350aa/jetified-PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/60709ad59e14e52f49cacf9d4b2350aa/jetified-PhotoView-2.3.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7f10366ae80dd78232ce7ebafba6eedd/jetified-PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5c1ef08438aa85a29fd050acfaee72a8/jetified-PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/206cab8f4ccdb40802d8dcbe968e0c4b/jetified-PhotoView-2.3.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/206cab8f4ccdb40802d8dcbe968e0c4b/jetified-PhotoView-2.3.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/206cab8f4ccdb40802d8dcbe968e0c4b/jetified-PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/76e7ecdd01adaee19ed5db5456ca2fc3/jetified-PhotoView-2.3.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/518197ff1bdfeb0599321853a6cbe7ea/jetified-PhotoView-2.3.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/518197ff1bdfeb0599321853a6cbe7ea/jetified-PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/518197ff1bdfeb0599321853a6cbe7ea/jetified-PhotoView-2.3.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1a3b1c93089ebfb318bdba8e22d107c1/jetified-PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4cf54da14116dc530867a07acd90ab2d/jetified-PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1a3b1c93089ebfb318bdba8e22d107c1/jetified-PhotoView-2.3.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1a3b1c93089ebfb318bdba8e22d107c1/jetified-PhotoView-2.3.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/65842b551bbeb0395b460bcbb96930c1/jetified-PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0f98d7a2f894e1fdedcfed59bb200d72/jetified-PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/920b1949d384a7fac1e5a7f5566c9201/jetified-PhotoView-2.3.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/920b1949d384a7fac1e5a7f5566c9201/jetified-PhotoView-2.3.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/920b1949d384a7fac1e5a7f5566c9201/jetified-PhotoView-2.3.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/54b48305f3f76e7bc1d550c169349088/jetified-PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4932f755ce3aaa410e506ac4fa0bb6dc/transformed/jetified-PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/078b6a83d1f4f169a5224b2eee51387f/transformed/jetified-PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/509780e34fc7960f57ad4e4a94578f42/transformed/jetified-PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1a6409b484a15b4a2c702884c3c42782/transformed/jetified-PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cc4a6d013994cb1b1accd3de4f57ba93/transformed/jetified-PhotoView-2.3.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/1a6409b484a15b4a2c702884c3c42782/transformed/jetified-PhotoView-2.3.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1a6409b484a15b4a2c702884c3c42782/transformed/jetified-PhotoView-2.3.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8f0bdf3718bfa76da070a1c9e2eb3ba8/transformed/jetified-PhotoView-2.3.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/5d9441c01209289edee6f67cf29255bf/transformed/jetified-PhotoView-2.3.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/5d9441c01209289edee6f67cf29255bf/transformed/jetified-PhotoView-2.3.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/5d9441c01209289edee6f67cf29255bf/transformed/jetified-PhotoView-2.3.0/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.chrisbanes/PhotoView/2.3.0/d8422d470ae4cb6b59ba36da3186028a9be71151/PhotoView-2.3.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.chrisbanes/PhotoView/2.3.0/5e9669ead9a641af9c7c1b43cc62223a84977ff5/PhotoView-2.3.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.chrisbanes/PhotoView/2.3.0/c8c367ea53befe93e3d77152590c9ae1b30af985/PhotoView-2.3.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.chrisbanes/PhotoView/2.3.0/b14c949b5aab64ffeaf699a67a71a8bf89a12c8/PhotoView-2.3.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.chrisbanes/PhotoView/2.3.0/57bec274331b8a5cac998b44af0364a96e2802e8/PhotoView-2.3.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

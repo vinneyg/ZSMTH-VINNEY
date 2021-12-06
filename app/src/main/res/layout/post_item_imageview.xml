@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--http://frescolib.org/docs/using-drawees-xml.html-->
+<com.zfdang.zsmth_android.fresco.WrapContentDraweeView
+    android:id="@+id/post_attach_image"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="68dp"
+    android:layout_marginBottom="18dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
+    android:layout_marginTop="0dp"
+    android:scaleType="centerInside"
+    fresco:fadeDuration="300"
+    fresco:failureImage="@drawable/image_not_found"
+    fresco:failureImageScaleType="centerInside"
+    fresco:roundAsCircle="false"
+    fresco:roundedCornerRadius="4dp"
+    />
