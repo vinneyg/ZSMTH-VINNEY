@@ -12,7 +12,7 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1ddfab386fa5d06cb2e6ee8382df5072/print-1.0.0/annotations.zip!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a7f24d3c0aaa6a9a02965aadd9277810/print-1.0.0/annotations.zip!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/bf72b9e6b56f9bf57c530a51772e2125/transformed/print-1.0.0/annotations.zip!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/3a5014d28d85aa6e9df4cca758efd867/transformed/print-1.0.0/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/318f9059779e91f4ca082a71250b5c5c/transformed/print-1.0.0/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/17fbba128701937cfa25cb96f016ba18/print-1.0.0/jars/classes.jar!/" />
@@ -63,9 +63,10 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/bf72b9e6b56f9bf57c530a51772e2125/transformed/print-1.0.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/bf72b9e6b56f9bf57c530a51772e2125/transformed/print-1.0.0/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/025bf6d65c5d5f089ce5fdefe615e517/transformed/print-1.0.0/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/3a5014d28d85aa6e9df4cca758efd867/transformed/print-1.0.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3a5014d28d85aa6e9df4cca758efd867/transformed/print-1.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3a5014d28d85aa6e9df4cca758efd867/transformed/print-1.0.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/318f9059779e91f4ca082a71250b5c5c/transformed/print-1.0.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/318f9059779e91f4ca082a71250b5c5c/transformed/print-1.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/318f9059779e91f4ca082a71250b5c5c/transformed/print-1.0.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

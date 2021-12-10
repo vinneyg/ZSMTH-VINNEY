@@ -3,7 +3,7 @@
     <ANNOTATIONS>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f959f971a9f5dba201b06778221b5c2a/core-1.5.0/annotations.zip!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/06e9e34ef68fe8f8bd645bf120feaa20/transformed/core-1.5.0/annotations.zip!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/6697e6fcc8e81e6615a6b7c584ee730b/transformed/core-1.5.0/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/f14da30d40e238ae2ec6da71af44c232/transformed/core-1.5.0/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f959f971a9f5dba201b06778221b5c2a/core-1.5.0/res" />
@@ -12,9 +12,9 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/06e9e34ef68fe8f8bd645bf120feaa20/transformed/core-1.5.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/06e9e34ef68fe8f8bd645bf120feaa20/transformed/core-1.5.0/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/06e9e34ef68fe8f8bd645bf120feaa20/transformed/core-1.5.0/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6697e6fcc8e81e6615a6b7c584ee730b/transformed/core-1.5.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6697e6fcc8e81e6615a6b7c584ee730b/transformed/core-1.5.0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/6697e6fcc8e81e6615a6b7c584ee730b/transformed/core-1.5.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f14da30d40e238ae2ec6da71af44c232/transformed/core-1.5.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/f14da30d40e238ae2ec6da71af44c232/transformed/core-1.5.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f14da30d40e238ae2ec6da71af44c232/transformed/core-1.5.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

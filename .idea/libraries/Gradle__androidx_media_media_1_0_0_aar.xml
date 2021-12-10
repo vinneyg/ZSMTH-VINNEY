@@ -12,7 +12,7 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ecdb3c027a1bcfc764b63bdbaa7957d8/media-1.0.0/annotations.zip!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ebe38de5bc1b7c95f41aaf6179d007f4/media-1.0.0/annotations.zip!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/611b11df6e0b8f911416319f707f1168/transformed/media-1.0.0/annotations.zip!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/f0a336f0dcb2a6897ca09cc4e3d12874/transformed/media-1.0.0/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/4963aeaaa49d5da652a40535e93af401/transformed/media-1.0.0/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/07215847979b75407347ba8314267548/media-1.0.0/jars/classes.jar!/" />
@@ -48,9 +48,9 @@
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/611b11df6e0b8f911416319f707f1168/transformed/media-1.0.0/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/611b11df6e0b8f911416319f707f1168/transformed/media-1.0.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/611b11df6e0b8f911416319f707f1168/transformed/media-1.0.0/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f0a336f0dcb2a6897ca09cc4e3d12874/transformed/media-1.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f0a336f0dcb2a6897ca09cc4e3d12874/transformed/media-1.0.0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/f0a336f0dcb2a6897ca09cc4e3d12874/transformed/media-1.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4963aeaaa49d5da652a40535e93af401/transformed/media-1.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4963aeaaa49d5da652a40535e93af401/transformed/media-1.0.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/4963aeaaa49d5da652a40535e93af401/transformed/media-1.0.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

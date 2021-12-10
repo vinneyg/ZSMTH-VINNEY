@@ -15,7 +15,7 @@ buildscript {
     }
     dependencies {
         // https://developer.android.com/studio/releases/gradle-plugin.html
-        classpath 'com.android.tools.build:gradle:7.0.3'
+        classpath 'com.android.tools.build:gradle:7.0.4'
 
         // https://github.com/ben-manes/gradle-versions-plugin
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.39.0'
@@ -45,8 +45,8 @@ task clean(type: Delete) {
 
 ext {
     minSdkVersion = 24
-    targetSdkVersion = 30
-    compileSdkVersion = 30
+    targetSdkVersion = 31
+    compileSdkVersion = 31
     // https://developer.android.com/studio/releases/build-tools
     buildToolsVersion = '30.0.2'
     FRESCO_VERSION = '1.13.0'
