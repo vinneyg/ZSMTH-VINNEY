@@ -11,9 +11,9 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 2000,
-      "versionName": "2021.12.10",
-      "outputFile": "zSMTH-v-release-v2021.12.10-2000.apk"
+      "versionCode": 2002,
+      "versionName": "2021.12.14",
+      "outputFile": "zSMTH-v-release-v2021.12.14-2002.apk"
     }
   ],
   "elementType": "File"

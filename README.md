@@ -1,4 +1,4 @@
-# zSMTH-Android-Vinney
+# zSMTH-Vinney
 
 基于zSMTH [http://zsmth-android.zfdang.com/](http://zsmth-android.zfdang.com/) 的水木社区BBS的
 更新开源Android客户端
