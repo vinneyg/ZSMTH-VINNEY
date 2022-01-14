@@ -10,8 +10,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
-import com.wx.wheelview.adapter.ArrayWheelAdapter;
-import com.wx.wheelview.widget.WheelView;
+
+//import com.wx.wheelview.adapter.ArrayWheelAdapter;
+//import com.wx.wheelview.widget.WheelView;
+import com.github.gzuliyujiang.wheelview.widget.WheelView;
 import java.util.Arrays;
 
 /**
@@ -40,10 +42,14 @@ public class PopupLikeWindow extends PopupWindow {
 
     String[] scores = { "-5", "-4", "-3", "-2", "-1", "0", "+1", "+2", "+3", "+4", "+5" };
     wheelView = (WheelView) contentView.findViewById(R.id.like_score);
-    wheelView.setWheelAdapter(new ArrayWheelAdapter(mContext)); // 文本数据源
-    wheelView.setSkin(WheelView.Skin.Common); // common皮肤
-    wheelView.setWheelData(Arrays.asList(scores));  // 数据集合
-    wheelView.setSelection(5);
+   // wheelView.setWheelAdapter(new ArrayWheelAdapter(mContext)); // 文本数据源
+   // wheelView.setSkin(WheelView.Skin.Common); // common皮肤
+   // wheelView.setWheelData(Arrays.asList(scores));  // 数据集合
+    //wheelView.setSelection(5);
+
+    wheelView.setData(Arrays.asList(scores));
+    wheelView.setStyle( 2 ); //to be upgraded
+    wheelView.setDefaultPosition(5);
 
     etMessage = (EditText) contentView.findViewById(R.id.like_message);
 
@@ -58,7 +64,9 @@ public class PopupLikeWindow extends PopupWindow {
     confirm.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         if (mListener != null) {
-          mListener.OnLikeAction(wheelView.getSelectionItem().toString(), etMessage.getText().toString());
+          //mListener.OnLikeAction(wheelView.getSelectionItem().toString(), etMessage.getText().toString());
+          mListener.OnLikeAction(wheelView.getCurrentItem().toString(), etMessage.getText().toString());
+
         }
         dismiss();
       }

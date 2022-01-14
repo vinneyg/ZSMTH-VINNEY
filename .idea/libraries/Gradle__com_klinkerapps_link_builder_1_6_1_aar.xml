@@ -10,9 +10,9 @@
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/930cb6f2eb4a2020c27fe24f5beec95e/transformed/jetified-link_builder-1.6.1/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/930cb6f2eb4a2020c27fe24f5beec95e/transformed/jetified-link_builder-1.6.1/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/930cb6f2eb4a2020c27fe24f5beec95e/transformed/jetified-link_builder-1.6.1/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/74641e8acb1bdb346683e49723c7d362/transformed/jetified-link_builder-1.6.1/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/74641e8acb1bdb346683e49723c7d362/transformed/jetified-link_builder-1.6.1/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/74641e8acb1bdb346683e49723c7d362/transformed/jetified-link_builder-1.6.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/efb467df148f9047536962fe634b4025/transformed/jetified-link_builder-1.6.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/efb467df148f9047536962fe634b4025/transformed/jetified-link_builder-1.6.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/efb467df148f9047536962fe634b4025/transformed/jetified-link_builder-1.6.1/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/d6ff7e904277fb8a1f88bcc10aeea852359bfdd8/link_builder-1.6.1-javadoc.jar!/" />

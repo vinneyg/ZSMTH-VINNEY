@@ -14,7 +14,7 @@
       android:orientation="horizontal"
       >
 
-    <com.wx.wheelview.widget.WheelView
+    <com.github.gzuliyujiang.wheelview.widget.WheelView
         android:id="@+id/like_score"
         android:layout_width="40dp"
         android:layout_height="150dp"

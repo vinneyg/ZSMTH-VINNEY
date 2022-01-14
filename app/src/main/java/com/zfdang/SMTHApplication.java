@@ -13,6 +13,7 @@ import com.zfdang.zsmth_android.helpers.GEODatabase;
 import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserStatus;
+
 import okhttp3.OkHttpClient;
 import androidx.multidex.MultiDex;
 
@@ -91,6 +92,7 @@ public class SMTHApplication extends Application {
 
   public void onCreate() {
     super.onCreate();
+
     SMTHApplication.context = getApplicationContext();
 
     // init IP lookup database

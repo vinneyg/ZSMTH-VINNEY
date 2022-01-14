@@ -10,15 +10,15 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/edc43b6e64b36adc2640816830e01d12/transformed/jetified-iconics-core-3.0.4/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/edc43b6e64b36adc2640816830e01d12/transformed/jetified-iconics-core-3.0.4/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/edc43b6e64b36adc2640816830e01d12/transformed/jetified-iconics-core-3.0.4/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/8f1273912403209e6424090f4374411a/transformed/jetified-iconics-core-3.0.4/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8f1273912403209e6424090f4374411a/transformed/jetified-iconics-core-3.0.4/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8f1273912403209e6424090f4374411a/transformed/jetified-iconics-core-3.0.4/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/8653265f0038e8c1409d66459fdc20a6/transformed/jetified-iconics-core-3.0.4/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8653265f0038e8c1409d66459fdc20a6/transformed/jetified-iconics-core-3.0.4/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8653265f0038e8c1409d66459fdc20a6/transformed/jetified-iconics-core-3.0.4/res" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mikepenz/iconics-core/3.0.4/eae6876f33605820e77fdccfff3d7eee232ebc25/iconics-core-3.0.4-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mikepenz/iconics-core/3.0.4/d7429fd3ab48e87b82c2c4de6c44b32dd29ebc6d/iconics-core-3.0.4-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mikepenz/iconics-core/3.0.4/8a944689cdd2b71ab5d6589042f6d533c4a32455/iconics-core-3.0.4-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mikepenz/iconics-core/3.0.4/1360a271f6a494ed5908d117142490dfbe211508/iconics-core-3.0.4-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

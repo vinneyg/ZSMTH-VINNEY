@@ -32,7 +32,7 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
         // Construct an intent that will execute the AlarmReceiver
         Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
         // Create a PendingIntent to be triggered when the alarm goes off
-        pendingIntent = PendingIntent.getBroadcast(context, REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent = PendingIntent.getBroadcast(context, REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         // first triggered in 3 seconds, repeated every 1 minute

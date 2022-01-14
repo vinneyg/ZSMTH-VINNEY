@@ -10,9 +10,9 @@
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/826706849ed7169cb9bb62c155e6ca1f/transformed/jetified-CircularFloatingActionMenu-1.0.2/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/826706849ed7169cb9bb62c155e6ca1f/transformed/jetified-CircularFloatingActionMenu-1.0.2/AndroidManifest.xml" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/826706849ed7169cb9bb62c155e6ca1f/transformed/jetified-CircularFloatingActionMenu-1.0.2/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c4cd7854ce9ffdbc92a371f4e3fff57d/transformed/jetified-CircularFloatingActionMenu-1.0.2/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/c4cd7854ce9ffdbc92a371f4e3fff57d/transformed/jetified-CircularFloatingActionMenu-1.0.2/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c4cd7854ce9ffdbc92a371f4e3fff57d/transformed/jetified-CircularFloatingActionMenu-1.0.2/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/6767474ad2793c8105d2fd5a5231e4aa/transformed/jetified-CircularFloatingActionMenu-1.0.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6767474ad2793c8105d2fd5a5231e4aa/transformed/jetified-CircularFloatingActionMenu-1.0.2/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6767474ad2793c8105d2fd5a5231e4aa/transformed/jetified-CircularFloatingActionMenu-1.0.2/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.oguzdev/CircularFloatingActionMenu/1.0.2/3f6ed2f1ddb9ff295e81f49e0de88d1c76cbe664/CircularFloatingActionMenu-1.0.2-javadoc.jar!/" />

@@ -147,6 +147,7 @@ public class PostListActivity extends SMTHBaseActivity
   @Override protected void onDestroy() {
     super.onDestroy();
     SwipeBackHelper.onDestroy(this);
+
   }
 
   @Override protected void onPostCreate(Bundle savedInstanceState) {

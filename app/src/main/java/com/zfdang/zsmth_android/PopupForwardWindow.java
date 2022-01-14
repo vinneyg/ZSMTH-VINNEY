@@ -13,7 +13,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
-//import com.wx.wheelview.widget.WheelView;
+
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.models.Post;
 
@@ -29,7 +29,6 @@ public class PopupForwardWindow extends PopupWindow {
   Activity mContext;
   private OnForwardInterface mListener;
   private View contentView;
-  //private WheelView wheelView;
   //private EditText etMessage;
   static public Post post;
   private RadioButton mTargetSelf;
