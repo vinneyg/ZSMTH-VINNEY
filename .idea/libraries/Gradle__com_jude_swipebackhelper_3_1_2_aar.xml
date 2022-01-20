@@ -4,6 +4,9 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/b5f8299688b6fe145d3fe141b44a4976/transformed/jetified-swipebackhelper-3.1.2/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b5f8299688b6fe145d3fe141b44a4976/transformed/jetified-swipebackhelper-3.1.2/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b5f8299688b6fe145d3fe141b44a4976/transformed/jetified-swipebackhelper-3.1.2/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/65bf75227acc583cf72887476d9fe792/transformed/jetified-swipebackhelper-3.1.2/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/65bf75227acc583cf72887476d9fe792/transformed/jetified-swipebackhelper-3.1.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/65bf75227acc583cf72887476d9fe792/transformed/jetified-swipebackhelper-3.1.2/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jude/swipebackhelper/3.1.2/3762e45c201fbb2a38b3bf18c27c483202483c3c/swipebackhelper-3.1.2-javadoc.jar!/" />

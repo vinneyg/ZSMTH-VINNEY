@@ -466,7 +466,7 @@ public class MainActivity extends SMTHBaseActivity
       notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
       // notification will be handled by MainActivity.onNewIntent
       PendingIntent resultPendingIntent =
-              PendingIntent.getActivity(MainActivity.this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+              PendingIntent.getActivity(MainActivity.this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
 
       Notification.Builder mBuilder = new Notification.Builder(this).setSmallIcon(R.drawable.ic_launcher)
               .setContentTitle("zSMTH-v提醒")

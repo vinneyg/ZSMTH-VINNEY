@@ -39,6 +39,8 @@ import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -80,6 +82,9 @@ public class BoardTopicActivity extends SMTHBaseActivity
   private Settings mSetting;
 
   private boolean isSearchMode = false;
+
+  private static final int MAXSIZE = 50;
+  private static Hashtable MapHash = new Hashtable(MAXSIZE);
 
   @Override protected void onDestroy() {
     super.onDestroy();
@@ -399,15 +404,39 @@ public class BoardTopicActivity extends SMTHBaseActivity
             Topic topic = new Topic(String.format("第%d页:", mCurrentPageNo));
             topic.isCategory = true;
             TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
-            mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
-          }
+            //mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+            mRecyclerView.post(new Runnable() {
+              @Override
+              public void run() {
+                // Notify adapter with appropriate notify methods
+                mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1); }
+            });
+            }
 
           @Override public void onNext(@NonNull Topic topic) {
             // Log.d(TAG, topic.toString());
             if (!topic.isSticky || mSetting.isShowSticky()) {
-              TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
-              mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
-            }
+              if(!MapHash.contains(topic.getTitle()) ) {
+                if (MapHash.size() < MAXSIZE) {
+                  Log.d(TAG, "Vinney1 + " + topic.getTitle());
+                  TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
+                  MapHash.put(topic.getTopicID(), topic.getTitle());
+                  mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                }
+                else
+                {
+                  Log.d(TAG, "Vinney2 + " + topic.getTitle());
+                  MapHash.clear();
+                  TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
+                  MapHash.put(topic.getTitle(),topic.getTopicID());
+                  mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                }
+              }
+
+              else{
+                Log.d(TAG, "Vinney3 + " + topic.getTitle());
+              }
+              }
           }
 
           @Override public void onError(@NonNull Throwable e) {

@@ -4,6 +4,9 @@
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6f0d96a093fdbd1859ae2ca73b431e12/transformed/jetified-OneKeyShare-3.9.5/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/6f0d96a093fdbd1859ae2ca73b431e12/transformed/jetified-OneKeyShare-3.9.5/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6f0d96a093fdbd1859ae2ca73b431e12/transformed/jetified-OneKeyShare-3.9.5/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/1d3155ed1fb79778386861151b423cfc/transformed/jetified-OneKeyShare-3.9.5/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1d3155ed1fb79778386861151b423cfc/transformed/jetified-OneKeyShare-3.9.5/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1d3155ed1fb79778386861151b423cfc/transformed/jetified-OneKeyShare-3.9.5/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

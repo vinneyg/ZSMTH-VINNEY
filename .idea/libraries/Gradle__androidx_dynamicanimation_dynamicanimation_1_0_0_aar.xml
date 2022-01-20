@@ -19,6 +19,9 @@
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/56680545bfb406dcf2c729bc98d1c9cc/transformed/dynamicanimation-1.0.0/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/56680545bfb406dcf2c729bc98d1c9cc/transformed/dynamicanimation-1.0.0/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/56680545bfb406dcf2c729bc98d1c9cc/transformed/dynamicanimation-1.0.0/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/c98b04b70d5d3512b3b033dd6670fb73/transformed/dynamicanimation-1.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c98b04b70d5d3512b3b033dd6670fb73/transformed/dynamicanimation-1.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c98b04b70d5d3512b3b033dd6670fb73/transformed/dynamicanimation-1.0.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

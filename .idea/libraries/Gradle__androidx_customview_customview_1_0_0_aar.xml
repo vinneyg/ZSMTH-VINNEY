@@ -54,6 +54,9 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/8324dd6bdea58b3c63e1ec4554ea3db2/transformed/customview-1.0.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8324dd6bdea58b3c63e1ec4554ea3db2/transformed/customview-1.0.0/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8324dd6bdea58b3c63e1ec4554ea3db2/transformed/customview-1.0.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/82027b2918884e658a542c99b1ad511f/transformed/customview-1.0.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/82027b2918884e658a542c99b1ad511f/transformed/customview-1.0.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/82027b2918884e658a542c99b1ad511f/transformed/customview-1.0.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
