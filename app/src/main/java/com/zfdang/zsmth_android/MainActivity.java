@@ -62,6 +62,7 @@ import android.widget.Toast;
 
 import com.mikepenz.aboutlibraries.LibsBuilder;
 //import com.mikepenz.aboutlibraries.ui.LibsSupportFragment;
+import com.mob.MobSDK;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.umeng.analytics.MobclickAgent;
@@ -260,10 +261,11 @@ public class MainActivity extends SMTHBaseActivity
         @Override
         public void run() {
           showInfoDialog();
-        }
+         }
       }, 1000);
     }
 
+    MobSDK.submitPolicyGrantResult(true,null);
 
     ShakeListener shakeListener = new ShakeListener(this);
     shakeListener.setOnShakeListener(new ShakeListener.OnShakeListener() {

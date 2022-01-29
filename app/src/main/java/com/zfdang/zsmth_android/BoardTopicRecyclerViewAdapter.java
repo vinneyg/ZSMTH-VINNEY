@@ -55,7 +55,7 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
 
       holder.mTitle.setText(topic.getTitle());
       if (Settings.getInstance().isDiffReadTopic()) {
-        if ((!SMTHApplication.ReadTopicLists.isEmpty()) && SMTHApplication.ReadTopicLists.contains(holder.mTopic.getTopicID())) {
+        if ((!SMTHApplication.ReadTopicLists.isEmpty()) && SMTHApplication.ReadTopicLists.contains(holder.mTopic.getTitle())) {
           if (Settings.getInstance().isNightMode()) {
             holder.mTitle.setTextColor(Color.GRAY);
             holder.mAuthor.setTextColor(Color.GRAY);
@@ -104,7 +104,7 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
           mListener.onTopicFragmentInteraction(holder.mTopic);
             //Vinney
             if (Settings.getInstance().isDiffReadTopic()) {
-              SMTHApplication.ReadTopicLists.add(holder.mTopic.getTopicID());
+              SMTHApplication.ReadTopicLists.add(holder.mTopic.getTitle());
               if (Settings.getInstance().isNightMode()) {
                 holder.mTitle.setTextColor(Color.GRAY);
                 holder.mAuthor.setTextColor(Color.GRAY);

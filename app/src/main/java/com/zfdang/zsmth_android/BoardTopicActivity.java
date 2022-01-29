@@ -418,14 +418,14 @@ public class BoardTopicActivity extends SMTHBaseActivity
             if (!topic.isSticky || mSetting.isShowSticky()) {
               if(!MapHash.contains(topic.getTitle()) ) {
                 if (MapHash.size() < MAXSIZE) {
-                  Log.d(TAG, "Vinney1 + " + topic.getTitle());
+                  //Log.d(TAG, "Vinney1 + " + topic.getTitle());
                   TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
-                  MapHash.put(topic.getTopicID(), topic.getTitle());
+                  MapHash.put(topic.getTitle(),topic.getTopicID());
                   mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
                 }
                 else
                 {
-                  Log.d(TAG, "Vinney2 + " + topic.getTitle());
+                  //Log.d(TAG, "Vinney2 + " + topic.getTitle());
                   MapHash.clear();
                   TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
                   MapHash.put(topic.getTitle(),topic.getTopicID());
