@@ -18,7 +18,7 @@ import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.Settings;
-//import com.zfdang.zsmth_android.helpers.ActivityUtils;
+import com.zfdang.zsmth_android.WebviewCookieHandler;
 import com.zfdang.zsmth_android.helpers.MakeList;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.Board;
@@ -88,11 +88,6 @@ public class SMTHHelper {
   public SMTHWWWService wService;
   static private final String SMTH_WWW_ENCODING = "GB2312";
 
-  // Mobile service of SMTH
-  // this interface is not used any longer
-  //    private final String SMTH_MOBILE_URL = "http://m.newsmth.net";
-  //    private Retrofit mRetrofit = null;
-
   // All boards cache file
   public static int BOARD_TYPE_FAVORITE = 1;
   public static int BOARD_TYPE_ALL = 2;
@@ -155,7 +150,9 @@ public class SMTHHelper {
           return originalResponse.newBuilder().header("Cache-Control", "no-cache").build();
         }
       }
-    }).cookieJar(mCookieJar).cache(cache).readTimeout(15, TimeUnit.SECONDS).connectTimeout(10, TimeUnit.SECONDS).build();
+    }).cookieJar(new WebviewCookieHandler())  // https://gist.github.com/scitbiz/8cb6d8484bb20e47d241cc8e117fa705
+//    }).cookieJar(mCookieJar)  // revert back to persistentcookiejar
+      .cache(cache).readTimeout(15, TimeUnit.SECONDS).connectTimeout(10, TimeUnit.SECONDS).build();
 
     //        mRetrofit = new Retrofit.Builder()
     //                .baseUrl(SMTH_MOBILE_URL)
@@ -163,6 +160,7 @@ public class SMTHHelper {
     //                .addConverterFactory(ScalarsConverterFactory.create())
     //                .client(mHttpClient)
     //                .build();
+
     wRetrofit = new Retrofit.Builder().baseUrl(SMTH_WWW_URL)
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(ScalarsConverterFactory.create())
@@ -372,7 +370,7 @@ public class SMTHHelper {
   }
 
   public static List<Post> ParsePostListFromWWW(String content, Topic topic) {
-    //final String TAG = "ParsePostListFromWWW";
+    final String TAG = "ParsePostListFromWWW";
     List<Post> results = new ArrayList<>();
 
     Document doc = Jsoup.parse(content);
@@ -654,11 +652,10 @@ public class SMTHHelper {
 
     if (lis.size() > 0) {
       Element li = lis.first();
-      //currentPage = li.text();
+      currentPage = li.text();
       //            Log.d(TAG, "ParseBoardTopicsFromWWW: " + currentPage);
     }
     // To handle Error case :  <title>水木社区-错误信息</title>
-    // Log.d("Vinney", Integer.toString(lis.size()));
     else
     {
       return results;

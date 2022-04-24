@@ -4,7 +4,10 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f27e054e1f1b1e6336838bfaa32d8f8a/recyclerview-1.2.1/annotations.zip!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/7322abca75fc1d09d7ed95ccc093d5f1/transformed/recyclerview-1.2.1/annotations.zip!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/3bd8417775d9fb66b1eb19bb9462668c/transformed/recyclerview-1.2.1/annotations.zip!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/1def42ed883dbeb9d3ee1d585c50188c/transformed/recyclerview-1.2.1/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/17a9777b1d47825632905c8b517250d1/transformed/recyclerview-1.2.1/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/62be1a2c081f212e84c5f55dda7fc002/transformed/recyclerview-1.2.1/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/4322ec7a24d0101385121fd511851a5b/transformed/recyclerview-1.2.1/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/fd3b9c2be39c23acdc1051aa0d5c6f43/transformed/recyclerview-1.2.1/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f27e054e1f1b1e6336838bfaa32d8f8a/recyclerview-1.2.1/AndroidManifest.xml" />
@@ -16,9 +19,18 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/3bd8417775d9fb66b1eb19bb9462668c/transformed/recyclerview-1.2.1/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3bd8417775d9fb66b1eb19bb9462668c/transformed/recyclerview-1.2.1/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3bd8417775d9fb66b1eb19bb9462668c/transformed/recyclerview-1.2.1/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1def42ed883dbeb9d3ee1d585c50188c/transformed/recyclerview-1.2.1/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/1def42ed883dbeb9d3ee1d585c50188c/transformed/recyclerview-1.2.1/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1def42ed883dbeb9d3ee1d585c50188c/transformed/recyclerview-1.2.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/17a9777b1d47825632905c8b517250d1/transformed/recyclerview-1.2.1/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/17a9777b1d47825632905c8b517250d1/transformed/recyclerview-1.2.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/17a9777b1d47825632905c8b517250d1/transformed/recyclerview-1.2.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/62be1a2c081f212e84c5f55dda7fc002/transformed/recyclerview-1.2.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/62be1a2c081f212e84c5f55dda7fc002/transformed/recyclerview-1.2.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/62be1a2c081f212e84c5f55dda7fc002/transformed/recyclerview-1.2.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4322ec7a24d0101385121fd511851a5b/transformed/recyclerview-1.2.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4322ec7a24d0101385121fd511851a5b/transformed/recyclerview-1.2.1/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/4322ec7a24d0101385121fd511851a5b/transformed/recyclerview-1.2.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/fd3b9c2be39c23acdc1051aa0d5c6f43/transformed/recyclerview-1.2.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/fd3b9c2be39c23acdc1051aa0d5c6f43/transformed/recyclerview-1.2.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/fd3b9c2be39c23acdc1051aa0d5c6f43/transformed/recyclerview-1.2.1/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

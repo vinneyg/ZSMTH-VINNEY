@@ -261,11 +261,11 @@ public class MainActivity extends SMTHBaseActivity
         @Override
         public void run() {
           showInfoDialog();
+          MobSDK.submitPolicyGrantResult(true,null);
          }
       }, 1000);
     }
 
-    MobSDK.submitPolicyGrantResult(true,null);
 
     ShakeListener shakeListener = new ShakeListener(this);
     shakeListener.setOnShakeListener(new ShakeListener.OnShakeListener() {
@@ -434,7 +434,7 @@ public class MainActivity extends SMTHBaseActivity
   }
 
 
-  // triger the background service right now
+  // trigger the background service right now
   private void updateUserStatusNow() {
     AlarmBroadcastReceiver.runJobNow(getApplicationContext(), mReceiver);
   }
@@ -445,7 +445,7 @@ public class MainActivity extends SMTHBaseActivity
       @Override
       public void onReceiveResult(int resultCode, Bundle resultData) {
         if (resultCode == RESULT_OK) {
-          //Log.d(TAG, "onReceiveResult: " + "to update navigationview" + SMTHApplication.activeUser.toString());
+          Log.d(TAG, "Vinney onReceiveResult: " + "to update navigationview" + SMTHApplication.activeUser.toString());
           UpdateNavigationViewHeader();
 
           // show notification if necessary

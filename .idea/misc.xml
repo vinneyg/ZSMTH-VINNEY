@@ -3,7 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/APK/ZSMTH-VINNEY/app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="..\:/APK/ZSMTH-VINNEY/app/src/main/res/layout/activity_post_list.xml" value="0.1" />
+        <entry key="..\:/APK/ZSMTH-VINNEY/app/src/main/res/layout/activity_webview_login.xml" value="0.1" />
+        <entry key="..\:/APK/ZSMTH-VINNEY/app/src/main/res/layout/board_item.xml" value="0.1" />
+        <entry key="..\:/APK/ZSMTH-VINNEY/app/src/main/res/layout/fragment_favorite_board.xml" value="0.1" />
         <entry key="..\:/APK/ZSMTH-VINNEY/app/src/main/res/layout/fragment_hot_topic.xml" value="0.1" />
         <entry key="..\:/APK/ZSMTH-VINNEY/app/src/main/res/layout/popup_forward_layout.xml" value="0.13768115942028986" />
         <entry key="..\:/APK/ZSMTH-VINNEY/app/src/main/res/layout/popup_like_layout.xml" value="0.1" />

@@ -27,6 +27,7 @@
         android:requestLegacyExternalStorage="true"
         android:preserveLegacyExternalStorage="true"
         tools:replace="android:name">
+        <activity android:name=".WebviewLoginActivity"></activity>
     <activity
         android:name=".MainActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"

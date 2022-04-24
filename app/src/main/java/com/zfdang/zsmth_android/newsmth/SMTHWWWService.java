@@ -43,11 +43,6 @@ public interface SMTHWWWService {
     @GET("/bbsdoc.php")
     Observable<ResponseBody> getFavoriteBoardsInSection(@Query("board") String boardEngName);
 
-    // https://www.newsmth.net/bbsdoc.php?board=Apple&&ftype=6
-    // @GET("/bbsdoc.php")
-    // Observable<ResponseBody> getBoardTopicsBySentTime(@Query("board") String boardEngName,
-    //                                                   @Query("ftype") String type);
-
     @GET("/nForum/section/{section}?ajax")
     Observable<ResponseBody> getBoardsBySection(@Path("section") String section);
 

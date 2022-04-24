@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 //import android.util.Log;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -148,11 +149,11 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
   public void RefreshFavoriteBoards() {
     showLoadingHints();
     LoadFavoriteBoardsByPath();
+
   }
 
   protected void LoadFavoriteBoardsByPath() {
    // SMTHHelper helper = SMTHHelper.getInstance();
-
     Board board = getCurrentPath();
     final String finalCurrentPath = getCurrentPathInString();
 
@@ -172,18 +173,23 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
     Observable<List<Board>> network = null;
     if (board == null || board.isFolder()) {
       // 用户在收藏夹里创建的目录
+      Log.d("Vinney","fav-1:"+ finalCurrentPath);
       network = Observable.create(new ObservableOnSubscribe<List<Board>>() {
         @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
           List<Board> boards = SMTHHelper.LoadFavoriteBoardsInFolder(finalCurrentPath);
+          Log.d("Vinney","fav-2");
           if (boards.size() > 0) {
+            Log.d("Vinney","fav-3:"+ Integer.toString(boards.size()));
             observableEmitter.onNext(boards);
           } else {
+            Log.d("Vinney","fav-4");
             observableEmitter.onComplete();
           }
         }
       });
     } else if(board.isSection()){
       // 用户在收藏夹里收藏的系统的二级目录
+      Log.d("Vinney","fav-5");
       network = Observable.create(new ObservableOnSubscribe<List<Board>>() {
         @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
           List<Board> boards = SMTHHelper.LoadFavoriteBoardsInSection(finalCurrentPath);
@@ -196,6 +202,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
       });
     }
 
+    Log.d("Vinney","fav-6");
     List<Board> boards = new ArrayList<>();
     Observable.concat(cache, network).first(boards).toObservable().flatMap(new Function<List<Board>, ObservableSource<Board>>() {
       @Override public ObservableSource<Board> apply(@NonNull List<Board> boards) throws Exception {

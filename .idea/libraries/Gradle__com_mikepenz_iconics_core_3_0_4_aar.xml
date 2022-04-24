@@ -13,9 +13,18 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/8653265f0038e8c1409d66459fdc20a6/transformed/jetified-iconics-core-3.0.4/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8653265f0038e8c1409d66459fdc20a6/transformed/jetified-iconics-core-3.0.4/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8653265f0038e8c1409d66459fdc20a6/transformed/jetified-iconics-core-3.0.4/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/2ad948862473fdad87a5ef1d6c4f0929/transformed/jetified-iconics-core-3.0.4/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/2ad948862473fdad87a5ef1d6c4f0929/transformed/jetified-iconics-core-3.0.4/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/2ad948862473fdad87a5ef1d6c4f0929/transformed/jetified-iconics-core-3.0.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4026a08dff399003e572fead0a79f55a/transformed/jetified-iconics-core-3.0.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4026a08dff399003e572fead0a79f55a/transformed/jetified-iconics-core-3.0.4/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/4026a08dff399003e572fead0a79f55a/transformed/jetified-iconics-core-3.0.4/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/0da9d1d718fe7bd14b6667b04d61621d/transformed/jetified-iconics-core-3.0.4/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/0da9d1d718fe7bd14b6667b04d61621d/transformed/jetified-iconics-core-3.0.4/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/0da9d1d718fe7bd14b6667b04d61621d/transformed/jetified-iconics-core-3.0.4/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/5edbefd0f6d56703fe488be964ed52ff/transformed/jetified-iconics-core-3.0.4/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/5edbefd0f6d56703fe488be964ed52ff/transformed/jetified-iconics-core-3.0.4/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/5edbefd0f6d56703fe488be964ed52ff/transformed/jetified-iconics-core-3.0.4/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cfe19336e21ee24940230c7ac2e30d05/transformed/jetified-iconics-core-3.0.4/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cfe19336e21ee24940230c7ac2e30d05/transformed/jetified-iconics-core-3.0.4/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/cfe19336e21ee24940230c7ac2e30d05/transformed/jetified-iconics-core-3.0.4/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mikepenz/iconics-core/3.0.4/eae6876f33605820e77fdccfff3d7eee232ebc25/iconics-core-3.0.4-javadoc.jar!/" />

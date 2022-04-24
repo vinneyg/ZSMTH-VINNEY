@@ -79,7 +79,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'junit:junit:4.13.1'
+    implementation 'junit:junit:4.13.2'
 
     // Fresco
     implementation "com.facebook.fresco:fresco:$rootProject.FRESCO_VERSION"

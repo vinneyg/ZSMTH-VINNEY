@@ -68,14 +68,14 @@ public class SMTHApplication extends Application {
   public static  boolean deletionPost = false;
   public static  int deletionCount = 0;
 
-  // IP database
-  public static GEODatabase geoDB;
-
   public static String getWebAddress()
   {
     return Settings.getInstance().getWebAddr();
   }
 
+
+  // IP database
+  public static GEODatabase geoDB;
   public static boolean isValidUser() {
     //return activeUser != null && !activeUser.getId().equals("guest");
     return activeUser != null && !activeUser.getId().equalsIgnoreCase("guest");
@@ -94,6 +94,7 @@ public class SMTHApplication extends Application {
     super.onCreate();
 
     SMTHApplication.context = getApplicationContext();
+
 
     // init IP lookup database
     geoDB = new GEODatabase(this);
