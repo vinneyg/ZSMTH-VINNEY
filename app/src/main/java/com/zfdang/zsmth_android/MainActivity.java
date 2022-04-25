@@ -445,7 +445,7 @@ public class MainActivity extends SMTHBaseActivity
       @Override
       public void onReceiveResult(int resultCode, Bundle resultData) {
         if (resultCode == RESULT_OK) {
-          Log.d(TAG, "Vinney onReceiveResult: " + "to update navigationview" + SMTHApplication.activeUser.toString());
+          Log.d(TAG, "onReceiveResult: " + "to update navigationview" + SMTHApplication.activeUser.toString());
           UpdateNavigationViewHeader();
 
           // show notification if necessary

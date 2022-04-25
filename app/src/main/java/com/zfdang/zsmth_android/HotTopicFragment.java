@@ -167,6 +167,7 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
         try {
           String response = responseBody.string();
           List<Topic> results = SMTHHelper.ParseHotTopicsFromWWW(response);
+          Log.d("Vinney:", Integer.toString(results.size()));
           return Observable.fromIterable(results);
         } catch (Exception e) {
           Log.d(TAG, Log.getStackTraceString(e));
