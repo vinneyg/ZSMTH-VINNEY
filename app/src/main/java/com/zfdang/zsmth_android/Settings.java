@@ -625,6 +625,26 @@ public class Settings {
     }
   }
 
+
+  // use normal login, or with verification
+  private static final String LOGIN_WITH_VERIFICATION = "LOGIN_WITH_VERIFICATION";
+  private boolean bLoginWithVerification;
+
+  public boolean isLoginWithVerification() {
+    return bLoginWithVerification;
+  }
+
+  public void setLoginWithVerification(boolean value) {
+    if (this.bLoginWithVerification != value) {
+      this.bLoginWithVerification = value;
+      mEditor.putBoolean(LOGIN_WITH_VERIFICATION, this.bLoginWithVerification);
+      mEditor.commit();
+    }
+
+  }
+
+
+
   private final String Preference_Name = "ZSMTH_Config";
 
   private SharedPreferences mPreference;
@@ -713,5 +733,6 @@ public class Settings {
     bAtt =mPreference.getBoolean(Target_Att,false);
 
     bLeftNavSlide =mPreference.getBoolean(left_nav_slide,false);
+    bLoginWithVerification = mPreference.getBoolean(LOGIN_WITH_VERIFICATION, true);
   }
 }

@@ -48,9 +48,9 @@
       android:checkableBehavior="single"
       android:id="@+id/drawer_menu_group3">
     <item
-        android:id="@+id/nav_exit"
+        android:id="@+id/nav_night_mode"
         android:icon="@drawable/ic_arrow_downward_36dp"
-        android:title="一键退出"/>
+        android:title="切换配色"/>
     <item
         android:id="@+id/nav_setting"
         android:icon="@drawable/ic_settings_white_48dp"

@@ -34,6 +34,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.customview.widget.ViewDragHelper;
@@ -140,7 +141,7 @@ public class MainActivity extends SMTHBaseActivity
     initCircularActionMenu(fab);
 
     initBottomNavigation();
-    // Add Vinney Switch
+
     // fab.hide()
     //BottomNavigationView mBottomNavigationView = findViewById(R.id.bv_bottomNavigation);
     if (Settings.getInstance().isLaunchBottomNavi()) {
@@ -174,7 +175,7 @@ public class MainActivity extends SMTHBaseActivity
     mToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
     //mDrawer.addDrawerListener(mToggle);
     mToggle.syncState();
-    //Vinney Full Screen Drawer
+    // Full Screen Drawer
 
     int[][] states = new int[][]{
             new int[]{-android.R.attr.state_checked},
@@ -277,8 +278,26 @@ public class MainActivity extends SMTHBaseActivity
     });
   }
 
+  public void setApplicationNightMode() {
+    boolean bNightMode = Settings.getInstance().isNightMode();
+    if (bNightMode) {
+      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+    } else {
+      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+    }
+
+    /*
+    Activity activity = this;
+    if (activity != null) {
+      Intent intent = new Intent(activity.getApplicationContext(), MainActivity.class);
+      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+      startActivity(intent);
+      activity.finish();
+    }
+    */
+  }
   /*
-  //Vinney for test
+  //for test
   private void onVibrator(Context context) {
     Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
     if (vibrator == null) {
@@ -291,7 +310,7 @@ public class MainActivity extends SMTHBaseActivity
    */
 
 
-
+/*
     @SuppressLint("RestrictedApi")
     public  void disableShiftMode(BottomNavigationView view) {
       //获取子View BottomNavigationMenuView的对象
@@ -314,16 +333,16 @@ public class MainActivity extends SMTHBaseActivity
         Log.e("BNVHelper", "无法修改mShiftingMode的值", e);
       }
     }
+*/
 
 
-  //Vinney
   private void initBottomNavigation() {
     BottomNavigationView mBottomNavigationView = findViewById(R.id.bv_bottomNavigation);
 
     mBottomNavigationView.setItemIconTintList(null);
     mBottomNavigationView.setItemTextAppearanceActive(R.style.bottom_selected_text);
     mBottomNavigationView.setItemTextAppearanceInactive(R.style.bottom_normal_text);
-    //Vinney to do
+
     if(!Settings.getInstance().isMenuTextOn())
       mBottomNavigationView.setLabelVisibilityMode(NavigationBarView.LABEL_VISIBILITY_UNLABELED);
 
@@ -678,6 +697,8 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   private void quitNow() {
+    //user logout
+    onLogout();
     // stop background service
     AlarmBroadcastReceiver.unschedule();
 
@@ -825,9 +846,12 @@ public class MainActivity extends SMTHBaseActivity
     } else if (id == R.id.nav_about) {
       fragment = aboutFragment;
       title = "关于";
-    } else if (id == R.id.nav_exit)
+    } else if (id == R.id.nav_night_mode)
     {
-      quitNow();
+      boolean bNightMode = Settings.getInstance().isNightMode();
+      Settings.getInstance().setNightMode(!bNightMode);
+      setApplicationNightMode();
+     //quitNow();
     } else if( id == R.id.nav_read)
     {
      //Toast.makeText(this, "Click boards below",Toast.LENGTH_SHORT);
@@ -1014,7 +1038,7 @@ public class MainActivity extends SMTHBaseActivity
         android.app.AlertDialog noticeDialog = builder.create();
         noticeDialog.show();
       } else if(board.isSection()) {
-        //* +Vinney confirm Folder
+        //* + confirm Folder
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         String title = String.format("将版面二级目录\"%s\"从收藏中删除么？", board.getFolderName());
         builder.setTitle("收藏操作").setMessage(title);
@@ -1025,7 +1049,6 @@ public class MainActivity extends SMTHBaseActivity
             dialog.dismiss();
 
             SMTHHelper helper = SMTHHelper.getInstance();
-            //Log.d(TAG, "Vinney: " + board.getFolderID() + "&&" + board.getFolderName() + "&&" + String.valueOf(Integer.parseInt(board.getFolderID()) - 1));
             Log.d(TAG, favoriteBoardFragment.getCurrentPathInString());
             helper.wService.manageFavoriteBoard("0", "db", board.getSectionID())
                     .subscribeOn(Schedulers.io())
@@ -1081,7 +1104,6 @@ public class MainActivity extends SMTHBaseActivity
               dialog.dismiss();
 
               SMTHHelper helper = SMTHHelper.getInstance();
-              //Log.d(TAG, "Vinney: " + board.getFolderID() + "&&" + board.getFolderName() + "&&" + String.valueOf(Integer.parseInt(board.getFolderID()) - 1));
               Log.d(TAG, favoriteBoardFragment.getCurrentPathInString());
               helper.wService.manageFavoriteBoard("0", "db", board.getFolderID())
                       .subscribeOn(Schedulers.io())
@@ -1126,7 +1148,7 @@ public class MainActivity extends SMTHBaseActivity
           noticeDialog.show();
         }
       }
-      //-Vinney confirm Folder */
+      //- confirm Folder */
   }
 
 

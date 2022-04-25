@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-//import android.support.v7.app.ActionBar;
+
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -53,26 +53,19 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
 
     // these two variables should be loaded from preference
     Settings setting = Settings.getInstance();
-
+    String username = setting.getUsername();
+    String password = setting.getPassword();
     boolean saveinfo = setting.isSaveInfo();
-    mSaveInfo = findViewById(R.id.save_info);
+
+    m_userNameEditText = (EditText) findViewById(R.id.username_edit);
+    m_userNameEditText.setText(username);
+    m_passwordEditText = (EditText) findViewById(R.id.password_edit);
+    m_passwordEditText.setText(password);
+
+    mSaveInfo = (CheckBox) findViewById(R.id.save_info);
     mSaveInfo.setChecked(saveinfo);
 
-    if(saveinfo) {
-      String username = setting.getUsername();
-      String password = setting.getPassword();
-      m_userNameEditText = findViewById(R.id.username_edit);
-      m_userNameEditText.setText(username);
-      m_passwordEditText = findViewById(R.id.password_edit);
-      m_passwordEditText.setText(password);
-    }
-    else
-    {
-      m_userNameEditText = findViewById(R.id.username_edit);
-      m_passwordEditText = findViewById(R.id.password_edit);
-    }
-
-    TextView registerLink = findViewById(R.id.register_link);
+    TextView registerLink = (TextView) findViewById(R.id.register_link);
     registerLink.setMovementMethod(LinkMovementMethod.getInstance());
 
     TextView asmHelpLink = findViewById(R.id.asm_help_link);
@@ -107,26 +100,36 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
         // There was an error; don't attempt login and focus the first
         // form field with an error.
         focusView.requestFocus();
+        Toast.makeText(SMTHApplication.getAppContext(), "请输入用户名/密码！", Toast.LENGTH_SHORT).show();
       } else {
-        // save info if selected
-        boolean saveinfo = mSaveInfo.isChecked();
-        Settings.getInstance().setSaveInfo(saveinfo);
+        // use two methods for login: with verification, or simple login
+        if (Settings.getInstance().isLoginWithVerification()) {
+          // login with verification
+          // save info if selected
+          boolean saveinfo = mSaveInfo.isChecked();
+          Settings.getInstance().setSaveInfo(saveinfo);
 
-        if(saveinfo) {
-          // save
-          Settings.getInstance().setUsername(username);
-          Settings.getInstance().setPassword(password);
+          if (saveinfo) {
+            // save
+            Settings.getInstance().setUsername(username);
+            Settings.getInstance().setPassword(password);
+          } else {
+            // clean existed
+            Settings.getInstance().setUsername("");
+            Settings.getInstance().setPassword("");
+          }
+
+          // continue to login with nforum web
+          Intent intent = new Intent(this, WebviewLoginActivity.class);
+          intent.putExtra(USERNAME, username);
+          intent.putExtra(PASSWORD, password);
+          startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
         } else {
-          // clean existed
-          Settings.getInstance().setUsername("");
-          Settings.getInstance().setPassword("");
+          // simple login
+          Settings.getInstance().setSaveInfo(mSaveInfo.isChecked());
+          Settings.getInstance().setLastLoginSuccess(false);
+          attemptLoginFromWWW(username, password);
         }
-
-        // continue to login with nforum web
-        Intent intent = new Intent(this, WebviewLoginActivity.class);
-        intent.putExtra(USERNAME, username);
-        intent.putExtra(PASSWORD, password);
-        startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
       }
     }
   }
@@ -137,11 +140,10 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
     if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
       Log.d(TAG, "receive login result");
       if (resultCode == RESULT_OK) {
-        Toast.makeText(SMTHApplication.getAppContext(), "登录完成!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
         Intent resultIntent = new Intent();
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
-        // attemptLoginFromWWW(Settings.getInstance().getUsername(), Settings.getInstance().getPassword());
       }
     }
   }
@@ -197,7 +199,7 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
                   case AjaxResponse.AJAX_RESULT_OK:
                     Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
 
-                    // save username & passworld
+                    // save username & password
                     Settings.getInstance().setUsername(username);
                     Settings.getInstance().setPassword(password);
                     Settings.getInstance().setLastLoginSuccess(true);

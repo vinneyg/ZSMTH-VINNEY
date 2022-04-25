@@ -135,7 +135,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     final Observable<List<Board>> network = Observable.create(new ObservableOnSubscribe<List<Board>>() {
       @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
         List<Board> boards = SMTHHelper.LoadAllBoardsFromWWW();
-        if ( boards.size() > 0) {
+        if (boards != null && boards.size() > 0) {
           observableEmitter.onNext(boards);
         } else {
           observableEmitter.onComplete();

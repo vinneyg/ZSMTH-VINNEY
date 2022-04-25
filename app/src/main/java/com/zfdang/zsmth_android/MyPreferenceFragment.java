@@ -57,6 +57,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
   CheckBoxPreference setting_volume_key_scroll;
   ListPreference setting_fontsize_control;
   CheckBoxPreference image_quality_control;
+  CheckBoxPreference login_with_verification;
   CheckBoxPreference image_source_cdn;
 
   CheckBoxPreference notification_control_mail;
@@ -190,6 +191,21 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         return true;
       }
     });
+
+    login_with_verification = (CheckBoxPreference) findPreference("setting_login_with_verification");
+    login_with_verification.setChecked(Settings.getInstance().isLoginWithVerification());
+    login_with_verification.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+      @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
+        boolean value = Settings.getInstance().isLoginWithVerification();
+        if (newValue instanceof Boolean) {
+          value = (Boolean) newValue;
+
+        }
+        Settings.getInstance().setLoginWithVerification(value);
+        return true;
+      }
+    });
+
 
     auto_load_more = (CheckBoxPreference) findPreference("auto_load_more");
     auto_load_more.setChecked(Settings.getInstance().isautoloadmore());

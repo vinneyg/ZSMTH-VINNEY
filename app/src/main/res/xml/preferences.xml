@@ -17,6 +17,12 @@
 
   <PreferenceCategory android:title="程序设置">
     <CheckBoxPreference
+        android:defaultValue="on"
+        android:key="setting_login_with_verification"
+        android:summaryOff="简单登录"
+        android:summaryOn="验证登录"
+        android:title="水木登录方式"/>
+    <CheckBoxPreference
         android:defaultValue="off"
         android:key="left_nav_slide"
         android:summaryOff="左侧边缘右滑出"
