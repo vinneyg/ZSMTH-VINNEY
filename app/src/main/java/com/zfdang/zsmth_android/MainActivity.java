@@ -267,15 +267,16 @@ public class MainActivity extends SMTHBaseActivity
       }, 1000);
     }
 
-
+    /*
     ShakeListener shakeListener = new ShakeListener(this);
     shakeListener.setOnShakeListener(new ShakeListener.OnShakeListener() {
       @Override
       public void onShake() {
         // onVibrator(getApplicationContext());
-        quitNow();
+        //quitNow();
       }
     });
+    */
   }
 
   public void setApplicationNightMode() {
