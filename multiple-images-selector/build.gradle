@@ -22,11 +22,12 @@ android {
     lint {
         abortOnError false
     }
+    namespace 'com.zfdang.multiple_images_selector'
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'junit:junit:4.13.1'
+    implementation 'junit:junit:4.13.2'
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'

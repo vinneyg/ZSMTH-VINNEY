@@ -120,10 +120,12 @@ public class BoardTopicActivity extends SMTHBaseActivity
     super.onBackPressed();
     //mRecyclerView.getAdapter().notifyDataSetChanged();
 
+    /*
     if(SMTHApplication.isValidUser()&&!Settings.getInstance().isUserOnline()) {
       Intent intent = new Intent(BoardTopicActivity.this, LoginActivity.class);
       startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
     }
+    */
   }
 
   private void UpdateNavigationViewHeaderNew() {

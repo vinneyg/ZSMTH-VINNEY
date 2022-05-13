@@ -4,7 +4,13 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/ZSMTH-VINNEY.iml" filepath="$PROJECT_DIR$/.idea/ZSMTH-VINNEY.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ZSMTH-VINNEY.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ZSMTH-VINNEY.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ZSMTH-VINNEY.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ZSMTH-VINNEY.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ZSMTH-VINNEY.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ZSMTH-VINNEY.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ZSMTH-VINNEY.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ZSMTH-VINNEY.app.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/multiple-images-selector/ZSMTH-VINNEY.multiple-images-selector.iml" filepath="$PROJECT_DIR$/.idea/modules/multiple-images-selector/ZSMTH-VINNEY.multiple-images-selector.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/multiple-images-selector/ZSMTH-VINNEY.multiple-images-selector.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/multiple-images-selector/ZSMTH-VINNEY.multiple-images-selector.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/multiple-images-selector/ZSMTH-VINNEY.multiple-images-selector.main.iml" filepath="$PROJECT_DIR$/.idea/modules/multiple-images-selector/ZSMTH-VINNEY.multiple-images-selector.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/multiple-images-selector/ZSMTH-VINNEY.multiple-images-selector.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/multiple-images-selector/ZSMTH-VINNEY.multiple-images-selector.unitTest.iml" />
     </modules>
   </component>
 </project>

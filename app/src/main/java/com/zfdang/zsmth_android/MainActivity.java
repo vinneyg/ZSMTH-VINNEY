@@ -647,6 +647,7 @@ public class MainActivity extends SMTHBaseActivity
       // only user to guest
       mUsername.setText(getString(R.string.nav_header_click_to_login));
       mAvatar.setImageResource(R.drawable.ic_person_black_48dp);
+
     }
   }
 

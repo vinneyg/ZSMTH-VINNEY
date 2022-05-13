@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 import android.webkit.ValueCallback;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import java.net.URL;
 
 // login chains:
 // http://m.mysmth.net/index
@@ -26,11 +29,11 @@ public class WebviewLoginClient extends WebViewClient {
         this.username = username;
         this.password = password;
     }
-
-    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+    @Override
+    public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
 //        Log.d(TAG, "shouldOverrideUrlLoading" + url);
-       if (url.startsWith("https://m.mysmth.net/index?m=")) {
-      //     if (url.startsWith("https://www.mysmth.net/nforum")) {
+        if (request.getUrl().toString().startsWith("https://m.mysmth.net/index?m=")) {
+            //     if (url.startsWith("https://www.mysmth.net/nforum")) {
             Intent resultIntent = new Intent();
             activity.setResult(Activity.RESULT_OK, resultIntent);
             activity.finish();
@@ -39,8 +42,8 @@ public class WebviewLoginClient extends WebViewClient {
     }
 
     @Override
-    public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-        if(url.contains("ads")) {
+    public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+        if(request.getUrl().toString().contains("ads")) {
             return new WebResourceResponse("text/javascript", "UTF-8", null);
         }
         return null;
@@ -58,15 +61,11 @@ public class WebviewLoginClient extends WebViewClient {
                     "passwds[0].value = '" + this.password + "';" +
                      "document.getElementById('TencentCaptcha').click();";
 
-            if (Build.VERSION.SDK_INT >= 19) {
                 view.evaluateJavascript(js, new ValueCallback<String>() {
                     @Override
                     public void onReceiveValue(String s) {
                     }
                 });
-            } else {
-                view.loadUrl(js);
-            }
         }
         super.onPageFinished(view, url);
     }

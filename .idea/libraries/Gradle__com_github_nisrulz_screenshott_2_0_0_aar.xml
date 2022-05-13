@@ -40,6 +40,10 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/cf301d2e8884732ee3e52637aa73b970/transformed/jetified-screenshott-2.0.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cf301d2e8884732ee3e52637aa73b970/transformed/jetified-screenshott-2.0.0/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cf301d2e8884732ee3e52637aa73b970/transformed/jetified-screenshott-2.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c36e2bc77bd541c08b9b2e42a320969f/transformed/jetified-screenshott-2.0.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/2419ba2e88ee0bdc688a45fec11a988d/transformed/jetified-screenshott-2.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/2419ba2e88ee0bdc688a45fec11a988d/transformed/jetified-screenshott-2.0.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/2419ba2e88ee0bdc688a45fec11a988d/transformed/jetified-screenshott-2.0.0/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.nisrulz/screenshott/2.0.0/a573eb4f70265d11d382b7574ddbd244d5cf1810/screenshott-2.0.0-javadoc.jar!/" />

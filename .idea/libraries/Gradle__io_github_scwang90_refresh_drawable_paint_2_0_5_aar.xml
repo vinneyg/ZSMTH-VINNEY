@@ -21,6 +21,10 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/fb713447cca9b4547b0f9a0c35df34b6/transformed/jetified-refresh-drawable-paint-2.0.5/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/fb713447cca9b4547b0f9a0c35df34b6/transformed/jetified-refresh-drawable-paint-2.0.5/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/fb713447cca9b4547b0f9a0c35df34b6/transformed/jetified-refresh-drawable-paint-2.0.5/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cd1a57e9c5a52b7098a0a6b6b2351302/transformed/jetified-refresh-drawable-paint-2.0.5/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3b3303f2becd6a71a0150a7a57b51f07/transformed/jetified-refresh-drawable-paint-2.0.5/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3b3303f2becd6a71a0150a7a57b51f07/transformed/jetified-refresh-drawable-paint-2.0.5/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/3b3303f2becd6a71a0150a7a57b51f07/transformed/jetified-refresh-drawable-paint-2.0.5/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

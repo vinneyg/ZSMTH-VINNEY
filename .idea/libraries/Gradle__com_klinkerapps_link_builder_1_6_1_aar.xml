@@ -25,6 +25,9 @@
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7af9995cb3e632a0a45bcefcb85af4ce/transformed/jetified-link_builder-1.6.1/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7af9995cb3e632a0a45bcefcb85af4ce/transformed/jetified-link_builder-1.6.1/AndroidManifest.xml" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/7af9995cb3e632a0a45bcefcb85af4ce/transformed/jetified-link_builder-1.6.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a2634561ac6182cc53dd897c0b5d06a0/transformed/jetified-link_builder-1.6.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a2634561ac6182cc53dd897c0b5d06a0/transformed/jetified-link_builder-1.6.1/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/a2634561ac6182cc53dd897c0b5d06a0/transformed/jetified-link_builder-1.6.1/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.klinkerapps/link_builder/1.6.1/d6ff7e904277fb8a1f88bcc10aeea852359bfdd8/link_builder-1.6.1-javadoc.jar!/" />

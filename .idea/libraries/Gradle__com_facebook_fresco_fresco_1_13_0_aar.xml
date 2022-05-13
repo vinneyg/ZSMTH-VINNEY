@@ -9,6 +9,7 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/622070dff03c539de4978e541d793574/transformed/jetified-fresco-1.13.0/annotations.zip!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/c41b2273b126dc57d6f9dc5cf7100fe6/transformed/jetified-fresco-1.13.0/annotations.zip!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/fec85f1fd1cfa8a29c093073634494e1/transformed/jetified-fresco-1.13.0/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/96f21b799831cfdb2b3af04dfa7aee0c/transformed/jetified-fresco-1.13.0/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e424ff676bacc2b6a311e2536b314557/jetified-fresco-1.13.0/res" />
@@ -50,6 +51,10 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/fec85f1fd1cfa8a29c093073634494e1/transformed/jetified-fresco-1.13.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/fec85f1fd1cfa8a29c093073634494e1/transformed/jetified-fresco-1.13.0/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/fec85f1fd1cfa8a29c093073634494e1/transformed/jetified-fresco-1.13.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8ae97165443523b37b6958a51834fa98/transformed/jetified-fresco-1.13.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/96f21b799831cfdb2b3af04dfa7aee0c/transformed/jetified-fresco-1.13.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/96f21b799831cfdb2b3af04dfa7aee0c/transformed/jetified-fresco-1.13.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/96f21b799831cfdb2b3af04dfa7aee0c/transformed/jetified-fresco-1.13.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/fresco/1.13.0/7f3f45407c1d3c0b3736c872b1b0aae9bb6b8a27/fresco-1.13.0-javadoc.jar!/" />
