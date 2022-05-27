@@ -102,6 +102,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
       // ideally, we should also check the resultCode
       RefreshBoardTopicFromPageOne();
     }
+    /*
     else if (requestCode == MainActivity.LOGIN_ACTIVITY_REQUEST_CODE) {
       if (resultCode == RESULT_OK) {
 
@@ -110,6 +111,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
         UpdateNavigationViewHeaderNew();
       }
     }
+    */
     super.onActivityResult(requestCode, resultCode, data);
   }
 

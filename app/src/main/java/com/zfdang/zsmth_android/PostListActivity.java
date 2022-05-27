@@ -161,6 +161,7 @@ public class PostListActivity extends SMTHBaseActivity
       // TODO: check resultCode
       reloadPostList();
     }
+    /*
     else if (requestCode == MainActivity.LOGIN_ACTIVITY_REQUEST_CODE) {
       if (resultCode == RESULT_OK) {
         SMTHApplication.activeUser.setId(Settings.getInstance().getUsername());
@@ -168,6 +169,7 @@ public class PostListActivity extends SMTHBaseActivity
         UpdateNavigationViewHeaderNew();
       }
     }
+    */
 
     super.onActivityResult(requestCode, resultCode, data);
   }
@@ -794,7 +796,7 @@ public class PostListActivity extends SMTHBaseActivity
   @Override public void onBackPressed() {
 
     super.onBackPressed();
-
+/*
     if(SMTHApplication.isValidUser()&&!Settings.getInstance().isUserOnline() && !SMTHApplication.deletionPost) {
         if(SMTHApplication.deletionCount < 2) {
           Intent intent = new Intent(PostListActivity.this, LoginActivity.class);
@@ -804,7 +806,9 @@ public class PostListActivity extends SMTHBaseActivity
           BoardTopicActivity.getInstance().RefreshBoardTopicFromPageOne();
         }
 
-    } else if(SMTHApplication.deletionPost)
+    } else
+      */
+      if(SMTHApplication.deletionPost)
     {
 
       if (mRecyclerView.isComputingLayout()) {
