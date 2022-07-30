@@ -19,6 +19,12 @@
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d6abe2e641d6cb487794f1efd29f45c9/transformed/jetified-refresh-layout-kernel-2.0.5/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d6abe2e641d6cb487794f1efd29f45c9/transformed/jetified-refresh-layout-kernel-2.0.5/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/d6abe2e641d6cb487794f1efd29f45c9/transformed/jetified-refresh-layout-kernel-2.0.5/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/5f4f08c01b7569ec4100413e51ce71e6/transformed/jetified-refresh-layout-kernel-2.0.5/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/5f4f08c01b7569ec4100413e51ce71e6/transformed/jetified-refresh-layout-kernel-2.0.5/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/5f4f08c01b7569ec4100413e51ce71e6/transformed/jetified-refresh-layout-kernel-2.0.5/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d6c0c788deccbfb91c6584f729314a46/transformed/jetified-refresh-layout-kernel-2.0.5/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d6c0c788deccbfb91c6584f729314a46/transformed/jetified-refresh-layout-kernel-2.0.5/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/d6c0c788deccbfb91c6584f729314a46/transformed/jetified-refresh-layout-kernel-2.0.5/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

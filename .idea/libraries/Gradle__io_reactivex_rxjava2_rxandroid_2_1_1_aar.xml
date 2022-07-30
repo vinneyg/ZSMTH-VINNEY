@@ -44,6 +44,9 @@
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/15cfff34f4c253a85c793bb931954a02/transformed/jetified-rxandroid-2.1.1/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/15cfff34f4c253a85c793bb931954a02/transformed/jetified-rxandroid-2.1.1/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/15cfff34f4c253a85c793bb931954a02/transformed/jetified-rxandroid-2.1.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3e3f5128ad0e22dddde56b476632c0f9/transformed/jetified-rxandroid-2.1.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3e3f5128ad0e22dddde56b476632c0f9/transformed/jetified-rxandroid-2.1.1/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/3e3f5128ad0e22dddde56b476632c0f9/transformed/jetified-rxandroid-2.1.1/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.reactivex.rxjava2/rxandroid/2.1.1/634c77382eff415441853908e7e1429c786f6320/rxandroid-2.1.1-javadoc.jar!/" />

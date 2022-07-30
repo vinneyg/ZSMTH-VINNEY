@@ -19,6 +19,7 @@ import android.content.pm.PackageManager;
 //import android.content.res.ColorStateList;
 import android.content.res.ColorStateList;
 //import android.graphics.Color;
+import android.graphics.Color;
 import android.graphics.Point;
 
 import android.os.Build;
@@ -56,6 +57,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,6 +71,7 @@ import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.umeng.analytics.MobclickAgent;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
+import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnMailInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
@@ -81,6 +84,7 @@ import com.zfdang.zsmth_android.models.MailListContent;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import com.zfdang.zsmth_android.newsmth.UserInfo;
 import com.zfdang.zsmth_android.services.AlarmBroadcastReceiver;
 
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
@@ -1149,6 +1153,7 @@ public class MainActivity extends SMTHBaseActivity
           AlertDialog noticeDialog = builder.create();
           noticeDialog.show();
         }
+
       }
       //- confirm Folder */
   }
@@ -1188,5 +1193,38 @@ public class MainActivity extends SMTHBaseActivity
     }
   }
 
+  @Override
+  protected void onRestart(){
+    super.onRestart();
+    //Toast.makeText(this,"relogin", Toast.LENGTH_SHORT).show();
+    SMTHHelper helper = SMTHHelper.getInstance();
+    helper.wService.queryUserInformation(SMTHApplication.activeUser.getId())
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Observer<UserInfo>() {
+              @Override public void onSubscribe(@NonNull Disposable disposable) {
+
+              }
+
+              @Override public void onNext(@NonNull UserInfo user) {
+                Log.d(TAG, "onNext: " + user.toString());
+
+                if(!user.is_online())
+                {
+                  //Toast.makeText(MainActivity.this,"Offline", Toast.LENGTH_SHORT).show();
+                  onLogin();
+                }
+              }
+
+              @Override public void onError(@NonNull Throwable e) {
+                Toast.makeText(MainActivity.this, "查询用户信息失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+
+              }
+
+              @Override public void onComplete() {
+
+              }
+            });
+  }
 
 }

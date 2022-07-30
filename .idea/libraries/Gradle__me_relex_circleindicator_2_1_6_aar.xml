@@ -22,6 +22,9 @@
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b22517a4d94594f124c24c68b88af2f4/transformed/jetified-circleindicator-2.1.6/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b22517a4d94594f124c24c68b88af2f4/transformed/jetified-circleindicator-2.1.6/AndroidManifest.xml" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/b22517a4d94594f124c24c68b88af2f4/transformed/jetified-circleindicator-2.1.6/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8796f8569482d207398eea00d957e20e/transformed/jetified-circleindicator-2.1.6/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8796f8569482d207398eea00d957e20e/transformed/jetified-circleindicator-2.1.6/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/8796f8569482d207398eea00d957e20e/transformed/jetified-circleindicator-2.1.6/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/me.relex/circleindicator/2.1.6/d0267b6edbd885d262891e96a01ab29dd9cffd64/circleindicator-2.1.6-javadoc.jar!/" />

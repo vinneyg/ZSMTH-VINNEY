@@ -681,7 +681,8 @@ public class Settings {
     mSignature = mPreference.getString(DEVICE_SIGNATURE, "");
     if (mSignature.length() == 0) {
       //String marketingName = DeviceMarketingName.getInstance(SMTHApplication.getAppContext()).getDeviceMarketingName(false);
-      String marketingName = Build.MODEL;
+      //String marketingName = Build.MODEL;
+      String marketingName = Build.BRAND +" " +Build.MODEL;
       setSignature(marketingName);
     }
 
