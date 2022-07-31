@@ -9,6 +9,10 @@
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7cc4ae22080ede6eaab9ae53037eb851/transformed/jetified-ShareSDK-3.9.9/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7cc4ae22080ede6eaab9ae53037eb851/transformed/jetified-ShareSDK-3.9.9/AndroidManifest.xml" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/7cc4ae22080ede6eaab9ae53037eb851/transformed/jetified-ShareSDK-3.9.9/jars/libs/ShareSDK-3.9.9.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/516a8e4b3517f24fd9c0ad410c825b3b/transformed/jetified-ShareSDK-3.9.9/jars/libs/ShareSDK-3.9.9.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/516a8e4b3517f24fd9c0ad410c825b3b/transformed/jetified-ShareSDK-3.9.9/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/516a8e4b3517f24fd9c0ad410c825b3b/transformed/jetified-ShareSDK-3.9.9/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/516a8e4b3517f24fd9c0ad410c825b3b/transformed/jetified-ShareSDK-3.9.9/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

@@ -51,6 +51,7 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
+//import android.util.Log;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -580,7 +581,6 @@ public class MainActivity extends SMTHBaseActivity
         }
         // force mail fragment to reload
         MailListContent.clear();
-
         fm.beginTransaction().replace(R.id.content_frame, mailListFragment).commitAllowingStateLoss();
         // switch title of mainActivity
         //setTitle(SMTHApplication.App_Title_Prefix + "邮件");
@@ -896,6 +896,9 @@ public class MainActivity extends SMTHBaseActivity
       if (fragment != favoriteBoardFragment) {
         setTitle(SMTHApplication.App_Title_Prefix + title);
       }
+      if(fragment == mailListFragment || fragment == favoriteBoardFragment){
+        onRelogin(); //Check userstatus if not online then relogin.
+      }
     }
 
     mDrawer.closeDrawer(GravityCompat.START);
@@ -1196,6 +1199,10 @@ public class MainActivity extends SMTHBaseActivity
   @Override
   protected void onRestart(){
     super.onRestart();
+    onRelogin();
+  }
+
+  public void onRelogin() {
     //Toast.makeText(this,"relogin", Toast.LENGTH_SHORT).show();
     SMTHHelper helper = SMTHHelper.getInstance();
     helper.wService.queryUserInformation(SMTHApplication.activeUser.getId())
@@ -1211,13 +1218,13 @@ public class MainActivity extends SMTHBaseActivity
 
                 if(!user.is_online())
                 {
-                  //Toast.makeText(MainActivity.this,"Offline", Toast.LENGTH_SHORT).show();
+                  //Toast.makeText(getApplicationContext,"Offline", Toast.LENGTH_SHORT).show();
                   onLogin();
                 }
               }
 
               @Override public void onError(@NonNull Throwable e) {
-                Toast.makeText(MainActivity.this, "查询用户信息失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "查询用户信息失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
 
               }
 
@@ -1226,5 +1233,6 @@ public class MainActivity extends SMTHBaseActivity
               }
             });
   }
+
 
 }

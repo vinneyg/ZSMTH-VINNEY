@@ -27,8 +27,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="ZSMTH-VINNEY.app.main" scope="TEST" />
     <orderEntry type="module" module-name="ZSMTH-VINNEY.multiple-images-selector.main" scope="TEST" />
-    <orderEntry type="library" scope="TEST" name="Gradle: com.mob:MobGUIULT:2022.0617.1428" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: com.mob:MobSupportV1:2022.0617.1428" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.mob:MobGUIULT:2022.0725.2109" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.mob:MobSupportV1:2022.0725.2109" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: cn.sharesdk:ShareSDK-SinaWeiboX:3.9.9" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: cn.sharesdk:ShareSDK-Facebook:3.9.9" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: cn.sharesdk:ShareSDK-Twitter:3.9.9" level="project" />
@@ -63,7 +63,7 @@
     <orderEntry type="library" scope="TEST" name="Gradle: org.ow2.asm:asm:5.0.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.esotericsoftware:minlog:1.3.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.objenesis:objenesis:2.5.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: com.mob:MobCoreULT:2022.0617.1428@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.mob:MobCoreULT:2022.0725.2109@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: cn.sharesdk:ShareSDK:3.9.9@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: cn.sharesdk:ShareSDK-SinaWeiboX-Core:3.9.9@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: cn.sharesdk:OneKeyShare:3.9.9@aar" level="project" />

@@ -61,6 +61,9 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/c17476d947fc6aa665a61dac1a998c37/transformed/jetified-PersistentCookieJar-1.0.1/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c17476d947fc6aa665a61dac1a998c37/transformed/jetified-PersistentCookieJar-1.0.1/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c17476d947fc6aa665a61dac1a998c37/transformed/jetified-PersistentCookieJar-1.0.1/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/f0bbc50e63a5a442104ec1c9c1edc764/transformed/jetified-PersistentCookieJar-1.0.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f0bbc50e63a5a442104ec1c9c1edc764/transformed/jetified-PersistentCookieJar-1.0.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f0bbc50e63a5a442104ec1c9c1edc764/transformed/jetified-PersistentCookieJar-1.0.1/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.franmontiel/PersistentCookieJar/1.0.1/2fdefab99aaedb86b342ff816d423493afc0679e/PersistentCookieJar-1.0.1-javadoc.jar!/" />

@@ -34,6 +34,9 @@
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/0aacbc68873bb141bb26cb4fb9ca0f91/transformed/jetified-aboutlibraries-6.1.1/AndroidManifest.xml" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/0aacbc68873bb141bb26cb4fb9ca0f91/transformed/jetified-aboutlibraries-6.1.1/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/0aacbc68873bb141bb26cb4fb9ca0f91/transformed/jetified-aboutlibraries-6.1.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/57fc60990e3c93b5de966883e04c6253/transformed/jetified-aboutlibraries-6.1.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/57fc60990e3c93b5de966883e04c6253/transformed/jetified-aboutlibraries-6.1.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/57fc60990e3c93b5de966883e04c6253/transformed/jetified-aboutlibraries-6.1.1/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mikepenz/aboutlibraries/6.1.1/53f906b5adac59a92f06dcf373e47e3284367b2/aboutlibraries-6.1.1-javadoc.jar!/" />
