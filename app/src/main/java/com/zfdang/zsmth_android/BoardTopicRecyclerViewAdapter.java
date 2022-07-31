@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,9 +54,10 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
       holder.mAuthorReplierRow.setVisibility(View.VISIBLE);
       holder.mStatusRow.setVisibility(View.VISIBLE);
 
-      holder.mTitle.setText(topic.getTitle());
+
       if (Settings.getInstance().isDiffReadTopic()) {
         if ((!SMTHApplication.ReadTopicLists.isEmpty()) && SMTHApplication.ReadTopicLists.contains(holder.mTopic.getTitle())) {
+          //Log.d("VinneyY","read topics");
           if (Settings.getInstance().isNightMode()) {
             holder.mTitle.setTextColor(Color.GRAY);
             holder.mAuthor.setTextColor(Color.GRAY);
@@ -74,7 +76,7 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
         }
       }
       //
-
+      holder.mTitle.setText(topic.getTitle());
       holder.mAuthor.setText(topic.getAuthor());
       holder.mReplier.setText(topic.getReplier());
       holder.mPublishDate.setText(topic.getPublishDate());
@@ -104,6 +106,7 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
           mListener.onTopicFragmentInteraction(holder.mTopic);
             //Vinney
             if (Settings.getInstance().isDiffReadTopic()) {
+              //Log.d("VinneyX+", Integer.toString(SMTHApplication.ReadTopicLists.size()));
               SMTHApplication.ReadTopicLists.add(holder.mTopic.getTitle());
               if (Settings.getInstance().isNightMode()) {
                 holder.mTitle.setTextColor(Color.GRAY);
@@ -160,7 +163,6 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
       mStatusSummary = (TextView) view.findViewById(R.id.topic_status_summary);
       mAttach = (ImageView) view.findViewById(R.id.topic_status_attach);
       mPinned = (ImageView) view.findViewById(R.id.topic_status_pinned);
-
       mAuthorReplierRow = (RelativeLayout) view.findViewById(R.id.topic_author_replier_row);
       mStatusRow = (RelativeLayout) view.findViewById(R.id.topic_status_row);
     }

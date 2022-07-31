@@ -83,7 +83,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
   private boolean isSearchMode = false;
 
-  private static final int MAXSIZE = 50;
+  private static final int MAXSIZE = 100;
   private static Hashtable MapHash = new Hashtable(MAXSIZE);
 
   @Override protected void onDestroy() {

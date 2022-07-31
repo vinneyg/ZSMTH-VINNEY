@@ -896,8 +896,9 @@ public class MainActivity extends SMTHBaseActivity
       if (fragment != favoriteBoardFragment) {
         setTitle(SMTHApplication.App_Title_Prefix + title);
       }
-      if(fragment == mailListFragment || fragment == favoriteBoardFragment){
-        onRelogin(); //Check userstatus if not online then relogin.
+
+      if (SMTHApplication.isValidUser()) {
+          onRelogin(); //Check userstatus if not online then relogin}
       }
     }
 
@@ -1215,11 +1216,11 @@ public class MainActivity extends SMTHBaseActivity
 
               @Override public void onNext(@NonNull UserInfo user) {
                 Log.d(TAG, "onNext: " + user.toString());
-
-                if(!user.is_online())
-                {
-                  //Toast.makeText(getApplicationContext,"Offline", Toast.LENGTH_SHORT).show();
-                  onLogin();
+                if(user != null) {
+                  if (!user.is_online()) {
+                    //Toast.makeText(getApplicationContext,"Offline", Toast.LENGTH_SHORT).show();
+                    onLogin();
+                  }
                 }
               }
 
