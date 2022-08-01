@@ -1200,7 +1200,9 @@ public class MainActivity extends SMTHBaseActivity
   @Override
   protected void onRestart(){
     super.onRestart();
-    onRelogin();
+    if(SMTHApplication.isValidUser()) {
+      onRelogin();
+    }
   }
 
   public void onRelogin() {

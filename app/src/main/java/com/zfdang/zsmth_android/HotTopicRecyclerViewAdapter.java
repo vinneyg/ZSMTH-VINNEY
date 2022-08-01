@@ -5,6 +5,7 @@ import android.graphics.Color;
 import androidx.recyclerview.widget.RecyclerView;
 
 //import android.util.Log;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,7 @@ public class HotTopicRecyclerViewAdapter extends RecyclerView.Adapter<HotTopicRe
     return new ViewHolder(view);
   }
 
-  @SuppressLint("ResourceAsColor")
+  @SuppressLint({"ResourceAsColor", "ResourceType"})
   @Override public void onBindViewHolder(final ViewHolder holder, int position) {
     holder.mItem = mValues.get(position);
 
@@ -67,8 +68,22 @@ public class HotTopicRecyclerViewAdapter extends RecyclerView.Adapter<HotTopicRe
             holder.mReplyCount.setTextColor(R.color.colorSecondaryText);
           }
         }
+        else
+        {
+          //First byte 0xFF ...... means transparent mode.
+          if (Settings.getInstance().isNightMode()) {
+           holder.mTopicTitle.setTextColor(0xFFABC2DA); //R.color.status_text_night
+            holder.mBoardName.setTextColor(0xFF607D8B); //R.color.colorPrimary
+            holder.mReplyCount.setTextColor(0xFF607D8B);//R.color.colorPrimary
+          }
+          else
+          {
+            holder.mTopicTitle.setTextColor(0xFF000000); //R.color.status_text_night
+            holder.mBoardName.setTextColor(0xFF607D8B);  //R.color.colorPrimary
+            holder.mReplyCount.setTextColor(0xFF607D8B); //R.color.colorPrimary
+          }
+        }
       }
-      //
     }
 
     holder.mView.setOnClickListener(new View.OnClickListener() {

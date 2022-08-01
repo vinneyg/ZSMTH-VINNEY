@@ -74,6 +74,26 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
             holder.mStatusSummary.setTextColor(R.color.colorSecondaryText);
           }
         }
+        else
+        {
+          //First byte 0xFF ...... means transparent mode.
+          if (Settings.getInstance().isNightMode()) {
+            holder.mTitle.setTextColor(0xFFABC2DA); //R.color.status_text_night
+            holder.mAuthor.setTextColor(0xFF607D8B);//R.color.colorPrimary
+            holder.mReplier.setTextColor(0xFF607D8B);
+            holder.mReplyDate.setTextColor(0xFF607D8B);
+            holder.mPublishDate.setTextColor(0xFF607D8B);
+            holder.mStatusSummary.setTextColor(0xFF607D8B);
+          }
+          else{
+            holder.mTitle.setTextColor(0xFF000000); //R.color.status_text_night
+            holder.mAuthor.setTextColor(0xFF607D8B);//R.color.colorPrimary
+            holder.mReplier.setTextColor(0xFF607D8B);
+            holder.mReplyDate.setTextColor(0xFF607D8B);
+            holder.mPublishDate.setTextColor(0xFF607D8B);
+            holder.mStatusSummary.setTextColor(0xFF607D8B);
+          }
+        }
       }
       //
       holder.mTitle.setText(topic.getTitle());
