@@ -72,15 +72,16 @@ public class HotTopicRecyclerViewAdapter extends RecyclerView.Adapter<HotTopicRe
         {
           //First byte 0xFF ...... means transparent mode.
           if (Settings.getInstance().isNightMode()) {
-           holder.mTopicTitle.setTextColor(0xFFABC2DA); //R.color.status_text_night
-            holder.mBoardName.setTextColor(0xFF607D8B); //R.color.colorPrimary
-            holder.mReplyCount.setTextColor(0xFF607D8B);//R.color.colorPrimary
+           //holder.mTopicTitle.setTextColor(0xFFABC2DA);
+            holder.mTopicTitle.setTextColor(Color.parseColor("#ABC2DA")); //R.color.status_text_night
+            holder.mBoardName.setTextColor(Color.parseColor("#607D8B")); //R.color.colorPrimary
+            holder.mReplyCount.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
           }
           else
           {
-            holder.mTopicTitle.setTextColor(0xFF000000); //R.color.status_text_night
-            holder.mBoardName.setTextColor(0xFF607D8B);  //R.color.colorPrimary
-            holder.mReplyCount.setTextColor(0xFF607D8B); //R.color.colorPrimary
+            holder.mTopicTitle.setTextColor(Color.parseColor("#000000")); //R.color.status_text_night
+            holder.mBoardName.setTextColor(Color.parseColor("#607D8B")); //R.color.colorPrimary
+            holder.mReplyCount.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
           }
         }
       }
