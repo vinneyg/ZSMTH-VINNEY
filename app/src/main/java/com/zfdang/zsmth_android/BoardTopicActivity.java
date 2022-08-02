@@ -1,5 +1,7 @@
 package com.zfdang.zsmth_android;
 
+import static com.zfdang.zsmth_android.LoginActivity.LOGIN_ACTIVITY_REQUEST_CODE;
+
 import android.content.Intent;
 
 import android.os.Bundle;
@@ -460,14 +462,17 @@ public class BoardTopicActivity extends SMTHBaseActivity
               //Toast.makeText(SMTHApplication.getAppContext(),"请重新登录！",Toast.LENGTH_SHORT).show();
               TopicListContent.clearBoardTopics();
              // SMTHApplication.activeUser = null;
+
               try {
-                Thread.sleep(1500);
+                Thread.sleep(500);
                 Settings.getInstance().setUserOnline(false); //User Offline
                 onBackPressed();
               } catch (InterruptedException e) {
                 e.printStackTrace();
               }
 
+              Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+              startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
             }
           }
         });

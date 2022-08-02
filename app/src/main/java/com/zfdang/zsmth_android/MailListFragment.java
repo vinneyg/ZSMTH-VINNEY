@@ -132,6 +132,8 @@ public class MailListFragment extends androidx.fragment.app.Fragment implements 
 
     if (MailListContent.MAILS.size() == 0) {
       LoadMailsFromBeginning();
+      if(SMTHApplication.isValidUser())
+        ( (MainActivity)getActivity()).onRelogin();
     }
 
     // highlight the current folder
@@ -533,4 +535,5 @@ public class MailListFragment extends androidx.fragment.app.Fragment implements 
     }
     return true;
   }
+
 }

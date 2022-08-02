@@ -387,21 +387,24 @@ public class Post {
       // handle quoted content
       if (line.contains("的大作中提到:")) {
         // line = "<font color=#00b4ae>" + line + "</font>";
-        line = "<font color=#808080>" + line + "</font>";
+        //line = "<font color=#808080>" + line + "</font>";
+        line = "<font color=#607D8B>" + line + "</font>";
         sb.append(line).append("<br />");
         continue;
       }
       // handle quoted content
       if (line.contains("的来信中提到:")) {
         // line = "<font color=#00b4ae>" + line + "</font>";
-        line = "<font color=#808080>" + line + "</font>";
+        //line = "<font color=#808080>" + line + "</font>";
+        line = "<font color=#607D8B>" + line + "</font>";
         sb.append(line).append("<br />");
         continue;
       }
       // handle quoted content
       if (line.startsWith(":")) {
        // line = "<font color=#00b4ae>" + line + "</font>";
-        line = "<font color=#808080>" + line + "</font>";
+       // line = "<font color=#808080>" + line + "</font>";
+        line = "<font color=#607D8B>" + line + "</font>";
         sb.append(line).append("<br />");
         continue;
       }
@@ -425,7 +428,8 @@ public class Post {
       if (i == signatureStartLine) {
         // entering signature mode
         signatureMode = 1;
-        line = "<font color=#808080>" + line + "</font>";
+        //line = "<font color=#808080>" + line + "</font>";
+        line = "<font color=#607D8B>" + line + "</font>";
         sb.append(line).append("<br />");
         continue;
       }
@@ -453,21 +457,24 @@ public class Post {
                 .replace("mysmth.net", "")
                 .replace("m.mysmth.net", "");
 
-        line = "<font color=#808080>" + StringUtils.lookupIPLocation(line) + "</font>";
+        //line = "<font color=#808080>" + StringUtils.lookupIPLocation(line) + "</font>";
+        line = "<font color=#607D8B>" + StringUtils.lookupIPLocation(line) + "</font>";
         sb.append(line).append("<br />");
         continue;
       } else if (line.contains("※ 修改:·")) {
         // jump out of signature mode
         signatureMode = 0;
         line = line.replace("·", "").replace("修改本文", "");
-        line = "<font color=#808080>" + StringUtils.lookupIPLocation(line) + "</font>";
+        //line = "<font color=#808080>" + StringUtils.lookupIPLocation(line) + "</font>";
+        line = "<font color=#607D8B>" + StringUtils.lookupIPLocation(line) + "</font>";
         sb.append(line).append("<br />");
         continue;
       }
 
       // after handle last part of post content, if it's still in signature mode, add signature
       if (signatureMode == 1) {
-        line = "<small><font color=#808080>" + line + "</font></small>";
+        //line = "<small><font color=#808080>" + line + "</font></small>";
+        line = "<small><font color=#607D8B>" + line + "</font></small>";
         sb.append(line).append("<br />");
         continue;
       }

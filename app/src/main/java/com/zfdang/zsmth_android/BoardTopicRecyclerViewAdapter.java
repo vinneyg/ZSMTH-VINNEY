@@ -58,6 +58,14 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
       if (Settings.getInstance().isDiffReadTopic()) {
         if ((!SMTHApplication.ReadTopicLists.isEmpty()) && SMTHApplication.ReadTopicLists.contains(holder.mTopic.getTitle())) {
           //Log.d("VinneyY","read topics");
+
+          holder.mTitle.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
+          holder.mAuthor.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
+          holder.mReplier.setTextColor(Color.parseColor("#607D8B"));
+          holder.mReplyDate.setTextColor(Color.parseColor("#607D8B"));
+          holder.mPublishDate.setTextColor(Color.parseColor("#607D8B"));
+          holder.mStatusSummary.setTextColor(Color.parseColor("#607D8B"));
+          /*
           if (Settings.getInstance().isNightMode()) {
             holder.mTitle.setTextColor(Color.GRAY);
             holder.mAuthor.setTextColor(Color.GRAY);
@@ -65,14 +73,28 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
             holder.mReplyDate.setTextColor(Color.GRAY);
             holder.mPublishDate.setTextColor(Color.GRAY);
             holder.mStatusSummary.setTextColor(Color.GRAY);
+            holder.mTitle.setTextColor(Color.parseColor("#607D8B"));//R.color.status_text_night
+            holder.mAuthor.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
+            holder.mReplier.setTextColor(Color.parseColor("#607D8B"));
+            holder.mReplyDate.setTextColor(Color.parseColor("#607D8B"));
+            holder.mPublishDate.setTextColor(Color.parseColor("#607D8B"));
+            holder.mStatusSummary.setTextColor(Color.parseColor("#607D8B"));
           } else {
+
             holder.mTitle.setTextColor(R.color.colorSecondaryText);
             holder.mAuthor.setTextColor(R.color.colorSecondaryText);
             holder.mReplier.setTextColor(R.color.colorSecondaryText);
             holder.mReplyDate.setTextColor(R.color.colorSecondaryText);
             holder.mPublishDate.setTextColor(R.color.colorSecondaryText);
             holder.mStatusSummary.setTextColor(R.color.colorSecondaryText);
-          }
+            holder.mTitle.setTextColor(Color.parseColor("#000000")); //R.color.status_text_night
+            holder.mAuthor.setTextColor(Color.parseColor("#000000"));//R.color.colorPrimary
+            holder.mReplier.setTextColor(Color.parseColor("#000000"));
+            holder.mReplyDate.setTextColor(Color.parseColor("#000000"));
+            holder.mPublishDate.setTextColor(Color.parseColor("#000000"));
+            holder.mStatusSummary.setTextColor(Color.parseColor("#000000"));
+         }
+         */
         }
         else
         {
@@ -128,6 +150,14 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
             if (Settings.getInstance().isDiffReadTopic()) {
               //Log.d("VinneyX+", Integer.toString(SMTHApplication.ReadTopicLists.size()));
               SMTHApplication.ReadTopicLists.add(holder.mTopic.getTitle());
+              holder.mTitle.setTextColor(Color.parseColor("#607D8B"));//R.color.status_text_night
+              holder.mAuthor.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
+              holder.mReplier.setTextColor(Color.parseColor("#607D8B"));
+              holder.mReplyDate.setTextColor(Color.parseColor("#607D8B"));
+              holder.mPublishDate.setTextColor(Color.parseColor("#607D8B"));
+              holder.mStatusSummary.setTextColor(Color.parseColor("#607D8B"));
+
+              /*
               if (Settings.getInstance().isNightMode()) {
                 holder.mTitle.setTextColor(Color.GRAY);
                 holder.mAuthor.setTextColor(Color.GRAY);
@@ -135,6 +165,14 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
                 holder.mReplyDate.setTextColor(Color.GRAY);
                 holder.mPublishDate.setTextColor(Color.GRAY);
                 holder.mStatusSummary.setTextColor(Color.GRAY);
+
+                holder.mTitle.setTextColor(Color.parseColor("#607D8B"));//R.color.status_text_night
+                holder.mAuthor.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
+                holder.mReplier.setTextColor(Color.parseColor("#607D8B"));
+                holder.mReplyDate.setTextColor(Color.parseColor("#607D8B"));
+                holder.mPublishDate.setTextColor(Color.parseColor("#607D8B"));
+                holder.mStatusSummary.setTextColor(Color.parseColor("#607D8B"));
+
               } else {
                 holder.mTitle.setTextColor(R.color.colorSecondaryText);
                 holder.mAuthor.setTextColor(R.color.colorSecondaryText);
@@ -142,7 +180,21 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
                 holder.mReplyDate.setTextColor(R.color.colorSecondaryText);
                 holder.mPublishDate.setTextColor(R.color.colorSecondaryText);
                 holder.mStatusSummary.setTextColor(R.color.colorSecondaryText);
+                holder.mTitle.setTextColor(Color.parseColor("#607D8B"));//R.color.status_text_night
+                holder.mAuthor.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
+                holder.mReplier.setTextColor(Color.parseColor("#607D8B"));
+                holder.mReplyDate.setTextColor(Color.parseColor("#607D8B"));
+                holder.mPublishDate.setTextColor(Color.parseColor("#607D8B"));
+                holder.mStatusSummary.setTextColor(Color.parseColor("#607D8B"));
+                holder.mTitle.setTextColor(Color.parseColor("#000000")); //R.color.status_text_night
+                holder.mAuthor.setTextColor(Color.parseColor("#000000"));//R.color.colorPrimary
+                holder.mReplier.setTextColor(Color.parseColor("#000000"));
+                holder.mReplyDate.setTextColor(Color.parseColor("#000000"));
+                holder.mPublishDate.setTextColor(Color.parseColor("#000000"));
+
               }
+
+               */
 
             }
           }
