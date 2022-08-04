@@ -53,8 +53,8 @@
   <string name="post_reply_mail">回信给作者</string>
   <string name="post_query_author">查询作者信息</string>
   <string name="post_copy_content">复制帖子内容</string>
-  <string name="post_foward">文章转寄/转帖...</string>
-  <string name="post_view_in_browser">在浏览器里打开</string>
+  <string name="post_foward">文章转寄/转帖</string>
+  <string name="post_view_in_browser">浏览器里打开</string>
   <string name="post_delete_post">删除文章</string>
   <string name="post_share">分享</string>
 
@@ -66,7 +66,7 @@
   <!--boardTopic的option menu-->
   <string name="board_topic_action_search">搜索</string>
   <string name="board_topic_action_favorite">收藏版面</string>
-  <string name="board_topic_action_sticky">显示/隐藏置顶</string>
+  <string name="board_topic_action_sticky">开/关置顶</string>
   <string name="board_topic_action_refresh">刷新</string>
 
   <!--postlist的option menu-->

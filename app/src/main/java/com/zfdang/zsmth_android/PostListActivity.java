@@ -161,43 +161,10 @@ public class PostListActivity extends SMTHBaseActivity
       // TODO: check resultCode
       reloadPostList();
     }
-    /*
-    else if (requestCode == MainActivity.LOGIN_ACTIVITY_REQUEST_CODE) {
-      if (resultCode == RESULT_OK) {
-        SMTHApplication.activeUser.setId(Settings.getInstance().getUsername());
-        Settings.getInstance().setUserOnline(true);
-        UpdateNavigationViewHeaderNew();
-      }
-    }
-    */
 
     super.onActivityResult(requestCode, resultCode, data);
   }
 
-  private void UpdateNavigationViewHeaderNew() {
-    getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
-    LayoutInflater factory = LayoutInflater.from(PostListActivity.this);
-
-    //View layout = factory.inflate(R.layout.activity_main, null);
-    View layout = factory.inflate(R.layout.nav_header_main, null);
-
-    TextView mUsername = (TextView) layout.findViewById(R.id.nav_user_name);
-    WrapContentDraweeView mAvatar = (WrapContentDraweeView) layout.findViewById(R.id.nav_user_avatar);
-
-    if (SMTHApplication.isValidUser()) {
-      // update user to login user
-      mUsername.setText(SMTHApplication.activeUser.getId());
-      String faceURL = SMTHApplication.activeUser.getFace_url();
-      if (faceURL != null) {
-        mAvatar.setImageFromStringURL(faceURL);
-      }
-    } else {
-      // only user to guest
-      mUsername.setText(getString(R.string.nav_header_click_to_login));
-      mAvatar.setImageResource(R.drawable.ic_person_black_48dp);
-    }
-
-  }
 
   /**
    * Record current View
@@ -248,16 +215,6 @@ public class PostListActivity extends SMTHBaseActivity
     mRefreshLayout.setEnableAutoLoadMore(false);
     mRefreshLayout.setEnableScrollContentWhenLoaded(false);
     mRefreshLayout.setEnableOverScrollBounce(false);
-
-    /*
-    if(!Settings.getInstance().isautoloadmore()) {
-      mRefreshLayout.setEnableRefresh(true);
-      mRefreshLayout.setEnableLoadMore(true);
-    } else {
-      mRefreshLayout.setEnableRefresh(true);
-      mRefreshLayout.setEnableLoadMore(true);
-    }
-     */
 
     mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
       @Override public void onRefresh(RefreshLayout refreshLayout) {
@@ -665,12 +622,14 @@ public class PostListActivity extends SMTHBaseActivity
                 //Toast.makeText(SMTHApplication.getAppContext(),"请重新登录-"+ PostListContent.POSTS.size()+"-!",Toast.LENGTH_SHORT).show();
                 PostListContent.clear();
                 try {
-                  Thread.sleep(1000);
+                  Thread.sleep(500);
                   Settings.getInstance().setUserOnline(false); //User Offline
                   onBackPressed();
                 } catch (InterruptedException e) {
                   e.printStackTrace();
                 }
+              Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+              startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
             }
           }
         });
@@ -744,12 +703,14 @@ public class PostListActivity extends SMTHBaseActivity
                   PostListContent.clear();
 
                   try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                     Settings.getInstance().setUserOnline(false); //User Offline
                     onBackPressed();
                   } catch (InterruptedException e) {
                     e.printStackTrace();
                   }
+                  Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                  startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
                 }
               }
             });
@@ -831,7 +792,7 @@ public class PostListActivity extends SMTHBaseActivity
     // page navigation buttons
     switch (v.getId()) {
       case R.id.post_list_first_page:
-        if(Settings.getInstance().isautoloadmore()) {
+        if(!Settings.getInstance().isautoloadmore()) {
           if (mCurrentPageNo == 1) {
             Toast.makeText(PostListActivity.this, "已在首页！", Toast.LENGTH_SHORT).show();
           } else {
@@ -846,7 +807,7 @@ public class PostListActivity extends SMTHBaseActivity
         }
         break;
       case R.id.post_list_pre_page:
-        if(Settings.getInstance().isautoloadmore()) {
+        if(!Settings.getInstance().isautoloadmore()) {
           if (mCurrentPageNo == 1) {
             Toast.makeText(PostListActivity.this, "已在首页！", Toast.LENGTH_SHORT).show();
           } else {
@@ -867,7 +828,7 @@ public class PostListActivity extends SMTHBaseActivity
         goToNextPage();
         break;
       case R.id.post_list_last_page:
-        if(Settings.getInstance().isautoloadmore()) {
+        if(!Settings.getInstance().isautoloadmore()) {
           //Change by Vinney
           if (mCurrentPageNo == mTopic.getTotalPageNo() || mCurrentReadPageNo == mTotalPageNo) {
             Toast.makeText(PostListActivity.this, "已在末页！", Toast.LENGTH_SHORT).show();
@@ -885,7 +846,7 @@ public class PostListActivity extends SMTHBaseActivity
       case R.id.post_list_go_page:
         int pageNo;
         pageNo = Integer.parseInt(mPageNo.getText().toString());
-        if(Settings.getInstance().isautoloadmore()) {
+        if(!Settings.getInstance().isautoloadmore()) {
           try {
             if (mCurrentPageNo == pageNo) {
               Toast.makeText(PostListActivity.this, String.format(Locale.CHINA,"已在第%d页！", pageNo), Toast.LENGTH_SHORT).show();
@@ -947,7 +908,7 @@ public class PostListActivity extends SMTHBaseActivity
   }
 
   public void goToNextPage() {
-    if(Settings.getInstance().isautoloadmore()) {
+    if(!Settings.getInstance().isautoloadmore()) {
       if (mCurrentPageNo == mTopic.getTotalPageNo()) {
         Toast.makeText(PostListActivity.this, "已在末页！", Toast.LENGTH_SHORT).show();
         clearLoadingHints();
