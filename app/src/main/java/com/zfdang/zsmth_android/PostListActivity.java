@@ -638,73 +638,90 @@ public class PostListActivity extends SMTHBaseActivity
   public void loadPostListByPagesNew() {
     final SMTHHelper helper = SMTHHelper.getInstance();
 
-    helper.wService.getPostListByPage(mTopic.getTopicURL(), mTopic.getTopicID(), mCurrentPageNo, mFilterUser)
-            .flatMap(new Function<ResponseBody, Observable<Post>>() {
-              @Override public Observable<Post> apply(@NonNull ResponseBody responseBody) throws Exception {
+    helper
+        .wService
+        .getPostListByPage(mTopic.getTopicURL(), mTopic.getTopicID(), mCurrentPageNo, mFilterUser)
+        .flatMap(
+            new Function<ResponseBody, Observable<Post>>() {
+              @Override
+              public Observable<Post> apply(@NonNull ResponseBody responseBody) throws Exception {
                 try {
                   String response = responseBody.string();
                   List<Post> posts = SMTHHelper.ParsePostListFromWWW(response, mTopic);
-                  if(posts.size()==0) {
-                    return Observable.empty(); //handle error case
+                  if (posts.size() == 0) {
+                    return Observable.empty(); // handle error case
                   }
-                  if(!SMTHApplication.ReadRec) {
+                  if (!SMTHApplication.ReadRec) {
                     SMTHApplication.ReadPostFirst = posts.get(0);
-                    SMTHApplication.ReadRec=true;
+                    SMTHApplication.ReadRec = true;
                   }
                   return Observable.fromIterable(posts);
                 } catch (Exception e) {
-                  SMTHApplication.ReadRec=false;
-                  SMTHApplication.ReadPostFirst=null;
+                  SMTHApplication.ReadRec = false;
+                  SMTHApplication.ReadPostFirst = null;
                   Log.e(TAG, Log.getStackTraceString(e));
                 }
                 return null;
               }
             })
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Observer<Post>() {
-              @Override public void onSubscribe(@NonNull Disposable disposable) {
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(
+            new Observer<Post>() {
+              @Override
+              public void onSubscribe(@NonNull Disposable disposable) {}
 
+              @Override
+              public void onNext(@NonNull Post post) {
+                  String temp = post.getPosition();
+                  int Index;
+                  if (temp.equals("楼主")) {
+                    Index = 0;
+                  } else {
+                    String newTemp = temp.replaceAll("第", "");
+                    temp = newTemp.replaceAll("楼", "");
+                    Index = Integer.parseInt(temp);
+                  }
+                  Index = Index % POST_PER_PAGE;
+                  // PostListContent.addItem(Index,post);
+                  PostListContent.InsertItem(Index, post);
+                  mRecyclerView.getAdapter().notifyItemInserted(Index);
               }
 
-              @Override public void onNext(@NonNull Post post) {
-                String temp = post.getPosition();
-                int Index ;
-                if (temp.equals("楼主")) {
-                  Index = 0;
-                } else {
-                  String newTemp = temp.replaceAll("第", "");
-                  temp = newTemp.replaceAll("楼", "");
-                  Index = Integer.parseInt(temp);
-                }
-                Index = Index % POST_PER_PAGE;
-                //PostListContent.addItem(Index,post);
-                PostListContent.InsertItem(Index,post);
-                mRecyclerView.getAdapter().notifyItemInserted(Index);
-              }
-
-              @Override public void onError(@NonNull Throwable e) {
+              @Override
+              public void onError(@NonNull Throwable e) {
                 clearLoadingHints();
-                Toast.makeText(SMTHApplication.getAppContext(), "加载失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(
+                        SMTHApplication.getAppContext(),
+                        "加载失败！\n" + e.toString(),
+                        Toast.LENGTH_SHORT)
+                    .show();
               }
 
-              @Override public void onComplete() {
+              @Override
+              public void onComplete() {
                 mTotalPageNo = mTopic.getTotalPageNo();
-                String title = String.format(Locale.CHINA,"[%d/%d] %s", mCurrentPageNo, mTopic.getTotalPageNo(), mTopic.getTitle());
+                String title =
+                    String.format(
+                        Locale.CHINA,
+                        "[%d/%d] %s",
+                        mCurrentPageNo,
+                        mTopic.getTotalPageNo(),
+                        mTopic.getTitle());
                 mTitle.setText(title);
-                mPageNo.setText(String.format(Locale.CHINA,"%d", mCurrentPageNo));
+                mPageNo.setText(String.format(Locale.CHINA, "%d", mCurrentPageNo));
                 mCurrentReadPageNo = mCurrentPageNo;
                 clearLoadingHints();
 
-                //Special User OFFLINE case: [] or [Category 第一页:]
-                if(PostListContent.POSTS.size() == 0)
-                {
-                  //Toast.makeText(SMTHApplication.getAppContext(),"请重新登录-"+ PostListContent.POSTS.size()+"-!",Toast.LENGTH_SHORT).show();
+                // Special User OFFLINE case: [] or [Category 第一页:]
+                if (PostListContent.POSTS.size() == 0) {
+                  // Toast.makeText(SMTHApplication.getAppContext(),"请重新登录-"+
+                  // PostListContent.POSTS.size()+"-!",Toast.LENGTH_SHORT).show();
                   PostListContent.clear();
 
                   try {
                     Thread.sleep(500);
-                    Settings.getInstance().setUserOnline(false); //User Offline
+                    Settings.getInstance().setUserOnline(false); // User Offline
                     onBackPressed();
                   } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -757,33 +774,6 @@ public class PostListActivity extends SMTHBaseActivity
   @Override public void onBackPressed() {
 
     super.onBackPressed();
-/*
-    if(SMTHApplication.isValidUser()&&!Settings.getInstance().isUserOnline() && !SMTHApplication.deletionPost) {
-        if(SMTHApplication.deletionCount < 2) {
-          Intent intent = new Intent(PostListActivity.this, LoginActivity.class);
-          startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
-        }else {
-          SMTHApplication.deletionCount = 0;
-          BoardTopicActivity.getInstance().RefreshBoardTopicFromPageOne();
-        }
-
-    } else
-      */
-      if(SMTHApplication.deletionPost)
-    {
-
-      if (mRecyclerView.isComputingLayout()) {
-        mRecyclerView.post(new Runnable() {
-          @Override
-          public void run() {
-            reloadPostList();
-          }
-        });
-      } else {
-        reloadPostList();
-      }
-      SMTHApplication.deletionPost = false;
-    }
 
   }
 
@@ -1197,8 +1187,8 @@ public class PostListActivity extends SMTHBaseActivity
       sharePost(post);
     } else if (which == 9) {
       // delete post
-      SMTHApplication.deletionPost = true;
       deletePost(post);
+
     } else if (which == 10) {
       // edit post
       ComposePostContext postContext = new ComposePostContext();
@@ -1300,7 +1290,7 @@ public class PostListActivity extends SMTHBaseActivity
       }
 
       @Override public void onNext(@NonNull String s) {
-          Toast.makeText(PostListActivity.this, s, Toast.LENGTH_SHORT).show();
+      //    Toast.makeText(PostListActivity.this, s, Toast.LENGTH_SHORT).show();
       }
 
       @Override public void onError(@NonNull Throwable e) {
@@ -1312,7 +1302,11 @@ public class PostListActivity extends SMTHBaseActivity
         //Vinney：修改删除回复后导致页面减少显示不正常。删除后，退回board再进入文章显示第一页
           mCurrentPageNo = 1;
           mCurrentReadPageNo = 1;
-          reloadPostListWithoutAlert();
+          mRecyclerView.getAdapter().notifyDataSetChanged();
+          //onBackPressed();
+          PostListActivity.this.finish();
+          Toast.makeText(PostListActivity.this, "请刷新版面!", Toast.LENGTH_SHORT).show();
+        //reloadPostListWithoutAlert();
       }
     });
   }
@@ -1408,7 +1402,7 @@ public class PostListActivity extends SMTHBaseActivity
           @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
             // Log.d(TAG, "onNext: " + ajaxResponse.toString());
             if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-              Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+              //Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
               reloadPostList();
             } else {
               Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
@@ -1449,7 +1443,7 @@ public class PostListActivity extends SMTHBaseActivity
           @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
             // Log.d(TAG, "onNext: " + ajaxResponse.toString());
             if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-              Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
             } else {
               Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
             }
@@ -1485,7 +1479,7 @@ public class PostListActivity extends SMTHBaseActivity
       }
 
       @Override public void onNext(@NonNull String s) {
-        Toast.makeText(SMTHApplication.getAppContext(), s, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(SMTHApplication.getAppContext(), s, Toast.LENGTH_SHORT).show();
       }
 
       @Override public void onError(@NonNull Throwable e) {

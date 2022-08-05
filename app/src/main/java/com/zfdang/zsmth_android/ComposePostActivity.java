@@ -358,7 +358,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
     // publish post
     String postContent = mContent.getText().toString();
     if (Settings.getInstance().bUseSignature()) {
-      postContent += "\n" + String.format(Locale.CHINA,"#发自zSMTH-v-@%s", Settings.getInstance().getSignature());
+      postContent += "\n\n" + String.format(Locale.CHINA,"#发自zSMTH-v-@%s", Settings.getInstance().getSignature());
       //postContent += "\n" + String.format(Locale.CHINA,"#发自zSMTH-v-@%s", Build.BRAND+"-"+Settings.getInstance().getSignature());
     }
     Observable<AjaxResponse> resp2 = null;
@@ -374,7 +374,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
     } else if (mPostContext.getComposingMode() == ComposePostContext.MODE_EDIT_POST) {
       postContent = mContent.getText().toString();
       if (Settings.getInstance().bUseSignature()) {
-        postContent += "\n" + String.format(Locale.CHINA,"#修改自zSMTH@%s", Settings.getInstance().getSignature());
+        postContent += "\n" + String.format(Locale.CHINA,"#修改自zSMTH-v@%s", Settings.getInstance().getSignature());
       }
       resp2 = SMTHHelper.editPost(mPostContext.getBoardEngName(), mPostContext.getPostId(), mTitle.getText().toString(), postContent);
     }
@@ -422,7 +422,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
                 // otherwise, compose the message by ourself
                 message = "成功!";
               }
-              Toast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT).show();
+
 
               KeyboardLess.$hide(ComposePostActivity.this, mContent);
 
@@ -431,6 +431,11 @@ public class ComposePostActivity extends SMTHBaseActivity {
                 clearPostContentCache();
                 ComposePostActivity.this.finish();
               }
+              else
+              {
+                Toast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT).show();
+              }
+
             }
 
           }

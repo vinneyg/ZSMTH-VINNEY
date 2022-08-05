@@ -180,7 +180,7 @@ public class MailListFragment extends androidx.fragment.app.Fragment implements 
                     MailListContent.MAILS.remove(viewHolder.getAdapterPosition());
                     recyclerView.getAdapter().notifyItemRemoved(viewHolder.getAdapterPosition());
                   }
-                  Toast.makeText(getActivity(), ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                 // Toast.makeText(getActivity(), ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override public void onError(@NonNull Throwable e) {
