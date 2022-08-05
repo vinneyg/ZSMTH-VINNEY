@@ -277,7 +277,9 @@ public class Post {
 
     if (attachFiles == null || attachFiles.size() == 0) {
       // no attachment, add all content as one segment
-      mSegments.add(new ContentSegment(ContentSegment.SEGMENT_TEXT, htmlContentAndLikes));
+      if (!htmlContentAndLikes.equals( "<br />") ) {
+        mSegments.add(new ContentSegment(ContentSegment.SEGMENT_TEXT, htmlContentAndLikes));
+      }
     } else {
       // when there are attachments here, separate them one by one
       String[] segments = htmlContentAndLikes.split(ATTACHMENT_MARK);

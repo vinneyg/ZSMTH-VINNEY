@@ -599,8 +599,10 @@ public class PostListActivity extends SMTHBaseActivity
 
           @Override public void onNext(@NonNull Post post) {
             // Log.d(TAG, post.toString());
+            if(post.getContentSegments().size() != 0 ){
             PostListContent.addItem(post);
             mRecyclerView.getAdapter().notifyItemInserted(PostListContent.POSTS.size() - 1);
+            }
           }
 
           @Override public void onError(@NonNull Throwable e) {
