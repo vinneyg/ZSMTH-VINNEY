@@ -10,6 +10,8 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.zfdang.SMTHApplication;
+
 import java.net.URL;
 
 // login chains:
@@ -22,6 +24,8 @@ public class WebviewLoginClient extends WebViewClient {
     private String username;
     private String password;
 
+    private  String SMTH_WWW_URL = SMTHApplication.getWebAddress();
+
     Activity activity;
 
     public WebviewLoginClient(Activity activity, String username, String password) {
@@ -32,7 +36,8 @@ public class WebviewLoginClient extends WebViewClient {
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
 //        Log.d(TAG, "shouldOverrideUrlLoading" + url);
-        if (request.getUrl().toString().startsWith("https://www.newsmth.net/")) {
+        if (request.getUrl().toString().startsWith(SMTH_WWW_URL)) {
+        //if (request.getUrl().toString().startsWith("https://www.newsmth.net")) {
         //if (request.getUrl().toString().startsWith("https://www.newsmth.net/nforum")) {
             //     if (url.startsWith("https://www.mysmth.net/nforum")) {
             Intent resultIntent = new Intent();

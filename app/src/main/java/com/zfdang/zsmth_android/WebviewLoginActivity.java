@@ -1,18 +1,26 @@
 package com.zfdang.zsmth_android;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+
+import com.zfdang.SMTHApplication;
 
 public class WebviewLoginActivity extends SMTHBaseActivity {
 
     private WebView mWebView;
     //private String url = "https://www.newsmth.net/";
  //   private String url = "https://m.mysmth.net/index";
-    private String url = "https://m.newsmth.net/index";
+    //private String url = "https://m.newsmth.net/index";
+
+
+    private final String SMTH_WWW_URL = SMTHApplication.getWebAddress();
+
     private String username;
     private String password;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +61,12 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
             }
         });
         mWebView.setWebViewClient(new WebviewLoginClient(this, username, password));
+
+        String url = SMTH_WWW_URL;
+        if(SMTH_WWW_URL.contains("newsmth"))
+            url= "https://m.newsmth.net/index";
+        else if(SMTH_WWW_URL.contains("mysmth"))
+            url= "https://m.mysmth.net/index";
         mWebView.loadUrl(url);
     }
 }
