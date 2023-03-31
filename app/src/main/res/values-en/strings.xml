@@ -26,7 +26,7 @@
   <string name="login_label_password">密码</string>
   <string name="login_label_signin">登录</string>
   <string name="login_label_saveinfo">保存账号密码</string>
-  <string name="login_register_link">没有帐号？  <a href="https://www.mysmth.net/nForum/#!reg">注册</a></string>
+  <string name="login_register_link">没有帐号？  <a href="https://www.newsmth.net/nForum/#!reg">注册</a></string>
   <string name="login_asm_help">zSMTH  <a href="https://github.com/vinneyg/zSMTH-VINNEY">使用说明</a></string>
 
   <!-- 导读页 -->

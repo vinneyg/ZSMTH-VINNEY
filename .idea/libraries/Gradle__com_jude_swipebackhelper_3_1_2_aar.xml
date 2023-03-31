@@ -1,24 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.jude:swipebackhelper:3.1.2@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/f9660efd471d1436ca0bac5ee6ff7068/transformed/jetified-swipebackhelper-3.1.2/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f9660efd471d1436ca0bac5ee6ff7068/transformed/jetified-swipebackhelper-3.1.2/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f9660efd471d1436ca0bac5ee6ff7068/transformed/jetified-swipebackhelper-3.1.2/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/07febfad8dda26d085e55018124d6f5f/transformed/jetified-swipebackhelper-3.1.2/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/07febfad8dda26d085e55018124d6f5f/transformed/jetified-swipebackhelper-3.1.2/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/07febfad8dda26d085e55018124d6f5f/transformed/jetified-swipebackhelper-3.1.2/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/e43286310fea061e51d6b73f687fb514/transformed/jetified-swipebackhelper-3.1.2/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e43286310fea061e51d6b73f687fb514/transformed/jetified-swipebackhelper-3.1.2/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e43286310fea061e51d6b73f687fb514/transformed/jetified-swipebackhelper-3.1.2/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3620e576610439dfb07831fa0c4832f1/transformed/jetified-swipebackhelper-3.1.2/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/3620e576610439dfb07831fa0c4832f1/transformed/jetified-swipebackhelper-3.1.2/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3620e576610439dfb07831fa0c4832f1/transformed/jetified-swipebackhelper-3.1.2/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ddcd9daa5cf0cdb0c392e80711614eb9/transformed/jetified-swipebackhelper-3.1.2/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ddcd9daa5cf0cdb0c392e80711614eb9/transformed/jetified-swipebackhelper-3.1.2/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/ddcd9daa5cf0cdb0c392e80711614eb9/transformed/jetified-swipebackhelper-3.1.2/jars/classes.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/2f6beab45b542fb7bd2760de5c345298/transformed/jetified-swipebackhelper-3.1.2/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/2f6beab45b542fb7bd2760de5c345298/transformed/jetified-swipebackhelper-3.1.2/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/2f6beab45b542fb7bd2760de5c345298/transformed/jetified-swipebackhelper-3.1.2/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/f390160486cff7bd0271eeedc18cb502/transformed/jetified-swipebackhelper-3.1.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f390160486cff7bd0271eeedc18cb502/transformed/jetified-swipebackhelper-3.1.2/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f390160486cff7bd0271eeedc18cb502/transformed/jetified-swipebackhelper-3.1.2/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jude/swipebackhelper/3.1.2/3762e45c201fbb2a38b3bf18c27c483202483c3c/swipebackhelper-3.1.2-javadoc.jar!/" />

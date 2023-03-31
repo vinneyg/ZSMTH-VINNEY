@@ -1,33 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: io.github.scwang90:refresh-footer-classics:2.0.5@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/bf33f74f0c0df4eafeb33c825f3baf98/transformed/jetified-refresh-footer-classics-2.0.5/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/bf33f74f0c0df4eafeb33c825f3baf98/transformed/jetified-refresh-footer-classics-2.0.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/bf33f74f0c0df4eafeb33c825f3baf98/transformed/jetified-refresh-footer-classics-2.0.5/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/0a98c64761ea186a74bfa2fa80737303/transformed/jetified-refresh-footer-classics-2.0.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/0a98c64761ea186a74bfa2fa80737303/transformed/jetified-refresh-footer-classics-2.0.5/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/0a98c64761ea186a74bfa2fa80737303/transformed/jetified-refresh-footer-classics-2.0.5/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/dccf83c29a772f5af7fb97d1c1bbd6f7/transformed/jetified-refresh-footer-classics-2.0.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/dccf83c29a772f5af7fb97d1c1bbd6f7/transformed/jetified-refresh-footer-classics-2.0.5/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/dccf83c29a772f5af7fb97d1c1bbd6f7/transformed/jetified-refresh-footer-classics-2.0.5/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/e5005e7a62f3c88de4986af2205c1cd7/transformed/jetified-refresh-footer-classics-2.0.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e5005e7a62f3c88de4986af2205c1cd7/transformed/jetified-refresh-footer-classics-2.0.5/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e5005e7a62f3c88de4986af2205c1cd7/transformed/jetified-refresh-footer-classics-2.0.5/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4dc763369a71579dd48eff01be7c088b/transformed/jetified-refresh-footer-classics-2.0.5/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/4dc763369a71579dd48eff01be7c088b/transformed/jetified-refresh-footer-classics-2.0.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4dc763369a71579dd48eff01be7c088b/transformed/jetified-refresh-footer-classics-2.0.5/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8d04cc4bb7277ba17737792628c9aeb6/transformed/jetified-refresh-footer-classics-2.0.5/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/8d04cc4bb7277ba17737792628c9aeb6/transformed/jetified-refresh-footer-classics-2.0.5/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/8d04cc4bb7277ba17737792628c9aeb6/transformed/jetified-refresh-footer-classics-2.0.5/jars/classes.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/35459f77799fd29883305b136c279aa5/transformed/jetified-refresh-footer-classics-2.0.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/35459f77799fd29883305b136c279aa5/transformed/jetified-refresh-footer-classics-2.0.5/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/35459f77799fd29883305b136c279aa5/transformed/jetified-refresh-footer-classics-2.0.5/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4ba792dce9c9c754dcb2fe9a6bbbc202/transformed/jetified-refresh-footer-classics-2.0.5/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/4ba792dce9c9c754dcb2fe9a6bbbc202/transformed/jetified-refresh-footer-classics-2.0.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4ba792dce9c9c754dcb2fe9a6bbbc202/transformed/jetified-refresh-footer-classics-2.0.5/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e7ea89512b610a7f14ec217a21b29e9b/transformed/jetified-refresh-footer-classics-2.0.5/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/e7ea89512b610a7f14ec217a21b29e9b/transformed/jetified-refresh-footer-classics-2.0.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e7ea89512b610a7f14ec217a21b29e9b/transformed/jetified-refresh-footer-classics-2.0.5/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/990d72d1f41645f37eea9bdd8ef220d5/transformed/jetified-refresh-footer-classics-2.0.5/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/990d72d1f41645f37eea9bdd8ef220d5/transformed/jetified-refresh-footer-classics-2.0.5/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/990d72d1f41645f37eea9bdd8ef220d5/transformed/jetified-refresh-footer-classics-2.0.5/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

@@ -161,7 +161,7 @@ public class MainActivity extends SMTHBaseActivity
     if(Settings.getInstance().isLeftNavSlide())
       setDrawerLeftEdgeSize(this, mDrawer, (float) 1);//To support Mail Deletion
     else
-      setDrawerLeftEdgeSize(this, mDrawer, (float) 0.15);
+      setDrawerLeftEdgeSize(this, mDrawer, (float) 0.3);
 
     mDrawer.addDrawerListener(new ActionBarDrawerToggle(this, mDrawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
       @Override
@@ -1222,6 +1222,7 @@ public class MainActivity extends SMTHBaseActivity
                   if (!user.is_online()) {
                     //Toast.makeText(getApplicationContext,"Offline", Toast.LENGTH_SHORT).show();
                     onLogin();
+                    Log.d(TAG, "Vinney - 101: ");
                   }
                 }
               }

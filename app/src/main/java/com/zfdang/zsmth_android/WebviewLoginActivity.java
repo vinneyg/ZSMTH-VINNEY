@@ -8,9 +8,9 @@ import android.webkit.WebView;
 public class WebviewLoginActivity extends SMTHBaseActivity {
 
     private WebView mWebView;
- //   private String url = "https://www.newsmth.net/";
-    private String url = "https://m.mysmth.net/index";
-
+    //private String url = "https://www.newsmth.net/";
+ //   private String url = "https://m.mysmth.net/index";
+    private String url = "https://m.newsmth.net/index";
     private String username;
     private String password;
 

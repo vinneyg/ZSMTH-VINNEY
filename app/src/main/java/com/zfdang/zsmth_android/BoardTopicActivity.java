@@ -459,6 +459,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
             //Special User OFFLINE case: [] or [Category 第一页:]
             if(TopicListContent.BOARD_TOPICS.toString().length() == 2 || TopicListContent.BOARD_TOPICS.toString().length() == 15)
             {
+              Log.d(TAG, "Vinney-100 + " + TopicListContent.BOARD_TOPICS.toString());
               //Toast.makeText(SMTHApplication.getAppContext(),"请重新登录！",Toast.LENGTH_SHORT).show();
               TopicListContent.clearBoardTopics();
              // SMTHApplication.activeUser = null;

@@ -1,30 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.gzu-liyujiang.AndroidPicker:WheelView:4.1.5@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4172cb4917a95ae4e797a8df7656560a/transformed/jetified-WheelView-4.1.5/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/4172cb4917a95ae4e797a8df7656560a/transformed/jetified-WheelView-4.1.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4172cb4917a95ae4e797a8df7656560a/transformed/jetified-WheelView-4.1.5/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/edb5f3fe612c8eb39fd6085ff13643df/transformed/jetified-WheelView-4.1.5/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/edb5f3fe612c8eb39fd6085ff13643df/transformed/jetified-WheelView-4.1.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/edb5f3fe612c8eb39fd6085ff13643df/transformed/jetified-WheelView-4.1.5/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1e1f4dbf5c16e078506a41e3f7177048/transformed/jetified-WheelView-4.1.5/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1e1f4dbf5c16e078506a41e3f7177048/transformed/jetified-WheelView-4.1.5/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/1e1f4dbf5c16e078506a41e3f7177048/transformed/jetified-WheelView-4.1.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/374e58aa1fa8ab7a12d049550b626c3f/transformed/jetified-WheelView-4.1.5/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/374e58aa1fa8ab7a12d049550b626c3f/transformed/jetified-WheelView-4.1.5/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/374e58aa1fa8ab7a12d049550b626c3f/transformed/jetified-WheelView-4.1.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/9dbb683c4d83cd3fbabd2d8705ad390d/transformed/jetified-WheelView-4.1.5/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/9dbb683c4d83cd3fbabd2d8705ad390d/transformed/jetified-WheelView-4.1.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/9dbb683c4d83cd3fbabd2d8705ad390d/transformed/jetified-WheelView-4.1.5/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/a441199ad46a8c3a977f9ef93c13ed31/transformed/jetified-WheelView-4.1.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a441199ad46a8c3a977f9ef93c13ed31/transformed/jetified-WheelView-4.1.5/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a441199ad46a8c3a977f9ef93c13ed31/transformed/jetified-WheelView-4.1.5/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ba693b5b769df42b71904de5d43e88e2/transformed/jetified-WheelView-4.1.5/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/ba693b5b769df42b71904de5d43e88e2/transformed/jetified-WheelView-4.1.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ba693b5b769df42b71904de5d43e88e2/transformed/jetified-WheelView-4.1.5/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/b62cd7246c21ac4f32aa8a95e827325a/transformed/jetified-WheelView-4.1.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b62cd7246c21ac4f32aa8a95e827325a/transformed/jetified-WheelView-4.1.5/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b62cd7246c21ac4f32aa8a95e827325a/transformed/jetified-WheelView-4.1.5/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/86c3bb6fd44221b56d2f2f1206a8c795/transformed/jetified-WheelView-4.1.5/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/86c3bb6fd44221b56d2f2f1206a8c795/transformed/jetified-WheelView-4.1.5/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/86c3bb6fd44221b56d2f2f1206a8c795/transformed/jetified-WheelView-4.1.5/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

@@ -32,7 +32,8 @@ public class WebviewLoginClient extends WebViewClient {
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
 //        Log.d(TAG, "shouldOverrideUrlLoading" + url);
-        if (request.getUrl().toString().startsWith("https://m.mysmth.net/index?m=")) {
+        if (request.getUrl().toString().startsWith("https://www.newsmth.net/")) {
+        //if (request.getUrl().toString().startsWith("https://www.newsmth.net/nforum")) {
             //     if (url.startsWith("https://www.mysmth.net/nforum")) {
             Intent resultIntent = new Intent();
             activity.setResult(Activity.RESULT_OK, resultIntent);
@@ -51,7 +52,7 @@ public class WebviewLoginClient extends WebViewClient {
 
     public void onPageFinished(WebView view, String url) {
 //        Log.d(TAG, "onPageFinished" + url);
-        if (url.equals("https://m.mysmth.net/index")) {
+        if (url.equals("https://m.newsmth.net/index")) {
         //    if (url.equals("https://www.mysmth.net")) {
             // login page, input id and passwd automatically
             final String js = "javascript: " +

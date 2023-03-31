@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: cn.sharesdk:ShareSDK-SinaWeiboX-Core:3.10.6@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/ca4165ef66a34d660e305581270ae792/transformed/jetified-ShareSDK-SinaWeiboX-Core-3.10.6/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ca4165ef66a34d660e305581270ae792/transformed/jetified-ShareSDK-SinaWeiboX-Core-3.10.6/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ca4165ef66a34d660e305581270ae792/transformed/jetified-ShareSDK-SinaWeiboX-Core-3.10.6/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

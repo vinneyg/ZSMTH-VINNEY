@@ -688,7 +688,7 @@ public class Settings {
 
     mWebAddr = mPreference.getString(WEB_ADDR, "");
     if (mWebAddr.length() == 0) {
-      String webAddr = "https://www.mysmth.net";
+      String webAddr = "https://www.newsmth.net";
       setWebAddr(webAddr);
     }
 

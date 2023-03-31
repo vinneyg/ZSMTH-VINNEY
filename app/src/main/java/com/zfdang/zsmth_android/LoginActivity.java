@@ -138,7 +138,7 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
     super.onActivityResult(requestCode, resultCode, data);
     Log.d(TAG, "receive login result" + requestCode);
     if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
-      Log.d(TAG, "receive login result");
+      Log.d(TAG, "receive login result"+ resultCode);
       if (resultCode == RESULT_OK) {
         //Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
         Intent resultIntent = new Intent();

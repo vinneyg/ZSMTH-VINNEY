@@ -1,42 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: xyz.danoz:recyclerviewfastscroller:0.1.3@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6dbd19f3fae6240a45a1a3140287d1fa/jetified-recyclerviewfastscroller-0.1.3/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6dbd19f3fae6240a45a1a3140287d1fa/jetified-recyclerviewfastscroller-0.1.3/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6dbd19f3fae6240a45a1a3140287d1fa/jetified-recyclerviewfastscroller-0.1.3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/953416b89780c012e174df418f3b1ade/jetified-recyclerviewfastscroller-0.1.3/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/953416b89780c012e174df418f3b1ade/jetified-recyclerviewfastscroller-0.1.3/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/953416b89780c012e174df418f3b1ade/jetified-recyclerviewfastscroller-0.1.3/jars/classes.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/3f8773ae3eaec1a24b84d836552b6b55/transformed/jetified-recyclerviewfastscroller-0.1.3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3f8773ae3eaec1a24b84d836552b6b55/transformed/jetified-recyclerviewfastscroller-0.1.3/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3f8773ae3eaec1a24b84d836552b6b55/transformed/jetified-recyclerviewfastscroller-0.1.3/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/d761d1e4f70f8f997853d6d7aec8c3ab/transformed/jetified-recyclerviewfastscroller-0.1.3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d761d1e4f70f8f997853d6d7aec8c3ab/transformed/jetified-recyclerviewfastscroller-0.1.3/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d761d1e4f70f8f997853d6d7aec8c3ab/transformed/jetified-recyclerviewfastscroller-0.1.3/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f6fb350e137289a3f474fcdfe2dc043d/transformed/jetified-recyclerviewfastscroller-0.1.3/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/f6fb350e137289a3f474fcdfe2dc043d/transformed/jetified-recyclerviewfastscroller-0.1.3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f6fb350e137289a3f474fcdfe2dc043d/transformed/jetified-recyclerviewfastscroller-0.1.3/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7d770f81f793e6e1e8569bcf5ac7d0db/transformed/jetified-recyclerviewfastscroller-0.1.3/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/7d770f81f793e6e1e8569bcf5ac7d0db/transformed/jetified-recyclerviewfastscroller-0.1.3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7d770f81f793e6e1e8569bcf5ac7d0db/transformed/jetified-recyclerviewfastscroller-0.1.3/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/ed9fe2d9aaa04b73c5d1c106e6a615ef/transformed/jetified-recyclerviewfastscroller-0.1.3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ed9fe2d9aaa04b73c5d1c106e6a615ef/transformed/jetified-recyclerviewfastscroller-0.1.3/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ed9fe2d9aaa04b73c5d1c106e6a615ef/transformed/jetified-recyclerviewfastscroller-0.1.3/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/4dc112c425966b52ee74ae4cb8b8727d/transformed/jetified-recyclerviewfastscroller-0.1.3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4dc112c425966b52ee74ae4cb8b8727d/transformed/jetified-recyclerviewfastscroller-0.1.3/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4dc112c425966b52ee74ae4cb8b8727d/transformed/jetified-recyclerviewfastscroller-0.1.3/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d71e765faf684b124d011fd800db723a/transformed/jetified-recyclerviewfastscroller-0.1.3/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/d71e765faf684b124d011fd800db723a/transformed/jetified-recyclerviewfastscroller-0.1.3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d71e765faf684b124d011fd800db723a/transformed/jetified-recyclerviewfastscroller-0.1.3/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/fa6c2f430d810e91f0d98d9619cd91e2/transformed/jetified-recyclerviewfastscroller-0.1.3/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/fa6c2f430d810e91f0d98d9619cd91e2/transformed/jetified-recyclerviewfastscroller-0.1.3/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/fa6c2f430d810e91f0d98d9619cd91e2/transformed/jetified-recyclerviewfastscroller-0.1.3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/692be5de9f4557c5a85509b3fa4bdadf/transformed/jetified-recyclerviewfastscroller-0.1.3/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/692be5de9f4557c5a85509b3fa4bdadf/transformed/jetified-recyclerviewfastscroller-0.1.3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/692be5de9f4557c5a85509b3fa4bdadf/transformed/jetified-recyclerviewfastscroller-0.1.3/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/5a4b4603bccacdd19b836c2367304827/transformed/jetified-recyclerviewfastscroller-0.1.3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/5a4b4603bccacdd19b836c2367304827/transformed/jetified-recyclerviewfastscroller-0.1.3/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/5a4b4603bccacdd19b836c2367304827/transformed/jetified-recyclerviewfastscroller-0.1.3/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1b9a48fa7398e0c8cbbfbfeddb0f047a/transformed/jetified-recyclerviewfastscroller-0.1.3/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/1b9a48fa7398e0c8cbbfbfeddb0f047a/transformed/jetified-recyclerviewfastscroller-0.1.3/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1b9a48fa7398e0c8cbbfbfeddb0f047a/transformed/jetified-recyclerviewfastscroller-0.1.3/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/xyz.danoz/recyclerviewfastscroller/0.1.3/d4e4267cad50bf98bf6259218d9e7717f418d7c9/recyclerviewfastscroller-0.1.3-javadoc.jar!/" />
