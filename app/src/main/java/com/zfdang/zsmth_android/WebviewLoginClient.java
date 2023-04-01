@@ -57,7 +57,7 @@ public class WebviewLoginClient extends WebViewClient {
 
     public void onPageFinished(WebView view, String url) {
 //        Log.d(TAG, "onPageFinished" + url);
-        if (url.equals("https://m.newsmth.net/index")) {
+        if (url.equals("https://m.newsmth.net/index")||url.equals("https://m.mysmth.net/index")) {
         //    if (url.equals("https://www.mysmth.net")) {
             // login page, input id and passwd automatically
             final String js = "javascript: " +
@@ -65,7 +65,7 @@ public class WebviewLoginClient extends WebViewClient {
                     "ids[0].value = '" + this.username + "';" +
                     "var passwds = document.getElementsByName('passwd');" +
                     "passwds[0].value = '" + this.password + "';" +
-                     "document.getElementById('TencentCaptcha').click();";
+                    "document.getElementById('TencentCaptcha').click();";
 
                 view.evaluateJavascript(js, new ValueCallback<String>() {
                     @Override
