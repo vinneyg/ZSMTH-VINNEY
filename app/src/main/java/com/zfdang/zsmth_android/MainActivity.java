@@ -1,13 +1,6 @@
 package com.zfdang.zsmth_android;
 
-
-import android.annotation.SuppressLint;
-//import android.app.ActionBar;
 import android.app.Activity;
-
-import android.app.AlertDialog;
-//import android.app.Fragment;
-//import android.app.FragmentManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -16,10 +9,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-//import android.content.res.ColorStateList;
+
 import android.content.res.ColorStateList;
-//import android.graphics.Color;
-import android.graphics.Color;
+
 import android.graphics.Point;
 
 import android.os.Build;
@@ -27,79 +19,78 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 
-import com.google.android.material.bottomnavigation.BottomNavigationItemView;
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationBarView;
-import com.google.android.material.navigation.NavigationView;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.customview.widget.ViewDragHelper;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-//import androidx.preference.CheckBoxPreference;
-//import androidx.appcompat.app.ActionBar;
-//import androidx.preference.PreferenceFragment;
-
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
-//import android.util.Log;
+
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-//import android.widget.Toolbar;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.customview.widget.ViewDragHelper;
+
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+//import androidx.preference.CheckBoxPreference;
+//import androidx.preference.PreferenceFragment;
+
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.navigation.NavigationView;
 import com.mikepenz.aboutlibraries.LibsBuilder;
-//import com.mikepenz.aboutlibraries.ui.LibsSupportFragment;
+
 import com.mob.MobSDK;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.umeng.analytics.MobclickAgent;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
-import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnMailInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
-import com.zfdang.zsmth_android.listeners.ShakeListener;
+
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.MailListContent;
-//import com.zfdang.zsmth_android.models.PostListContent;
+
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserInfo;
-import com.zfdang.zsmth_android.services.AlarmBroadcastReceiver;
+
+import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
 
 import java.lang.reflect.Field;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-
-import static com.google.android.material.bottomnavigation.LabelVisibilityMode.LABEL_VISIBILITY_UNLABELED;
-
 
 public class MainActivity extends SMTHBaseActivity
     implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, OnTopicFragmentInteractionListener,
@@ -130,8 +121,7 @@ public class MainActivity extends SMTHBaseActivity
 
   private static final int notificationID = 273;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
+  @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -193,7 +183,7 @@ public class MainActivity extends SMTHBaseActivity
     ColorStateList csl = new ColorStateList(states, colors);
 
 
-    mNavigationView = findViewById(R.id.nav_view);
+    mNavigationView = (NavigationView) findViewById(R.id.nav_view);
     mNavigationView.setNavigationItemSelectedListener(this);
     mNavigationView.setItemTextColor(csl);
     mNavigationView.setItemIconTintList(csl);
@@ -201,18 +191,19 @@ public class MainActivity extends SMTHBaseActivity
 
     // http://stackoverflow.com/questions/33161345/android-support-v23-1-0-update-breaks-navigationview-get-find-header
     View headerView = mNavigationView.getHeaderView(0);
-    mAvatar = headerView.findViewById(R.id.nav_user_avatar);
+    mAvatar = (WrapContentDraweeView) headerView.findViewById(R.id.nav_user_avatar);
     mAvatar.setOnClickListener(this);
 
-    mUsername =  headerView.findViewById(R.id.nav_user_name);
+    mUsername = (TextView) headerView.findViewById(R.id.nav_user_name);
     mUsername.setOnClickListener(this);
 
     // http://stackoverflow.com/questions/27097126/marquee-title-in-toolbar-actionbar-in-android-with-lollipop-sdk
-    TextView titleTextView ;
+    TextView titleTextView;
     try {
       Field f = toolbar.getClass().getDeclaredField("mTitleTextView");
       f.setAccessible(true);
       titleTextView = (TextView) f.get(toolbar);
+      assert titleTextView != null;
       titleTextView.setEllipsize(TextUtils.TruncateAt.START);
     } catch (NoSuchFieldException e) {
     } catch (IllegalAccessException e) {
@@ -255,7 +246,15 @@ public class MainActivity extends SMTHBaseActivity
     setupUserStatusReceiver();
 
     // schedule the periodical background service
-    AlarmBroadcastReceiver.schedule(getApplicationContext(), mReceiver);
+    Data.Builder inputData = new Data.Builder();
+    inputData.putBoolean(MaintainUserStatusWorker.REPEAT, true);
+    WorkRequest userStatusWorkRequest =
+            new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class)
+                    .setInitialDelay(SMTHApplication.INTERVAL_TO_CHECK_MESSAGE, TimeUnit.MINUTES)
+                    .setInputData(inputData.build())
+                    .build();
+    WorkManager.getInstance(getApplicationContext()).enqueue(userStatusWorkRequest);
+
     // run the background service now
     updateUserStatusNow();
     UpdateNavigationViewHeader();
@@ -264,24 +263,14 @@ public class MainActivity extends SMTHBaseActivity
       // show info dialog after 5 seconds for the first run
       final Handler handler = new Handler();
       handler.postDelayed(new Runnable() {
-        @Override
-        public void run() {
+      @Override public void run() {
           showInfoDialog();
           MobSDK.submitPolicyGrantResult(true,null);
          }
       }, 1000);
     }
 
-    /*
-    ShakeListener shakeListener = new ShakeListener(this);
-    shakeListener.setOnShakeListener(new ShakeListener.OnShakeListener() {
-      @Override
-      public void onShake() {
-        // onVibrator(getApplicationContext());
-        //quitNow();
-      }
-    });
-    */
+
   }
 
   public void setApplicationNightMode() {
@@ -302,44 +291,6 @@ public class MainActivity extends SMTHBaseActivity
     }
     */
   }
-  /*
-  //for test
-  private void onVibrator(Context context) {
-    Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-    if (vibrator == null) {
-      Vibrator localVibrator = (Vibrator) context.getApplicationContext()
-              .getSystemService(Context.VIBRATOR_SERVICE);
-      vibrator = localVibrator;
-    }
-    vibrator.vibrate(100L);
-  }
-   */
-
-
-/*
-    @SuppressLint("RestrictedApi")
-    public  void disableShiftMode(BottomNavigationView view) {
-      //获取子View BottomNavigationMenuView的对象
-      BottomNavigationMenuView menuView = (BottomNavigationMenuView) view.getChildAt(0);
-      try {
-        //设置私有成员变量mShiftingMode可以修改
-        Field shiftingMode = menuView.getClass().getDeclaredField("mShiftingMode");
-        shiftingMode.setAccessible(true);
-        shiftingMode.setBoolean(menuView, false);
-        shiftingMode.setAccessible(false);
-        for (int i = 0; i < menuView.getChildCount(); i++) {
-          BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
-          //去除shift效果
-          item.setShifting(false);
-          item.setChecked(item.getItemData().isChecked());
-        }
-      } catch (NoSuchFieldException e) {
-        Log.e("BNVHelper", "没有mShiftingMode这个成员变量", e);
-      } catch (IllegalAccessException e) {
-        Log.e("BNVHelper", "无法修改mShiftingMode的值", e);
-      }
-    }
-*/
 
 
   private void initBottomNavigation() {
@@ -461,14 +412,16 @@ public class MainActivity extends SMTHBaseActivity
 
   // trigger the background service right now
   private void updateUserStatusNow() {
-    AlarmBroadcastReceiver.runJobNow(getApplicationContext(), mReceiver);
+    // run worker immediately for once
+    WorkRequest userStatusWorkRequest =
+            new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
+    WorkManager.getInstance(getApplicationContext()).enqueue(userStatusWorkRequest);
   }
 
   private void setupUserStatusReceiver() {
     mReceiver = new UserStatusReceiver(new Handler());
     mReceiver.setReceiver(new UserStatusReceiver.Receiver() {
-      @Override
-      public void onReceiveResult(int resultCode, Bundle resultData) {
+      @Override public void onReceiveResult(int resultCode, Bundle resultData) {
         if (resultCode == RESULT_OK) {
           Log.d(TAG, "onReceiveResult: " + "to update navigationview" + SMTHApplication.activeUser.toString());
           UpdateNavigationViewHeader();
@@ -482,6 +435,7 @@ public class MainActivity extends SMTHBaseActivity
         }
       }
     });
+    SMTHApplication.mUserStatusReceiver = mReceiver;
   }
 
   private void showNotification(String text) {
@@ -523,8 +477,7 @@ public class MainActivity extends SMTHBaseActivity
     }
   }
 
-  @Override
-  public boolean onKeyDown(int keyCode, KeyEvent event) {
+  @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
     if (Settings.getInstance().isVolumeKeyScroll() && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
       Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
       if (fragment instanceof OnVolumeUpDownListener) {
@@ -538,8 +491,7 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   // http://stackoverflow.com/questions/4500354/control-volume-keys
-  @Override
-  public boolean onKeyUp(int keyCode, KeyEvent event) {
+ @Override public boolean onKeyUp(int keyCode, KeyEvent event) {
     // disable the beep sound when volume up/down is pressed
     if (Settings.getInstance().isVolumeKeyScroll() && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
       return true;
@@ -547,8 +499,7 @@ public class MainActivity extends SMTHBaseActivity
     return super.onKeyUp(keyCode, event);
   }
 
-  @Override
-  protected void onPause() {
+ @Override protected void onPause() {
     super.onPause();
     MobclickAgent.onPause(this);
   }
@@ -556,6 +507,7 @@ public class MainActivity extends SMTHBaseActivity
   @Override
   protected void onNewIntent(Intent intent) {
     // this method will be triggered by showNotification(message);
+    super.onNewIntent(intent);
     FragmentManager fm = getSupportFragmentManager();
     Bundle bundle = intent.getExtras();
     if (bundle != null) {
@@ -565,33 +517,38 @@ public class MainActivity extends SMTHBaseActivity
       // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
       String message = bundle.getString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE);
       if (message != null) {
-        // find the actual folder for the new message
-        String subTitle = "收件箱";
-        if (message.contains(SMTHApplication.NOTIFICATION_NEW_MAIL)) {
-          mailListFragment.setCurrentFolder(MailListFragment.INBOX_LABEL);
-        } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_LIKE)) {
-          subTitle = "Like我";
-          mailListFragment.setCurrentFolder(MailListFragment.LIKE_LABEL);
-        } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_AT)) {
-          subTitle = "@我";
-          mailListFragment.setCurrentFolder(MailListFragment.AT_LABEL);
-        } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_REPLY)) {
-          subTitle = "回复我";
-          mailListFragment.setCurrentFolder(MailListFragment.REPLY_LABEL);
+        if (message.contains(SMTHApplication.NOTIFICATION_LOGIN_LOST)) {
+          // login status lost, show login menu
+          onLogin();
+        } else {
+          // find the actual folder for the new message
+          String subTitle = "收件箱";
+          if (message.contains(SMTHApplication.NOTIFICATION_NEW_MAIL)) {
+            mailListFragment.setCurrentFolder(MailListFragment.INBOX_LABEL);
+          } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_LIKE)) {
+            subTitle = "Like我";
+            mailListFragment.setCurrentFolder(MailListFragment.LIKE_LABEL);
+          } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_AT)) {
+            subTitle = "@我";
+            mailListFragment.setCurrentFolder(MailListFragment.AT_LABEL);
+          } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_REPLY)) {
+            subTitle = "回复我";
+            mailListFragment.setCurrentFolder(MailListFragment.REPLY_LABEL);
+          }
+          // force mail fragment to reload
+          MailListContent.clear();
+          fm.beginTransaction()
+              .replace(R.id.content_frame, mailListFragment)
+              .commitAllowingStateLoss();
+          // switch title of mainActivity
+          // setTitle(SMTHApplication.App_Title_Prefix + "邮件");
+          setTitle(SMTHApplication.App_Title_Prefix + subTitle);
         }
-        // force mail fragment to reload
-        MailListContent.clear();
-        fm.beginTransaction().replace(R.id.content_frame, mailListFragment).commitAllowingStateLoss();
-        // switch title of mainActivity
-        //setTitle(SMTHApplication.App_Title_Prefix + "邮件");
-        setTitle(SMTHApplication.App_Title_Prefix + subTitle);
       }
     }
-    super.onNewIntent(intent);
-  }
+    }
 
-  @Override
-  protected void onResume() {
+  @Override protected void onResume() {
     super.onResume();
     MobclickAgent.onResume(this);
   }
@@ -614,15 +571,14 @@ public class MainActivity extends SMTHBaseActivity
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
+//    Log.d(TAG, "receive login result, requestCode = " + requestCode);
     if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
-      if (resultCode == RESULT_OK) {
-        updateUserStatusNow();
-      }
+//      Log.d(TAG, "receive login result, resultCode = " + resultCode);
+      updateUserStatusNow();
     }
-  }
+    }
 
-  @Override
-  public boolean onPrepareOptionsMenu(Menu menu) {
+  @Override public boolean onPrepareOptionsMenu(Menu menu) {
     MenuItem login = menu.findItem(R.id.main_action_login);
     MenuItem logout = menu.findItem(R.id.main_action_logout);
     if (SMTHApplication.isValidUser()) {
@@ -636,34 +592,34 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   // update header view in navigation header
-  private void UpdateNavigationViewHeader() {
+  public void UpdateNavigationViewHeader() {
     // update optionMenu
     getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
 
     if (SMTHApplication.isValidUser()) {
-      // update user to login user
+      // update user to logined user
       mUsername.setText(SMTHApplication.activeUser.getId());
       String faceURL = SMTHApplication.activeUser.getFace_url();
       if (faceURL != null) {
         mAvatar.setImageFromStringURL(faceURL);
       }
+      SMTHApplication.displayedUserId = SMTHApplication.activeUser.getId();
     } else {
-      // only user to guest
+      // when user is invalid, set notice to login
       mUsername.setText(getString(R.string.nav_header_click_to_login));
       mAvatar.setImageResource(R.drawable.ic_person_black_48dp);
-
+      SMTHApplication.displayedUserId = "guest";
     }
   }
 
-  @Override
-  public void onBackPressed() {
+  @Override public void onBackPressed() {
     if (mDrawer.isDrawerOpen(GravityCompat.START)) {
       mDrawer.closeDrawer(GravityCompat.START);
       return;
     }
 
     // handle back button for all fragment
-    androidx.fragment.app.Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+    Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
     if (fragment instanceof FavoriteBoardFragment) {
       if (!favoriteBoardFragment.isAtRoot()) {
         favoriteBoardFragment.popPath();
@@ -674,7 +630,7 @@ public class MainActivity extends SMTHBaseActivity
 
     if (fragment != hotTopicFragment) {
       // return to hottopic if we are not there yet
-      String title = "首页";
+      String title = "首页导读";
       FragmentManager fm = getSupportFragmentManager();
       fm.beginTransaction().replace(R.id.content_frame, hotTopicFragment).commit();
       setTitle(SMTHApplication.App_Title_Prefix + title);
@@ -706,7 +662,7 @@ public class MainActivity extends SMTHBaseActivity
     //user logout
     onLogout();
     // stop background service
-    AlarmBroadcastReceiver.unschedule();
+    //AlarmBroadcastReceiver.unschedule();
 
     // quit
     finish();
@@ -735,13 +691,12 @@ public class MainActivity extends SMTHBaseActivity
     final SpannableString msg = new SpannableString(content_with_version);
     Linkify.addLinks(msg, Linkify.WEB_URLS);
 
-    final android.app.AlertDialog dlg =
-            new android.app.AlertDialog.Builder(this).setIcon(R.drawable.ic_launcher).setTitle(R.string.about_title).setMessage(msg).create();
+    final AlertDialog dlg =
+            new AlertDialog.Builder(this).setIcon(R.drawable.ic_launcher).setTitle(R.string.about_title).setMessage(msg).create();
 
-    dlg.setButton(android.app.AlertDialog.BUTTON_POSITIVE, getString(R.string.about_close), new DialogInterface.OnClickListener() {
+    dlg.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.about_close), new DialogInterface.OnClickListener() {
 
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
+      @Override public void onClick(DialogInterface dialog, int which) {
         // do nothing here
       }
     });
@@ -752,15 +707,13 @@ public class MainActivity extends SMTHBaseActivity
     ((TextView) dlg.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
   }
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
+  @Override public boolean onCreateOptionsMenu(Menu menu) {
     // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.main_menu, menu);
     return true;
   }
 
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
+ @Override public boolean onOptionsItemSelected(MenuItem item) {
     // Handle action bar item clicks here. The action bar will
     // automatically handle clicks on the Home/Up button, so long
     // as you specify a parent activity in AndroidManifest.xml.
@@ -780,6 +733,7 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   public void onLogin() {
+    // still use the previous login method
     Intent intent = new Intent(this, LoginActivity.class);
     startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
   }
@@ -844,7 +798,7 @@ public class MainActivity extends SMTHBaseActivity
       title = "版面";
     } else if (id == R.id.nav_mail) {
       fragment = mailListFragment;
-      title = "消息";
+      title = "邮件";
     } else if (id == R.id.nav_setting) {
       //            fragment = settingFragment;
       fragment = preferenceFragment;
@@ -955,8 +909,7 @@ public class MainActivity extends SMTHBaseActivity
     }
   }
 
-  @Override
-  public void onMailInteraction(Mail item, int position) {
+ @Override public void onMailInteraction(Mail item, int position) {
     if (item.isCategory) return;
 
     // mark item as read
@@ -967,10 +920,10 @@ public class MainActivity extends SMTHBaseActivity
     startActivity(intent);
   }
 
-  @Override
-  public void onBoardFragmentInteraction(Board item) {
+ @Override public void onBoardFragmentInteraction(Board item) {
     // shared by FavoriteBoard & AllBoard fragment
-    androidx.fragment.app.Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+    Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+    Log.d(TAG, item.toString());
     if (fragment == favoriteBoardFragment) {
       // favorite fragment, we might enter a folder or section
       if (item.isFolder() || item.isSection()) {
@@ -985,18 +938,17 @@ public class MainActivity extends SMTHBaseActivity
     }
   }
 
-  @Override
-  public void onBoardLongClick(final Board board) {
+ @Override public void onBoardLongClick(final Board board) {
     // shared by FavoriteBoard & AllBoard fragment
     // long click to remove board from favorite
-    androidx.fragment.app.Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+    Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
     if (fragment == favoriteBoardFragment) {
       // favorite fragment, remove the board
       if (board.isBoard()) {
         // confirm dialog
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        String title = String.format("将版面\"%s\"从收藏中删除么？", board.getBoardName());
-        builder.setTitle("收藏操作").setMessage(title);
+        String title = String.format("将版面\"%s\"从收藏夹中删除么？", board.getBoardName());
+        builder.setTitle("收藏夹操作").setMessage(title);
 
        // Log.d(TAG, favoriteBoardFragment.getCurrentFavoritePath());
 
@@ -1049,7 +1001,7 @@ public class MainActivity extends SMTHBaseActivity
         noticeDialog.show();
       } else if(board.isSection()) {
         //* + confirm Folder
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String title = String.format("将版面二级目录\"%s\"从收藏中删除么？", board.getFolderName());
         builder.setTitle("收藏操作").setMessage(title);
 
@@ -1099,12 +1051,12 @@ public class MainActivity extends SMTHBaseActivity
             dialog.dismiss();
           }
         });
-        android.app.AlertDialog noticeDialog = builder.create();
+        AlertDialog noticeDialog = builder.create();
         noticeDialog.show();
       }
       else if (board.isFolder())
       {
-          android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+          AlertDialog.Builder builder = new AlertDialog.Builder(this);
           String title = String.format("将版面二级目录\"%s\"从收藏中删除么？", board.getFolderName());
           builder.setTitle("收藏操作").setMessage(title);
 

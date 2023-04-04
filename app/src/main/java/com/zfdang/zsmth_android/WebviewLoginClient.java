@@ -24,7 +24,7 @@ public class WebviewLoginClient extends WebViewClient {
     private String username;
     private String password;
 
-    private  String SMTH_WWW_URL = SMTHApplication.getWebAddress();
+    //private  String SMTH_WWW_URL = SMTHApplication.getWebAddress();
 
     Activity activity;
 
@@ -36,7 +36,7 @@ public class WebviewLoginClient extends WebViewClient {
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
 //        Log.d(TAG, "shouldOverrideUrlLoading" + url);
-        if (request.getUrl().toString().startsWith(SMTH_WWW_URL)) {
+        if (request.getUrl().toString().startsWith( "https://m.newsmth.net/index?m=")) {
         //if (request.getUrl().toString().startsWith("https://www.newsmth.net")) {
         //if (request.getUrl().toString().startsWith("https://www.newsmth.net/nforum")) {
             //     if (url.startsWith("https://www.mysmth.net/nforum")) {
