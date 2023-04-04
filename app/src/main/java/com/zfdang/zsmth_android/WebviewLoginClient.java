@@ -10,10 +10,6 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.zfdang.SMTHApplication;
-
-import java.net.URL;
-
 // login chains:
 // http://m.mysmth.net/index
 //   ==> POST: https://m.mysmth.net/user/login
@@ -24,8 +20,6 @@ public class WebviewLoginClient extends WebViewClient {
     private String username;
     private String password;
 
-    //private  String SMTH_WWW_URL = SMTHApplication.getWebAddress();
-
     Activity activity;
 
     public WebviewLoginClient(Activity activity, String username, String password) {
@@ -35,25 +29,24 @@ public class WebviewLoginClient extends WebViewClient {
     }
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-//        Log.d(TAG, "shouldOverrideUrlLoading" + url);
-        if (request.getUrl().toString().startsWith( "https://m.newsmth.net/index?m=")) {
-        //if (request.getUrl().toString().startsWith("https://www.newsmth.net")) {
-        //if (request.getUrl().toString().startsWith("https://www.newsmth.net/nforum")) {
-            //     if (url.startsWith("https://www.mysmth.net/nforum")) {
-            Intent resultIntent = new Intent();
-            activity.setResult(Activity.RESULT_OK, resultIntent);
-            activity.finish();
+//        Log.d(TAG, "shouldOverrideUrlLoading" + request.getUrl().toString());
+            if (request.getUrl().toString().startsWith("https://m.newsmth.net/index?m=")||request.getUrl().toString().startsWith("https://m.mysmth.net/index?m=")) {
+            //if (url.startsWith("https://www.mysmth.net/nforum")) {
+                Intent resultIntent = new Intent();
+                activity.setResult(Activity.RESULT_OK, resultIntent);
+                activity.finish();
         }
         return false;
     }
 
     @Override
-    public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-        if(request.getUrl().toString().contains("ads")) {
+    public WebResourceResponse    shouldInterceptRequest(WebView view, WebResourceRequest request) {
+        if (request.getUrl().toString().contains("ads")) {
             return new WebResourceResponse("text/javascript", "UTF-8", null);
         }
         return null;
     }
+
 
     public void onPageFinished(WebView view, String url) {
 //        Log.d(TAG, "onPageFinished" + url);
@@ -67,11 +60,15 @@ public class WebviewLoginClient extends WebViewClient {
                     "passwds[0].value = '" + this.password + "';" +
                     "document.getElementById('TencentCaptcha').click();";
 
+            if (Build.VERSION.SDK_INT >= 19) {
                 view.evaluateJavascript(js, new ValueCallback<String>() {
                     @Override
                     public void onReceiveValue(String s) {
                     }
                 });
+            } else {
+                view.loadUrl(js);
+            }
         }
         super.onPageFinished(view, url);
     }
