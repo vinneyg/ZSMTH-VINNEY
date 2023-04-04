@@ -304,7 +304,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
         DELETED_LABEL)) {
       // Load mails
       if (TextUtils.equals(currentFolder, INBOX_LABEL) )
-        activity.setTitle(SMTHApplication.App_Title_Prefix+"收件箱");
+        activity.setTitle(SMTHApplication.App_Title_Prefix+"邮件");
       else if(TextUtils.equals(currentFolder,OUTBOX_LABEL))
         activity.setTitle(SMTHApplication.App_Title_Prefix+"发件箱");
       else if(TextUtils.equals(currentFolder,DELETED_LABEL))

@@ -383,63 +383,72 @@ public class ComposePostActivity extends SMTHBaseActivity {
     Observable.concat(resp1, resp2)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Observer<AjaxResponse>() {
-          @Override public void onSubscribe(@NonNull Disposable disposable) {
+        .subscribe(
+            new Observer<AjaxResponse>() {
+              @Override
+              public void onSubscribe(@NonNull Disposable disposable) {}
 
-          }
-
-          @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
-            Log.d(TAG, "onNext: " + ajaxResponse.toString());
-            if (ajaxResponse.getAjax_st() != AjaxResponse.AJAX_RESULT_OK) {
-              postPublishResult = AjaxResponse.AJAX_RESULT_FAILED;
-              postPublishMessage += ajaxResponse.getAjax_msg() + "\n";
-            }
-            lastResponse = ajaxResponse;
-            ComposePostActivity.currentStep++;
-            showProgress(String.format(Locale.CHINA,progressHint, ComposePostActivity.currentStep, ComposePostActivity.totalSteps));
-          }
-
-          @Override public void onError(@NonNull Throwable e) {
-            dismissProgress();
-            Toast.makeText(SMTHApplication.getAppContext(), "发生错误:\n" + e.toString(), Toast.LENGTH_SHORT).show();
-
-          }
-
-          @Override public void onComplete() {
-            dismissProgress();
-
-            String message = null;
-            if (postPublishResult != AjaxResponse.AJAX_RESULT_OK) {
-              message = "操作失败! \n错误信息:\n" + postPublishMessage;
-              Toast.makeText(ComposePostActivity.this, message, Toast.LENGTH_SHORT).show();
-              Intent intent = new Intent(ComposePostActivity.this, LoginActivity.class);
-              startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
-            } else {
-              if (lastResponse != null) {
-                // if we have valid last response, use the message.
-                message = lastResponse.getAjax_msg();
-              } else {
-                // otherwise, compose the message by ourself
-                message = "成功!";
+              @Override
+              public void onNext(@NonNull AjaxResponse ajaxResponse) {
+                Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                if (ajaxResponse.getAjax_st() != AjaxResponse.AJAX_RESULT_OK) {
+                  postPublishResult = AjaxResponse.AJAX_RESULT_FAILED;
+                  postPublishMessage += ajaxResponse.getAjax_msg() + "\n";
+                }
+                lastResponse = ajaxResponse;
+                ComposePostActivity.currentStep++;
+                showProgress(
+                    String.format(
+                        Locale.CHINA,
+                        progressHint,
+                        ComposePostActivity.currentStep,
+                        ComposePostActivity.totalSteps));
               }
 
-
-              KeyboardLess.$hide(ComposePostActivity.this, mContent);
-
-              if (message != null && !message.contains("本文可能含有不当内容")) {
-                mContent.setText("");
-                clearPostContentCache();
-                ComposePostActivity.this.finish();
-              }
-              else
-              {
-                Toast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT).show();
+              @Override
+              public void onError(@NonNull Throwable e) {
+                dismissProgress();
+                Toast.makeText(
+                        SMTHApplication.getAppContext(),
+                        "发生错误:\n" + e.toString(),
+                        Toast.LENGTH_SHORT)
+                    .show();
               }
 
-            }
+              @Override
+              public void onComplete() {
+                dismissProgress();
 
-          }
-        });
+                String message = null;
+                if (postPublishResult != AjaxResponse.AJAX_RESULT_OK) {
+                  message = "操作失败! \n错误信息:\n" + postPublishMessage;
+                  if(!SMTHApplication.isValidUser()){
+                    Toast.makeText(ComposePostActivity.this, message, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(ComposePostActivity.this, LoginActivity.class);
+                    startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
+                  }
+                } else {
+                  if (lastResponse != null) {
+                    // if we have valid last response, use the message.
+                    message = lastResponse.getAjax_msg();
+                  } else {
+                    // otherwise, compose the message by ourself
+                    message = "成功!";
+                  }
+
+                  KeyboardLess.$hide(ComposePostActivity.this, mContent);
+
+                  if (message != null && !message.contains("本文可能含有不当内容")) {
+                    mContent.setText("");
+                    clearPostContentCache();
+                    ComposePostActivity.this.finish();
+                  } else {
+                    Toast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT)
+                        .show();
+                  }
+                }
+              }
+            });
   }
 
   public void onBackAction() {

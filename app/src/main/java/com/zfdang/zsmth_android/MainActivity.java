@@ -409,8 +409,7 @@ public class MainActivity extends SMTHBaseActivity
         .build();
   }
 
-
-  // trigger the background service right now
+// triger the background service right now
   private void updateUserStatusNow() {
     // run worker immediately for once
     WorkRequest userStatusWorkRequest =
@@ -423,7 +422,7 @@ public class MainActivity extends SMTHBaseActivity
     mReceiver.setReceiver(new UserStatusReceiver.Receiver() {
       @Override public void onReceiveResult(int resultCode, Bundle resultData) {
         if (resultCode == RESULT_OK) {
-          Log.d(TAG, "onReceiveResult: " + "to update navigationview" + SMTHApplication.activeUser.toString());
+          //Log.d(TAG, "onReceiveResult: " + "to update navigationview" + SMTHApplication.activeUser.toString());
           UpdateNavigationViewHeader();
 
           // show notification if necessary
@@ -473,7 +472,7 @@ public class MainActivity extends SMTHBaseActivity
       Notification notification = mBuilder.build();
       mNotifyMgr.notify(notificationID, notification);
     } catch (Exception se) {
-      Log.e(TAG, "showNotification: " + se.toString());
+      Log.e(TAG, "showNotification: " + se);
     }
   }
 
@@ -504,8 +503,7 @@ public class MainActivity extends SMTHBaseActivity
     MobclickAgent.onPause(this);
   }
 
-  @Override
-  protected void onNewIntent(Intent intent) {
+  @Override protected void onNewIntent(Intent intent) {
     // this method will be triggered by showNotification(message);
     super.onNewIntent(intent);
     FragmentManager fm = getSupportFragmentManager();
@@ -522,7 +520,7 @@ public class MainActivity extends SMTHBaseActivity
           onLogin();
         } else {
           // find the actual folder for the new message
-          String subTitle = "收件箱";
+          String subTitle = "邮件";
           if (message.contains(SMTHApplication.NOTIFICATION_NEW_MAIL)) {
             mailListFragment.setCurrentFolder(MailListFragment.INBOX_LABEL);
           } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_LIKE)) {
@@ -537,9 +535,8 @@ public class MainActivity extends SMTHBaseActivity
           }
           // force mail fragment to reload
           MailListContent.clear();
-          fm.beginTransaction()
-              .replace(R.id.content_frame, mailListFragment)
-              .commitAllowingStateLoss();
+
+          fm.beginTransaction().replace(R.id.content_frame, mailListFragment).commitAllowingStateLoss();
           // switch title of mainActivity
           // setTitle(SMTHApplication.App_Title_Prefix + "邮件");
           setTitle(SMTHApplication.App_Title_Prefix + subTitle);
@@ -661,8 +658,6 @@ public class MainActivity extends SMTHBaseActivity
   private void quitNow() {
     //user logout
     onLogout();
-    // stop background service
-    //AlarmBroadcastReceiver.unschedule();
 
     // quit
     finish();
@@ -782,42 +777,39 @@ public class MainActivity extends SMTHBaseActivity
 
   public boolean onNavigationItemID(int menuID) {
     // Handle navigation view item clicks here.
-    int id = menuID;
-
     Fragment fragment = null;
     String title = "";
 
-    if (id == R.id.nav_guidance) {
+    if (menuID == R.id.nav_guidance) {
       fragment = hotTopicFragment;
       title = "首页";
-    } else if (id == R.id.nav_favorite) {
+    } else if (menuID == R.id.nav_favorite) {
       fragment = favoriteBoardFragment;
       title = "收藏";
-    } else if (id == R.id.nav_all_boards) {
+    } else if (menuID == R.id.nav_all_boards) {
       fragment = allBoardFragment;
-      title = "版块";
-    } else if (id == R.id.nav_mail) {
+      title = "分区";
+    } else if (menuID == R.id.nav_mail) {
       fragment = mailListFragment;
       title = "邮件";
-    } else if (id == R.id.nav_setting) {
+    } else if (menuID == R.id.nav_setting) {
       //            fragment = settingFragment;
       fragment = preferenceFragment;
       title = "设置";
-    } else if (id == R.id.nav_about) {
+    } else if (menuID == R.id.nav_about) {
       fragment = aboutFragment;
       title = "关于";
-    } else if (id == R.id.nav_night_mode)
-    {
+    } else if(menuID == R.id.nav_night_mode) {
       boolean bNightMode = Settings.getInstance().isNightMode();
       Settings.getInstance().setNightMode(!bNightMode);
       setApplicationNightMode();
      //quitNow();
-    } else if( id == R.id.nav_read)
+    } else if( menuID == R.id.nav_read)
     {
      //Toast.makeText(this, "Click boards below",Toast.LENGTH_SHORT);
       return true;
     }
-    else if( id == R.id.read_board1)
+    else if( menuID == R.id.read_board1)
     {
       if(SMTHApplication.ReadBoardEng1 != null) {
        // Board item = new Board(null, SMTHApplication.ReadBoard1, SMTHApplication.ReadBoardEng1);
@@ -825,14 +817,14 @@ public class MainActivity extends SMTHBaseActivity
         board.initAsBoard(SMTHApplication.ReadBoard1, SMTHApplication.ReadBoardEng1, "", "");
         startBoardTopicActivity(board);
       }
-    } else if( id == R.id.read_board2)
+    } else if( menuID == R.id.read_board2)
     {
       if(SMTHApplication.ReadBoardEng2 != null) {
         Board board = new Board();
         board.initAsBoard(SMTHApplication.ReadBoard2, SMTHApplication.ReadBoardEng2, "", "");
         startBoardTopicActivity(board);
       }
-    }else if( id == R.id.read_board3)
+    }else if( menuID == R.id.read_board3)
     {
       if(SMTHApplication.ReadBoardEng3 != null) {
         Board board = new Board();
@@ -875,10 +867,9 @@ public class MainActivity extends SMTHBaseActivity
     }
   }
 
-  @Override
-  public void onTopicFragmentInteraction(Topic item) {
+  @Override public void onTopicFragmentInteraction(Topic item) {
     // will be triggered in HotTopicFragment
-    androidx.fragment.app.Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+    Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
     if (fragment == hotTopicFragment) {
       if (item.isCategory) return;
 
@@ -931,6 +922,7 @@ public class MainActivity extends SMTHBaseActivity
         return;
       }
     }
+
     // if it's a normal board, show postlist in the board
     if(item.isBoard()) {
       startBoardTopicActivity(item);
@@ -945,7 +937,7 @@ public class MainActivity extends SMTHBaseActivity
       // favorite fragment, remove the board
       if (board.isBoard()) {
         // confirm dialog
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String title = String.format("将版面\"%s\"从收藏中删除么？", board.getBoardName());
         builder.setTitle("收藏操作").setMessage(title);
 
@@ -996,7 +988,7 @@ public class MainActivity extends SMTHBaseActivity
             dialog.dismiss();
           }
         });
-        android.app.AlertDialog noticeDialog = builder.create();
+        AlertDialog noticeDialog = builder.create();
         noticeDialog.show();
       } else if(board.isSection()) {
         //* + confirm Folder

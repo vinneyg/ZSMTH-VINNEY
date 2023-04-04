@@ -16,12 +16,12 @@
     <item
         android:id="@+id/nav_all_boards"
         android:icon="@drawable/ic_format_list_bulleted_white_48dp"
-        android:title="版块"/>
+        android:title="分区"/>
 
     <item
         android:id="@+id/nav_mail"
         android:icon="@drawable/ic_email_white_48dp"
-        android:title="消息"/>
+        android:title="邮件"/>
 
   </group>
 
