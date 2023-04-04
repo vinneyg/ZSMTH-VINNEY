@@ -7,7 +7,8 @@
   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-  <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+      tools:ignore="ScopedStorage" />
   <uses-permission android:name="android.permission.WAKE_LOCK" />
   <!-- <uses-permission
     android:name="android.permission.VIBRATE"
@@ -26,7 +27,6 @@
         android:requestLegacyExternalStorage="true"
         android:preserveLegacyExternalStorage="true"
         tools:replace="android:name">
-        <activity android:name=".WebviewLoginActivity"></activity>
     <activity
         android:name=".MainActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
@@ -43,7 +43,7 @@
         android:name=".LoginActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:label="@string/title_activity_login" />
-
+        <activity android:name=".WebviewLoginActivity"></activity>
     <activity
         android:name=".BoardTopicActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
@@ -84,12 +84,6 @@
         android:configChanges="orientation|screenSize" /> 
 
     <!-- service -->
-    <service
-        android:name=".services.MaintainUserStatusService"
-        android:permission="android.permission.BIND_JOB_SERVICE"
-        android:exported="false" />
-    <receiver
-        android:name=".services.AlarmBroadcastReceiver" />
         <!-- aadapt to S8 and Mix2 -->
         <meta-data
             android:name="android.max_aspect"

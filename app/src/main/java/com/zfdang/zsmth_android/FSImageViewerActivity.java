@@ -189,7 +189,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
             Toast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
           }
         }
-        else   //Build == 29.Android Q
+        else
         {
           if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
                   && grantResults[1] == PackageManager.PERMISSION_GRANTED) {

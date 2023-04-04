@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -158,9 +160,19 @@ public class ImagesSelectorActivity extends AppCompatActivity
 
     public void requestReadStorageRuntimePermission() {
         if (ContextCompat.checkSelfPermission(ImagesSelectorActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(ImagesSelectorActivity.this,
+            /*ActivityCompat.requestPermissions(ImagesSelectorActivity.this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     MY_PERMISSIONS_REQUEST_STORAGE_CODE);
+           */
+            if(Build.VERSION.SDK_INT<Build.VERSION_CODES.R|| Environment.isExternalStorageManager()){
+                LoadFolderAndImages();
+                //Toast.makeText(this,"已获得所有文件的访问权限",Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                startActivityForResult(intent,MY_PERMISSIONS_REQUEST_STORAGE_CODE);
+            }
         } else {
             LoadFolderAndImages();
         }
@@ -184,21 +196,20 @@ public class ImagesSelectorActivity extends AppCompatActivity
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_STORAGE_CODE: {
                 // If request is cancelled, the result arrays are empty.
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q ){
+                //if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q ){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    if( Environment.isExternalStorageManager() )  // permission was granted, yay! Do the
+                         // contacts-related task you need to do.
+                         LoadFolderAndImages();
 
-                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                    LoadFolderAndImages();
-
-                    } else{
+            } else{
                         //在版本低于此的时候，做一些处理
 
                         // permission denied, boo! Disable the
                         // functionality that depends on this permission.
                         Toast.makeText(ImagesSelectorActivity.this, getString(R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
                     }
-                    }
+                    /*
                 else //Build >= 29.Android Q
                 {
                     if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
@@ -213,7 +224,8 @@ public class ImagesSelectorActivity extends AppCompatActivity
                     }
                     return;
                 }
-                //return;
+                                */
+           return;
             }
             case MY_PERMISSIONS_REQUEST_CAMERA_CODE: {
                 // If request is cancelled, the result arrays are empty.

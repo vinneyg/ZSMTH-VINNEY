@@ -795,7 +795,7 @@ public class MainActivity extends SMTHBaseActivity
       title = "收藏";
     } else if (id == R.id.nav_all_boards) {
       fragment = allBoardFragment;
-      title = "版面";
+      title = "版块";
     } else if (id == R.id.nav_mail) {
       fragment = mailListFragment;
       title = "邮件";

@@ -25,8 +25,8 @@
   <string name="login_label_username">用户名</string>
   <string name="login_label_password">密码</string>
   <string name="login_label_signin">登录</string>
-    <string name="login_label_saveinfo">保存账号密码</string>
-  <string name="login_register_link">没有帐号？  <a href="https://www.mysmth.net/nForum/#!reg">注册</a></string>
+  <string name="login_label_saveinfo">保存登录信息</string>
+  <string name="login_register_link">没有帐号？  <a href="http://www.newsmth.net/bbsreg0.html">注册</a></string>
   <string name="login_asm_help">zSMTH-v  <a href="https://github.com/vinneyg/zSMTH-VINNEY">使用说明</a></string>
 
   <!-- 导读页 -->
@@ -146,4 +146,5 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   <string name="about_close">关闭</string>
   <string name="mail_content_menu_open_post">打开原贴</string>
   <string name="mail_content_title">加载中...</string>
+  <string name="read_write_storage_rationale">需要"读写存储的权限"来保存文件</string>
 </resources>
