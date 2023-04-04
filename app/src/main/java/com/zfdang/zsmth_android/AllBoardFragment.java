@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -31,6 +32,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A fragment representing a list of Items.
@@ -150,6 +152,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
         return Observable.fromIterable(boards);
       }
     }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Board>() {
+      @SuppressLint("NotifyDataSetChanged")
       @Override public void onSubscribe(@NonNull Disposable disposable) {
         BoardListContent.clearAllBoards();
         mRecyclerView.getAdapter().notifyDataSetChanged();
@@ -159,7 +162,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
         // Log.d(TAG, board.toString());
         BoardListContent.addAllBoardItem(board);
         int size = BoardListContent.ALL_BOARDS.size();
-        mRecyclerView.getAdapter().notifyItemInserted(size - 1);
+        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(size - 1);
         if (size == 50) {
           // if 50 items have been shown already, stop the loading hints
           clearLoadingHints();
@@ -221,11 +224,9 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
 
   @Override public boolean onVolumeUpDown(int keyCode) {
     if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-    //  Toast.makeText(SMTHApplication.getAppContext(), "Volume UP, to scroll up", Toast.LENGTH_SHORT).show();
-      ( (MainActivity) getActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
+     ( (MainActivity) getActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
     } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-   //   Toast.makeText(SMTHApplication.getAppContext(), "Volume down, to scroll down", Toast.LENGTH_SHORT).show();
-      ( (MainActivity) getActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
+     ( (MainActivity) getActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
     }
     return true;
   }

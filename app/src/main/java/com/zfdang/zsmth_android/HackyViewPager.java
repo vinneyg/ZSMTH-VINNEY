@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
@@ -51,6 +52,7 @@ public class HackyViewPager extends ViewPager {
     return false;
   }
 
+  @SuppressLint("ClickableViewAccessibility")
   @Override public boolean onTouchEvent(MotionEvent event) {
     return !isLocked && super.onTouchEvent(event);
   }

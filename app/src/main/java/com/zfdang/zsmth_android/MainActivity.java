@@ -864,7 +864,6 @@ public class MainActivity extends SMTHBaseActivity
   public void onClick(View v) {
     int id = v.getId();
     if (id == R.id.nav_user_avatar || id == R.id.nav_user_name) {
-      // 点击图标或者文字，都弹出登录对话框或者profile对话框
       mDrawer.closeDrawer(GravityCompat.START);
       if (SMTHApplication.activeUser != null && !SMTHApplication.activeUser.getId().equals("guest")) {
         Intent intent = new Intent(this, QueryUserActivity.class);
@@ -947,8 +946,8 @@ public class MainActivity extends SMTHBaseActivity
       if (board.isBoard()) {
         // confirm dialog
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        String title = String.format("将版面\"%s\"从收藏夹中删除么？", board.getBoardName());
-        builder.setTitle("收藏夹操作").setMessage(title);
+        String title = String.format("将版面\"%s\"从收藏中删除么？", board.getBoardName());
+        builder.setTitle("收藏操作").setMessage(title);
 
        // Log.d(TAG, favoriteBoardFragment.getCurrentFavoritePath());
 
@@ -1158,7 +1157,6 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   public void onRelogin() {
-    //Toast.makeText(this,"relogin", Toast.LENGTH_SHORT).show();
     SMTHHelper helper = SMTHHelper.getInstance();
     helper.wService.queryUserInformation(SMTHApplication.activeUser.getId())
             .subscribeOn(Schedulers.io())
@@ -1174,14 +1172,13 @@ public class MainActivity extends SMTHBaseActivity
                   if (!user.is_online()) {
                     //Toast.makeText(getApplicationContext,"Offline", Toast.LENGTH_SHORT).show();
                     onLogin();
-                    Log.d(TAG, "Vinney - 101: ");
                   }
                 }
               }
 
               @Override public void onError(@NonNull Throwable e) {
-                Toast.makeText(getApplicationContext(), "查询用户信息失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
-
+                //Toast.makeText(getApplicationContext(), "查询用户信息失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "用户掉线！\n" , Toast.LENGTH_SHORT).show();
               }
 
               @Override public void onComplete() {

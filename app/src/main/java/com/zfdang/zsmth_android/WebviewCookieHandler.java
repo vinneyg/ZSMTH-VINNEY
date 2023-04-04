@@ -2,6 +2,8 @@ package com.zfdang.zsmth_android;
 
 import android.webkit.CookieManager;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +21,7 @@ import okhttp3.HttpUrl;
 // 这样就避免了cookie同步的问题
 
 public final class WebviewCookieHandler implements CookieJar {
-    private CookieManager webviewCookieManager = CookieManager.getInstance();
+    private final CookieManager webviewCookieManager = CookieManager.getInstance();
 
     @Override
     public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
@@ -30,6 +32,7 @@ public final class WebviewCookieHandler implements CookieJar {
         }
     }
 
+    @NonNull
     @Override
     public List<Cookie> loadForRequest(HttpUrl url) {
         String urlString = url.toString();

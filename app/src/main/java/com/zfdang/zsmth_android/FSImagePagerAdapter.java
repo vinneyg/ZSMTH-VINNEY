@@ -21,8 +21,8 @@ import java.util.Map;
  */
 public class FSImagePagerAdapter extends PagerAdapter {
 
-  private List<String> mURLs;
-  private Activity mListener;
+  private final List<String> mURLs;
+  private final Activity mListener;
   private Map<Integer, PhotoViewAttacher> mAttachers;
 
   // http://stackoverflow.com/questions/6807262/get-focused-view-from-viewpager

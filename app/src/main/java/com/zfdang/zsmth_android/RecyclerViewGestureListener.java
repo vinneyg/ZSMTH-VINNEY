@@ -20,11 +20,11 @@ import android.view.WindowManager;
 public class RecyclerViewGestureListener extends GestureDetector.SimpleOnGestureListener {
 
   public interface OnItemLongClickListener {
-    boolean onItemLongClicked(int position, View v);
-    boolean onItemLeftClicked(int position, View v);
-    boolean onItemRightClicked(int position, View v);
-    boolean onItemBottomClicked(int position, View v);
-    boolean onItemTopClicked(int position, View v);
+    void onItemLongClicked(int position, View v);
+    void onItemLeftClicked(int position, View v);
+    void onItemRightClicked(int position, View v);
+    void onItemBottomClicked(int position, View v);
+    void onItemTopClicked(int position, View v);
   }
 
   private OnItemLongClickListener mListener;
@@ -44,22 +44,7 @@ public class RecyclerViewGestureListener extends GestureDetector.SimpleOnGesture
     mScreenHeight = wm.getDefaultDisplay().getHeight();
     mScreenWidth = wm.getDefaultDisplay().getWidth();
   }
-/*
-  @Override public boolean onSingleTapUp(MotionEvent e) {
-    int touchY = (int) e.getRawY();
-    //        Log.d("Gesture", "onSingleTapUp: " + String.format("%d / %d = %f", touchY, mScreenHeight, touchY * 1.0 / mScreenHeight));
-    if (touchY < mScreenHeight * 0.40) {
-      RecyclerViewUtil.ScrollRecyclerViewByKey(this.recyclerView, KeyEvent.KEYCODE_VOLUME_UP);
-      return true;
-    } else if (touchY > mScreenHeight * 0.60) {
-      RecyclerViewUtil.ScrollRecyclerViewByKey(this.recyclerView, KeyEvent.KEYCODE_VOLUME_DOWN);
-      return true;
-    }
 
-    return super.onSingleTapUp(e);
-  }
-
-  */
   @Override public void onLongPress(MotionEvent e) {
     float x = e.getRawX();
     float y = e.getRawY();
@@ -67,6 +52,7 @@ public class RecyclerViewGestureListener extends GestureDetector.SimpleOnGesture
     recyclerView.getLocationOnScreen(location);
 
     View targetView = recyclerView.findChildViewUnder(x - location[0], y - location[1]);
+    assert targetView != null;
     int position = recyclerView.getChildAdapterPosition(targetView);
 
     //        Log.d("Gesture", "onLongPress: " + String.format("position = %d", position));

@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.WebChromeClient;
@@ -22,6 +23,7 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
     private String password;
 
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,10 +46,7 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
         // https://stackoverflow.com/questions/9602124/enable-horizontal-scrolling-in-a-webview
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
-//        mWebView.setInitialScale(120);
-//        mWebView.getSettings().setTextZoom(200);
 
-        //支持屏幕缩放
         mWebView.getSettings().setSupportZoom(true);
         mWebView.getSettings().setBuiltInZoomControls(true);
 

@@ -30,7 +30,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -60,7 +59,6 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import com.zfdang.SMTHApplication;
 
-import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.models.Attachment;
 import com.zfdang.zsmth_android.models.Board;
@@ -89,6 +87,7 @@ import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 
 import okhttp3.ResponseBody;
@@ -306,7 +305,7 @@ public class PostListActivity extends SMTHBaseActivity
             else if(lastVisiblePos == (totalItemCount - 1) && isSlidingToLast && (mCurrentPageNo ==mTopic.getTotalPageNo())) {
               clearLoadingHints();
             }
-            else if((!isSlidingToLast)||  (isSlidingToLast&&(lastVisiblePos < (totalItemCount - 1)))) {
+            else if((!isSlidingToLast)||  (lastVisiblePos < (totalItemCount - 1))) {
               TextView mIndexView = (TextView) (manager.findViewByPosition(lastVisiblePos)).findViewById(R.id.post_index);
               String temp = mIndexView.getText().toString();
                int index =0;
@@ -331,7 +330,7 @@ public class PostListActivity extends SMTHBaseActivity
         }
       }
         @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        public void onScrolled(@androidx.annotation.NonNull RecyclerView recyclerView, int dx, int dy) {
           super.onScrolled(recyclerView, dx, dy);
           if(dy > 0){
             isSlidingToLast = true;
@@ -442,6 +441,7 @@ public class PostListActivity extends SMTHBaseActivity
     }
   }
 
+  @SuppressLint("NotifyDataSetChanged")
   public void reloadPostListWithoutAlert() {
       PostListContent.clear();
       mRecyclerView.getAdapter().notifyDataSetChanged();
@@ -687,7 +687,7 @@ public class PostListActivity extends SMTHBaseActivity
                   Index = Index % POST_PER_PAGE;
                   // PostListContent.addItem(Index,post);
                   PostListContent.InsertItem(Index, post);
-                  mRecyclerView.getAdapter().notifyItemInserted(Index);
+                  Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(Index);
               }
 
               @Override
@@ -888,12 +888,12 @@ public class PostListActivity extends SMTHBaseActivity
         break;
       case R.id.post_list_action_down:
         int nextPos = linearLayoutManager.findLastVisibleItemPosition() + 1;
-        if (nextPos < mRecyclerView.getAdapter().getItemCount()) {
+        if (nextPos < Objects.requireNonNull(mRecyclerView.getAdapter()).getItemCount()) {
           mRecyclerView.smoothScrollToPosition(nextPos);
         }
         break;
       case R.id.post_list_action_bottom:
-        mRecyclerView.scrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
+        mRecyclerView.scrollToPosition(Objects.requireNonNull(mRecyclerView.getAdapter()).getItemCount() - 1);
         break;
 
     }
@@ -927,9 +927,7 @@ public class PostListActivity extends SMTHBaseActivity
       clearLoadingHints();
     } else {
       synchronized (this) {
-
         mCurrentPageNo += 1;
-        //reloadPostList();
        // showProgress("加载文章中, 请稍候...");
         loadPostListByPages();
       }
@@ -954,8 +952,8 @@ public class PostListActivity extends SMTHBaseActivity
   }
 
 
-  @Override public boolean onItemLongClicked(final int position, View v) {
-    if (position == RecyclerView.NO_POSITION || position >= PostListContent.POSTS.size()) return false;
+  @Override public void onItemLongClicked(final int position, View v) {
+    if (position == RecyclerView.NO_POSITION || position >= PostListContent.POSTS.size()) return;
 
     //Log.d(TAG, String.format(Locale.CHINA,"Post by %s is long clicked", PostListContent.POSTS.get(position).getAuthor()));
 
@@ -1017,16 +1015,15 @@ public class PostListActivity extends SMTHBaseActivity
     dialog.setCancelable(true);
 
     dialog.show();
-    return true;
   }
 
-   public boolean onItemLeftClicked(final int position, View v) {
+   public void onItemLeftClicked(final int position, View v) {
     if(Settings.getInstance().isQuickReply()) {
       // post_reply_mail
       // Toast.makeText(PostListActivity.this, "回复到作者信箱:TBD", Toast.LENGTH_SHORT).show();
       if (position >= PostListContent.POSTS.size()) {
         Log.e(TAG, "onItemLeftClicked: " + "Invalid Post index" + position);
-        return false;
+        return;
       }
 
       Post post = PostListContent.POSTS.get(position);
@@ -1042,14 +1039,13 @@ public class PostListActivity extends SMTHBaseActivity
       intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
       startActivity(intent);
     }
-    return true;
-  }
-   public boolean onItemRightClicked(final int position, View v) {
+   }
+   public void onItemRightClicked(final int position, View v) {
      if (Settings.getInstance().isQuickReply()) {
        // post_reply_post
        if (position >= PostListContent.POSTS.size()) {
          Log.e(TAG, "onItemRightClicked: " + "Invalid Post index" + position);
-         return false;
+         return;
        }
 
        Post post = PostListContent.POSTS.get(position);
@@ -1065,30 +1061,29 @@ public class PostListActivity extends SMTHBaseActivity
        intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
        startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
      }
-     return true;
-  }
+   }
 
-  public boolean onItemBottomClicked(final int position, View v) {
+  public void onItemBottomClicked(final int position, View v) {
     //goToNextPage();
     LinearLayoutManager manager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
 
         //LastItemPosition
+    assert manager != null;
     int lastVisiblePos = manager.findLastVisibleItemPosition();
     int totalItemCount = manager.getItemCount();
     if(lastVisiblePos <= totalItemCount-1 )
-    mRecyclerView.scrollToPosition(lastVisiblePos+1);
+      mRecyclerView.scrollToPosition(lastVisiblePos+1);
 
-    return true;
   }
 
-  public boolean onItemTopClicked(final int position, View v) {
+  public void onItemTopClicked(final int position, View v) {
     LinearLayoutManager manager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
 
     //LastItemPosition
+    assert manager != null;
     int FirstVisiblePos = manager.findFirstVisibleItemPosition();
     if(FirstVisiblePos > 1 )
       mRecyclerView.scrollToPosition(FirstVisiblePos-1);
-    return true;
   }
   private void onPostPopupMenuItem(int position, int which) {
     //        Log.d(TAG, String.format(Locale.CHINA,"MenuItem %d was clicked", which));
@@ -1206,7 +1201,7 @@ public class PostListActivity extends SMTHBaseActivity
       startActivity(intent);
     } else if (which == 11) {
       // generate screenshot of current post
-      View v = mRecyclerView.getLayoutManager().findViewByPosition(position);
+      View v = Objects.requireNonNull(mRecyclerView.getLayoutManager()).findViewByPosition(position);
 
       // convert title + post to image
       captureView(mTitle, v, post.getPostID());
@@ -1304,7 +1299,7 @@ public class PostListActivity extends SMTHBaseActivity
         //Vinney：修改删除回复后导致页面减少显示不正常。删除后，退回board再进入文章显示第一页
           mCurrentPageNo = 1;
           mCurrentReadPageNo = 1;
-          mRecyclerView.getAdapter().notifyDataSetChanged();
+          Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
           //onBackPressed();
           PostListActivity.this.finish();
           Toast.makeText(PostListActivity.this, "请刷新版面!", Toast.LENGTH_SHORT).show();
@@ -1384,6 +1379,7 @@ public class PostListActivity extends SMTHBaseActivity
     oks.show(this);
   }
 
+  @SuppressLint("ClickableViewAccessibility")
   @Override public boolean onTouch(View v, MotionEvent event) {
     mGestureDetector.onTouchEvent(event);
     return false;

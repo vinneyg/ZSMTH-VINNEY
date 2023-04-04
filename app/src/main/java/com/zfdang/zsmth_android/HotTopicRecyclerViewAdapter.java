@@ -2,6 +2,8 @@ package com.zfdang.zsmth_android;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 //import android.util.Log;
@@ -29,6 +31,7 @@ public class HotTopicRecyclerViewAdapter extends RecyclerView.Adapter<HotTopicRe
     mListener = listener;
   }
 
+  @NonNull
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.hot_topic_item, parent, false);
     return new ViewHolder(view);
@@ -62,23 +65,6 @@ public class HotTopicRecyclerViewAdapter extends RecyclerView.Adapter<HotTopicRe
           holder.mBoardName.setTextColor(Color.parseColor("#607D8B")); //R.color.colorPrimary
           holder.mReplyCount.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
 
-          /*
-          if (Settings.getInstance().isNightMode()) {
-            holder.mTopicTitle.setTextColor(Color.GRAY);
-            holder.mBoardName.setTextColor(Color.GRAY);
-            holder.mReplyCount.setTextColor(Color.GRAY);
-            holder.mTopicTitle.setTextColor(Color.parseColor("#607D8B")); //R.color.status_text_night
-            holder.mBoardName.setTextColor(Color.parseColor("#607D8B")); //R.color.colorPrimary
-            holder.mReplyCount.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
-          } else {
-            holder.mTopicTitle.setTextColor(R.color.colorSecondaryText);
-            holder.mBoardName.setTextColor(R.color.colorSecondaryText);
-            holder.mReplyCount.setTextColor(R.color.colorSecondaryText);
-            holder.mTopicTitle.setTextColor(Color.parseColor("#607D8B")); //R.color.status_text_night
-            holder.mBoardName.setTextColor(Color.parseColor("#607D8B")); //R.color.colorPrimary
-            holder.mReplyCount.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
-          }
-          */
         }
         else
         {
@@ -115,23 +101,6 @@ public class HotTopicRecyclerViewAdapter extends RecyclerView.Adapter<HotTopicRe
             holder.mTopicTitle.setTextColor(Color.parseColor("#607D8B")); //R.color.colorPrimary
             holder.mBoardName.setTextColor(Color.parseColor("#607D8B")); //R.color.colorPrimary
             holder.mReplyCount.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
-            /*
-            if (Settings.getInstance().isNightMode()) {
-              holder.mTopicTitle.setTextColor(Color.GRAY);
-              holder.mBoardName.setTextColor(Color.GRAY);
-              holder.mReplyCount.setTextColor(Color.GRAY);
-              holder.mTopicTitle.setTextColor(Color.parseColor("#607D8B")); //R.color.status_text_night
-              holder.mBoardName.setTextColor(Color.parseColor("#607D8B")); //R.color.colorPrimary
-              holder.mReplyCount.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
-            } else {
-              holder.mTopicTitle.setTextColor(R.color.colorSecondaryText);
-              holder.mBoardName.setTextColor(R.color.colorSecondaryText);
-              holder.mReplyCount.setTextColor(R.color.colorSecondaryText);
-              holder.mTopicTitle.setTextColor(Color.parseColor("#607D8B")); //R.color.status_text_night
-              holder.mBoardName.setTextColor(Color.parseColor("#607D8B")); //R.color.colorPrimary
-              holder.mReplyCount.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
-            }
-            */
           }
         }
       }
@@ -142,7 +111,7 @@ public class HotTopicRecyclerViewAdapter extends RecyclerView.Adapter<HotTopicRe
     return mValues.size();
   }
 
-  public class ViewHolder extends RecyclerView.ViewHolder {
+  public static class ViewHolder extends RecyclerView.ViewHolder {
     public final View mView;
     public final TextView mSeperator;
     public final TextView mBoardName;
@@ -159,6 +128,7 @@ public class HotTopicRecyclerViewAdapter extends RecyclerView.Adapter<HotTopicRe
       mReplyCount = (TextView) view.findViewById(R.id.topic_reply_count);
     }
 
+    @NonNull
     @Override public String toString() {
       return mTopicTitle.getText().toString();
     }

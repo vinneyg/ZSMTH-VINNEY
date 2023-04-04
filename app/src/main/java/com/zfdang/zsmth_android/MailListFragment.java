@@ -3,7 +3,7 @@ package com.zfdang.zsmth_android;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-//import androidx.fragment.app.Fragment;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 import com.zfdang.SMTHApplication;
-//import com.zfdang.multiple_images_selector.SelectorSettings;
+
 import com.zfdang.zsmth_android.listeners.EndlessRecyclerOnScrollListener;
 import com.zfdang.zsmth_android.listeners.OnMailInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
@@ -49,7 +49,7 @@ import io.reactivex.schedulers.Schedulers;
  * Activities containing this fragment MUST implement the {@link OnMailInteractionListener}
  * interface.
  */
-public class MailListFragment extends androidx.fragment.app.Fragment implements OnVolumeUpDownListener, View.OnClickListener {
+public class MailListFragment extends Fragment implements OnVolumeUpDownListener, View.OnClickListener {
 
   private static final String TAG = "MailListFragment";
   public static final String INBOX_LABEL = "inbox";

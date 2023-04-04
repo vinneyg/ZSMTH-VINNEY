@@ -9,7 +9,7 @@ import android.util.Log;
 //import android.widget.Toast;
 
 import com.zfdang.SMTHApplication;
-//import com.zfdang.devicemodeltomarketingname.DeviceMarketingName;
+
 
 //import java.text.SimpleDateFormat;
 //import java.util.Date;

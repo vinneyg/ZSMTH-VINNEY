@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 //import androidx.appcompat.app.ActionBar;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -167,7 +168,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
     saveImageToFile(imagePath, isAnimation);
   }
   @Override
-  public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+  public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], int[] grantResults) {
     super.onRequestPermissionsResult(requestCode,permissions,grantResults);
     switch (requestCode) {
       case MY_PERMISSIONS_REQUEST_STORAGE_CODE:

@@ -44,6 +44,7 @@ import io.reactivex.disposables.Disposable;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import io.reactivex.Observable;
@@ -362,7 +363,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     // this method does not alert since it's triggered by SwipeRefreshLayout
     mCurrentPageNo = 1;
     TopicListContent.clearBoardTopics();
-    mRecyclerView.getAdapter().notifyDataSetChanged();
+    Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
     LoadBoardTopics();
   }
 
@@ -538,7 +539,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     showProgress("加载搜索结果...");
 
     TopicListContent.BOARD_TOPICS.clear();
-    mRecyclerView.getAdapter().notifyDataSetChanged();
+    Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
 
     String eliteStr = null;
     if (elite) eliteStr = "on";

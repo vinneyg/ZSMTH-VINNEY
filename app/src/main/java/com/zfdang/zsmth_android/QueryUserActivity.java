@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -19,6 +20,9 @@ import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserInfo;
+
+import java.util.Objects;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -54,7 +58,7 @@ public class QueryUserActivity extends SMTHBaseActivity {
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
-    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
     assignViews();
 
@@ -164,6 +168,7 @@ public class QueryUserActivity extends SMTHBaseActivity {
 
           }
 
+          @SuppressLint("SetTextI18n")
           @Override public void onNext(@NonNull UserInfo user) {
             Log.d(TAG, "onNext: " + user.toString());
 

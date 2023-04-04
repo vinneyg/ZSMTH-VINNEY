@@ -17,8 +17,8 @@ import android.webkit.WebViewClient;
 public class WebviewLoginClient extends WebViewClient {
 
     private static final String TAG = "WebviewLoginClient";
-    private String username;
-    private String password;
+    private final String username;
+    private final String password;
 
     Activity activity;
 
@@ -60,15 +60,11 @@ public class WebviewLoginClient extends WebViewClient {
                     "passwds[0].value = '" + this.password + "';" +
                     "document.getElementById('TencentCaptcha').click();";
 
-            if (Build.VERSION.SDK_INT >= 19) {
                 view.evaluateJavascript(js, new ValueCallback<String>() {
                     @Override
                     public void onReceiveValue(String s) {
                     }
                 });
-            } else {
-                view.loadUrl(js);
-            }
         }
         super.onPageFinished(view, url);
     }

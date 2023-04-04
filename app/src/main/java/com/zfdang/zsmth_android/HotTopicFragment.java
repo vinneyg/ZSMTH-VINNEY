@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -45,6 +46,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import java.util.List;
+import java.util.Objects;
+
 import okhttp3.ResponseBody;
 
 //import static androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE;
@@ -174,6 +177,7 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
         return null;
       }
     }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Topic>() {
+      @SuppressLint("NotifyDataSetChanged")
       @Override public void onSubscribe(@NonNull Disposable disposable) {
         // clearHotTopics current hot topics
         TopicListContent.clearHotTopics();
@@ -183,7 +187,7 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
       @Override public void onNext(@NonNull Topic topic) {
         //                        Log.d(TAG, topic.toString());
         TopicListContent.addHotTopic(topic);
-        mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.HOT_TOPICS.size() - 1);
+        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(TopicListContent.HOT_TOPICS.size() - 1);
       }
 
       @Override public void onError(@NonNull Throwable e) {

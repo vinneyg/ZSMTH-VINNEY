@@ -1,9 +1,13 @@
 package com.zfdang.zsmth_android;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
@@ -23,15 +27,15 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
   private int mOrientation;
 
   public final int[] ATTRS = { android.R.attr.listDivider };
-  private Drawable mDivider;
-  private int mHeight;
-  private int mWidth;
+  private final Drawable mDivider;
+  private final int mHeight;
+  private final int mWidth;
 
+  @SuppressLint("UseCompatLoadingForDrawables")
   public DividerItemDecoration(Context context, int orientation, int dividerDrawableRes) {
     if (dividerDrawableRes == 0) {
       dividerDrawableRes = R.drawable.recyclerview_divider;
     }
-
     mDivider = context.getResources().getDrawable(dividerDrawableRes,null);
     mHeight = DIVIDER_HEIGHT;
     mWidth = DIVIDER_WIDTH;
@@ -45,7 +49,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     mOrientation = orientation;
   }
 
-  @Override public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
+  @Override public void onDrawOver(@NonNull Canvas c, @NonNull RecyclerView parent, RecyclerView.State state) {
     if (mOrientation == VERTICAL_LIST) {
       drawVertical(c, parent);
     } else {
@@ -83,7 +87,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     }
   }
 
-  @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+  @Override public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, RecyclerView parent, RecyclerView.State state) {
     if (mOrientation == VERTICAL_LIST) {
       outRect.set(0, 0, 0, mHeight);
     } else {

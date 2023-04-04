@@ -1,10 +1,13 @@
 package com.zfdang.zsmth_android;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 
 import android.content.Intent;
 
 import android.net.Uri;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 //import android.util.Log;
@@ -46,6 +49,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
   }
 
   //    MailContentActivity.inflateContentViewGroup is using the same logic, please make sure they are consistent
+  @SuppressLint("SetTextI18n")
   public void inflateContentViewGroup(ViewGroup viewGroup, TextView contentView, final Post post) {
     // remove all child view in viewgroup
     viewGroup.removeAllViews();
@@ -244,7 +248,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     return mPosts.size();
   }
 
-  public class ViewHolder extends RecyclerView.ViewHolder {
+  public static class ViewHolder extends RecyclerView.ViewHolder {
     public final View mView;
     public final TextView mPostAuthor;
     public final TextView mPostIndex;
@@ -263,6 +267,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
       mPostContent = (LinkConsumableTextView) view.findViewById(R.id.post_content);
     }
 
+    @NonNull
     @Override public String toString() {
       return mPost.toString();
     }

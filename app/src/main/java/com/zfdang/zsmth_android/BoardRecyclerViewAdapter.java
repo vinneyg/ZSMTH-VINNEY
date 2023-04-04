@@ -1,6 +1,9 @@
 package com.zfdang.zsmth_android;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +33,13 @@ public class BoardRecyclerViewAdapter extends RecyclerView.Adapter<BoardRecycler
     mListener = listener;
   }
 
+  @NonNull
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.board_item, parent, false);
     return new ViewHolder(view);
   }
 
+  @SuppressLint("SetTextI18n")
   @Override public void onBindViewHolder(final ViewHolder holder, int position) {
     holder.mItem = mBoards.get(position);
     Board board = holder.mItem;
@@ -133,6 +138,7 @@ public class BoardRecyclerViewAdapter extends RecyclerView.Adapter<BoardRecycler
       return results;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override protected void publishResults(CharSequence constraint, FilterResults results) {
       adapter.mBoards.clear();
       adapter.mBoards.addAll((ArrayList<Board>) results.values);
@@ -140,7 +146,7 @@ public class BoardRecyclerViewAdapter extends RecyclerView.Adapter<BoardRecycler
     }
   }
 
-  public class ViewHolder extends RecyclerView.ViewHolder {
+  public static class ViewHolder extends RecyclerView.ViewHolder {
     public Board mItem;
     public final View mView;
     public final TextView mCategoryView;
@@ -158,6 +164,7 @@ public class BoardRecyclerViewAdapter extends RecyclerView.Adapter<BoardRecycler
       mEngNameView = (TextView) view.findViewById(R.id.BoardEngName);
     }
 
+    @NonNull
     @Override public String toString() {
       return mNameView.getText().toString();
     }

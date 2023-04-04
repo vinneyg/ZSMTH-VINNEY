@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
@@ -29,6 +30,7 @@ public class PopupLikeWindow extends PopupWindow {
   private EditText etMessage;
 
   // http://stackoverflow.com/questions/23464232/how-would-you-create-a-popover-view-in-android-like-facebook-comments
+  @SuppressLint("ResourceType")
   public void initPopupWindow(final Activity context) {
     mContext = context;
     if (context instanceof OnLikeInterface) {
