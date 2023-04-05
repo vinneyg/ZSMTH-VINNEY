@@ -9,10 +9,10 @@ import android.media.ExifInterface;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
+
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.Settings;
 import com.zfdang.zsmth_android.WebviewCookieHandler;
@@ -25,11 +25,12 @@ import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.MailListContent;
 import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.Topic;
-import io.reactivex.Observable;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
-import io.reactivex.schedulers.Schedulers;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -43,6 +44,12 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import io.reactivex.Observable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -50,10 +57,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -68,7 +71,6 @@ public class SMTHHelper {
   public static final String USER_AGENT =
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.101 Safari/537.36";
 
- // public ClearableCookieJar mCookieJar;
   public OkHttpClient mHttpClient;
 
   // WWW service of SMTH, but actually most of services are actually from nForum
@@ -81,7 +83,6 @@ public class SMTHHelper {
   // Mobile service of SMTH; this is used for webchat sharing & open in browser
   static public final String SMTH_MOBILE_URL = "https://m.newsmth.net";
 
-  private Retrofit wRetrofit;
   public SMTHWWWService wService;
   static private final String SMTH_WWW_ENCODING = "GB2312";
 
@@ -153,7 +154,7 @@ public class SMTHHelper {
     //                .client(mHttpClient)
     //                .build();
 
-    wRetrofit = new Retrofit.Builder().baseUrl(SMTH_WWW_URL)
+    Retrofit wRetrofit = new Retrofit.Builder().baseUrl(SMTH_WWW_URL)
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
@@ -186,11 +187,10 @@ public class SMTHHelper {
 
   private static Bitmap loadResizedBitmapFromFile(final String filename, final int targetWidth, final int targetHeight, boolean bCompress) {
     try {
-      BitmapFactory.Options option = null;
       Bitmap bitmap;
 
       // o.inPurgeable = true;
-      bitmap = BitmapFactory.decodeFile(filename, option);
+      bitmap = BitmapFactory.decodeFile(filename, null);
       Log.d(TAG, "loadResizedBitmapFromFile: " + String.format(Locale.CHINA,"Pre-sized bitmap size: (%dx%d).", bitmap.getWidth(), bitmap.getHeight()));
 
       if (bCompress) {
@@ -308,14 +308,12 @@ public class SMTHHelper {
   }
 
   public static byte[] getBitmapBytesWithResize(final String filename, boolean bCompress) {
-    final SMTHHelper helper = SMTHHelper.getInstance();
+//    final SMTHHelper helper = SMTHHelper.getInstance();
     Log.d(TAG, "getBitmapBytesWithResize: " + filename);
 
     if (filename.toLowerCase().endsWith(".gif")) {
       // gif, don't resize
       File infile = new File(filename);
-      //byte[] byteArray = getBytesFromFile(infile);
-      //return byteArray;
       return getBytesFromFile(infile);
     } else {
       // static image, resize it
@@ -328,9 +326,8 @@ public class SMTHHelper {
       copyExif(filename, newfilename);
 
       // read data
+      assert newfilename != null;
       File infile = new File(newfilename);
-      //byte[] byteArray = getBytesFromFile(infile);
-      //return byteArray;
       return getBytesFromFile(infile);
     }
   }
@@ -1302,7 +1299,7 @@ public class SMTHHelper {
       if(null != original) {
         if (original.startsWith("//")) {
           // images in post or avatar
-          return "http:" + original;
+          return "https:" + original;
         } else if (original.startsWith("/nForum")) {
           //return "http://att.newsmth.net" + original;
           //return Settings.getInstance().getWebAddr()+original;

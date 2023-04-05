@@ -446,18 +446,15 @@ public class Post {
             .replace("http://www.newsmth.net", "")
             .replace("http://m.mysmth.net", "")
             .replace("http://m.newsmth.net", "")
+            .replace("http://mysmth.net", "")
+            .replace("https://exp.mysmth.net", "")
             .replace("http://newsmth.net", "")
+            .replace("mysmth.net", "")
             .replace("newsmth.net", "")
+            .replace("m.mysmth.net", "")
             .replace("m.newsmth.net", "")
             .replace("官方应用", "")
             .replace("客户端", "");
-
-        line = line.replace("·", "")
-                .replace("http://www.mysmth.net", "")
-                .replace("http://m.mysmth.net", "")
-                .replace("http://mysmth.net", "")
-                .replace("mysmth.net", "")
-                .replace("m.mysmth.net", "");
 
         //line = "<font color=#808080>" + StringUtils.lookupIPLocation(line) + "</font>";
         line = "<font color=#607D8B>" + StringUtils.lookupIPLocation(line) + "</font>";

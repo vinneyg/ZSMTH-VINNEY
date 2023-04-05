@@ -6,13 +6,9 @@ import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
-//import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-//import android.view.ActionMode;
-//import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -80,7 +76,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
     // min size of image which will be shown; to filter tiny images (mainly icons)
     intent.putExtra(SelectorSettings.SELECTOR_MIN_IMAGE_SIZE, 10000); // file size > 10k
     // show camera or not
-    intent.putExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, false);
+    intent.putExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, true);
     // pass current selected images as the initial value
     intent.putStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST, mPhotos);
     // start the selector
@@ -374,7 +370,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
     } else if (mPostContext.getComposingMode() == ComposePostContext.MODE_EDIT_POST) {
       postContent = mContent.getText().toString();
       if (Settings.getInstance().bUseSignature()) {
-        postContent += "\n" + String.format(Locale.CHINA,"#修改自zSMTH-v@%s", Settings.getInstance().getSignature());
+        postContent += "\n" + String.format(Locale.CHINA,"#修改自zSMTH-v-@%s", Settings.getInstance().getSignature());
       }
       resp2 = SMTHHelper.editPost(mPostContext.getBoardEngName(), mPostContext.getPostId(), mTitle.getText().toString(), postContent);
     }
@@ -474,5 +470,4 @@ public class ComposePostActivity extends SMTHBaseActivity {
         .create()
         .show();
   }
-
 }

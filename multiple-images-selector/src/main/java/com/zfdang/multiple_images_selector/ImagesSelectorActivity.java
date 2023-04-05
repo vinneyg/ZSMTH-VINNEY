@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -183,9 +184,18 @@ public class ImagesSelectorActivity extends AppCompatActivity
         if (ContextCompat.checkSelfPermission(ImagesSelectorActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(ImagesSelectorActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(ImagesSelectorActivity.this,
+            /*ActivityCompat.requestPermissions(ImagesSelectorActivity.this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
-                    MY_PERMISSIONS_REQUEST_CAMERA_CODE);
+                    MY_PERMISSIONS_REQUEST_CAMERA_CODE);*/
+            if(Build.VERSION.SDK_INT<Build.VERSION_CODES.R|| Environment.isExternalStorageManager()){
+                launchCamera();
+                //Toast.makeText(this,"已获得所有文件的访问权限",Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                startActivityForResult(intent,MY_PERMISSIONS_REQUEST_CAMERA_CODE);
+            }
         } else {
             launchCamera();
         }
@@ -229,17 +239,35 @@ public class ImagesSelectorActivity extends AppCompatActivity
             }
             case MY_PERMISSIONS_REQUEST_CAMERA_CODE: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                    launchCamera();
-                } else {
+                //if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q ){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    if( Environment.isExternalStorageManager() )  // permission was granted, yay! Do the
+                        // contacts-related task you need to do.
+                        launchCamera();
+
+                } else{
+                    //在版本低于此的时候，做一些处理
+
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     Toast.makeText(ImagesSelectorActivity.this, getString(R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
                 }
-                //return;
+                    /*
+                else //Build >= 29.Android Q
+                {
+                    if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                            && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                        // permission was granted, yay! Do the
+                        // contacts-related task you need to do.
+                         launchCamera();
+                    } else {
+                        // permission denied, boo! Disable the
+                        // functionality that depends on this permission.
+                        Toast.makeText(ImagesSelectorActivity.this, getString(R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
+                    }
+                    return;
+                }
+                                */
             }
         }
     }
@@ -388,6 +416,7 @@ public class ImagesSelectorActivity extends AppCompatActivity
 
     public void launchCamera() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
             // set the output file of camera
             try {
@@ -396,7 +425,9 @@ public class ImagesSelectorActivity extends AppCompatActivity
                 Log.e(TAG, "launchCamera: ", e);
             }
             if (mTempImageFile != null && mTempImageFile.exists()) {
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mTempImageFile));
+                Uri photoURI = FileProvider.getUriForFile(this, this.getApplicationContext().getPackageName() + ".provider", mTempImageFile);
+                //cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mTempImageFile));
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
             } else {
                 Toast.makeText(this, R.string.camera_temp_file_error, Toast.LENGTH_SHORT).show();

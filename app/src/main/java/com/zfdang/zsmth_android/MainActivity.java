@@ -657,8 +657,7 @@ public class MainActivity extends SMTHBaseActivity
 
   private void quitNow() {
     //user logout
-    onLogout();
-
+    //onLogout();
     // quit
     finish();
     android.os.Process.killProcess(android.os.Process.myPid());

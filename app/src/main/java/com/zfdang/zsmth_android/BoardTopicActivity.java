@@ -2,6 +2,7 @@ package com.zfdang.zsmth_android;
 
 import static com.zfdang.zsmth_android.LoginActivity.LOGIN_ACTIVITY_REQUEST_CODE;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 
 import android.os.Bundle;
@@ -53,7 +54,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-//import static androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 /**
  * An activity representing a list of Topics. This activity
@@ -358,6 +358,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     // Log.d(TAG, mCurrentPageNo + " page is loading now...");
     LoadBoardTopics();
   }
+  @SuppressLint("NotifyDataSetChanged")
   @Override public void onRefresh() {
     // this method is slightly different with RefreshBoardTopicFromPageOne
     // this method does not alert since it's triggered by SwipeRefreshLayout
@@ -367,6 +368,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     LoadBoardTopics();
   }
 
+  @SuppressLint("NotifyDataSetChanged")
   public void RefreshBoardTopicFromPageOne() {
     showProgress("刷新版面文章...");
 
@@ -416,7 +418,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
               @Override
               public void run() {
                 // Notify adapter with appropriate notify methods
-                mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1); }
+                Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1); }
             });
             }
 

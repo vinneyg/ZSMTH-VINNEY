@@ -10,6 +10,7 @@
   <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
       tools:ignore="ScopedStorage" />
   <uses-permission android:name="android.permission.WAKE_LOCK" />
+  <uses-permission android:name="android.permission.CAMERA" />
   <!-- <uses-permission
     android:name="android.permission.VIBRATE"
     android:maxSdkVersion="30"/>-->
@@ -43,7 +44,7 @@
         android:name=".LoginActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:label="@string/title_activity_login" />
-        <activity android:name=".WebviewLoginActivity"></activity>
+    <activity android:name=".WebviewLoginActivity"></activity>
     <activity
         android:name=".BoardTopicActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
