@@ -198,6 +198,10 @@
         android:id="@+id/popup_post_target"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:textColor="@color/status_text_night"
+        android:textColorHint="@color/status_text_night"
+        android:digits="1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
         />
 
   </LinearLayout>

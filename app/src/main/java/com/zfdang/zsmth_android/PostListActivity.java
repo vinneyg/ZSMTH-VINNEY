@@ -1475,15 +1475,15 @@ public class PostListActivity extends SMTHBaseActivity
       }
 
       @Override public void onNext(@NonNull String s) {
-        //Toast.makeText(SMTHApplication.getAppContext(), s, Toast.LENGTH_SHORT).show();
+        Toast.makeText(SMTHApplication.getAppContext(), s, Toast.LENGTH_SHORT).show();
       }
 
       @Override public void onError(@NonNull Throwable e) {
-        Toast.makeText(SMTHApplication.getAppContext(), e.toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(SMTHApplication.getAppContext(), "发生错误:\n" + e.toString(), Toast.LENGTH_SHORT).show();
       }
 
       @Override public void onComplete() {
-      //  Toast.makeText(SMTHApplication.getAppContext(), "Vinney", Toast.LENGTH_SHORT).show();
+
       }
     });
   }
