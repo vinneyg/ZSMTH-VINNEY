@@ -418,8 +418,8 @@ public class ComposePostActivity extends SMTHBaseActivity {
                 String message = null;
                 if (postPublishResult != AjaxResponse.AJAX_RESULT_OK) {
                   message = "操作失败! \n错误信息:\n" + postPublishMessage;
+                  Toast.makeText(ComposePostActivity.this, message, Toast.LENGTH_SHORT).show();
                   if(!SMTHApplication.isValidUser()){
-                    Toast.makeText(ComposePostActivity.this, message, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ComposePostActivity.this, LoginActivity.class);
                     startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
                   }
@@ -435,6 +435,8 @@ public class ComposePostActivity extends SMTHBaseActivity {
                   KeyboardLess.$hide(ComposePostActivity.this, mContent);
 
                   if (message != null && !message.contains("本文可能含有不当内容")) {
+                    Toast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT)
+                            .show();
                     mContent.setText("");
                     clearPostContentCache();
                     ComposePostActivity.this.finish();
