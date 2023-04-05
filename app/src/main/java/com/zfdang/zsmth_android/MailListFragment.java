@@ -180,7 +180,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
                     MailListContent.MAILS.remove(viewHolder.getAdapterPosition());
                     recyclerView.getAdapter().notifyItemRemoved(viewHolder.getAdapterPosition());
                   }
-                 // Toast.makeText(getActivity(), ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                  Toast.makeText(getActivity(), ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override public void onError(@NonNull Throwable e) {
@@ -527,7 +527,6 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
   @Override public boolean onVolumeUpDown(int keyCode) {
     if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
      // RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
-      MainActivity activity = (MainActivity) getActivity();
       ( (MainActivity) getActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
     } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
      // RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);

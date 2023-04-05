@@ -13,15 +13,11 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
 
     private WebView mWebView;
     //private String url = "https://www.newsmth.net/";
- //   private String url = "https://m.mysmth.net/index";
+    //private String url = "https://m.mysmth.net/index";
     //private String url = "https://m.newsmth.net/index";
-
-
     private final String SMTH_WWW_URL = SMTHApplication.getWebAddress();
-
     private String username;
     private String password;
-
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -47,6 +43,7 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
 
+        //支持屏幕缩放
         mWebView.getSettings().setSupportZoom(true);
         mWebView.getSettings().setBuiltInZoomControls(true);
 

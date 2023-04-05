@@ -132,8 +132,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
           // set onclicklistener
           image.setTag(R.id.image_tag, content.getImgIndex());
           image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+         @Override public void onClick(View v) {
               int position = (int) v.getTag(R.id.image_tag);
 
               Intent intent = new Intent(mListener, FSImageViewerActivity.class);

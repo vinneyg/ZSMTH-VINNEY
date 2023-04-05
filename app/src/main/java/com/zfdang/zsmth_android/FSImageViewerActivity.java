@@ -31,7 +31,6 @@ import android.widget.Toast;
 
 import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener;
 import com.github.chrisbanes.photoview.OnPhotoTapListener;
-//import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.FrescoUtils;
@@ -46,7 +45,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import me.relex.circleindicator.CircleIndicator;
-//import com.github.chrisbanes.photoview.OnPhotoTapListener;
+
 
 public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoTapListener, OnOutsidePhotoTapListener {
 
@@ -192,7 +191,8 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
         else
         {
           if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                  && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                  && grantResults[1] == PackageManager.PERMISSION_GRANTED
+                  ||Build.VERSION.SDK_INT>=Build.VERSION_CODES.R) {
             // permission was granted, yay! Do the
             // contacts-related task you need to do.
             realSaveImageToFile();

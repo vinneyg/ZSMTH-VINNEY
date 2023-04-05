@@ -2,7 +2,6 @@ package com.zfdang.zsmth_android;
 
 import android.content.Context;
 import android.content.Intent;
-//import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 
@@ -278,7 +277,4 @@ public class MailContentActivity extends AppCompatActivity {
     getMenuInflater().inflate(R.menu.mail_content_menu, menu);
     return true;
   }
-
-
-
-    }
+}

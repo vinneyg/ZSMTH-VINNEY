@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
-//import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-//import android.util.Log;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -176,14 +174,14 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
       network = Observable.create(new ObservableOnSubscribe<List<Board>>() {
         @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
           List<Board> boards = SMTHHelper.LoadFavoriteBoardsInFolder(finalCurrentPath);
-          if (boards.size() > 0) {
+          if (boards != null && boards.size() > 0) {
             observableEmitter.onNext(boards);
           } else {
             observableEmitter.onComplete();
           }
         }
       });
-    } else if(board.isSection()){
+    } else if(board != null && board.isSection()){
       // 用户在收藏夹里收藏的系统的二级目录
       network = Observable.create(new ObservableOnSubscribe<List<Board>>() {
         @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
@@ -196,6 +194,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
         }
       });
     }
+
     List<Board> boards = new ArrayList<>();
     Observable.concat(cache, network).first(boards).toObservable().flatMap(new Function<List<Board>, ObservableSource<Board>>() {
       @Override public ObservableSource<Board> apply(@NonNull List<Board> boards) throws Exception {

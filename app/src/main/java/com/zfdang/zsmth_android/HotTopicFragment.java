@@ -16,11 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-/*
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-*/
 
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
@@ -49,8 +44,6 @@ import java.util.List;
 import java.util.Objects;
 
 import okhttp3.ResponseBody;
-
-//import static androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 /**
  * A fragment representing a list of Items.
@@ -233,7 +226,6 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
   @Override public boolean onVolumeUpDown(int keyCode) {
     if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
       RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
-      MainActivity activity = (MainActivity) getActivity();
       ( (MainActivity) getActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
     } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
       RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);

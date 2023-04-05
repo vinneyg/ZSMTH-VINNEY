@@ -1,17 +1,11 @@
 package com.zfdang.zsmth_android;
 
 import android.content.Context;
-
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.GestureDetector;
-//import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-//import android.widget.Toast;
-
-//import com.zfdang.SMTHApplication;
-//import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 
 /**
  * This gesturelistener is for PostListActivity

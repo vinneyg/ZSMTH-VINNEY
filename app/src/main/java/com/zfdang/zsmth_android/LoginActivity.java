@@ -2,9 +2,8 @@ package com.zfdang.zsmth_android;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-
+import androidx.appcompat.app.ActionBar;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -16,16 +15,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.appcompat.app.ActionBar;
-
 import com.zfdang.SMTHApplication;
-import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
-import com.zfdang.zsmth_android.newsmth.UserInfo;
-import com.zfdang.zsmth_android.newsmth.UserStatus;
-
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -41,6 +33,7 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
   private EditText m_passwordEditText;
   private CheckBox mSaveInfo;
 
+  // these 3 parameters are used by webviewlogin only
   static final int LOGIN_ACTIVITY_REQUEST_CODE = 9528;  // The request code
   static final String USERNAME = "USERNAME";
   static final String PASSWORD = "PASSWORD";
@@ -83,7 +76,7 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
 
   @Override public void onClick(View view) {
     if (view.getId() == R.id.signin_button) {
-      // verify username & password
+      // login with provided username and password
       String username = m_userNameEditText.getText().toString();
       String password = m_passwordEditText.getText().toString();
 
@@ -97,19 +90,18 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
       }
 
       if (focusView != null) {
-        // There was an error; don't attempt login and focus the first
-        // form field with an error.
+    // There was an error; don't attempt login and focus the first field with an alert
         focusView.requestFocus();
         Toast.makeText(SMTHApplication.getAppContext(), "请输入用户名/密码！", Toast.LENGTH_SHORT).show();
       } else {
         // use two methods for login: with verification, or simple login
-        if (Settings.getInstance().isLoginWithVerification()) {
-          // login with verification
+        if(Settings.getInstance().isLoginWithVerification()) {
+          // login with gesture verification
           // save info if selected
           boolean saveinfo = mSaveInfo.isChecked();
           Settings.getInstance().setSaveInfo(saveinfo);
 
-          if (saveinfo) {
+          if(saveinfo) {
             // save
             Settings.getInstance().setUsername(username);
             Settings.getInstance().setPassword(password);
@@ -136,33 +128,15 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    Log.d(TAG, "receive login result" + requestCode);
+//    Log.d(TAG, "receive login result" + requestCode);
     if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
-      Log.d(TAG, "receive login result"+ resultCode);
+//      Log.d(TAG, "receive login result"+ resultCode);
       if (resultCode == RESULT_OK) {
-        //Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
         Intent resultIntent = new Intent();
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
       }
-    }
-  }
-
-  @Override public void onStart() {
-    super.onStart();
-  }
-
-  @Override public void onStop() {
-    super.onStop();
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case android.R.id.home:
-        onBackPressed();
-        return true;
-      default:
-        return super.onOptionsItemSelected(item);
     }
   }
 
@@ -179,7 +153,6 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
     // http://gank.io/post/560e15be2dca930e00da1083
     SMTHHelper helper = SMTHHelper.getInstance();
     // clear cookies upon login
-    //helper.mCookieJar.clear();
     final String cookieDays = "2";
     helper.wService.login(username, password, cookieDays)
             .subscribeOn(Schedulers.io())
@@ -224,6 +197,22 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
               }
             });
   }
+  @Override public void onStart() {
+    super.onStart();
+  }
 
+  @Override public void onStop() {
+    super.onStop();
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        onBackPressed();
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
+  }
 }
 

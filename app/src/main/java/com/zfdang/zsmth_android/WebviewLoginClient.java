@@ -2,8 +2,6 @@ package com.zfdang.zsmth_android;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
-import android.util.Log;
 import android.webkit.ValueCallback;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -49,9 +47,8 @@ public class WebviewLoginClient extends WebViewClient {
 
 
     public void onPageFinished(WebView view, String url) {
-//        Log.d(TAG, "onPageFinished" + url);
+        // Log.d(TAG, "onPageFinished" + url);
         if (url.equals("https://m.newsmth.net/index")||url.equals("https://m.mysmth.net/index")) {
-        //    if (url.equals("https://www.mysmth.net")) {
             // login page, input id and passwd automatically
             final String js = "javascript: " +
                     "var ids = document.getElementsByName('id');" +

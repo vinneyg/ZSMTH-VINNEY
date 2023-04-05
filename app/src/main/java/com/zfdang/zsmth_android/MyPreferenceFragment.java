@@ -1,7 +1,6 @@
 package com.zfdang.zsmth_android;
 
 import android.app.Activity;
-//import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
