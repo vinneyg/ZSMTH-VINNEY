@@ -959,7 +959,7 @@ public class MainActivity extends SMTHBaseActivity
 
                       @Override
                       public void onNext(@NonNull AjaxResponse ajaxResponse) {
-                        Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                        //Log.d(TAG, "onNext: " + ajaxResponse.toString());
                         if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
                           Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg() + "\n" + "请刷新收藏！", Toast.LENGTH_SHORT).show();
                         } else {
@@ -1001,7 +1001,7 @@ public class MainActivity extends SMTHBaseActivity
             dialog.dismiss();
 
             SMTHHelper helper = SMTHHelper.getInstance();
-            Log.d(TAG, favoriteBoardFragment.getCurrentPathInString());
+            //Log.d(TAG, favoriteBoardFragment.getCurrentPathInString());
             helper.wService.manageFavoriteBoard("0", "db", board.getSectionID())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -1013,7 +1013,7 @@ public class MainActivity extends SMTHBaseActivity
 
                       @Override
                       public void onNext(@NonNull AjaxResponse ajaxResponse) {
-                        Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                        //(TAG, "onNext: " + ajaxResponse.toString());
                         if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
                           Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg() + "\n" + "请刷新收藏！", Toast.LENGTH_SHORT).show();
                         } else {
@@ -1056,7 +1056,7 @@ public class MainActivity extends SMTHBaseActivity
               dialog.dismiss();
 
               SMTHHelper helper = SMTHHelper.getInstance();
-              Log.d(TAG, favoriteBoardFragment.getCurrentPathInString());
+              //Log.d(TAG, favoriteBoardFragment.getCurrentPathInString());
               helper.wService.manageFavoriteBoard("0", "db", board.getFolderID())
                       .subscribeOn(Schedulers.io())
                       .observeOn(AndroidSchedulers.mainThread())
@@ -1068,7 +1068,7 @@ public class MainActivity extends SMTHBaseActivity
 
                         @Override
                         public void onNext(@NonNull AjaxResponse ajaxResponse) {
-                          Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                          //Log.d(TAG, "onNext: " + ajaxResponse.toString());
                           if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
                             Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg() + "\n" + "请刷新收藏！", Toast.LENGTH_SHORT).show();
                           } else {
@@ -1158,7 +1158,7 @@ public class MainActivity extends SMTHBaseActivity
               }
 
               @Override public void onNext(@NonNull UserInfo user) {
-                Log.d(TAG, "onNext: " + user.toString());
+                //Log.d(TAG, "onNext: " + user.toString());
                 if(user != null) {
                   if (!user.is_online()) {
                     //Toast.makeText(getApplicationContext,"Offline", Toast.LENGTH_SHORT).show();
