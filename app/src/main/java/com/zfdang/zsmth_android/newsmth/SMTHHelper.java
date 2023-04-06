@@ -376,7 +376,6 @@ public class SMTHHelper {
       if (matcher.find()) {
         String totalPostString = matcher.group(0);
         topic.setTotalPostNoFromString(totalPostString);
-        //                Log.d(TAG, totalPostString);
       }
     }
     else
@@ -424,6 +423,7 @@ public class SMTHHelper {
     }
 
     if (results.size() == 0) {
+
       // there might be some problems with the response
       //            <div class="error">
       //            <h5>产生错误的可能原因：</h5>

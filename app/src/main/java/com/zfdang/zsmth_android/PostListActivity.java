@@ -568,73 +568,97 @@ public class PostListActivity extends SMTHBaseActivity
   public void loadPostListByPages() {
     final SMTHHelper helper = SMTHHelper.getInstance();
 
-    helper.wService.getPostListByPage(mTopic.getTopicURL(), mTopic.getTopicID(), mCurrentPageNo, mFilterUser)
-        .flatMap(new Function<ResponseBody, Observable<Post>>() {
-          @Override public Observable<Post> apply(@NonNull ResponseBody responseBody) throws Exception {
-            try {
-              String response = responseBody.string();
-              List<Post> posts = SMTHHelper.ParsePostListFromWWW(response, mTopic);
-              if(posts.size()==0) {
-                return Observable.empty(); //handle error case
+    helper
+        .wService
+        .getPostListByPage(mTopic.getTopicURL(), mTopic.getTopicID(), mCurrentPageNo, mFilterUser)
+        .flatMap(
+            new Function<ResponseBody, Observable<Post>>() {
+              @Override
+              public Observable<Post> apply(@NonNull ResponseBody responseBody) throws Exception {
+                try {
+                  String response = responseBody.string();
+                  List<Post> posts = SMTHHelper.ParsePostListFromWWW(response, mTopic);
+                  if (posts.size() == 0) {
+                    return Observable.empty(); // handle error case
+                  }
+                  if (!SMTHApplication.ReadRec) {
+                    SMTHApplication.ReadPostFirst = posts.get(0);
+                    SMTHApplication.ReadRec = true;
+                  }
+                  return Observable.fromIterable(posts);
+                } catch (Exception e) {
+                  SMTHApplication.ReadRec = false;
+                  SMTHApplication.ReadPostFirst = null;
+                  Log.e(TAG, Log.getStackTraceString(e));
+                }
+                return null;
               }
-              if(!SMTHApplication.ReadRec) {
-                SMTHApplication.ReadPostFirst = posts.get(0);
-                SMTHApplication.ReadRec=true;
-              }
-              return Observable.fromIterable(posts);
-            } catch (Exception e) {
-              SMTHApplication.ReadRec=false;
-              SMTHApplication.ReadPostFirst=null;
-              Log.e(TAG, Log.getStackTraceString(e));
-            }
-            return null;
-          }
-        })
+            })
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Observer<Post>() {
-          @Override public void onSubscribe(@NonNull Disposable disposable) {
+        .subscribe(
+            new Observer<Post>() {
+              @Override
+              public void onSubscribe(@NonNull Disposable disposable) {}
 
-          }
-
-          @Override public void onNext(@NonNull Post post) {
-            // Log.d(TAG, post.toString());
-            if(post.getContentSegments().size() != 0 ){
-            PostListContent.addItem(post);
-            mRecyclerView.getAdapter().notifyItemInserted(PostListContent.POSTS.size() - 1);
-            }
-          }
-
-          @Override public void onError(@NonNull Throwable e) {
-            clearLoadingHints();
-            Toast.makeText(SMTHApplication.getAppContext(), "加载失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
-          }
-
-          @Override public void onComplete() {
-            mTotalPageNo = mTopic.getTotalPageNo();
-            String title = String.format(Locale.CHINA,"[%d/%d] %s", mCurrentPageNo, mTopic.getTotalPageNo(), mTopic.getTitle());
-            mTitle.setText(title);
-            mPageNo.setText(String.format(Locale.CHINA,"%d", mCurrentPageNo));
-            mCurrentReadPageNo = mCurrentPageNo;
-            clearLoadingHints();
-            SMTHApplication.deletionCount++;
-
-            //Special User OFFLINE case: [] or [Category 第一页:]
-            if(PostListContent.POSTS.size() == 0) {
-                //Toast.makeText(SMTHApplication.getAppContext(),"请重新登录-"+ PostListContent.POSTS.size()+"-!",Toast.LENGTH_SHORT).show();
-                PostListContent.clear();
-                try {
-                  Thread.sleep(500);
-                  Settings.getInstance().setUserOnline(false); //User Offline
-                  onBackPressed();
-                } catch (InterruptedException e) {
-                  e.printStackTrace();
+              @Override
+              public void onNext(@NonNull Post post) {
+                // Log.d(TAG, post.toString());
+                if (post.getContentSegments().size() != 0) {
+                  PostListContent.addItem(post);
+                  mRecyclerView.getAdapter().notifyItemInserted(PostListContent.POSTS.size() - 1);
                 }
-              Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-              startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
-            }
-          }
-        });
+              }
+
+              @Override
+              public void onError(@NonNull Throwable e) {
+                clearLoadingHints();
+                Toast.makeText(
+                        SMTHApplication.getAppContext(),
+                        "加载失败！\n" + e.toString(),
+                        Toast.LENGTH_SHORT)
+                    .show();
+              }
+
+              @Override
+              public void onComplete() {
+                mTotalPageNo = mTopic.getTotalPageNo();
+                String title =
+                    String.format(
+                        Locale.CHINA,
+                        "[%d/%d] %s",
+                        mCurrentPageNo,
+                        mTopic.getTotalPageNo(),
+                        mTopic.getTitle());
+                mTitle.setText(title);
+                mPageNo.setText(String.format(Locale.CHINA, "%d", mCurrentPageNo));
+                mCurrentReadPageNo = mCurrentPageNo;
+                clearLoadingHints();
+                SMTHApplication.deletionCount++;
+
+
+                  // Special User OFFLINE case: [] or [Category 第一页:]
+                  if (PostListContent.POSTS.size() == 0) {
+                    // Toast.makeText(SMTHApplication.getAppContext(),"请重新登录-"+
+                    // PostListContent.POSTS.size()+"-!",Toast.LENGTH_SHORT).show();
+                    PostListContent.clear();
+                    try {
+                      Thread.sleep(500);
+                      onBackPressed();
+                    } catch (InterruptedException e) {
+                      e.printStackTrace();
+                    }
+
+                    if (!SMTHApplication.isValidUser()) {
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
+                    }
+                    else
+                      Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请刷新页面！",Toast.LENGTH_SHORT).show();
+
+                  }
+                }
+            });
   }
 
   public void loadPostListByPagesNew() {
@@ -675,19 +699,19 @@ public class PostListActivity extends SMTHBaseActivity
 
               @Override
               public void onNext(@NonNull Post post) {
-                  String temp = post.getPosition();
-                  int Index;
-                  if (temp.equals("楼主")) {
-                    Index = 0;
-                  } else {
-                    String newTemp = temp.replaceAll("第", "");
-                    temp = newTemp.replaceAll("楼", "");
-                    Index = Integer.parseInt(temp);
-                  }
-                  Index = Index % POST_PER_PAGE;
-                  // PostListContent.addItem(Index,post);
-                  PostListContent.InsertItem(Index, post);
-                  Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(Index);
+                String temp = post.getPosition();
+                int Index;
+                if (temp.equals("楼主")) {
+                  Index = 0;
+                } else {
+                  String newTemp = temp.replaceAll("第", "");
+                  temp = newTemp.replaceAll("楼", "");
+                  Index = Integer.parseInt(temp);
+                }
+                Index = Index % POST_PER_PAGE;
+                // PostListContent.addItem(Index,post);
+                PostListContent.InsertItem(Index, post);
+                Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(Index);
               }
 
               @Override
@@ -716,21 +740,24 @@ public class PostListActivity extends SMTHBaseActivity
                 clearLoadingHints();
 
                 // Special User OFFLINE case: [] or [Category 第一页:]
-                if (PostListContent.POSTS.size() == 0) {
-                  // Toast.makeText(SMTHApplication.getAppContext(),"请重新登录-"+
-                  // PostListContent.POSTS.size()+"-!",Toast.LENGTH_SHORT).show();
-                  PostListContent.clear();
 
-                  try {
-                    Thread.sleep(500);
-                    Settings.getInstance().setUserOnline(false); // User Offline
-                    onBackPressed();
-                  } catch (InterruptedException e) {
-                    e.printStackTrace();
+                  if (PostListContent.POSTS.size() == 0) {
+                    // Toast.makeText(SMTHApplication.getAppContext(),"请重新登录-"+
+                    // PostListContent.POSTS.size()+"-!",Toast.LENGTH_SHORT).show();
+                    PostListContent.clear();
+                    try {
+                      Thread.sleep(500);
+                      onBackPressed();
+                    } catch (InterruptedException e) {
+                      e.printStackTrace();
+                    }
+                    if (!SMTHApplication.isValidUser()) {
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
                   }
-                  Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                  startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
-                }
+                    else
+                      Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请刷新页面！",Toast.LENGTH_SHORT).show();
+                  }
               }
             });
   }
@@ -1264,7 +1291,7 @@ public class PostListActivity extends SMTHBaseActivity
       }
     } catch (Exception e) {
       Log.e(TAG, "saveImageToFile: " + Log.getStackTraceString(e));
-      Toast.makeText(PostListActivity.this, "保存截图失败:\n" + e.toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(PostListActivity.this, "保存截图失败:\n请授予应用存储权限！\n" + e.toString(), Toast.LENGTH_LONG).show();
     }
   }
 

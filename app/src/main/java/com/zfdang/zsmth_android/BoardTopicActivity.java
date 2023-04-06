@@ -390,98 +390,118 @@ public class BoardTopicActivity extends SMTHBaseActivity
     isSearchMode = false;
     final SMTHHelper helper = SMTHHelper.getInstance();
 
-    helper.wService.getBoardTopicsByPage(mBoard.getBoardEngName(), Integer.toString(mCurrentPageNo))
-        .flatMap(new Function<ResponseBody, ObservableSource<Topic>>() {
-          @Override public ObservableSource<Topic> apply(@NonNull ResponseBody responseBody) throws Exception {
-            try {
-              String response = responseBody.string();
-              List<Topic> topics = SMTHHelper.ParseBoardTopicsFromWWW(response);
-              if(topics.size()==0) {
-                return Observable.empty(); //handle error case
+    helper
+        .wService
+        .getBoardTopicsByPage(mBoard.getBoardEngName(), Integer.toString(mCurrentPageNo))
+        .flatMap(
+            new Function<ResponseBody, ObservableSource<Topic>>() {
+              @Override
+              public ObservableSource<Topic> apply(@NonNull ResponseBody responseBody)
+                  throws Exception {
+                try {
+                  String response = responseBody.string();
+                  List<Topic> topics = SMTHHelper.ParseBoardTopicsFromWWW(response);
+                  if (topics.size() == 0) {
+                    return Observable.empty(); // handle error case
+                  }
+                  return Observable.fromIterable(topics);
+                } catch (Exception e) {
+                  Log.e(TAG, "call: " + Log.getStackTraceString(e));
+                  return null;
+                }
               }
-              return Observable.fromIterable(topics);
-            } catch (Exception e) {
-              Log.e(TAG, "call: " + Log.getStackTraceString(e));
-              return null;
-            }
-          }
-        })
+            })
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Observer<Topic>() {
-          @Override public void onSubscribe(@NonNull Disposable disposable) {
-            Topic topic = new Topic(String.format("第%d页:", mCurrentPageNo));
-            topic.isCategory = true;
-            TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
-            //mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
-            mRecyclerView.post(new Runnable() {
+        .subscribe(
+            new Observer<Topic>() {
               @Override
-              public void run() {
-                // Notify adapter with appropriate notify methods
-                Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1); }
+              public void onSubscribe(@NonNull Disposable disposable) {
+                Topic topic = new Topic(String.format("第%d页:", mCurrentPageNo));
+                topic.isCategory = true;
+                TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
+                // mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                mRecyclerView.post(
+                    new Runnable() {
+                      @Override
+                      public void run() {
+                        // Notify adapter with appropriate notify methods
+                        Objects.requireNonNull(mRecyclerView.getAdapter())
+                            .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                      }
+                    });
+              }
+
+              @Override
+              public void onNext(@NonNull Topic topic) {
+                // Log.d(TAG, topic.toString());
+                if (!topic.isSticky || mSetting.isShowSticky()) {
+                  if (!MapHash.contains(topic.getTitle())) {
+                    if (MapHash.size() < MAXSIZE) {
+                      // Log.d(TAG, "Vinney1 + " + topic.getTitle());
+                      TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
+                      MapHash.put(topic.getTitle(), topic.getTopicID());
+                      mRecyclerView
+                          .getAdapter()
+                          .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                    } else {
+                      // Log.d(TAG, "Vinney2 + " + topic.getTitle());
+                      MapHash.clear();
+                      TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
+                      MapHash.put(topic.getTitle(), topic.getTopicID());
+                      mRecyclerView
+                          .getAdapter()
+                          .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                    }
+                  } else {
+                    Log.d(TAG, "Vinney3 + " + topic.getTitle());
+                  }
+                }
+              }
+
+              @Override
+              public void onError(@NonNull Throwable e) {
+                clearLoadingHints();
+
+                Toast.makeText(
+                        SMTHApplication.getAppContext(),
+                        String.format("获取第%d页的帖子失败!\n", mCurrentPageNo) + e.toString(),
+                        Toast.LENGTH_SHORT)
+                    .show();
+                mCurrentPageNo -= 1;
+              }
+
+              @Override
+              public void onComplete() {
+                clearLoadingHints();
+
+                // Special User OFFLINE case: [] or [Category 第一页:]
+                  if (TopicListContent.BOARD_TOPICS.toString().length() == 2
+                      || TopicListContent.BOARD_TOPICS.toString().length() == 15) {
+                    Log.d(TAG, "Vinney-100 + " + TopicListContent.BOARD_TOPICS.toString());
+                    // Toast.makeText(SMTHApplication.getAppContext(),"请重新登录！",Toast.LENGTH_SHORT).show();
+                    TopicListContent.clearBoardTopics();
+                    // SMTHApplication.activeUser = null;
+
+                    try {
+                      Thread.sleep(500);
+                      //Settings.getInstance().setUserOnline(false); // User Offline
+                      onBackPressed();
+                    } catch (InterruptedException e) {
+                      e.printStackTrace();
+                    }
+
+                    if (!SMTHApplication.isValidUser()) {
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
+                  }
+                    else
+                      Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请刷新页面！",Toast.LENGTH_SHORT).show();
+
+
+                  }
+              }
             });
-            }
-
-          @Override public void onNext(@NonNull Topic topic) {
-            // Log.d(TAG, topic.toString());
-            if (!topic.isSticky || mSetting.isShowSticky()) {
-              if(!MapHash.contains(topic.getTitle()) ) {
-                if (MapHash.size() < MAXSIZE) {
-                  //Log.d(TAG, "Vinney1 + " + topic.getTitle());
-                  TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
-                  MapHash.put(topic.getTitle(),topic.getTopicID());
-                  mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
-                }
-                else
-                {
-                  //Log.d(TAG, "Vinney2 + " + topic.getTitle());
-                  MapHash.clear();
-                  TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
-                  MapHash.put(topic.getTitle(),topic.getTopicID());
-                  mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
-                }
-              }
-
-              else{
-                Log.d(TAG, "Vinney3 + " + topic.getTitle());
-              }
-              }
-          }
-
-          @Override public void onError(@NonNull Throwable e) {
-            clearLoadingHints();
-
-            Toast.makeText(SMTHApplication.getAppContext(), String.format("获取第%d页的帖子失败!\n", mCurrentPageNo) + e.toString(),
-                Toast.LENGTH_SHORT).show();
-            mCurrentPageNo -= 1;
-          }
-
-          @Override public void onComplete() {
-            clearLoadingHints();
-
-            //Special User OFFLINE case: [] or [Category 第一页:]
-            if(TopicListContent.BOARD_TOPICS.toString().length() == 2 || TopicListContent.BOARD_TOPICS.toString().length() == 15)
-            {
-              Log.d(TAG, "Vinney-100 + " + TopicListContent.BOARD_TOPICS.toString());
-              //Toast.makeText(SMTHApplication.getAppContext(),"请重新登录！",Toast.LENGTH_SHORT).show();
-              TopicListContent.clearBoardTopics();
-             // SMTHApplication.activeUser = null;
-
-              try {
-                Thread.sleep(500);
-                Settings.getInstance().setUserOnline(false); //User Offline
-                onBackPressed();
-              } catch (InterruptedException e) {
-                e.printStackTrace();
-              }
-
-              Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-              startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
-            }
-          }
-        });
-
-
   }
 
 
