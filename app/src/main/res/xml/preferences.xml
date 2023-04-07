@@ -166,7 +166,7 @@
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="setting_signature_control"
-        android:summaryOff="打赏作者: vinneyguo@outlook.com(支付宝)"
+        android:summaryOff="不使用签名"
         android:summaryOn="使用签名"
         android:title="发帖时添加设备签名"/>
     <EditTextPreference
@@ -187,6 +187,10 @@
         android:summary="https://www.mysmth.net"
         android:title="水木社区站点"
         />
+    <Preference
+        android:key="sponsor"
+        android:summary="支付宝帐号: vinneyguo@outlook.com\n点击自动复制"
+        android:title="赞助打赏"/>
     <Preference
         android:key="setting_app_version"
         android:summary="版本号: 未知"

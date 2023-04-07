@@ -14,6 +14,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -76,6 +77,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
   Preference app_feedback;
   Preference app_version;
 
+  Preference app_sponsor;
+
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -83,6 +86,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     addPreferencesFromResource(R.xml.preferences);
 
     fresco_cache = findPreference("setting_fresco_cache");
+
     fresco_cache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
       @Override public boolean onPreferenceClick(Preference preference) {
         // clear cache, then update cache size
@@ -411,24 +415,6 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
           bValue = boolVal;
         }
         Settings.getInstance().setUseSignature(bValue);
-        if (bValue == false) {
-          String alipay = "vinneyguo@outlook.com";
-          /*
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            final android.content.ClipboardManager clipboardManager =
-                (android.content.ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-            final android.content.ClipData clipData = android.content.ClipData.newPlainText("ID", alipay);
-            clipboardManager.setPrimaryClip(clipData);
-          } else {
-            final android.text.ClipboardManager clipboardManager =
-                (android.text.ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboardManager.setText(alipay);
-          }
-          */
-          final android.content.ClipboardManager clipboardManager =
-                  (android.content.ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-          Toast.makeText(getActivity(), "作者支付宝ID已复制到剪贴板...", Toast.LENGTH_SHORT).show();
-        }
         return true;
       }
     });
@@ -527,7 +513,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       @Override public boolean onPreferenceClick(Preference preference) {
         ComposePostContext postContext = new ComposePostContext();
         postContext.setComposingMode(ComposePostContext.MODE_NEW_MAIL_TO_USER);
-        postContext.setPostAuthor("VINNEY");
+        postContext.setPostAuthor("Vinney");
         Intent intent = new Intent(getActivity(), ComposePostActivity.class);
         intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
         startActivity(intent);
@@ -542,6 +528,19 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
        // ActivityUtils.openLink("http://zsmth-android.zfdang.com/release.html", getActivity());
         Toast.makeText(SMTHApplication.getAppContext(),"这是Vinney的zSMTH改进版本!",Toast.LENGTH_SHORT).show();
         ActivityUtils.openLink("https://lanzoui.com/b01noyh6b", getActivity());
+        return true;
+      }
+    });
+
+    app_sponsor = findPreference("sponsor");
+    app_sponsor.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+      @Override public boolean onPreferenceClick(Preference preference) {
+
+        String alipay = "vinneyguo@outlook.com";
+        final android.content.ClipboardManager clipboardManager =
+                (android.content.ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        clipboardManager.setText(alipay);
+        Toast.makeText(getActivity(), "作者支付宝ID已复制到剪贴板...", Toast.LENGTH_SHORT).show();
         return true;
       }
     });

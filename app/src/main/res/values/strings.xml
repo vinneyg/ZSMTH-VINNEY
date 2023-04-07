@@ -142,7 +142,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   <!-- 关于 -->
   <string name="about_title">关于zSMTH-v</string>
     <!--string name="about_content" formatted="false">版本: %s(%d).\nzSMTH-Android是水木社区BBS的开源Android客户端。\n\n1.在帖子内容处，长按将弹出‘回复’等操作菜单！\n2.点击十大帖子右上角的图标可跳至对应版面\n3.邮件左划删除\n\n获取更新和使用说明:\nhttp://zsmth-android.zfdang.com/\n\nby zfdang.-->
-  <string name="about_content" formatted="false">版本: %s(%d).\n1.修改水木社区登录掉线问题！\n2.登录站点可配置，默认newsmth！</string>
+  <string name="about_content" formatted="false">版本: %s(%d).\n不定期升级，注意检查更新！</string>
   <string name="about_close">关闭</string>
   <string name="mail_content_menu_open_post">打开原贴</string>
   <string name="mail_content_title">加载中...</string>
