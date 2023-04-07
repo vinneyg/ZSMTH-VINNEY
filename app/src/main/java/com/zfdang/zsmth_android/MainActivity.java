@@ -524,7 +524,7 @@ public class MainActivity extends SMTHBaseActivity
           if (message.contains(SMTHApplication.NOTIFICATION_NEW_MAIL)) {
             mailListFragment.setCurrentFolder(MailListFragment.INBOX_LABEL);
           } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_LIKE)) {
-            subTitle = "Like我";
+            subTitle = "LIKE我";
             mailListFragment.setCurrentFolder(MailListFragment.LIKE_LABEL);
           } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_AT)) {
             subTitle = "@我";

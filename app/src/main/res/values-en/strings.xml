@@ -1,5 +1,5 @@
 <resources>
-  <string name="app_name">zSMTH</string>
+  <string name="app_name">zSMTH-v</string>
 
   <string name="navigation_drawer_open">打开侧边导航栏</string>
   <string name="navigation_drawer_close">关闭侧边导航栏</string>
@@ -27,7 +27,7 @@
   <string name="login_label_signin">登录</string>
   <string name="login_label_saveinfo">保存登录信息</string>
   <string name="login_register_link">没有帐号？  <a href="http://www.newsmth.net/bbsreg0.html">注册</a></string>
-  <string name="login_asm_help">zSMTH  <a href="https://github.com/vinneyg/zSMTH-VINNEY">使用说明</a></string>
+  <string name="login_asm_help">zSMTH-v  <a href="https://github.com/vinneyg/zSMTH-VINNEY">使用说明</a></string>
 
   <!-- 导读页 -->
   <string name="guidance_label_board">版面:</string>

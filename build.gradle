@@ -3,16 +3,15 @@ apply plugin: 'com.github.ben-manes.versions'
 
 buildscript {
     repositories {
+        mavenCentral()
         google()
         maven {
-            allowInsecureProtocol = true
-            url "http://mvn.mob.com/android/"
+         url "http://mvn.mob.com/android/";
+            allowInsecureProtocol = true;
         }
         maven {
             url "https://plugins.gradle.org/m2/"
         }
-
-        mavenCentral()
     }
     dependencies {
         // https://developer.android.com/studio/releases/gradle-plugin.html
@@ -48,8 +47,8 @@ task clean(type: Delete) {
 
 ext {
     minSdkVersion = 24
-    targetSdkVersion = 32
-    compileSdkVersion = 32
+    targetSdkVersion = 33
+    compileSdkVersion = 33
     // https://developer.android.com/studio/releases/build-tools
     buildToolsVersion = '30.0.3'
     FRESCO_VERSION = '1.14.2'

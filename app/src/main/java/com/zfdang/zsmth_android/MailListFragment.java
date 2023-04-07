@@ -480,6 +480,8 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     MenuItem item = menu.findItem(R.id.mail_list_fragment_newmail);
     item.setVisible(true);
+    item = menu.findItem(R.id.mail_list_read_all);
+    item.setVisible(true);
     super.onCreateOptionsMenu(menu, inflater);
   }
 
@@ -495,7 +497,15 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
       return true;
     } else if (id == R.id.main_action_refresh) {
       LoadMailsFromBeginning();
-    }
+    } else if (id == R.id.mail_list_read_all) {
+          if (TextUtils.equals(currentFolder, INBOX_LABEL)||TextUtils.equals(currentFolder, OUTBOX_LABEL)||TextUtils.equals(currentFolder, DELETED_LABEL))
+                 Toast.makeText(SMTHApplication.getAppContext(),"站点不支持邮件已读！",Toast.LENGTH_SHORT).show();
+          else
+          {
+                  for(int pos =0;pos<MailListContent.MAILS.size();pos++)
+                      markMailAsReaded(pos);
+                }
+           }
 
     return super.onOptionsItemSelected(item);
   }

@@ -25,4 +25,11 @@
       android:orderInCategory="4"
       android:title="@string/action_logout"
       app:showAsAction="never"/>
+	  
+  <item
+      android:id="@+id/mail_list_read_all"
+      android:orderInCategory="5"
+      android:title="全部已读"
+	  android:visible="false"
+      app:showAsAction="never"/>
 </menu>
