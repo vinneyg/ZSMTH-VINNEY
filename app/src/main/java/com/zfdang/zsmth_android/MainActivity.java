@@ -621,7 +621,7 @@ public class MainActivity extends SMTHBaseActivity
 
     if (fragment != hotTopicFragment) {
       // return to hottopic if we are not there yet
-      String title = "首页导读";
+      String title = "首页";
       FragmentManager fm = getSupportFragmentManager();
       fm.beginTransaction().replace(R.id.content_frame, hotTopicFragment).commit();
       setTitle(SMTHApplication.App_Title_Prefix + title);
@@ -839,6 +839,7 @@ public class MainActivity extends SMTHBaseActivity
       if (SMTHApplication.isValidUser()) {
           onRelogin(); //Check userstatus if not online then relogin}
       }
+
     }
 
     mDrawer.closeDrawer(GravityCompat.START);
@@ -1153,10 +1154,10 @@ public class MainActivity extends SMTHBaseActivity
               }
 
               @Override public void onNext(@NonNull UserInfo user) {
-                //Log.d(TAG, "onNext: " + user.toString());
+                Log.d(TAG, "onNext: " + user.toString());
                 if(user != null) {
                   if (!user.is_online()) {
-                    //Toast.makeText(getApplicationContext,"Offline", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"掉线，自动登录！", Toast.LENGTH_SHORT).show();
                     onLogin();
                   }
                 }

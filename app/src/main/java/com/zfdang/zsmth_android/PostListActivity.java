@@ -1178,17 +1178,6 @@ public class PostListActivity extends SMTHBaseActivity
       String content;
       if (post != null) {
         content = post.getRawContent();
-        /*
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-          final android.content.ClipboardManager clipboardManager =
-              (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-          final android.content.ClipData clipData = android.content.ClipData.newPlainText("PostContent", content);
-          clipboardManager.setPrimaryClip(clipData);
-        } else {
-          final android.text.ClipboardManager clipboardManager =
-              (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-          clipboardManager.setText(content);
-          }*/
         final android.content.ClipboardManager clipboardManager =
                 (android.content.ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
         final android.content.ClipData clipData = android.content.ClipData.newPlainText("PostContent", content);

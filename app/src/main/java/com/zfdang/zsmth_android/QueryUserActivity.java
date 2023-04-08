@@ -170,8 +170,6 @@ public class QueryUserActivity extends SMTHBaseActivity {
 
           @SuppressLint("SetTextI18n")
           @Override public void onNext(@NonNull UserInfo user) {
-            Log.d(TAG, "onNext: " + user.toString());
-
             if(user.getId() == null)
             {
               EditText tv = (EditText) findViewById(R.id.query_user_input);
