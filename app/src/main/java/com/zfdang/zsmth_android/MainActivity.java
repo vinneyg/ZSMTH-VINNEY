@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -84,6 +85,7 @@ import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
 
 import java.lang.reflect.Field;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observer;
@@ -112,7 +114,6 @@ public class MainActivity extends SMTHBaseActivity
   private DrawerLayout mDrawer = null;
   private ActionBarDrawerToggle mToggle = null;
 
-  private UserStatusReceiver mReceiver;
   // press BACK in 2 seconds, app will quit
   private boolean mDoubleBackToExit = false;
   private Handler mHandler = null;
@@ -281,15 +282,6 @@ public class MainActivity extends SMTHBaseActivity
       AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
 
-    /*
-    Activity activity = this;
-    if (activity != null) {
-      Intent intent = new Intent(activity.getApplicationContext(), MainActivity.class);
-      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-      startActivity(intent);
-      activity.finish();
-    }
-    */
   }
 
 
@@ -318,8 +310,9 @@ public class MainActivity extends SMTHBaseActivity
     //disableShiftMode(mBottomNavigationView);
 
     mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+      @SuppressLint("NonConstantResourceId")
       @Override
-      public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+      public boolean onNavigationItemSelected(@androidx.annotation.NonNull @NonNull MenuItem item) {
         switch (item.getItemId()) {
           case R.id.menu_discover:
             onNavigationItemID(R.id.nav_guidance);
@@ -346,6 +339,7 @@ public class MainActivity extends SMTHBaseActivity
   }
 
 
+  @SuppressLint("UseCompatLoadingForDrawables")
   private void initCircularActionMenu(FloatingActionButton fab) {
     SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
 
@@ -418,7 +412,7 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   private void setupUserStatusReceiver() {
-    mReceiver = new UserStatusReceiver(new Handler());
+    UserStatusReceiver mReceiver = new UserStatusReceiver(new Handler());
     mReceiver.setReceiver(new UserStatusReceiver.Receiver() {
       @Override public void onReceiveResult(int resultCode, Bundle resultData) {
         if (resultCode == RESULT_OK) {
@@ -698,7 +692,7 @@ public class MainActivity extends SMTHBaseActivity
     dlg.show();
 
     // Make the textview clickable. Must be called after show()
-    ((TextView) dlg.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+    ((TextView) Objects.requireNonNull(dlg.findViewById(android.R.id.message))).setMovementMethod(LinkMovementMethod.getInstance());
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -1125,6 +1119,7 @@ public class MainActivity extends SMTHBaseActivity
       leftDraggerField.setAccessible(true);
       ViewDragHelper leftDragger = (ViewDragHelper) leftDraggerField.get(drawerLayout);
 
+      assert leftDragger != null;
       Field edgeSizeField = leftDragger.getClass().getDeclaredField("mEdgeSize");
       edgeSizeField.setAccessible(true);
       int edgeSize = edgeSizeField.getInt(leftDragger);

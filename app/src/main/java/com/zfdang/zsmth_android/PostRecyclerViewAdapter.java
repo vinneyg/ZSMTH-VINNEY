@@ -234,6 +234,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
       }
     });
     holder.mView.setOnTouchListener(new View.OnTouchListener() {
+      @SuppressLint("ClickableViewAccessibility")
       @Override public boolean onTouch(View v, MotionEvent event) {
         if (mListener != null && mListener instanceof View.OnTouchListener) {
           return ((View.OnTouchListener) mListener).onTouch(v, event);

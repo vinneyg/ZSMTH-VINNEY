@@ -8,6 +8,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import java.util.Locale;
+
 /**
  */
 public class Topic implements Parcelable {
@@ -71,15 +75,14 @@ public class Topic implements Parcelable {
     return totalPageNo;
   }
 
-  public int setTotalPageNo( int page) {
-    return this.totalPageNo = page;
+  public void setTotalPageNo(int page) {
+    this.totalPageNo = page;
   }
 
   public String getTotalPostNoAsStr() {
     if (this.totalPostNo == 0) return "";
 
-    String result = String.format("%d", this.totalPostNo);
-    return result;
+    return String.format(Locale.CHINA,"%d", this.totalPostNo);
   }
 
   public String getTitle() {
@@ -206,6 +209,7 @@ public class Topic implements Parcelable {
     return result;
   }
 
+  @NonNull
   @Override public String toString() {
     if (isCategory) {
       return "Category " + this.category;

@@ -536,11 +536,9 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
   }
   @Override public boolean onVolumeUpDown(int keyCode) {
     if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-     // RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
-      ( (MainActivity) getActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
+      ((MainActivity) requireActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
     } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-     // RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
-      ( (MainActivity) getActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
+      ((MainActivity) requireActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
     }
     return true;
   }

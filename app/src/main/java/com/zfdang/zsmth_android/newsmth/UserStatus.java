@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 /**
  * used by Observable<UserStatus> queryActiveUserStatus()
  * Created by zfdang on 2016-4-5.
@@ -239,6 +241,7 @@ public class UserStatus implements Parcelable {
   }
 
 
+  @NonNull
   @Override public String toString() {
     return "UserStatus{"
         + "\najax_code='"

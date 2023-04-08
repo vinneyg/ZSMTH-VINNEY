@@ -77,6 +77,7 @@ public class WrapContentDraweeView extends SimpleDraweeView {
     getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
 
     // set ratio, so that image view's height will be updated by Fresco (width = match_parent)
+    assert imageInfo != null;
     setAspectRatio((float) imageInfo.getWidth() / imageInfo.getHeight());
   }
 

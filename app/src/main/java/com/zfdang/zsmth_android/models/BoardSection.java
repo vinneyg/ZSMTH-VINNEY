@@ -1,5 +1,7 @@
 package com.zfdang.zsmth_android.models;
 
+import androidx.annotation.NonNull;
+
 /**
  * Created by zfdang on 2016-3-24.
  */
@@ -16,6 +18,7 @@ public class BoardSection {
     }
   }
 
+  @NonNull
   @Override
   public String toString() {
     return "BoardSection{" +

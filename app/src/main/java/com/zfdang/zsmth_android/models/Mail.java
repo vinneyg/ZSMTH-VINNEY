@@ -2,6 +2,9 @@ package com.zfdang.zsmth_android.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,8 +48,7 @@ public class Mail implements Parcelable {
       Pattern pattern = Pattern.compile("(\\d+)", Pattern.DOTALL);
       Matcher matcher = pattern.matcher(url);
       if (matcher.find()) {
-        String mailid = matcher.group(0);
-        return mailid;
+        return matcher.group(0);
       }
     }
     return "";
@@ -56,6 +58,7 @@ public class Mail implements Parcelable {
     return this.fromBoard != null && this.fromBoard.length() > 0;
   }
 
+  @NonNull
   @Override public String toString() {
     return "Mail{"
         + "author='"

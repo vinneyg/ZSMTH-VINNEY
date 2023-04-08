@@ -2,6 +2,8 @@ package com.zfdang.zsmth_android;
 
 import android.app.Activity;
 import android.content.Context;
+
+import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +39,8 @@ public class FSImagePagerAdapter extends PagerAdapter {
     return mURLs.size();
   }
 
-  @Override public Object instantiateItem(ViewGroup container, int position) {
+  @NonNull
+  @Override public Object instantiateItem(@NonNull ViewGroup container, int position) {
     final LayoutInflater inflater = (LayoutInflater) SMTHApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     // Add the text layout to the parent layout
     MyPhotoView image = (MyPhotoView) inflater.inflate(R.layout.image_viewer_pager, container, false);
@@ -79,19 +82,19 @@ public class FSImagePagerAdapter extends PagerAdapter {
     return image;
   }
 
-  @Override public void destroyItem(ViewGroup container, int position, Object object) {
+  @Override public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
 
     ImageView iv = (ImageView) object;
     container.removeView(iv);
     object = null;
   }
 
-  @Override public void setPrimaryItem(ViewGroup container, int position, Object object) {
+  @Override public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
     mCurrentView = (View) object;
     super.setPrimaryItem(container, position, object);
   }
 
-  @Override public boolean isViewFromObject(View view, Object object) {
+  @Override public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
     return (object == view);
   }
 }

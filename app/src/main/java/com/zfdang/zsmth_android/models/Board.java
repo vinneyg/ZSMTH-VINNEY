@@ -3,6 +3,8 @@ package com.zfdang.zsmth_android.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -143,6 +145,7 @@ public class Board implements Externalizable, Parcelable {
     }
   }
 
+  @NonNull
   @Override
   public String toString() {
     return "Board{" +

@@ -1,6 +1,7 @@
 package com.zfdang.zsmth_android;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -156,15 +157,14 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         return true;
       }
     });
-	
-	open_topic_add = (CheckBoxPreference) findPreference("open_topic_add");
+
+    open_topic_add = (CheckBoxPreference) findPreference("open_topic_add");
     open_topic_add.setChecked(Settings.getInstance().isOpenTopicAdd());
     open_topic_add.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
       @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean bValue = Settings.getInstance().isOpenTopicAdd();
         if (newValue instanceof Boolean) {
-          Boolean boolVal = (Boolean) newValue;
-          bValue = boolVal;
+          bValue = (Boolean) newValue;
         }
         Settings.getInstance().setOpenTopicAdd(bValue);
         return true;
@@ -177,8 +177,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean bDiffRead = Settings.getInstance().isDiffReadTopic();
         if (newValue instanceof Boolean) {
-          Boolean boolVal = (Boolean) newValue;
-          bDiffRead = boolVal;
+          bDiffRead = (Boolean) newValue;
         }
         Settings.getInstance().setDiffReadTopic(bDiffRead);
         SMTHApplication.ReadTopicLists.clear();// 当选择on或者off的时候清空已读列表。
@@ -192,8 +191,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean bValue = Settings.getInstance().hasPostNavBar();
         if (newValue instanceof Boolean) {
-          Boolean boolVal = (Boolean) newValue;
-          bValue = boolVal;
+          bValue = (Boolean) newValue;
         }
         Settings.getInstance().setPostNavBar(bValue);
         return true;
@@ -221,8 +219,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean bValue = Settings.getInstance().isautoloadmore();
         if (newValue instanceof Boolean) {
-          Boolean boolVal = (Boolean) newValue;
-          bValue = boolVal;
+          bValue = (Boolean) newValue;
         }
         Settings.getInstance().Setautoloadmore(bValue);
         return true;
@@ -235,8 +232,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean bValue = Settings.getInstance().isQuickReply();
         if (newValue instanceof Boolean) {
-          Boolean boolVal = (Boolean) newValue;
-          bValue = boolVal;
+          bValue = (Boolean) newValue;
         }
         Settings.getInstance().SetQuickReply(bValue);
         return true;
@@ -254,8 +250,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         else {
           boolean bValue = Settings.getInstance().isMenuTextOn();
           if (newValue instanceof Boolean) {
-            Boolean boolVal = (Boolean) newValue;
-            bValue = boolVal;
+            bValue = (Boolean) newValue;
           }
           Settings.getInstance().SetMenuText(bValue);
 
@@ -278,8 +273,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean bValue = Settings.getInstance().isVolumeKeyScroll();
         if (newValue instanceof Boolean) {
-          Boolean boolVal = (Boolean) newValue;
-          bValue = boolVal;
+          bValue = (Boolean) newValue;
         }
         Settings.getInstance().setVolumeKeyScroll(bValue);
         return true;
@@ -311,8 +305,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean bLoadOriginalImage = Settings.getInstance().isLoadOriginalImage();
         if (newValue instanceof Boolean) {
-          Boolean boolVal = (Boolean) newValue;
-          bLoadOriginalImage = boolVal;
+          bLoadOriginalImage = (Boolean) newValue;
         }
         Settings.getInstance().setLoadOriginalImage(bLoadOriginalImage);
         return true;
@@ -325,8 +318,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean bImageSourceCDN = Settings.getInstance().isImageSourceCDN();
         if (newValue instanceof Boolean) {
-          Boolean boolVal = (Boolean) newValue;
-          bImageSourceCDN = boolVal;
+          bImageSourceCDN = (Boolean) newValue;
         }
         Settings.getInstance().setImageSourceCDN(bImageSourceCDN);
         return true;
@@ -339,8 +331,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean bNightMode = Settings.getInstance().isNightMode();
         if (newValue instanceof Boolean) {
-          Boolean boolVal = (Boolean) newValue;
-          bNightMode = boolVal;
+          bNightMode = (Boolean) newValue;
         }
         Settings.getInstance().setNightMode(bNightMode);
 
@@ -355,8 +346,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean bValue = Settings.getInstance().isNotificationMail();
         if (newValue instanceof Boolean) {
-          Boolean boolVal = (Boolean) newValue;
-          bValue = boolVal;
+          bValue = (Boolean) newValue;
         }
         Settings.getInstance().setNotificationMail(bValue);
         return true;
@@ -369,8 +359,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean bValue = Settings.getInstance().isNotificationAt();
         if (newValue instanceof Boolean) {
-          Boolean boolVal = (Boolean) newValue;
-          bValue = boolVal;
+          bValue = (Boolean) newValue;
         }
         Settings.getInstance().setNotificationAt(bValue);
         return true;
@@ -383,8 +372,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean bValue = Settings.getInstance().isNotificationLike();
         if (newValue instanceof Boolean) {
-          Boolean boolVal = (Boolean) newValue;
-          bValue = boolVal;
+          bValue = (Boolean) newValue;
         }
         Settings.getInstance().setNotificationLike(bValue);
         return true;
@@ -397,8 +385,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean bValue = Settings.getInstance().isNotificationReply();
         if (newValue instanceof Boolean) {
-          Boolean boolVal = (Boolean) newValue;
-          bValue = boolVal;
+          bValue = (Boolean) newValue;
         }
         Settings.getInstance().setNotificationReply(bValue);
         return true;
@@ -411,8 +398,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean bValue = Settings.getInstance().bUseSignature();
         if (newValue instanceof Boolean) {
-          Boolean boolVal = (Boolean) newValue;
-          bValue = boolVal;
+          bValue = (Boolean) newValue;
         }
         Settings.getInstance().setUseSignature(bValue);
         return true;
@@ -465,8 +451,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean bValue = Settings.getInstance().isTopicFwdSelf();
         if (newValue instanceof Boolean) {
-          Boolean boolVal = (Boolean) newValue;
-          bValue = boolVal;
+          bValue = (Boolean) newValue;
         }
         Settings.getInstance().SetTopicFwdSelf(bValue);
         return true;
@@ -479,8 +464,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean bValue = Settings.getInstance().isSetIdCheck();
         if (newValue instanceof Boolean) {
-          Boolean boolVal = (Boolean) newValue;
-          bValue = boolVal;
+          bValue = (Boolean) newValue;
         }
         Settings.getInstance().SetIdCheck(bValue);
         return true;
@@ -493,8 +477,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean bValue = Settings.getInstance().isLeftNavSlide();
         if (newValue instanceof Boolean) {
-          Boolean boolVal = (Boolean) newValue;
-          bValue = boolVal;
+          bValue = (Boolean) newValue;
         }
         Settings.getInstance().setLeftNavSlide(bValue);
         Activity activity = getActivity();
@@ -539,7 +522,12 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         String alipay = "vinneyguo@outlook.com";
         final android.content.ClipboardManager clipboardManager =
                 (android.content.ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-        clipboardManager.setText(alipay);
+        //clipboardManager.setText(alipay);
+        assert clipboardManager != null;
+        clipboardManager.setPrimaryClip(ClipData.newPlainText(null,alipay));
+        if (clipboardManager.hasPrimaryClip()){
+          clipboardManager.getPrimaryClip().getItemAt(0).getText();
+        }
         Toast.makeText(getActivity(), "作者支付宝ID已复制到剪贴板...", Toast.LENGTH_SHORT).show();
         return true;
       }

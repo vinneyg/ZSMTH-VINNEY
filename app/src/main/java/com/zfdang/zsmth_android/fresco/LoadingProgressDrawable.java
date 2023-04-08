@@ -28,9 +28,9 @@ public class LoadingProgressDrawable extends Drawable {
       R.mipmap.load_progress_1, R.mipmap.load_progress_3, R.mipmap.load_progress_4, R.mipmap.load_progress_6, R.mipmap.load_progress_7,
       R.mipmap.load_progress_8, R.mipmap.load_progress_9, R.mipmap.load_progress_10, R.mipmap.load_progress_11, R.mipmap.load_progress_12
   };
-  private Paint mPaint;
+  private final Paint mPaint;
   private int mLevel;
-  private Context context;
+  private final Context context;
 
   public LoadingProgressDrawable(Context context) {
     this.context = context;

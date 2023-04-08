@@ -66,6 +66,7 @@ public class RecyclerViewGestureListener extends GestureDetector.SimpleOnGesture
     recyclerView.getLocationOnScreen(location);
 
     View targetView = recyclerView.findChildViewUnder(x - location[0], y - location[1]);
+    assert targetView != null;
     int position = recyclerView.getChildAdapterPosition(targetView);
 
     //        Log.d("Gesture", "onLongPress: " + String.format("position = %d", position));

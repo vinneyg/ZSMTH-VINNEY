@@ -1,6 +1,8 @@
 package com.zfdang.zsmth_android;
 
 import android.content.Intent;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,7 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
     mListener = listener;
   }
 
+  @NonNull
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mail_item, parent, false);
     return new ViewHolder(view);
@@ -89,7 +92,7 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
     return mValues.size();
   }
 
-  public class ViewHolder extends RecyclerView.ViewHolder {
+  public static class ViewHolder extends RecyclerView.ViewHolder {
     public final View mView;
     public final TextView mPage;
     public final TextView mTopic;
@@ -108,6 +111,7 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
       mDate = (TextView) view.findViewById(R.id.mail_item_date);
     }
 
+    @NonNull
     @Override public String toString() {
       return super.toString() + " '" + mTopic.getText() + "'";
     }

@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -128,16 +129,18 @@ public class SMTHHelper {
     Cache cache = new Cache(httpCacheDirectory, cacheSize);
 
     mHttpClient = new OkHttpClient().newBuilder().addInterceptor(logging).addInterceptor(new Interceptor() {
-      @Override public Response intercept(Chain chain) throws IOException {
+      @androidx.annotation.NonNull
+      @Override public Response intercept(@androidx.annotation.NonNull Chain chain) throws IOException {
         Request request = chain.request().newBuilder().header("User-Agent", USER_AGENT).build();
         return chain.proceed(request);
       }
     }).addNetworkInterceptor(new Interceptor() {
       // for error response, do not cache its content
-      @Override public Response intercept(Chain chain) throws IOException {
+      @androidx.annotation.NonNull
+      @Override public Response intercept(@androidx.annotation.NonNull Chain chain) throws IOException {
         Response originalResponse = chain.proceed(chain.request());
 //        if (originalResponse.isSuccessful() && originalResponse.body().toString().contains("您未登录,请登录后继续操作")) {
-        if (originalResponse.isSuccessful() && originalResponse.body().contentLength() > 4096) {
+        if (originalResponse.isSuccessful() && Objects.requireNonNull(originalResponse.body()).contentLength() > 4096) {
           // only cache large response
           // the size of response with "您未登录,请登录后继续操作" is 2033
           return originalResponse;
@@ -298,9 +301,9 @@ public class SMTHHelper {
       };
 
       ExifInterface newExif = new ExifInterface(newPath);
-      for (int i = 0; i < attributes.length; i++) {
-        String value = oldExif.getAttribute(attributes[i]);
-        if (value != null) newExif.setAttribute(attributes[i], value);
+      for (String attribute : attributes) {
+        String value = oldExif.getAttribute(attribute);
+        if (value != null) newExif.setAttribute(attribute, value);
       }
       newExif.saveAttributes();
     } catch (IOException e) {
@@ -373,6 +376,7 @@ public class SMTHHelper {
       //            Log.d(TAG, li.text());
 
       Pattern pattern = Pattern.compile("(\\d+)", Pattern.DOTALL);
+      assert li != null;
       Matcher matcher = pattern.matcher(li.text());
       if (matcher.find()) {
         String totalPostString = matcher.group(0);
@@ -403,6 +407,7 @@ public class SMTHHelper {
       Elements links = table.select("li a.a-post");
       if (links.size() > 0) {
         Element link = links.first();
+        assert link != null;
         String postID = StringUtils.getLastStringSegment(link.attr("href"));
         post.setPostID(postID);
       }
@@ -412,6 +417,7 @@ public class SMTHHelper {
       Elements positions = table.select("span.a-pos");
       if (positions.size() > 0) {
         Element position = positions.first();
+        assert position != null;
         post.setPosition(position.text());
       }
 
@@ -441,6 +447,7 @@ public class SMTHHelper {
 
         Post post = new Post();
         post.setAuthor("错误信息");
+        assert div != null;
         post.setRawContent(div.toString());
         results.add(post);
       }
@@ -540,6 +547,7 @@ public class SMTHHelper {
 
       // parse hot hopic
       Element top10 = top10s.first();
+      assert top10 != null;
       Elements lis = top10.getElementsByTag("li");
 
       for (Element li : lis) {
@@ -581,6 +589,7 @@ public class SMTHHelper {
       Elements sectionNames = section.getElementsByTag("h3");
       if (sectionNames.size() == 1) {
         Element sectionName = sectionNames.first();
+        assert sectionName != null;
         topic = new Topic(sectionName.text());
         results.add(topic);
       }
@@ -604,6 +613,7 @@ public class SMTHHelper {
       Elements sectionNames = section.getElementsByTag("h3");
       if (sectionNames.size() == 1) {
         Element sectionName = sectionNames.first();
+        assert sectionName != null;
         String name = sectionName.text();
         if (name == null || name.equals("系统与祝福")) {
           continue;
@@ -642,6 +652,7 @@ public class SMTHHelper {
 
     if (lis.size() > 0) {
       Element li = lis.first();
+      assert li != null;
       currentPage = li.text();
       //            Log.d(TAG, "ParseBoardTopicsFromWWW: " + currentPage);
     }

@@ -1,5 +1,7 @@
 package com.zfdang.zsmth_android.models;
 
+import androidx.annotation.NonNull;
+
 public class Like {
     public String score;
     public String user;
@@ -20,6 +22,7 @@ public class Like {
         this.time = this.time.replace("(", "").replace(")", "");
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Like{" +

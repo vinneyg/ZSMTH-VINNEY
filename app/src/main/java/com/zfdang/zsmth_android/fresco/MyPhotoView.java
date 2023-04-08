@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android.fresco;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
@@ -78,6 +79,7 @@ public class MyPhotoView extends PhotoView {
     mDraweeHolder.onAttach();
   }
 
+  @SuppressLint("ClickableViewAccessibility")
   @Override public boolean onTouchEvent(MotionEvent event) {
     return mDraweeHolder.onTouchEvent(event) || super.onTouchEvent(event);
   }
@@ -108,7 +110,7 @@ public class MyPhotoView extends PhotoView {
               imageCloseableReference = dataSource.getResult();
               if (imageCloseableReference != null) {
                 final CloseableImage image = imageCloseableReference.get();
-                if (image != null && image instanceof CloseableStaticBitmap) {
+                if (image instanceof CloseableStaticBitmap) {
                   CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) image;
                   final Bitmap bitmap = closeableStaticBitmap.getUnderlyingBitmap();
                   if (bitmap != null) {

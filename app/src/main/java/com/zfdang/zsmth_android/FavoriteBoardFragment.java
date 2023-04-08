@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -30,6 +31,8 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -48,7 +51,6 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
   private OnBoardFragmentInteractionListener mListener;
 
   private RecyclerView mRecyclerView = null;
-  private String mDefaultTitle = "收藏";
 
   // list of favorite paths
   private List<Board> mFavoritePaths = null;
@@ -174,19 +176,19 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
       network = Observable.create(new ObservableOnSubscribe<List<Board>>() {
         @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
           List<Board> boards = SMTHHelper.LoadFavoriteBoardsInFolder(finalCurrentPath);
-          if (boards != null && boards.size() > 0) {
+          if (boards.size() > 0) {
             observableEmitter.onNext(boards);
           } else {
             observableEmitter.onComplete();
           }
         }
       });
-    } else if(board != null && board.isSection()){
+    } else if(board.isSection()){
       // 用户在收藏夹里收藏的系统的二级目录
       network = Observable.create(new ObservableOnSubscribe<List<Board>>() {
         @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
           List<Board> boards = SMTHHelper.LoadFavoriteBoardsInSection(finalCurrentPath);
-          if (boards != null && boards.size() > 0) {
+          if (boards.size() > 0) {
             observableEmitter.onNext(boards);
           } else {
             observableEmitter.onComplete();
@@ -196,19 +198,21 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
     }
 
     List<Board> boards = new ArrayList<>();
+    assert network != null;
     Observable.concat(cache, network).first(boards).toObservable().flatMap(new Function<List<Board>, ObservableSource<Board>>() {
       @Override public ObservableSource<Board> apply(@NonNull List<Board> boards) throws Exception {
         return Observable.fromIterable(boards);
       }
     }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Board>() {
+      @SuppressLint("NotifyDataSetChanged")
       @Override public void onSubscribe(@NonNull Disposable disposable) {
         BoardListContent.clearFavorites();
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
       }
 
       @Override public void onNext(@NonNull Board board) {
         BoardListContent.addFavoriteItem(board);
-        mRecyclerView.getAdapter().notifyItemInserted(BoardListContent.FAVORITE_BOARDS.size());
+        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(BoardListContent.FAVORITE_BOARDS.size());
         // Log.d(TAG, board.toString());
       }
 
@@ -232,6 +236,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
       return;
     }
     String title ;
+    String mDefaultTitle = "收藏";
     if(mFavoritePaths.size() == 0) {
       title = SMTHApplication.App_Title_Prefix + mDefaultTitle;
     } else {
@@ -248,7 +253,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
     activity.setTitle(title);
   }
 
-  @Override public void onAttach(Context context) {
+  @Override public void onAttach(@androidx.annotation.NonNull Context context) {
     super.onAttach(context);
     if (context instanceof OnBoardFragmentInteractionListener) {
       mListener = (OnBoardFragmentInteractionListener) context;
@@ -275,9 +280,9 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
     if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
       RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
 
-      ( (MainActivity) getActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
+      ( (MainActivity) requireActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
     } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-      ( (MainActivity) getActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
+      ( (MainActivity) requireActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
     }
     return true;
   }

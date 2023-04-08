@@ -3,6 +3,8 @@ package com.zfdang.zsmth_android.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
 /**
  * Created by zfdang on 2016-4-4.
  */
@@ -77,6 +79,7 @@ public class ComposePostContext implements Parcelable {
     this.postAuthor = postAuthor;
   }
 
+  @NonNull
   @Override public String toString() {
     return "ComposePostContext{"
         + "boardEngName='"

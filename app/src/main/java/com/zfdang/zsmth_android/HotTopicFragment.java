@@ -82,7 +82,7 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
     mRefreshLayout = (SmartRefreshLayout) rootView;
     mRefreshLayout.setEnableLoadMore(false);
     mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-      @Override public void onRefresh(RefreshLayout refreshLayout) {
+      @Override public void onRefresh(@androidx.annotation.NonNull RefreshLayout refreshLayout) {
         RefreshGuidanceFromWWW();
       }
     });
@@ -114,7 +114,7 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
           }
 
         @Override
-        public void onScrolled (RecyclerView recyclerView,int dx , int dy){
+        public void onScrolled (@androidx.annotation.NonNull RecyclerView recyclerView, int dx , int dy){
           super.onScrolled(recyclerView,dx,dy);
          // mRecyclerView.getAdapter().notifyDataSetChanged();
         }
@@ -123,7 +123,7 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
       }
 
 
-    getActivity().setTitle(SMTHApplication.App_Title_Prefix + "首页");
+    requireActivity().setTitle(SMTHApplication.App_Title_Prefix + "首页");
 
     if (TopicListContent.HOT_TOPICS.size() == 0) {
       RefreshGuidance();
@@ -174,7 +174,7 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
       @Override public void onSubscribe(@NonNull Disposable disposable) {
         // clearHotTopics current hot topics
         TopicListContent.clearHotTopics();
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
       }
 
       @Override public void onNext(@NonNull Topic topic) {
@@ -191,7 +191,7 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
       @Override public void onComplete() {
         Topic topic = new Topic("-- END --");
         TopicListContent.addHotTopic(topic);
-        mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.HOT_TOPICS.size() - 1);
+        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(TopicListContent.HOT_TOPICS.size() - 1);
         clearLoadingHints();
       }
     });
@@ -200,7 +200,7 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
   // http://stackoverflow.com/questions/32604552/onattach-not-called-in-fragment
   // If you run your application on a device with API 23 (marshmallow) then onAttach(Context) will be called.
   // On all previous Android Versions onAttach(Activity) will be called.
-  @Override public void onAttach(Context context) {
+  @Override public void onAttach(@androidx.annotation.NonNull Context context) {
     super.onAttach(context);
     if (context instanceof OnTopicFragmentInteractionListener) {
       mListener = (OnTopicFragmentInteractionListener) context;
@@ -226,10 +226,10 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
   @Override public boolean onVolumeUpDown(int keyCode) {
     if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
       RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
-      ( (MainActivity) getActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
+      ( (MainActivity) requireActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
     } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
       RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
-      ( (MainActivity) getActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
+      ( (MainActivity) requireActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
     }
     return true;
   }

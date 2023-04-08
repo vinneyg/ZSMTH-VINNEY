@@ -12,7 +12,7 @@ public class ContentSegment {
   public static final int SEGMENT_TEXT = 292;
   public static final int SEGMENT_IMAGE = 165;
 
-  private int type;
+  private final int type;
   private Spanned spanned;
   private String url;
   // image index among all attachments, it will be used for full screen image viewer

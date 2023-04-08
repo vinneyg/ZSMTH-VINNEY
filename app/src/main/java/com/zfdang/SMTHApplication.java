@@ -1,5 +1,6 @@
 package com.zfdang;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -79,6 +80,7 @@ public class SMTHApplication extends Application {
 
 
   // IP database
+  @SuppressLint("StaticFieldLeak")
   public static GEODatabase geoDB;
 
   @Override

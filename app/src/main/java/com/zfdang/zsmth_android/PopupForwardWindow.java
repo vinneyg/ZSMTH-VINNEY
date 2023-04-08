@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
@@ -28,7 +29,6 @@ public class PopupForwardWindow extends PopupWindow {
 
   Activity mContext;
   private OnForwardInterface mListener;
-  private View contentView;
   //private EditText etMessage;
   static public Post post;
   private RadioButton mTargetSelf;
@@ -52,7 +52,7 @@ public class PopupForwardWindow extends PopupWindow {
     }
 
     LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    contentView = layoutInflater.inflate(R.layout.popup_forward_layout, null, false);
+    @SuppressLint("InflateParams") View contentView = layoutInflater.inflate(R.layout.popup_forward_layout, null, false);
 
     mTargetSelf = (RadioButton) contentView.findViewById(R.id.popup_forward_target_self);
     mTargetSelf.setOnClickListener(new View.OnClickListener() {
@@ -81,12 +81,7 @@ public class PopupForwardWindow extends PopupWindow {
 
     mThread.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        if (mThread.isChecked()) {
-          mNoRef.setEnabled(true);
-
-        } else {
-          mNoRef.setEnabled(false);
-        }
+        mNoRef.setEnabled(mThread.isChecked());
         Settings.getInstance().setThread(!Settings.getInstance().isThread());
       }
     });
@@ -169,9 +164,9 @@ public class PopupForwardWindow extends PopupWindow {
           String target = mTargetBoard.getText().toString().trim();
           String [] newTarget = target.split(",");
           ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
-          for(int i=0;i<newTarget.length;i++) {
+          for (String s : newTarget) {
             //mListener.OnRePostAction(PopupForwardWindow.post, target, "on");
-            mListener.OnRePostAction(PopupForwardWindow.post, newTarget[i], "on");
+            mListener.OnRePostAction(PopupForwardWindow.post, s, "on");
 
             /*
              final int index = i;
@@ -190,7 +185,7 @@ public class PopupForwardWindow extends PopupWindow {
                 }
               });
             */
-            }
+          }
           }
         dismiss();
       }

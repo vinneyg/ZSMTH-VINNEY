@@ -216,7 +216,7 @@ public class PostListActivity extends SMTHBaseActivity
     mRefreshLayout.setEnableOverScrollBounce(false);
 
     mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-      @Override public void onRefresh(RefreshLayout refreshLayout) {
+      @Override public void onRefresh(@androidx.annotation.NonNull RefreshLayout refreshLayout) {
         // reload current page
         if(Settings.getInstance().isautoloadmore()) {
           reloadPostListWithoutAlert();
@@ -227,7 +227,7 @@ public class PostListActivity extends SMTHBaseActivity
       }
     });
     mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
-      @Override public void onLoadMore(RefreshLayout refreshLayout) {
+      @Override public void onLoadMore(@androidx.annotation.NonNull RefreshLayout refreshLayout) {
         // load next page if available
         if(Settings.getInstance().isautoloadmore()) {
           goToNextPage();
@@ -282,7 +282,7 @@ public class PostListActivity extends SMTHBaseActivity
       int mIndex = 0;
 
       @Override
-      public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+      public void onScrollStateChanged(@androidx.annotation.NonNull RecyclerView recyclerView, int newState) {
         LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
         super.onScrollStateChanged(recyclerView, newState);
@@ -292,6 +292,7 @@ public class PostListActivity extends SMTHBaseActivity
         if(!Settings.getInstance().isautoloadmore()) {
           if (newState == RecyclerView.SCROLL_STATE_IDLE) {
             //LastItemPosition
+            assert manager != null;
             int lastVisiblePos = manager.findLastVisibleItemPosition();
             int totalItemCount = manager.getItemCount();
 
@@ -444,7 +445,7 @@ public class PostListActivity extends SMTHBaseActivity
   @SuppressLint("NotifyDataSetChanged")
   public void reloadPostListWithoutAlert() {
       PostListContent.clear();
-      mRecyclerView.getAdapter().notifyDataSetChanged();
+      Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
       loadPostListByPages();
   }
 
@@ -513,7 +514,7 @@ public class PostListActivity extends SMTHBaseActivity
                 {
                 PostListContent.addItem(post);
                // mRecyclerView.getAdapter().notifyItemInserted(PostListContent.POSTS.size()-1);
-                  mRecyclerView.getAdapter().notifyItemInserted(mIndex);
+                  Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(mIndex);
               }
               }
 
@@ -606,7 +607,7 @@ public class PostListActivity extends SMTHBaseActivity
                 // Log.d(TAG, post.toString());
                 if (post.getContentSegments().size() != 0) {
                   PostListContent.addItem(post);
-                  mRecyclerView.getAdapter().notifyItemInserted(PostListContent.POSTS.size() - 1);
+                  Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(PostListContent.POSTS.size() - 1);
                 }
               }
 
@@ -1005,6 +1006,7 @@ public class PostListActivity extends SMTHBaseActivity
     ListAdapter adapter = new ArrayAdapter<PostActionAlertDialogItem>(getApplicationContext(), R.layout.post_popup_menu_item, menuItems) {
       ViewHolder holder;
 
+      @SuppressLint("InflateParams")
       public View getView(int position, View convertView, ViewGroup parent) {
         final LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -1231,6 +1233,7 @@ public class PostListActivity extends SMTHBaseActivity
       View v = Objects.requireNonNull(mRecyclerView.getLayoutManager()).findViewByPosition(position);
 
       // convert title + post to image
+      assert v != null;
       captureView(mTitle, v, post.getPostID());
     }
     //Vinney
@@ -1322,6 +1325,7 @@ public class PostListActivity extends SMTHBaseActivity
 
       }
 
+      @SuppressLint("NotifyDataSetChanged")
       @Override public void onComplete() {
         //Vinney：修改删除回复后导致页面减少显示不正常。删除后，退回board再进入文章显示第一页
           mCurrentPageNo = 1;

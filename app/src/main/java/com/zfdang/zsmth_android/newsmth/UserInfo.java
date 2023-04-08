@@ -3,8 +3,12 @@ package com.zfdang.zsmth_android.newsmth;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.Html;
+
+import androidx.annotation.NonNull;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * this class will be used by Retrofit's API
@@ -177,9 +181,8 @@ public class UserInfo implements Parcelable {
 
   public String formatUnixTime(long value) {
     Date date = new Date(value * 1000L); // *1000 is to convert seconds to milliseconds
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // the format of your date
-    String formattedDate = sdf.format(date);
-    return formattedDate;
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.CHINA); // the format of your date
+    return sdf.format(date);
   }
 
   public String getLast_login_time() {
@@ -219,7 +222,7 @@ public class UserInfo implements Parcelable {
   }
 
   public String getLogin_count() {
-    return String.format("%d", this.login_count);
+    return String.format(Locale.CHINA,"%d", this.login_count);
   }
 
   public void setLogin_count(int login_count) {
@@ -243,7 +246,7 @@ public class UserInfo implements Parcelable {
   }
 
   public String getPost_count() {
-    return String.format("%d", this.post_count);
+    return String.format(Locale.CHINA,"%d", this.post_count);
   }
 
   public void setPost_count(int post_count) {
@@ -259,7 +262,7 @@ public class UserInfo implements Parcelable {
   }
 
   public String getScore_user() {
-    return String.format("%d", this.score_user);
+    return String.format(Locale.CHINA,"%d", this.score_user);
   }
 
   public void setScore_user(int score_user) {
@@ -324,7 +327,8 @@ public class UserInfo implements Parcelable {
   String ajax_code;// 0005,
   String ajax_msg;// 操作成功
 
-  @Override public String toString() {
+  @NonNull
+  @Override public String  toString() {
     return "UserInfo{"
         + "ajax_code='"
         + ajax_code

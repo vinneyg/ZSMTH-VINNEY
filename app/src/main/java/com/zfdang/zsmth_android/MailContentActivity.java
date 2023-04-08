@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -138,6 +139,7 @@ public class MailContentActivity extends AppCompatActivity {
         inflateContentViewGroup(mViewGroup, mPostContent, mPost);
       }
 
+      @SuppressLint("SetTextI18n")
       @Override public void onError(@NonNull Throwable e) {
         mPostContent.setText("读取内容失败: \n" + e.getMessage());
       }

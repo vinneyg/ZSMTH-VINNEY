@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,14 +46,13 @@ public class ComposePostActivity extends SMTHBaseActivity {
   public static final int COMPOSE_ACTIVITY_REQUEST_CODE = 107;
   private static final int REQUEST_CODE = 653;
   private static final String TAG = "ComposePostActivity";
-  private final String UPLOAD_TEMPLATE = " [upload=%d][/upload] ";
 
-  private Button mButton;
   private LinearLayout mUserRow;
   private EditText mUserID;
   private EditText mTitle;
   private LinearLayout mAttachRow;
   private EditText mAttachments;
+  @SuppressLint("UseSwitchCompatOrMaterialCode")
   private Switch mCompress;
   private EditText mContent;
   private ArrayList<String> mPhotos;
@@ -91,7 +91,8 @@ public class ComposePostActivity extends SMTHBaseActivity {
         mAttachments.setText(String.format(Locale.CHINA,"共有%d个附件", mPhotos.size()));
         String attachments = "";
         for (int i = 0; i < mPhotos.size(); i++) {
-          attachments += String.format(Locale.CHINA,UPLOAD_TEMPLATE, i + 1);
+          String UPLOAD_TEMPLATE = " [upload=%d][/upload] ";
+          attachments += String.format(Locale.CHINA, UPLOAD_TEMPLATE, i + 1);
         }
 
         // https://stackoverflow.com/questions/3609174/android-insert-text-into-edittext-at-current-position
@@ -129,7 +130,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
     mContent = (EditText) findViewById(R.id.compose_post_content);
     mContentCount = (TextView) findViewById(R.id.compose_post_content_label);
 
-    mButton = (Button) findViewById(R.id.compose_post_attach_button);
+    Button mButton = (Button) findViewById(R.id.compose_post_attach_button);
     mButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         KeyboardLess.$hide(v.getContext(), mContent);
@@ -376,6 +377,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
     }
 
     // process all these tasks one by one
+    assert resp2 != null;
     Observable.concat(resp1, resp2)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())

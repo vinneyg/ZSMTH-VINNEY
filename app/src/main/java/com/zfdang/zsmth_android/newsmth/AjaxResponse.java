@@ -3,6 +3,8 @@ package com.zfdang.zsmth_android.newsmth;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
 /**
  * Created by zfdang on 2016-4-5.
  */
@@ -77,6 +79,7 @@ public class AjaxResponse implements Parcelable {
     this.group_id = group_id;
   }
 
+  @NonNull
   @Override public String toString() {
     return "AjaxResponse{"
         + "ajax_code='"

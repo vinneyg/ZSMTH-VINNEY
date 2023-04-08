@@ -4,6 +4,8 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.zfdang.zsmth_android.Settings;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
@@ -112,6 +114,7 @@ public class Post {
       if (likeNodes.size() == 1) {
         Element likeNode = likeNodes.first();
         ParseLikeElementInPostContent(likeNode);
+        assert likeNode != null;
         likeNode.remove();
       }
 
@@ -253,14 +256,14 @@ public class Post {
 
       if (likes != null && likes.size() > 0) {
           StringBuilder wordList = new StringBuilder();
-        wordList.append("有" + likes.size() + "位用户评价了这篇文章:");
+        wordList.append("有").append(likes.size()).append("位用户评价了这篇文章:");
         wordList.append("<br/>");
         wordList.append("<small>");
         for (Like like : likes) {
-          wordList.append("[<font face='monospace'>" + like.score + "</font>]");
-          wordList.append(" " + like.msg);
-          wordList.append(" ( " + like.user);
-          wordList.append(" @ " + like.time);
+          wordList.append("[<font face='monospace'>").append(like.score).append("</font>]");
+          wordList.append(" ").append(like.msg);
+          wordList.append(" ( ").append(like.user);
+          wordList.append(" @ ").append(like.time);
           wordList.append(" )<br/>");
         }
         wordList.append("</small>");
@@ -528,6 +531,7 @@ public class Post {
     return attachVideoFiles;
   }
 
+  @NonNull
   @Override public String toString() {
     return "Post{"
         + "postID='"

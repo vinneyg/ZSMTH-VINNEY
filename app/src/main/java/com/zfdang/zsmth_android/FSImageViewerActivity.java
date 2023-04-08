@@ -55,13 +55,9 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
   private HackyViewPager mViewPager;
 
   private FSImagePagerAdapter mPagerAdapter;
-  private CircleIndicator mIndicator;
   private ArrayList<String> mURLs;
 
   private LinearLayout layoutToolbar;
-  private ImageView btBack;
-  private ImageView btInfo;
-  private ImageView btSave;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -90,20 +86,20 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
     mViewPager.setAdapter(mPagerAdapter);
     mViewPager.setCurrentItem(pos);
 
-    mIndicator = (CircleIndicator) findViewById(R.id.fullscreen_image_indicator);
+    CircleIndicator mIndicator = (CircleIndicator) findViewById(R.id.fullscreen_image_indicator);
     mIndicator.setViewPager(mViewPager);
 
     // initialize toolbar and its child buttons
     layoutToolbar = (LinearLayout) findViewById(R.id.fullscreen_toolbar);
 
-    btBack = (ImageView) findViewById(R.id.fullscreen_button_back);
+    ImageView btBack = (ImageView) findViewById(R.id.fullscreen_button_back);
     btBack.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         finish();
       }
     });
 
-    btInfo = (ImageView) findViewById(R.id.fullscreen_button_info);
+    ImageView btInfo = (ImageView) findViewById(R.id.fullscreen_button_info);
     btInfo.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         int position = mViewPager.getCurrentItem();
@@ -113,7 +109,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
       }
     });
 
-    btSave = (ImageView) findViewById(R.id.fullscreen_button_save);
+    ImageView btSave = (ImageView) findViewById(R.id.fullscreen_button_save);
     btSave.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
 
@@ -167,7 +163,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
     saveImageToFile(imagePath, isAnimation);
   }
   @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], int[] grantResults) {
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode,permissions,grantResults);
     switch (requestCode) {
       case MY_PERMISSIONS_REQUEST_STORAGE_CODE:

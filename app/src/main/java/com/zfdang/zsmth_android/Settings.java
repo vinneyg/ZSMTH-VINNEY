@@ -157,13 +157,13 @@ public class Settings {
   }
 
   private static final String WEB_ADDR = "web_address";
-  private String mWebAddr = "https://www.mysmth.net";
+  private String mWebAddr = "https://www.newsmth.net";
 
   public String getWebAddr() {
     if (mWebAddr != null && mWebAddr.length() > 0) {
       return mWebAddr;
     } else {
-      return "https://www.mysmth.net";
+      return "https://www.newsmth.net";
     }
   }
 

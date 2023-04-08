@@ -44,7 +44,6 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
 
   final private String TAG = "AllBoardFragment";
   private RecyclerView mRecyclerView = null;
-  private SearchView mSearchView = null;
   private QueryTextListener mQueryListener = null;
 
   private OnBoardFragmentInteractionListener mListener = null;
@@ -77,7 +76,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     }
     mRecyclerView.setAdapter(mAdapter);
 
-    mSearchView = (SearchView) view.findViewById(R.id.all_board_search);
+    SearchView mSearchView = (SearchView) view.findViewById(R.id.all_board_search);
     mSearchView.setIconifiedByDefault(false);
 
     // http://stackoverflow.com/questions/11321129/is-it-possible-to-change-the-textcolor-on-an-android-searchview
@@ -137,7 +136,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     final Observable<List<Board>> network = Observable.create(new ObservableOnSubscribe<List<Board>>() {
       @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
         List<Board> boards = SMTHHelper.LoadAllBoardsFromWWW();
-        if (boards != null && boards.size() > 0) {
+        if (boards.size() > 0) {
           observableEmitter.onNext(boards);
         } else {
           observableEmitter.onComplete();
@@ -155,7 +154,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
       @SuppressLint("NotifyDataSetChanged")
       @Override public void onSubscribe(@NonNull Disposable disposable) {
         BoardListContent.clearAllBoards();
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
       }
 
       @Override public void onNext(@NonNull Board board) {
@@ -181,7 +180,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     });
   }
 
-  @Override public void onAttach(Context context) {
+  @Override public void onAttach(@androidx.annotation.NonNull Context context) {
     super.onAttach(context);
     if (context instanceof OnBoardFragmentInteractionListener) {
       mListener = (OnBoardFragmentInteractionListener) context;
@@ -205,7 +204,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
   }
 
   public class QueryTextListener implements SearchView.OnQueryTextListener {
-    private BoardRecyclerViewAdapter mAdapter ;
+    private final BoardRecyclerViewAdapter mAdapter ;
 
     public QueryTextListener(BoardRecyclerViewAdapter mAdapter) {
       this.mAdapter = mAdapter;
@@ -224,9 +223,9 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
 
   @Override public boolean onVolumeUpDown(int keyCode) {
     if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-     ( (MainActivity) getActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
+     ( (MainActivity) requireActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
     } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-     ( (MainActivity) getActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
+     ( (MainActivity) requireActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
     }
     return true;
   }

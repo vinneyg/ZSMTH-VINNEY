@@ -17,8 +17,6 @@ import android.widget.PopupWindow;
  */
 public class PopupSearchWindow extends PopupWindow {
   private static final String TAG = "PopupSearchWindow";
-  private Context mContext;
-  private View contentView;
 
   private SearchInterface mListener = null;
   private EditText etKeyword;
@@ -28,7 +26,6 @@ public class PopupSearchWindow extends PopupWindow {
 
   // http://stackoverflow.com/questions/23464232/how-would-you-create-a-popover-view-in-android-like-facebook-comments
   public void initPopupWindow(final Activity context) {
-    mContext = context;
     if (context instanceof SearchInterface) {
       mListener = (SearchInterface) context;
     } else {
@@ -36,7 +33,7 @@ public class PopupSearchWindow extends PopupWindow {
     }
 
     LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    contentView = layoutInflater.inflate(R.layout.popup_topic_search, null, false);
+    View contentView = layoutInflater.inflate(R.layout.popup_topic_search, null, false);
 
     Button cancel = (Button) contentView.findViewById(R.id.search_cancel);
     cancel.setOnClickListener(new View.OnClickListener() {

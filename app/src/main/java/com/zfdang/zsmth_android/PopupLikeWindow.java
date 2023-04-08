@@ -25,7 +25,6 @@ public class PopupLikeWindow extends PopupWindow {
 
   Activity mContext;
   private OnLikeInterface mListener;
-  private View contentView;
   private WheelView wheelView;
   private EditText etMessage;
 
@@ -40,7 +39,7 @@ public class PopupLikeWindow extends PopupWindow {
     }
 
     LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    contentView = layoutInflater.inflate(R.layout.popup_like_layout, null, false);
+    @SuppressLint("InflateParams") View contentView = layoutInflater.inflate(R.layout.popup_like_layout, null, false);
 
     String[] scores = { "-5", "-4", "-3", "-2", "-1", "0", "+1", "+2", "+3", "+4", "+5" };
     wheelView = (WheelView) contentView.findViewById(R.id.like_score);

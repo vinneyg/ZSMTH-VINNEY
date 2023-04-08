@@ -2,6 +2,7 @@ package com.zfdang.zsmth_android;
 
 import static com.zfdang.zsmth_android.LoginActivity.LOGIN_ACTIVITY_REQUEST_CODE;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 
 import android.os.Bundle;
@@ -44,6 +45,7 @@ import io.reactivex.disposables.Disposable;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import okhttp3.ResponseBody;
@@ -76,7 +78,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
   private Board mBoard = null;
 
   private int mCurrentPageNo = 1;
-  private int LOAD_MORE_THRESHOLD = 1;
+  private final int LOAD_MORE_THRESHOLD = 1;
 
   private SwipeRefreshLayout mSwipeRefreshLayout = null;
   private EndlessRecyclerOnScrollListener mScrollListener = null;
@@ -358,6 +360,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     // Log.d(TAG, mCurrentPageNo + " page is loading now...");
     LoadBoardTopics();
   }
+  @SuppressLint("NotifyDataSetChanged")
   @Override public void onRefresh() {
     // this method is slightly different with RefreshBoardTopicFromPageOne
     // this method does not alert since it's triggered by SwipeRefreshLayout
@@ -367,6 +370,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     LoadBoardTopics();
   }
 
+  @SuppressLint("NotifyDataSetChanged")
   public void RefreshBoardTopicFromPageOne() {
     showProgress("刷新版面文章...");
 
@@ -409,7 +413,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Observer<Topic>() {
           @Override public void onSubscribe(@NonNull Disposable disposable) {
-            Topic topic = new Topic(String.format("第%d页:", mCurrentPageNo));
+            Topic topic = new Topic(String.format(Locale.CHINA,"第%d页:", mCurrentPageNo));
             topic.isCategory = true;
             TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
             //mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
@@ -417,7 +421,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
               @Override
               public void run() {
                 // Notify adapter with appropriate notify methods
-                mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1); }
+                Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1); }
             });
             }
 
@@ -429,7 +433,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                  // Log.d(TAG, "Vinney1 + " + topic.getTitle());
                   TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
                   MapHash.put(topic.getTitle(),topic.getTopicID());
-                  mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                  Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
                 }
                 else
                 {
@@ -437,7 +441,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                   MapHash.clear();
                   TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
                   MapHash.put(topic.getTitle(),topic.getTopicID());
-                  mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                  Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
                 }
               }
 
@@ -450,7 +454,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
           @Override public void onError(@NonNull Throwable e) {
             clearLoadingHints();
 
-            Toast.makeText(SMTHApplication.getAppContext(), String.format("获取第%d页的帖子失败!\n", mCurrentPageNo) + e.toString(),
+            Toast.makeText(SMTHApplication.getAppContext(), String.format(Locale.CHINA,"获取第%d页的帖子失败!\n", mCurrentPageNo) + e.toString(),
                 Toast.LENGTH_SHORT).show();
             mCurrentPageNo -= 1;
           }
@@ -534,6 +538,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     startActivity(intent);
   }
 
+  @SuppressLint("NotifyDataSetChanged")
   @Override public void OnSearchAction(String keyword, String author, boolean elite, boolean attachment) {
     Log.d(TAG, "OnSearchAction: " + keyword + author + elite + attachment);
 
