@@ -1157,7 +1157,7 @@ public class MainActivity extends SMTHBaseActivity
                 Log.d(TAG, "onNext: " + user.toString());
                 if(user != null) {
                   if (!user.is_online()) {
-                    Toast.makeText(getApplicationContext(),"掉线自动登录！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"掉线将自动登录！", Toast.LENGTH_SHORT).show();
                     onLogin();
                   }
                 }
