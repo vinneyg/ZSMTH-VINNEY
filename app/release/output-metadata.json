@@ -11,9 +11,9 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 2053,
-      "versionName": "23.04.09",
-      "outputFile": "zSMTH-v-release-v23.04.09-2053.apk"
+      "versionCode": 2055,
+      "versionName": "23.04.11",
+      "outputFile": "zSMTH-v-release-v23.04.11-2055.apk"
     }
   ],
   "elementType": "File"

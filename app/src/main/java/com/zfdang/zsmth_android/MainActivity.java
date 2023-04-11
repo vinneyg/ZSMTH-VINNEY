@@ -836,9 +836,11 @@ public class MainActivity extends SMTHBaseActivity
         setTitle(SMTHApplication.App_Title_Prefix + title);
       }
 
+      /*
       if (SMTHApplication.isValidUser()) {
           onRelogin(); //Check userstatus if not online then relogin}
       }
+      */
 
     }
 
