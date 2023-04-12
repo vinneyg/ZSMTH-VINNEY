@@ -45,7 +45,7 @@
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="launch_hottopic_as_entry"
-        android:summaryOff="打开收藏页面"
+        android:summaryOff="打开收藏"
         android:summaryOn="打开首页"
         android:title="初始页面"/>
 
@@ -90,7 +90,7 @@
         android:title="帖子加载设置"/>
 
     <CheckBoxPreference
-        android:defaultValue="off"
+        android:defaultValue="on"
         android:key="quick_reply"
         android:summaryOff="关"
         android:summaryOn="开"

@@ -1061,7 +1061,8 @@ public class PostListActivity extends SMTHBaseActivity
       postContext.setPostId(post.getPostID());
       postContext.setPostTitle(mTopic.getTitle());
       postContext.setPostAuthor(post.getRawAuthor());
-      postContext.setPostContent(post.getRawContent());
+      //postContext.setPostContent(post.getRawContent());
+      postContext.setPostContent("");
       postContext.setComposingMode(ComposePostContext.MODE_REPLY_MAIL);
 
       Intent intent = new Intent(this, ComposePostActivity.class);
@@ -1083,7 +1084,8 @@ public class PostListActivity extends SMTHBaseActivity
        postContext.setPostId(post.getPostID());
        postContext.setPostTitle(mTopic.getTitle());
        postContext.setPostAuthor(post.getRawAuthor());
-       postContext.setPostContent(post.getRawContent());
+       //postContext.setPostContent(post.getRawContent());
+       postContext.setPostContent("");
        postContext.setComposingMode(ComposePostContext.MODE_REPLY_POST);
 
        Intent intent = new Intent(this, ComposePostActivity.class);
