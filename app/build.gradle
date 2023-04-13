@@ -45,9 +45,11 @@ android {
     }
     // http://www.sollyu.com/android-apk-studio-generated-automatically-appends-a-version-number/
     android.applicationVariants.all { variant ->
+        def path = "../apk" // app/apk
+        println (path)
         variant.outputs.all { output ->
             if(buildType.name == "release") {
-                output.outputFileName = new File("zSMTH-v" + "-" + buildType.name + "-v" + defaultConfig.versionName +"-"+ defaultConfig.versionCode+ ".apk" )
+                output.outputFileName = new File(path, "zSMTH-v" + "-" + buildType.name + "-v" + defaultConfig.versionName +"-"+ defaultConfig.versionCode+ ".apk" )
             } else {
                 output.outputFileName = new File("zSMTH-v" + "-" + buildType.name + "-v" + defaultConfig.versionName + ".apk" )
             }
@@ -159,4 +161,6 @@ dependencies {
 
 
 }
+
+
 
