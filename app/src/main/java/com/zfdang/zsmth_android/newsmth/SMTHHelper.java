@@ -97,7 +97,7 @@ public class SMTHHelper {
   // singleton
   private static SMTHHelper instance = null;
 
-  public static SMTHHelper getInstance() {
+  public static synchronized SMTHHelper getInstance() {
     if (instance == null) {
       instance = new SMTHHelper(SMTHApplication.getAppContext());
     }
@@ -615,7 +615,7 @@ public class SMTHHelper {
         Element sectionName = sectionNames.first();
         assert sectionName != null;
         String name = sectionName.text();
-        if (name == null || name.equals("系统与祝福")) {
+        if (name.equals("系统与祝福")) {
           continue;
         }
         topic = new Topic(name);
@@ -792,6 +792,7 @@ public class SMTHHelper {
     }
     Element div = divs.first();
 
+    assert div != null;
     Elements trs = div.getElementsByTag("tr");
     for (Element tr : trs) {
       // Log.d(TAG, "ParseSearchResultFromWWW: " + tr.toString());
@@ -814,6 +815,7 @@ public class SMTHHelper {
           Elements As = td.getElementsByTag("A");
           if (As.size() > 0) {
             Element A = As.first();
+            assert A != null;
             topicID = StringUtils.getLastStringSegment(A.attr("href"));
           }
         } else if (TextUtils.equals(td.attr("class"), "title_10")) {
@@ -895,6 +897,7 @@ public class SMTHHelper {
         // o.o(true,1,1368,0,'[数码]','SmartLife','智能生活','[目录]',0,1367,0);
         board.initAsSection(engName,chsName);
       } else {
+        assert moderator != null;
         board.initAsBoard(chsName,engName, category, moderator);
       }
 
@@ -916,6 +919,7 @@ public class SMTHHelper {
     Elements errors = doc.select("div.error");
     if (errors.size() > 0) {
       Element error = errors.first();
+      assert error != null;
       Mail mail = new Mail(error.text());
       mails.add(mail);
       return mails;
@@ -926,6 +930,7 @@ public class SMTHHelper {
     Elements is = doc.select("div.page li.page-pre i");
     if (is.size() > 0) {
       Element i = is.first();
+      assert i != null;
       String totalMails = i.text();
       // Log.d(TAG, "ParseMailsFromWWW: " + totalMails);
       MailListContent.setTotalMails(Integer.parseInt(totalMails));
@@ -937,6 +942,7 @@ public class SMTHHelper {
     if (lis.size() > 0) {
       // find
       Element li = lis.first();
+      assert li != null;
       String page = li.text();
       Mail mail = new Mail(String.format(Locale.CHINA,"第%s页", page));
       mails.add(mail);
@@ -974,6 +980,7 @@ public class SMTHHelper {
           Elements as = td.getElementsByTag("a");
           if (as.size() > 0) {
             Element a = as.first();
+            assert a != null;
             mail.url = a.attr("href");
             mail.referIndex = a.attr("_index");
           }
@@ -1004,9 +1011,10 @@ public class SMTHHelper {
     Document doc = Jsoup.parse(response);
     Elements bodies = doc.getElementsByTag("body");
 
-    if (bodies != null && bodies.size() > 0) {
+    if (bodies.size() > 0) {
       Element body = bodies.first();
 
+      assert body != null;
       Elements divs = body.select("div.nav");
       for (Element div : divs) {
         div.remove();
@@ -1037,8 +1045,9 @@ public class SMTHHelper {
 
     Document doc = Jsoup.parse(response);
     Elements errors = doc.select("table.error");
-    if (errors != null && errors.size() > 0) {
+    if (errors.size() > 0) {
       Element error = errors.first();
+      assert error != null;
       return error.text();
     }
 
@@ -1248,6 +1257,7 @@ public class SMTHHelper {
       Elements t1links = tr.select("td.title_1 a[href]");
       if (t1links.size() == 1) {
         Element link1 = t1links.first();
+        assert link1 != null;
         String temp = link1.attr("href");
 
         String chsBoardName;
@@ -1267,6 +1277,7 @@ public class SMTHHelper {
             // if we can find link to moderator, set moderator
             // it's also possible that moderator is empty, so no link can be found
             Element link2 = t2links.first();
+            assert link2 != null;
             moderator = link2.text();
           }
 

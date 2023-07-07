@@ -70,9 +70,6 @@
             />
 
         <androidx.recyclerview.widget.RecyclerView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/post_list"
             android:name="com.zfdang.zsmth_android.TopicListFragment"
             android:layout_width="match_parent"
@@ -107,7 +104,7 @@
             android:background="@null"
             android:clickable="true"
             android:src="@drawable/ic_arrow_upward_36dp"
-            />
+            android:focusable="true" />
 
         <ImageButton
             android:id="@+id/post_list_action_up"
@@ -117,7 +114,7 @@
             android:background="@null"
             android:clickable="true"
             android:src="@drawable/ic_expand_less_36dp"
-            />
+            android:focusable="true" />
 
         <ImageButton
             android:id="@+id/post_list_action_down"
@@ -127,7 +124,7 @@
             android:background="@null"
             android:clickable="true"
             android:src="@drawable/ic_expand_more_36dp"
-            />
+            android:focusable="true" />
 
         <ImageButton
             android:id="@+id/post_list_action_bottom"
@@ -136,7 +133,7 @@
             android:background="@null"
             android:clickable="true"
             android:src="@drawable/ic_arrow_downward_36dp"
-            />
+            android:focusable="true" />
       </LinearLayout>
 
     </FrameLayout>

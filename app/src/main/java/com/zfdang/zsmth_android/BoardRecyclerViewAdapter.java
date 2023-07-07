@@ -39,7 +39,7 @@ public class BoardRecyclerViewAdapter extends RecyclerView.Adapter<BoardRecycler
     return new ViewHolder(view);
   }
 
-  @SuppressLint("SetTextI18n")
+  @SuppressLint({"SetTextI18n", "SuspiciousIndentation"})
   @Override public void onBindViewHolder(final ViewHolder holder, int position) {
     holder.mItem = mBoards.get(position);
     Board board = holder.mItem;

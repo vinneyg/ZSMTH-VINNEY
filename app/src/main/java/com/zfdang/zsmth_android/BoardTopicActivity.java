@@ -470,10 +470,11 @@ public class BoardTopicActivity extends SMTHBaseActivity
               public void onComplete() {
                 clearLoadingHints();
 
+
                 // Special User OFFLINE case: [] or [Category 第一页:]
                 if ((TopicListContent.BOARD_TOPICS.toString().length() == 2
                     || TopicListContent.BOARD_TOPICS.toString().length() == 15)) {
-                  // Toast.makeText(SMTHApplication.getAppContext(),"请重新登录！",Toast.LENGTH_SHORT).show();
+                  Toast.makeText(SMTHApplication.getAppContext(),"特殊掉线请重新登录！",Toast.LENGTH_SHORT).show();
                   TopicListContent.clearBoardTopics();
                   // SMTHApplication.activeUser = null;
 
@@ -488,6 +489,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                     startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
                   }
                 }
+
               }
             });
   }
