@@ -3,7 +3,7 @@ apply from: 'MobSDK.gradle'
 
 // http://www.race604.com/android-auto-version/
 // use git count as build number, as current date as build version
-def getDate() {
+static def getDate() {
     def date = new Date()
     def formattedDate = date.format('yy.MM.dd')
     return formattedDate
@@ -15,8 +15,8 @@ def appVersion = getDate()
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-   // buildToolsVersion rootProject.buildToolsVersion
-    ndkVersion "21.4.7075529"
+    //buildToolsVersion rootProject.buildToolsVersion
+    //ndkVersion "21.4.7075529"
 
     defaultConfig {
         applicationId "com.zfdang.zsmth_android"
@@ -45,11 +45,9 @@ android {
     }
     // http://www.sollyu.com/android-apk-studio-generated-automatically-appends-a-version-number/
     android.applicationVariants.all { variant ->
-        def path = "../apk" // app/apk
-        println (path)
         variant.outputs.all { output ->
             if(buildType.name == "release") {
-                output.outputFileName = new File(path, "zSMTH-v" + "-" + buildType.name + "-v" + defaultConfig.versionName +"-"+ defaultConfig.versionCode+ ".apk" )
+                output.outputFileName = new File("zSMTH-v" + "-" + buildType.name + "-v" + defaultConfig.versionName +"-"+ defaultConfig.versionCode+ ".apk" )
             } else {
                 output.outputFileName = new File("zSMTH-v" + "-" + buildType.name + "-v" + defaultConfig.versionName + ".apk" )
             }
@@ -94,14 +92,11 @@ dependencies {
     implementation "com.facebook.fresco:imagepipeline-okhttp3:$rootProject.FRESCO_VERSION"
 
     // Support library
-    //implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    //implementation 'com.google.android.material:material:1.5.0'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.3.0'
-    //implementation 'androidx.recyclerview:recyclerview:1.2.1'
     // http://stackoverflow.com/questions/9783368/alternatives-to-preferencefragment-with-android-support-v4
     // https://github.com/Gericop/Android-Support-Preference-V7-Fix
     //implementation 'androidx.preference:preference:1.2.0'

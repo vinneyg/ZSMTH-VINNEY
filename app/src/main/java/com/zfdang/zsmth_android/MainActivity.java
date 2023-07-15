@@ -317,24 +317,19 @@ public class MainActivity extends SMTHBaseActivity
       @SuppressLint("NonConstantResourceId")
       @Override
       public boolean onNavigationItemSelected(@androidx.annotation.NonNull @NonNull MenuItem item) {
-        switch (item.getItemId()) {
-          case R.id.menu_discover:
-            onNavigationItemID(R.id.nav_guidance);
-            mNavigationView.setCheckedItem(R.id.nav_guidance);
-            break;
-          case R.id.menu_star:
-            onNavigationItemID(R.id.nav_favorite);
-            mNavigationView.setCheckedItem(R.id.nav_favorite);
-            break;
-          case R.id.menu_list:
-            onNavigationItemID(R.id.nav_all_boards);
-            mNavigationView.setCheckedItem(R.id.nav_all_boards);
-            break;
-          case R.id.menu_message:
-            onNavigationItemID(R.id.nav_mail);
-            mNavigationView.setCheckedItem(R.id.nav_mail);
-          default:
-            break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_discover) {
+          onNavigationItemID(R.id.nav_guidance);
+          mNavigationView.setCheckedItem(R.id.nav_guidance);
+        } else if (itemId == R.id.menu_star) {
+          onNavigationItemID(R.id.nav_favorite);
+          mNavigationView.setCheckedItem(R.id.nav_favorite);
+        } else if (itemId == R.id.menu_list) {
+          onNavigationItemID(R.id.nav_all_boards);
+          mNavigationView.setCheckedItem(R.id.nav_all_boards);
+        } else if (itemId == R.id.menu_message) {
+          onNavigationItemID(R.id.nav_mail);
+          mNavigationView.setCheckedItem(R.id.nav_mail);
         }
         return true;
       }

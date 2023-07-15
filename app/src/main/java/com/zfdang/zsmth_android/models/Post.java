@@ -200,6 +200,8 @@ public class Post {
     for (Element a : as) {
       // process each a|href
       Elements imgs = a.select("img[src]");
+      Log.d("Vinney-Attach-1",Integer.toString(imgs.size()));
+
       if (imgs.size() == 1) {
         // find one image attachment
         String origImageSrc = a.attr("href");
@@ -227,8 +229,8 @@ public class Post {
           // this is a video attachment, show it as text with link
 
           String origVideoSrc = a.attr("href");
-
-         // Log.d("Vinney-Attach",attachName +"$"+SMTHHelper.preprocessSMTHImageURL(origVideoSrc));
+          Log.d("Vinney-Attach-2 -", origVideoSrc);
+          Log.d("Vinney-Attach-2",attachName +"$"+SMTHHelper.preprocessSMTHImageURL(origVideoSrc));
           Attachment attach = new Attachment(origVideoSrc);
           this.addAttachVideoFile(attach);
         } else {

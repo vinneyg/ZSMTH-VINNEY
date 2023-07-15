@@ -476,7 +476,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                     || TopicListContent.BOARD_TOPICS.toString().length() == 15)) {
                   Toast.makeText(SMTHApplication.getAppContext(),"特殊掉线请重新登录！",Toast.LENGTH_SHORT).show();
                   TopicListContent.clearBoardTopics();
-                  // SMTHApplication.activeUser = null;
+                  SMTHApplication.activeUser = null;
 
                   try {
                     Thread.sleep(500);

@@ -810,120 +810,105 @@ public class PostListActivity extends SMTHBaseActivity
   @SuppressLint("NonConstantResourceId")
   @Override public void onClick(View v) {
     // page navigation buttons
-    switch (v.getId()) {
-      case R.id.post_list_first_page:
-        if(!Settings.getInstance().isautoloadmore()) {
-          if (mCurrentPageNo == 1) {
-            Toast.makeText(PostListActivity.this, "已在首页！", Toast.LENGTH_SHORT).show();
-          } else {
-            mCurrentPageNo = 1;
-            reloadPostList();
-          }
-        }
-        else
-        {
+    int id = v.getId();
+    if (id == R.id.post_list_first_page) {
+      if (!Settings.getInstance().isautoloadmore()) {
+        if (mCurrentPageNo == 1) {
+          Toast.makeText(PostListActivity.this, "已在首页！", Toast.LENGTH_SHORT).show();
+        } else {
           mCurrentPageNo = 1;
           reloadPostList();
         }
-        break;
-      case R.id.post_list_pre_page:
-        if(!Settings.getInstance().isautoloadmore()) {
-          if (mCurrentPageNo == 1) {
-            Toast.makeText(PostListActivity.this, "已在首页！", Toast.LENGTH_SHORT).show();
+      } else {
+        mCurrentPageNo = 1;
+        reloadPostList();
+      }
+    } else if (id == R.id.post_list_pre_page) {
+      if (!Settings.getInstance().isautoloadmore()) {
+        if (mCurrentPageNo == 1) {
+          Toast.makeText(PostListActivity.this, "已在首页！", Toast.LENGTH_SHORT).show();
+        } else {
+          mCurrentPageNo -= 1;
+          reloadPostList();
+        }
+      } else {
+        if (mCurrentPageNo == 1) {
+          reloadPostList();
+        } else {
+          mCurrentPageNo -= 1;
+          reloadPostList();
+        }
+      }
+    } else if (id == R.id.post_list_next_page) {
+      goToNextPage();
+    } else if (id == R.id.post_list_last_page) {
+      if (!Settings.getInstance().isautoloadmore()) {
+        //Change by Vinney
+        if (mCurrentPageNo == mTopic.getTotalPageNo() || mCurrentReadPageNo == mTotalPageNo) {
+          Toast.makeText(PostListActivity.this, "已在末页！", Toast.LENGTH_SHORT).show();
+        } else {
+          //mCurrentPageNo = mTopic.getTotalPageNo();
+          mCurrentPageNo = mTotalPageNo;
+          reloadPostList();
+        }
+      } else {
+        mCurrentPageNo = mTotalPageNo;
+        reloadPostList();
+      }
+    } else if (id == R.id.post_list_go_page) {
+      int pageNo;
+      pageNo = Integer.parseInt(mPageNo.getText().toString());
+      if (!Settings.getInstance().isautoloadmore()) {
+        try {
+          if (mCurrentPageNo == pageNo) {
+            Toast.makeText(PostListActivity.this, String.format(Locale.CHINA, "已在第%d页！", pageNo), Toast.LENGTH_SHORT).show();
+          } else if (pageNo >= 1 && pageNo <= mTopic.getTotalPageNo()) {
+            mCurrentPageNo = pageNo;
+            // turn off keyboard
+            mPageNo.clearFocus();
+            InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            im.hideSoftInputFromWindow(mPageNo.getWindowToken(), 0);
+            // jump now
+            reloadPostList();
           } else {
-            mCurrentPageNo -= 1;
-            reloadPostList();
+            Toast.makeText(PostListActivity.this, "非法页码！", Toast.LENGTH_SHORT).show();
           }
+        } catch (Exception e) {
+          Toast.makeText(PostListActivity.this, "非法输入！", Toast.LENGTH_SHORT).show();
         }
-        else{
-          if (mCurrentPageNo == 1) {
+      } else {
+        try {
+          if (mCurrentPageNo == pageNo) {
+            reloadPostList();
+          } else if (pageNo >= 1 && pageNo <= mTopic.getTotalPageNo()) {
+            mCurrentPageNo = pageNo;
+            // turn off keyboard
+            mPageNo.clearFocus();
+            InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            im.hideSoftInputFromWindow(mPageNo.getWindowToken(), 0);
+            // jump now
             reloadPostList();
           } else {
-            mCurrentPageNo -= 1;
-            reloadPostList();
+            Toast.makeText(PostListActivity.this, "非法页码！", Toast.LENGTH_SHORT).show();
           }
+        } catch (Exception e) {
+          Toast.makeText(PostListActivity.this, "非法输入！", Toast.LENGTH_SHORT).show();
         }
-        break;
-      case R.id.post_list_next_page:
-        goToNextPage();
-        break;
-      case R.id.post_list_last_page:
-        if(!Settings.getInstance().isautoloadmore()) {
-          //Change by Vinney
-          if (mCurrentPageNo == mTopic.getTotalPageNo() || mCurrentReadPageNo == mTotalPageNo) {
-            Toast.makeText(PostListActivity.this, "已在末页！", Toast.LENGTH_SHORT).show();
-          } else {
-            //mCurrentPageNo = mTopic.getTotalPageNo();
-            mCurrentPageNo = mTotalPageNo;
-            reloadPostList();
-          }
-        }
-        else {
-            mCurrentPageNo = mTotalPageNo;
-            reloadPostList();
-          }
-        break;
-      case R.id.post_list_go_page:
-        int pageNo;
-        pageNo = Integer.parseInt(mPageNo.getText().toString());
-        if(!Settings.getInstance().isautoloadmore()) {
-          try {
-            if (mCurrentPageNo == pageNo) {
-              Toast.makeText(PostListActivity.this, String.format(Locale.CHINA,"已在第%d页！", pageNo), Toast.LENGTH_SHORT).show();
-            } else if (pageNo >= 1 && pageNo <= mTopic.getTotalPageNo()) {
-              mCurrentPageNo = pageNo;
-              // turn off keyboard
-              mPageNo.clearFocus();
-              InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-              im.hideSoftInputFromWindow(mPageNo.getWindowToken(), 0);
-              // jump now
-              reloadPostList();
-            } else {
-              Toast.makeText(PostListActivity.this, "非法页码！", Toast.LENGTH_SHORT).show();
-            }
-          } catch (Exception e) {
-            Toast.makeText(PostListActivity.this, "非法输入！", Toast.LENGTH_SHORT).show();
-          }
-        }
-        else        {
-          try {
-            if (mCurrentPageNo == pageNo) {
-              reloadPostList();
-            } else if (pageNo >= 1 && pageNo <= mTopic.getTotalPageNo()) {
-              mCurrentPageNo = pageNo;
-              // turn off keyboard
-              mPageNo.clearFocus();
-              InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-              im.hideSoftInputFromWindow(mPageNo.getWindowToken(), 0);
-              // jump now
-              reloadPostList();
-            } else {
-              Toast.makeText(PostListActivity.this, "非法页码！", Toast.LENGTH_SHORT).show();
-            }
-          } catch (Exception e) {
-            Toast.makeText(PostListActivity.this, "非法输入！", Toast.LENGTH_SHORT).show();
-          }
-        }
-        break;
-      case R.id.post_list_action_top:
-        mRecyclerView.scrollToPosition(0);
-        break;
-      case R.id.post_list_action_up:
-        int prevPos = linearLayoutManager.findFirstVisibleItemPosition() - 1;
-        if (prevPos >= 0) {
-          mRecyclerView.smoothScrollToPosition(prevPos);
-        }
-        break;
-      case R.id.post_list_action_down:
-        int nextPos = linearLayoutManager.findLastVisibleItemPosition() + 1;
-        if (nextPos < Objects.requireNonNull(mRecyclerView.getAdapter()).getItemCount()) {
-          mRecyclerView.smoothScrollToPosition(nextPos);
-        }
-        break;
-      case R.id.post_list_action_bottom:
-        mRecyclerView.scrollToPosition(Objects.requireNonNull(mRecyclerView.getAdapter()).getItemCount() - 1);
-        break;
-
+      }
+    } else if (id == R.id.post_list_action_top) {
+      mRecyclerView.scrollToPosition(0);
+    } else if (id == R.id.post_list_action_up) {
+      int prevPos = linearLayoutManager.findFirstVisibleItemPosition() - 1;
+      if (prevPos >= 0) {
+        mRecyclerView.smoothScrollToPosition(prevPos);
+      }
+    } else if (id == R.id.post_list_action_down) {
+      int nextPos = linearLayoutManager.findLastVisibleItemPosition() + 1;
+      if (nextPos < Objects.requireNonNull(mRecyclerView.getAdapter()).getItemCount()) {
+        mRecyclerView.smoothScrollToPosition(nextPos);
+      }
+    } else if (id == R.id.post_list_action_bottom) {
+      mRecyclerView.scrollToPosition(Objects.requireNonNull(mRecyclerView.getAdapter()).getItemCount() - 1);
     }
   }
 

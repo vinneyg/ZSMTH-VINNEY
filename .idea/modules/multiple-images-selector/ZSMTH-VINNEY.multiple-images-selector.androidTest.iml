@@ -7,8 +7,8 @@
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
-        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/../../../multiple-images-selector/src/main/res;file://$MODULE_DIR$/../../../multiple-images-selector/src/debug/res;file://$MODULE_DIR$/../../../multiple-images-selector/build/generated/res/rs/debug;file://$MODULE_DIR$/../../../multiple-images-selector/build/generated/res/resValues/debug" />
-        <option name="TEST_RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/../../../multiple-images-selector/src/androidTest/res;file://$MODULE_DIR$/../../../multiple-images-selector/src/androidTestDebug/res;file://$MODULE_DIR$/../../../multiple-images-selector/build/generated/res/rs/androidTest/debug;file://$MODULE_DIR$/../../../multiple-images-selector/build/generated/res/resValues/androidTest/debug" />
+        <option name="RES_FOLDERS_RELATIVE_PATH" value="" />
+        <option name="TEST_RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/../../../multiple-images-selector/src/androidTest/res;file://$MODULE_DIR$/../../../multiple-images-selector/src/androidTestDebug/res;file://$MODULE_DIR$/../../../multiple-images-selector/build/generated/res/resValues/androidTest/debug" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
         <option name="PROJECT_TYPE" value="1" />
       </configuration>
@@ -18,17 +18,13 @@
     <output url="file://$MODULE_DIR$/../../../multiple-images-selector/build/intermediates/javac/debug/classes" />
     <output-test url="file://$MODULE_DIR$/../../../multiple-images-selector/build/intermediates/javac/debugUnitTest/classes" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../../multiple-images-selector/build/generated/aidl_source_output_dir/debugAndroidTest/out" />
     <content url="file://$MODULE_DIR$/../../../multiple-images-selector/build/generated/ap_generated_sources/debugAndroidTest/out" />
-    <content url="file://$MODULE_DIR$/../../../multiple-images-selector/build/generated/renderscript_source_output_dir/debugAndroidTest/out" />
     <content url="file://$MODULE_DIR$/../../../multiple-images-selector/build/generated/res/resValues/androidTest/debug" />
-    <content url="file://$MODULE_DIR$/../../../multiple-images-selector/build/generated/res/rs/androidTest/debug" />
-    <content url="file://$MODULE_DIR$/../../../multiple-images-selector/build/generated/source/buildConfig/androidTest/debug" />
     <content url="file://$MODULE_DIR$/../../../multiple-images-selector/src/androidTest">
       <sourceFolder url="file://$MODULE_DIR$/../../../multiple-images-selector/src/androidTest/java" isTestSource="true" />
     </content>
     <content url="file://$MODULE_DIR$/../../../multiple-images-selector/src/androidTestDebug" />
-    <orderEntry type="jdk" jdkName="Android API 33 Platform" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 34, extension level 7 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="ZSMTH-VINNEY.multiple-images-selector.main" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Gradle: junit:junit:4.13.2" level="project" />
