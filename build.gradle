@@ -15,7 +15,6 @@ buildscript {
     }
     dependencies {
         // https://developer.android.com/studio/releases/gradle-plugin.html
-        // classpath 'com.android.tools.build:gradle:7.2.2'
         classpath 'com.android.tools.build:gradle:8.0.2'
         // https://github.com/ben-manes/gradle-versions-plugin
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.42.0'
@@ -30,14 +29,15 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter() //To be removed
-        google()
         mavenCentral()
+        maven {
+            url "http://maven.aliyun.com/nexus/content/repositories/jcenter"
+            allowInsecureProtocol = true;
+        }
         maven {
             url "https://jitpack.io"
         }
-
-
+        google()
     }
 }
 
@@ -52,8 +52,8 @@ ext {
     targetSdkVersion = 34
     compileSdkVersion = 34
     // https://developer.android.com/studio/releases/build-tools
-    buildToolsVersion = '30.0.3'
-    FRESCO_VERSION = '1.14.2'
+    buildToolsVersion = '34.0.0'
+    FRESCO_VERSION = '2.6.0'
     RXJAVA2_VERSION = '2.2.21'
     RXANDROID2_VERSION = '2.1.1'
 }

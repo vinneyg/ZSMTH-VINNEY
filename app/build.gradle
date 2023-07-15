@@ -74,7 +74,7 @@ android {
 }
 
 dependencies {
-    final OKHTTP_VERSION = '3.14.9'
+    final OKHTTP_VERSION = '4.11.0'
     final RETROFIT_VERSION = '2.9.0'
 
     implementation 'androidx.multidex:multidex:2.0.1'
@@ -94,7 +94,7 @@ dependencies {
     // Support library
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.3.0'
     // http://stackoverflow.com/questions/9783368/alternatives-to-preferencefragment-with-android-support-v4
@@ -108,7 +108,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:$rootProject.RXJAVA2_VERSION"
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.RXANDROID2_VERSION"
 
-    def work_version = "2.7.1"
+    def work_version = "2.8.1"
     // (Java only)
     implementation "androidx.work:work-runtime:$work_version"
     // optional - RxJava2 support
@@ -132,6 +132,7 @@ dependencies {
     implementation 'com.github.maksim88:PasswordEditText:0.9'
     implementation 'org.jsoup:jsoup:1.14.3'
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
+    // https://mvnrepository.com/artifact/com.jude/swipebackhelper
     implementation 'com.jude:swipebackhelper:3.1.2'
 
     implementation 'me.relex:circleindicator:2.1.6'
