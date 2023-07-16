@@ -157,7 +157,6 @@ public class PostListActivity extends SMTHBaseActivity
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if(requestCode == ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE) {
       // returned from Compose activity, refresh current post
-      // TODO: check resultCode
       reloadPostList();
     }
 

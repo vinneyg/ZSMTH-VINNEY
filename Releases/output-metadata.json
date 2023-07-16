@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.zfdang.zsmth_android",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 2062,
+      "versionName": "23.07.16",
+      "outputFile": "zSMTH-v-release-v23.07.16-2062.apk"
+    }
+  ],
+  "elementType": "File"
+}

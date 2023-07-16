@@ -47,11 +47,14 @@ android {
     android.applicationVariants.all { variant ->
         variant.outputs.all { output ->
             if(buildType.name == "release") {
+                variant.getPackageApplicationProvider().get().outputDirectory = new File(
+                      project.rootDir.absolutePath+"/Releases/" )
                 output.outputFileName = new File("zSMTH-v" + "-" + buildType.name + "-v" + defaultConfig.versionName +"-"+ defaultConfig.versionCode+ ".apk" )
             } else {
                 output.outputFileName = new File("zSMTH-v" + "-" + buildType.name + "-v" + defaultConfig.versionName + ".apk" )
             }
         }
+
     }
     // ...
     testOptions {
@@ -71,6 +74,7 @@ android {
         abortOnError false
     }
     namespace 'com.zfdang.zsmth_android'
+
 }
 
 dependencies {
@@ -132,9 +136,7 @@ dependencies {
     implementation 'com.github.maksim88:PasswordEditText:0.9'
     implementation 'org.jsoup:jsoup:1.14.3'
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
-    // https://mvnrepository.com/artifact/com.jude/swipebackhelper
     implementation 'com.jude:swipebackhelper:3.1.2'
-
     implementation 'me.relex:circleindicator:2.1.6'
 
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
@@ -147,16 +149,22 @@ dependencies {
     implementation  'io.github.scwang90:refresh-header-classics:2.0.5'    //经典刷新头
     implementation  'io.github.scwang90:refresh-footer-classics:2.0.5'    //经典加载
     implementation 'com.klinkerapps:link_builder:1.6.1'
-
     implementation 'com.esotericsoftware:kryo:4.0.2'
-
     implementation 'com.github.nisrulz:screenshott:2.0.0'
 
     // my gradles
     implementation project(':multiple-images-selector')
-
-
 }
+
+//https://blog.csdn.net/ismartv_dagou2/article/details/127392262
+tasks.whenTaskAdded { task ->
+    if(task.name.contains("ReleaseApkListingFileRedirect"))
+    {
+        task.enabled = false
+    }
+}
+
+
 
 
 

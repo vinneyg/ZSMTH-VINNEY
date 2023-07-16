@@ -6,10 +6,10 @@
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/2758120bcda2190e680656539b121e05/transformed/jetified-circleindicator-2.1.6/res" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/me.relex/circleindicator/2.1.6/d0267b6edbd885d262891e96a01ab29dd9cffd64/circleindicator-2.1.6-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/me.relex/circleindicator/2.1.6/c63914dbe6762d8b39b388c2524f3a690e27ba94/circleindicator-2.1.6-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/me.relex/circleindicator/2.1.6/3e3f812a70cfdaaa3fa76dbb109b443ff9b96407/circleindicator-2.1.6-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/me.relex/circleindicator/2.1.6/56c29dda2252605f95f5206d3b75d3f43085286d/circleindicator-2.1.6-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

@@ -6,7 +6,7 @@
   <string name="nav_header_click_to_login">点击登录</string>
 
 
-  <!-- TODO: Remove or change this placeholder text -->
+  <!-- Remove or change this placeholder text -->
   <string name="hello_blank_fragment">This is the first fragment</string>
   <string name="setting_fragment">程序设置</string>
   <string name="button_load_version">检查更新</string>
