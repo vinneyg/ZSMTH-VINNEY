@@ -90,7 +90,7 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
       }
 
       if (focusView != null) {
-    // There was an error; don't attempt login and focus the first field with an alert
+        // There was an error; don't attempt login and focus the first field with an alert
         focusView.requestFocus();
         Toast.makeText(SMTHApplication.getAppContext(), "请输入用户名/密码！", Toast.LENGTH_SHORT).show();
       } else {
@@ -215,4 +215,3 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
     }
   }
 }
-

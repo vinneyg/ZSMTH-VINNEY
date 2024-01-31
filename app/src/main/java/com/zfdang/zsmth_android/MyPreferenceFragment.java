@@ -508,7 +508,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     app_version.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
       @Override public boolean onPreferenceClick(Preference preference) {
 
-       // ActivityUtils.openLink("http://zsmth-android.zfdang.com/release.html", getActivity());
+        // ActivityUtils.openLink("http://zsmth-android.zfdang.com/release.html", getActivity());
         Toast.makeText(SMTHApplication.getAppContext(),"这是Vinney的zSMTH改进版本!",Toast.LENGTH_SHORT).show();
         ActivityUtils.openLink("https://lanzoui.com/b01noyh6b", getActivity());
         return true;

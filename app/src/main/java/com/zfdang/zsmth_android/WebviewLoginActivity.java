@@ -27,8 +27,8 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
         // get username & password
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
-        username = extras.getString(LoginActivity.USERNAME);
-        password = extras.getString(LoginActivity.PASSWORD);
+            username = extras.getString(LoginActivity.USERNAME);
+            password = extras.getString(LoginActivity.PASSWORD);
         }
 
         WebView mWebView = (WebView) findViewById(R.id.webview_login);

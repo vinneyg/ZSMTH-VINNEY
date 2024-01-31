@@ -118,9 +118,9 @@ public class SMTHApplication extends Application {
     // requestListeners.add(new RequestLoggingListener());
     OkHttpClient httpClient = SMTHHelper.getInstance().mHttpClient;
     ImagePipelineConfig config = OkHttpImagePipelineConfigFactory.newBuilder(context, httpClient)
-        //                .setRequestListeners(requestListeners)
-                        .setDownsampleEnabled(false)
-        .build();
+            //                .setRequestListeners(requestListeners)
+            .setDownsampleEnabled(false)
+            .build();
     Fresco.initialize(context, config);
     // FLog.setMinimumLoggingLevel(FLog.VERBOSE);
 

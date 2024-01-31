@@ -28,11 +28,11 @@ public class WebviewLoginClient extends WebViewClient {
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
 //        Log.d(TAG, "shouldOverrideUrlLoading" + request.getUrl().toString());
-            if (request.getUrl().toString().startsWith("https://m.newsmth.net/index?m=")||request.getUrl().toString().startsWith("https://m.mysmth.net/index?m=")) {
+        if (request.getUrl().toString().startsWith("https://m.newsmth.net/index?m=")||request.getUrl().toString().startsWith("https://m.mysmth.net/index?m=")) {
             //if (url.startsWith("https://www.mysmth.net/nforum")) {
-                Intent resultIntent = new Intent();
-                activity.setResult(Activity.RESULT_OK, resultIntent);
-                activity.finish();
+            Intent resultIntent = new Intent();
+            activity.setResult(Activity.RESULT_OK, resultIntent);
+            activity.finish();
         }
         return false;
     }
@@ -55,13 +55,15 @@ public class WebviewLoginClient extends WebViewClient {
                     "ids[0].value = '" + this.username + "';" +
                     "var passwds = document.getElementsByName('passwd');" +
                     "passwds[0].value = '" + this.password + "';" +
+                    "var checkbox = document.getElementsByName('save');" +
+                    "checkbox[0].checked = '" + true + "';" +
                     "document.getElementById('TencentCaptcha').click();";
 
-                view.evaluateJavascript(js, new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String s) {
-                    }
-                });
+            view.evaluateJavascript(js, new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String s) {
+                }
+            });
         }
         super.onPageFinished(view, url);
     }

@@ -95,16 +95,17 @@ dependencies {
     implementation "com.facebook.fresco:animated-webp:$rootProject.FRESCO_VERSION"
     implementation "com.facebook.fresco:imagepipeline-okhttp3:$rootProject.FRESCO_VERSION"
 
-    // Support library
+    // Support library1
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.3.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
     // http://stackoverflow.com/questions/9783368/alternatives-to-preferencefragment-with-android-support-v4
     // https://github.com/Gericop/Android-Support-Preference-V7-Fix
     //implementation 'androidx.preference:preference:1.2.0'
     implementation 'androidx.preference:preference:1.0.0'
+    //implementation 'androidx.fragment:fragment:1.4.1'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
 
@@ -112,7 +113,8 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:$rootProject.RXJAVA2_VERSION"
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.RXANDROID2_VERSION"
 
-    def work_version = "2.8.1"
+
+    def work_version = "2.9.0"
     // (Java only)
     implementation "androidx.work:work-runtime:$work_version"
     // optional - RxJava2 support
@@ -152,8 +154,12 @@ dependencies {
     implementation 'com.esotericsoftware:kryo:4.0.2'
     implementation 'com.github.nisrulz:screenshott:2.0.0'
 
+    implementation 'com.squareup.okhttp:okhttp:1.3.0'
+    implementation 'com.squareup.mimecraft:mimecraft:1.1.0'
+
     // my gradles
     implementation project(':multiple-images-selector')
+
 }
 
 //https://blog.csdn.net/ismartv_dagou2/article/details/127392262

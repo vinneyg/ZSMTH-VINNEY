@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.oguzdev:CircularFloatingActionMenu:1.0.2@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/a9f81f267c8c754d3c16f74861f18873/transformed/jetified-CircularFloatingActionMenu-1.0.2/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a9f81f267c8c754d3c16f74861f18873/transformed/jetified-CircularFloatingActionMenu-1.0.2/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a9f81f267c8c754d3c16f74861f18873/transformed/jetified-CircularFloatingActionMenu-1.0.2/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/366d38ba4d6064e1a53f20cf693896ca/transformed/jetified-CircularFloatingActionMenu-1.0.2/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/366d38ba4d6064e1a53f20cf693896ca/transformed/jetified-CircularFloatingActionMenu-1.0.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/366d38ba4d6064e1a53f20cf693896ca/transformed/jetified-CircularFloatingActionMenu-1.0.2/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.oguzdev/CircularFloatingActionMenu/1.0.2/3f6ed2f1ddb9ff295e81f49e0de88d1c76cbe664/CircularFloatingActionMenu-1.0.2-javadoc.jar!/" />

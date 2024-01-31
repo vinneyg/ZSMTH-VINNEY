@@ -1,10 +1,14 @@
 package com.zfdang.zsmth_android.services;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
@@ -16,8 +20,10 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.QueryUserActivity;
 import com.zfdang.zsmth_android.Settings;
 import com.zfdang.zsmth_android.helpers.MakeList;
+import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserInfo;
@@ -27,6 +33,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
@@ -77,43 +84,27 @@ public class MaintainUserStatusWorker extends Worker {
 
         final SMTHHelper helper = SMTHHelper.getInstance();
 
+
         //Log.d(TAG, "1.0 get current UserStatus from remote");
         helper.wService.queryActiveUserStatus().map(new Function<UserStatus, UserStatus>() {
             @Override
             public UserStatus apply(UserStatus userStatus) throws Exception {
-//                Log.d(TAG, "2.0 " + userStatus.toString());
+                Log.d(TAG, "2.0 " + userStatus.toString());
                 // create a dummy userStatus if it is null
                 if (userStatus == null) {
                     userStatus = new UserStatus();
                 }
 
-                // set id to guest if it is null
-                if (userStatus.getId() == null) {
-                    userStatus.setId("guest");
-                }
-
-                //Log.d(TAG, "call: " + "2.2 user not logined, try to login now...");
-                if (Settings.getInstance().isLoginWithVerification()) {
-                    // if login with gesture verification, skip the login attempt
-                    return userStatus;
-                }
-
-                // check it's logined user, or guest
-                if (!TextUtils.equals(userStatus.getId(), "guest")) {
-                    // logined user, just return the status for next step
-                    // Log.d(TAG, "call: 2.1 valid logined user: " + userStatus.getId());
-                    return userStatus;
-                }
 
                 // now try to login
                 final Settings setting = Settings.getInstance();
                 String username = setting.getUsername();
                 String password = setting.getPassword();
-                boolean bSaveInfo = setting.isSaveInfo();
-                boolean bLastSuccess = setting.isLastLoginSuccess();
-                boolean bUserOnline = setting.isUserOnline();
+                boolean bSaveInfo = true;
+                boolean bLastSuccess = true;
+                boolean bUserOnline = true;
                 boolean bLoginSuccess = false;
-//                Log.d(TAG, "call: 2.2.1 " + String.format("Autologin: %b, LastSuccess: %b, Online: %b", bAutoLogin, bLastSuccess, bUserOnline));
+               // Log.d(TAG, "call: 2.2.1 " + String.format("Autologin: %b, LastSuccess: %b, Online: %b", bAutoLogin, bLastSuccess, bUserOnline));
                 if (bSaveInfo && bLastSuccess && bUserOnline) {
                     Iterable<Integer> its = helper.wService.login(username, password, "7").map(new Function<AjaxResponse, Integer>() {
                         @Override
@@ -131,7 +122,7 @@ public class MaintainUserStatusWorker extends Worker {
 
                     List<Integer> results = MakeList.makeList(its);
 
-                    //Log.d(TAG, "call: 2.2.2 " + results.size());
+                    Log.d(TAG, "call: 2.2.2 " + results.size());
                     if (results != null && results.size() == 1) {
                         int result = results.get(0);
                         if (result == AjaxResponse.AJAX_RESULT_OK) {
@@ -174,14 +165,14 @@ public class MaintainUserStatusWorker extends Worker {
                         userStatus.setFace_url(SMTHApplication.activeUser.getFace_url());
                     } else {
                         // get correct faceURL
-                        //Log.d(TAG, "call: " + "3.2 New user is different with cached user, get real face URL from remote");
+                        Log.d(TAG, "call: " + "3.2 New user is different with cached user, get real face URL from remote");
                         UserInfo userInfo = helper.wService.queryUserInformation(userStatus.getId()).blockingFirst();
                         if (userInfo != null) {
                             userStatus.setFace_url(userInfo.getFace_url());
                         }
                     }
                 } else {
-                    //Log.d(TAG, "call: 3.3 " + "invalid logined user");
+                    Log.d(TAG, "call: 3.3 " + "invalid logined user"+ userStatus.getId());
                 }
                 return userStatus;
             }
@@ -229,6 +220,7 @@ public class MaintainUserStatusWorker extends Worker {
             public void onComplete() {
             }
         });
+
     }
 
     public String getNotificationMessage(UserStatus userStatus) {
