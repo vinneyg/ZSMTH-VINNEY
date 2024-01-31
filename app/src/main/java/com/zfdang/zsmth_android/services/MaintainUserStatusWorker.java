@@ -1,29 +1,20 @@
 package com.zfdang.zsmth_android.services;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.EditText;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.work.Data;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
-
 import com.zfdang.SMTHApplication;
-import com.zfdang.zsmth_android.QueryUserActivity;
 import com.zfdang.zsmth_android.Settings;
 import com.zfdang.zsmth_android.helpers.MakeList;
-import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserInfo;
@@ -31,13 +22,9 @@ import com.zfdang.zsmth_android.newsmth.UserStatus;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
+
 
 public class MaintainUserStatusWorker extends Worker {
 

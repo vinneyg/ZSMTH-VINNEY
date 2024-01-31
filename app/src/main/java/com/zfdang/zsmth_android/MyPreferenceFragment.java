@@ -12,13 +12,11 @@ import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceCategory;
+
 import androidx.preference.PreferenceFragmentCompat;
 
-import android.text.TextUtils;
-import android.util.AttributeSet;
+
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;

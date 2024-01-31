@@ -50,15 +50,15 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
     String password = setting.getPassword();
     boolean saveinfo = setting.isSaveInfo();
 
-    m_userNameEditText = (EditText) findViewById(R.id.username_edit);
+    m_userNameEditText = findViewById(R.id.username_edit);
     m_userNameEditText.setText(username);
-    m_passwordEditText = (EditText) findViewById(R.id.password_edit);
+    m_passwordEditText = findViewById(R.id.password_edit);
     m_passwordEditText.setText(password);
 
-    mSaveInfo = (CheckBox) findViewById(R.id.save_info);
+    mSaveInfo = findViewById(R.id.save_info);
     mSaveInfo.setChecked(saveinfo);
 
-    TextView registerLink = (TextView) findViewById(R.id.register_link);
+    TextView registerLink =  findViewById(R.id.register_link);
     registerLink.setMovementMethod(LinkMovementMethod.getInstance());
 
     TextView asmHelpLink = findViewById(R.id.asm_help_link);

@@ -127,7 +127,7 @@ public class MainActivity extends SMTHBaseActivity
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    Toolbar toolbar =  findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
     // how to adjust the height of toolbar
@@ -135,7 +135,7 @@ public class MainActivity extends SMTHBaseActivity
     // zsmth_actionbar_size @ dimen ==> ThemeOverlay.ActionBar @ styles ==> theme @ app_bar_main.xml
 
     // init floating action button & circular action menu
-    FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+    FloatingActionButton fab = findViewById(R.id.fab);
     initCircularActionMenu(fab);
 
     initBottomNavigation();
@@ -150,7 +150,7 @@ public class MainActivity extends SMTHBaseActivity
       findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
     }
 
-    mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+    mDrawer = findViewById(R.id.drawer_layout);
     if(Settings.getInstance().isLeftNavSlide())
       setDrawerLeftEdgeSize(this, mDrawer, (float) 1);//To support Mail Deletion
     else
@@ -186,7 +186,7 @@ public class MainActivity extends SMTHBaseActivity
     ColorStateList csl = new ColorStateList(states, colors);
 
 
-    mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+    mNavigationView = findViewById(R.id.nav_view);
     mNavigationView.setNavigationItemSelectedListener(this);
     mNavigationView.setItemTextColor(csl);
     mNavigationView.setItemIconTintList(csl);
@@ -194,10 +194,10 @@ public class MainActivity extends SMTHBaseActivity
 
     // http://stackoverflow.com/questions/33161345/android-support-v23-1-0-update-breaks-navigationview-get-find-header
     View headerView = mNavigationView.getHeaderView(0);
-    mAvatar = (WrapContentDraweeView) headerView.findViewById(R.id.nav_user_avatar);
+    mAvatar = headerView.findViewById(R.id.nav_user_avatar);
     mAvatar.setOnClickListener(this);
 
-    mUsername = (TextView) headerView.findViewById(R.id.nav_user_name);
+    mUsername = headerView.findViewById(R.id.nav_user_name);
     mUsername.setOnClickListener(this);
 
     // http://stackoverflow.com/questions/27097126/marquee-title-in-toolbar-actionbar-in-android-with-lollipop-sdk
