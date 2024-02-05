@@ -12,11 +12,11 @@ import android.widget.ImageView;
 
 import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener;
 import com.github.chrisbanes.photoview.OnPhotoTapListener;
-import com.github.chrisbanes.photoview.PhotoViewAttacher;
+//import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.MyPhotoView;
 import java.util.List;
-import java.util.Map;
+//import java.util.Map;
 
 /**
  * Created by zfdang on 2016-3-31.
@@ -25,7 +25,7 @@ public class FSImagePagerAdapter extends PagerAdapter {
 
   private final List<String> mURLs;
   private final Activity mListener;
-  private Map<Integer, PhotoViewAttacher> mAttachers;
+  //private Map<Integer, PhotoViewAttacher> mAttachers;
 
   // http://stackoverflow.com/questions/6807262/get-focused-view-from-viewpager
   public View mCurrentView;
@@ -86,7 +86,7 @@ public class FSImagePagerAdapter extends PagerAdapter {
 
     ImageView iv = (ImageView) object;
     container.removeView(iv);
-    object = null;
+    //object = null;
   }
 
   @Override public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {

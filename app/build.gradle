@@ -14,17 +14,15 @@ def gitVersion = 2000+cmd.execute().text.trim().toInteger() //Starting 109
 def appVersion = getDate()
 
 android {
-    compileSdkVersion rootProject.compileSdkVersion
     //buildToolsVersion rootProject.buildToolsVersion
     //ndkVersion "21.4.7075529"
-
     defaultConfig {
         applicationId "com.zfdang.zsmth_android"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode gitVersion
         versionName appVersion
-
+        compileSdk rootProject.compileSdkVersion
         // Enabling multidex support.
         multiDexEnabled true
     }
@@ -80,6 +78,7 @@ android {
 dependencies {
     final OKHTTP_VERSION = '4.11.0'
     final RETROFIT_VERSION = '2.9.0'
+    final WORK_VERSION = "2.9.0"
 
     implementation 'androidx.multidex:multidex:2.0.1'
 
@@ -113,12 +112,10 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:$rootProject.RXJAVA2_VERSION"
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.RXANDROID2_VERSION"
 
-
-    def work_version = "2.9.0"
     // (Java only)
-    implementation "androidx.work:work-runtime:$work_version"
+    implementation "androidx.work:work-runtime:$WORK_VERSION"
     // optional - RxJava2 support
-    implementation "androidx.work:work-rxjava2:$work_version"
+    implementation "androidx.work:work-rxjava2:$WORK_VERSION"
     // OkHttp
     //implementation 'com.github.franmontiel:PersistentCookieJar:1.0.1'
     implementation "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"

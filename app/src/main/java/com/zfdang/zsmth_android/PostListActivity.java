@@ -171,7 +171,7 @@ public class PostListActivity extends SMTHBaseActivity
   private void getPositionAndOffset() {
     LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
     //Get first visible view
-    View topView = layoutManager.getChildAt(0);
+    View topView = Objects.requireNonNull(layoutManager).getChildAt(0);
     if(topView != null) {
       lastOffset = topView.getTop();
       lastPosition = layoutManager.getPosition(topView);
@@ -306,9 +306,9 @@ public class PostListActivity extends SMTHBaseActivity
               clearLoadingHints();
             }
             else if((!isSlidingToLast)||  (lastVisiblePos < (totalItemCount - 1))) {
-              TextView mIndexView = (TextView) (manager.findViewByPosition(lastVisiblePos)).findViewById(R.id.post_index);
+              TextView mIndexView = (TextView) (Objects.requireNonNull(manager.findViewByPosition(lastVisiblePos))).findViewById(R.id.post_index);
               String temp = mIndexView.getText().toString();
-               int index =0;
+             //  int index =0;
               if (temp.equals("楼主")) {
                 mIndex = 0;
               } else {
@@ -1269,7 +1269,7 @@ public class PostListActivity extends SMTHBaseActivity
       }
     } catch (Exception e) {
       Log.e(TAG, "saveImageToFile: " + Log.getStackTraceString(e));
-        Toast.makeText(PostListActivity.this, "保存截图失败:\n请授予应用存储权限！\n" + e.toString(), Toast.LENGTH_LONG).show();
+        Toast.makeText(PostListActivity.this, "保存截图失败:\n请授予应用存储权限！\n" + e, Toast.LENGTH_LONG).show();
     }
   }
 

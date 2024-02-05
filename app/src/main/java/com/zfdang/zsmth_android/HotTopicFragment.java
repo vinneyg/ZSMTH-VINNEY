@@ -19,9 +19,9 @@ import android.widget.Toast;
 
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
-import com.scwang.smart.refresh.footer.ClassicsFooter;
-import com.scwang.smart.refresh.header.ClassicsHeader;
-import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
+//import com.scwang.smart.refresh.footer.ClassicsFooter;
+//import com.scwang.smart.refresh.header.ClassicsHeader;
+//import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 
@@ -205,7 +205,7 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
     if (context instanceof OnTopicFragmentInteractionListener) {
       mListener = (OnTopicFragmentInteractionListener) context;
     } else {
-      throw new RuntimeException(context.toString() + " must implement OnTopicFragmentInteractionListener");
+      throw new RuntimeException(context + " must implement OnTopicFragmentInteractionListener");
     }
   }
 

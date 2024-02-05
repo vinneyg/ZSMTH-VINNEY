@@ -35,6 +35,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import java.io.File;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Created by zfdang on 2016-5-2.
@@ -433,7 +434,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         web_content.setSummary(webContent);
 
         Activity activity = getActivity();
-        Intent intent = new Intent(activity.getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(Objects.requireNonNull(activity).getApplicationContext(), MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         activity.finish();
@@ -519,12 +520,12 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
         String alipay = "vinneyguo@outlook.com";
         final android.content.ClipboardManager clipboardManager =
-                (android.content.ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                (android.content.ClipboardManager) requireActivity().getSystemService(Context.CLIPBOARD_SERVICE);
         //clipboardManager.setText(alipay);
         assert clipboardManager != null;
         clipboardManager.setPrimaryClip(ClipData.newPlainText(null,alipay));
         if (clipboardManager.hasPrimaryClip()){
-          clipboardManager.getPrimaryClip().getItemAt(0).getText();
+          Objects.requireNonNull(clipboardManager.getPrimaryClip()).getItemAt(0).getText();
         }
         Toast.makeText(getActivity(), "作者支付宝ID已复制到剪贴板...", Toast.LENGTH_SHORT).show();
         return true;

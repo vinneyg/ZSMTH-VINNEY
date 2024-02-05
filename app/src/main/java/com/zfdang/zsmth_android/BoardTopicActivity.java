@@ -1,7 +1,5 @@
 package com.zfdang.zsmth_android;
 
-import static com.zfdang.zsmth_android.LoginActivity.LOGIN_ACTIVITY_REQUEST_CODE;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 
@@ -16,18 +14,18 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
+//import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.widget.TextView;
+//import android.view.View;
+//import android.view.Window;
+//import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.SMTHApplication;
-import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
+//import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.listeners.EndlessRecyclerOnScrollListener;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
@@ -42,7 +40,6 @@ import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -78,7 +75,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
   private Board mBoard = null;
 
   private int mCurrentPageNo = 1;
-  private final int LOAD_MORE_THRESHOLD = 1;
+  //private final int LOAD_MORE_THRESHOLD = 1;
 
   private SwipeRefreshLayout mSwipeRefreshLayout = null;
   private EndlessRecyclerOnScrollListener mScrollListener = null;
@@ -127,7 +124,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     super.onBackPressed();
     //mRecyclerView.getAdapter().notifyDataSetChanged();
   }
-
+/*
   private void UpdateNavigationViewHeaderNew() {
     getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
     LayoutInflater factory = LayoutInflater.from(BoardTopicActivity.this);
@@ -152,7 +149,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     }
 
   }
-
+*/
 
   private static BoardTopicActivity mActivity1 = null;
 

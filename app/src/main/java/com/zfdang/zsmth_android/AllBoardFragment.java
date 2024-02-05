@@ -185,7 +185,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     if (context instanceof OnBoardFragmentInteractionListener) {
       mListener = (OnBoardFragmentInteractionListener) context;
     } else {
-      throw new RuntimeException(context.toString() + " must implement OnBoardFragmentInteractionListener");
+      throw new RuntimeException(context + " must implement OnBoardFragmentInteractionListener");
     }
   }
 

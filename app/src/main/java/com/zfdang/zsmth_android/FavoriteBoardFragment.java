@@ -9,10 +9,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
+//import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
+//import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -235,22 +235,22 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
     if (activity == null) {
       return;
     }
-    String title ;
+    StringBuilder title ;
     String mDefaultTitle = "收藏";
     if(mFavoritePaths.size() == 0) {
-      title = SMTHApplication.App_Title_Prefix + mDefaultTitle;
+      title = new StringBuilder(SMTHApplication.App_Title_Prefix + mDefaultTitle);
     } else {
-      title = mDefaultTitle;
+      title = new StringBuilder(mDefaultTitle);
       for (int i = 0; i < mFavoritePaths.size(); i++) {
         Board board = mFavoritePaths.get(i);
         if(board.isFolder()) {
-          title += " | " + mFavoritePaths.get(i).getFolderName();
+          title.append(" | ").append(mFavoritePaths.get(i).getFolderName());
         } else if(board.isSection()) {
-          title += " | " + mFavoritePaths.get(i).getSectionName();
+          title.append(" | ").append(mFavoritePaths.get(i).getSectionName());
         }
       }
     }
-    activity.setTitle(title);
+    activity.setTitle(title.toString());
   }
 
   @Override public void onAttach(@androidx.annotation.NonNull Context context) {
@@ -258,7 +258,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
     if (context instanceof OnBoardFragmentInteractionListener) {
       mListener = (OnBoardFragmentInteractionListener) context;
     } else {
-      throw new RuntimeException(context.toString() + " must implement OnBoardFragmentInteractionListener");
+      throw new RuntimeException(context + " must implement OnBoardFragmentInteractionListener");
     }
   }
 

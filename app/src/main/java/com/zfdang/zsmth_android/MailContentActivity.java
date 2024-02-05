@@ -36,6 +36,7 @@ import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
 import java.util.List;
+import java.util.Objects;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -105,7 +106,7 @@ public class MailContentActivity extends AppCompatActivity {
 
     // load mMail content
     Bundle bundle = getIntent().getExtras();
-    mMail = (Mail) bundle.getParcelable(SMTHApplication.MAIL_OBJECT);
+    mMail = (Mail) Objects.requireNonNull(bundle).getParcelable(SMTHApplication.MAIL_OBJECT);
     loadMailContent();
   }
 

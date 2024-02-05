@@ -1156,11 +1156,10 @@ public class MainActivity extends SMTHBaseActivity
 
               @Override public void onNext(@NonNull UserInfo user) {
                 Log.d(TAG, "onNext: " + user.toString());
-                if(user != null) {
-                  if (!user.is_online()) {
-                    Toast.makeText(getApplicationContext(),"掉线将自动登录！", Toast.LENGTH_SHORT).show();
-                    onLogin();
-                  }
+
+                if (!user.is_online()) {
+                  Toast.makeText(getApplicationContext(),"掉线将自动登录！", Toast.LENGTH_SHORT).show();
+                  onLogin();
                 }
               }
 

@@ -25,7 +25,7 @@ import com.zfdang.multiple_images_selector.SelectorSettings;
 import com.zfdang.zsmth_android.helpers.KeyboardLess;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.ComposePostContext;
-import com.zfdang.zsmth_android.models.PostListContent;
+//import com.zfdang.zsmth_android.models.PostListContent;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import io.reactivex.Observable;
@@ -88,15 +88,16 @@ public class ComposePostActivity extends SMTHBaseActivity {
     if (requestCode == REQUEST_CODE) {
       if (resultCode == RESULT_OK && data != null) {
         mPhotos = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
+        assert mPhotos != null;
         mAttachments.setText(String.format(Locale.CHINA,"共有%d个附件", mPhotos.size()));
-        String attachments = "";
+        StringBuilder attachments = new StringBuilder();
         for (int i = 0; i < mPhotos.size(); i++) {
           String UPLOAD_TEMPLATE = " [upload=%d][/upload] ";
-          attachments += String.format(Locale.CHINA, UPLOAD_TEMPLATE, i + 1);
+          attachments.append(String.format(Locale.CHINA, UPLOAD_TEMPLATE, i + 1));
         }
 
         // https://stackoverflow.com/questions/3609174/android-insert-text-into-edittext-at-current-position
-        mContent.getText().insert(mContent.getSelectionStart(), attachments);
+        mContent.getText().insert(mContent.getSelectionStart(), attachments.toString());
       }
     } else if(requestCode == MainActivity.LOGIN_ACTIVITY_REQUEST_CODE){
       if (resultCode == RESULT_OK)
@@ -302,7 +303,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
     return super.onOptionsItemSelected(item);
   }
 
-  public class BytesContainer {
+  public static class BytesContainer {
     public String filename;
     public byte[] bytes;
 
@@ -417,7 +418,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
               public void onComplete() {
                 dismissProgress();
 
-                String message = null;
+                String message;
                 if (postPublishResult != AjaxResponse.AJAX_RESULT_OK) {
                   message = "操作失败! \n错误信息:\n" + postPublishMessage;
                   Toast.makeText(ComposePostActivity.this, message, Toast.LENGTH_SHORT).show();

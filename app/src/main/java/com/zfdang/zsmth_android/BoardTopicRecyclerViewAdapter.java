@@ -6,7 +6,7 @@ import android.graphics.Color;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
+//import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,33 +58,25 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
       holder.mStatusRow.setVisibility(View.VISIBLE);
 
       if (Settings.getInstance().isDiffReadTopic()) {
+        //Common Parts
+        holder.mAuthor.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
+        holder.mReplier.setTextColor(Color.parseColor("#607D8B"));
+        holder.mReplyDate.setTextColor(Color.parseColor("#607D8B"));
+        holder.mPublishDate.setTextColor(Color.parseColor("#607D8B"));
+        holder.mStatusSummary.setTextColor(Color.parseColor("#607D8B"));
+
         if ((!SMTHApplication.ReadTopicLists.isEmpty()) && SMTHApplication.ReadTopicLists.contains(holder.mTopic.getTitle())) {
           //Log.d("Vinney","read topics");
           holder.mTitle.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
-          holder.mAuthor.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
-          holder.mReplier.setTextColor(Color.parseColor("#607D8B"));
-          holder.mReplyDate.setTextColor(Color.parseColor("#607D8B"));
-          holder.mPublishDate.setTextColor(Color.parseColor("#607D8B"));
-          holder.mStatusSummary.setTextColor(Color.parseColor("#607D8B"));
         }
         else
         {
           //First byte 0xFF ...... means transparent mode.
           if (Settings.getInstance().isNightMode()) {
             holder.mTitle.setTextColor(Color.parseColor("#ABC2DA"));//R.color.status_text_night
-            holder.mAuthor.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
-            holder.mReplier.setTextColor(Color.parseColor("#607D8B"));
-            holder.mReplyDate.setTextColor(Color.parseColor("#607D8B"));
-            holder.mPublishDate.setTextColor(Color.parseColor("#607D8B"));
-            holder.mStatusSummary.setTextColor(Color.parseColor("#607D8B"));
           }
           else{
             holder.mTitle.setTextColor(Color.parseColor("#000000")); //R.color.status_text_night
-            holder.mAuthor.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
-            holder.mReplier.setTextColor(Color.parseColor("#607D8B"));
-            holder.mReplyDate.setTextColor(Color.parseColor("#607D8B"));
-            holder.mPublishDate.setTextColor(Color.parseColor("#607D8B"));
-            holder.mStatusSummary.setTextColor(Color.parseColor("#607D8B"));
           }
         }
       }

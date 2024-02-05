@@ -2,6 +2,8 @@ package com.zfdang.zsmth_android;
 
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,8 +37,15 @@ public class RecyclerViewGestureListener extends GestureDetector.SimpleOnGesture
     this.recyclerView = recyclerView;
 
     WindowManager wm = (WindowManager) this.recyclerView.getContext().getSystemService(Context.WINDOW_SERVICE);
-    mScreenHeight = wm.getDefaultDisplay().getHeight();
-    mScreenWidth = wm.getDefaultDisplay().getWidth();
+
+    // Old version of Android
+    //mScreenHeight = wm.getDefaultDisplay().getHeight();
+    //mScreenWidth = wm.getDefaultDisplay().getWidth();
+    DisplayMetrics dm = new DisplayMetrics();
+    wm.getDefaultDisplay().getMetrics(dm);
+    mScreenWidth = dm.widthPixels;
+    mScreenHeight = dm.heightPixels;
+
   }
 
   @Override public void onLongPress(MotionEvent e) {
@@ -48,8 +57,7 @@ public class RecyclerViewGestureListener extends GestureDetector.SimpleOnGesture
     View targetView = recyclerView.findChildViewUnder(x - location[0], y - location[1]);
     assert targetView != null;
     int position = recyclerView.getChildAdapterPosition(targetView);
-
-    //        Log.d("Gesture", "onLongPress: " + String.format("position = %d", position));
+    // Log.d("Gesture", "onLongPress: " + String.format("position = %d", position));
     if (mListener != null) {
       mListener.onItemLongClicked(position, targetView);
     }
