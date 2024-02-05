@@ -5,9 +5,14 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
+
+import java.util.Objects;
 
 /**
  * Created by zfdang on 2016-3-16.
@@ -22,19 +27,20 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     private int mOrientation;
 
     public final int[] ATTRS = {android.R.attr.listDivider};
-    private Drawable mDivider;
-    private int mHeight;
-    private int mWidth;
+    private final Drawable mDivider;
+    private final int mHeight;
+    private final int mWidth;
 
     public DividerItemDecoration(Context context, int orientation, int dividerDrawableRes) {
         if(dividerDrawableRes == 0){
             final TypedArray a = context.obtainStyledAttributes(ATTRS);
             mDivider = a.getDrawable(0);
             a.recycle();
-            mHeight = mDivider.getIntrinsicHeight();
+            mHeight = Objects.requireNonNull(mDivider).getIntrinsicHeight();
             mWidth = mDivider.getIntrinsicWidth();
         } else {
-            mDivider = context.getResources().getDrawable(dividerDrawableRes);
+            //mDivider = context.getResources().getDrawable(dividerDrawableRes);
+            mDivider = ContextCompat.getDrawable(context,dividerDrawableRes);
             mHeight = DIVIDER_HEIGHT;
             mWidth = DIVIDER_WIDTH;
         }
@@ -49,7 +55,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
+    public void onDrawOver(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         if (mOrientation == VERTICAL_LIST) {
             drawVertical(c, parent);
         } else {
@@ -90,7 +96,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+    public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         if (mOrientation == VERTICAL_LIST) {
             outRect.set(0, 0, 0, mHeight);
         } else {

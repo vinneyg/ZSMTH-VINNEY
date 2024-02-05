@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -25,14 +26,8 @@ public final class FileLess {
    */
   public static String $read(File file) throws IOException {
     String text = null;
-    InputStream is = null;
-    try {
-      is = new FileInputStream(file);
+    try (InputStream is = new FileInputStream(file)) {
       text = $read(is);
-    } finally {
-      if (is != null) {
-        is.close();
-      }
     }
     return text;
   }
@@ -45,17 +40,11 @@ public final class FileLess {
    * @throws IOException
    */
   public static String $read(InputStream is) throws IOException {
-    StringBuffer strbuffer = new StringBuffer();
+    StringBuilder strbuffer = new StringBuilder();
     String line;
-    BufferedReader reader = null;
-    try {
-      reader = new BufferedReader(new InputStreamReader(is));
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
       while ((line = reader.readLine()) != null) {
         strbuffer.append(line).append("\r\n");
-      }
-    } finally {
-      if (reader != null) {
-        reader.close();
       }
     }
     return strbuffer.toString();
@@ -69,14 +58,8 @@ public final class FileLess {
    * @throws IOException
    */
   public static void $write(File file, String str) throws IOException {
-    DataOutputStream out = null;
-    try {
-      out = new DataOutputStream(new FileOutputStream(file));
+    try (DataOutputStream out = new DataOutputStream(new FileOutputStream(file))) {
       out.write(str.getBytes());
-    } finally {
-      if (out != null) {
-        out.close();
-      }
     }
   }
 
@@ -101,7 +84,7 @@ public final class FileLess {
         folder.mkdirs();
       } else {
         File file = new File(destPath + File.separator + zipEntryName);
-        if (file != null && !file.getParentFile().exists()) {
+        if (!Objects.requireNonNull(file.getParentFile()).exists()) {
           file.getParentFile().mkdirs();
         }
         file.createNewFile();
@@ -131,7 +114,7 @@ public final class FileLess {
   public static void $del(File directory, boolean keepRoot) {
     if (directory != null && directory.exists()) {
       if (directory.isDirectory()) {
-        for (File subDirectory : directory.listFiles()) {
+        for (File subDirectory : Objects.requireNonNull(directory.listFiles())) {
           $del(subDirectory, false);
         }
       }

@@ -313,7 +313,8 @@ public class MainActivity extends SMTHBaseActivity
 
     //disableShiftMode(mBottomNavigationView);
 
-    mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+    //mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+    mBottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
       @SuppressLint("NonConstantResourceId")
       @Override
       public boolean onNavigationItemSelected(@androidx.annotation.NonNull @NonNull MenuItem item) {

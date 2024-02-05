@@ -5,6 +5,7 @@ import android.util.Log;
 import com.zfdang.SMTHApplication;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,8 +41,7 @@ public class StringUtils {
     Pattern hp = Pattern.compile("\\((\\d+)\\)$", Pattern.DOTALL);
     Matcher hm = hp.matcher(content);
     if (hm.find()) {
-      String count = hm.group(1);
-      return count;
+      return hm.group(1);
     }
 
     return "";
@@ -65,7 +65,7 @@ public class StringUtils {
     Matcher myipMatcher = myipPattern.matcher(content);
     while (myipMatcher.find()) {
       String ipl = myipMatcher.group(1);
-      if (ipl.length() > 5) {
+      if (Objects.requireNonNull(ipl).length() > 5) {
         ipl = "$1\\*(" + SMTHApplication.geoDB.getLocation(ipl + "1") + ")";
       } else {
         ipl = "$1\\*";
@@ -80,7 +80,7 @@ public class StringUtils {
     Matcher myipMatcher = myipPattern.matcher(content);
     while (myipMatcher.find()) {
       String ipl = myipMatcher.group(1);
-      if (ipl.length() > 5) {
+      if (Objects.requireNonNull(ipl).length() > 5) {
         ipl = "$1\\*(" + SMTHApplication.geoDB.getLocation(ipl + "1") + ")";
       } else {
         ipl = "$1\\*";
@@ -96,7 +96,8 @@ public class StringUtils {
       return false;
     }
 
-    String text = Html.fromHtml(content).toString();
+    //String text = Html.fromHtml(content).toString();
+    String text = Html.fromHtml(content,Html.FROM_HTML_MODE_LEGACY).toString();
     for (int i = 0; i < text.length(); i++) {
       int value = Character.codePointAt(text, i);
       // http://www.utf8-chartable.de/unicode-utf8-table.pl?utf8=dec

@@ -1,6 +1,9 @@
 package com.zfdang.multiple_images_selector;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,6 +31,7 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
         mListener = listener;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.popup_folder_item, parent, false);
@@ -35,7 +39,7 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         FolderItem folderItem = mValues.get(position);
         holder.mItem = folderItem;
         holder.folderName.setText(folderItem.name);
@@ -75,7 +79,7 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         FolderItem mItem;
         View mView;
         SimpleDraweeView folderCover;
@@ -94,6 +98,7 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
             folderIndicator = (ImageView) view.findViewById(R.id.folder_selected_indicator);
         }
 
+        @NonNull
         @Override
         public String toString() {
             return "ViewHolder{" +

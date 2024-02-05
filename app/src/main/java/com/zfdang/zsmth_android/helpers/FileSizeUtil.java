@@ -4,6 +4,7 @@ import android.util.Log;
 import java.io.File;
 import java.io.FileInputStream;
 import java.text.DecimalFormat;
+import java.util.Objects;
 
 /**
  * Created by zfdang on 2016-4-9.
@@ -67,16 +68,10 @@ public class FileSizeUtil {
   public static long getFileSize(File file) throws Exception {
     long size = 0;
     if (file.exists()) {
-      FileInputStream fis = null;
-      try {
-        fis = new FileInputStream(file);
+      try (FileInputStream fis = new FileInputStream(file)) {
         size = fis.available();
       } catch (Exception e) {
         Log.e(TAG, "getFileSize: " + Log.getStackTraceString(e));
-      } finally {
-        if (fis != null) {
-          fis.close();
-        }
       }
     }
     return size;
@@ -89,12 +84,12 @@ public class FileSizeUtil {
    */
   public static long getFolderSize(File f) throws Exception {
     long size = 0;
-    File flist[] = f.listFiles();
-    for (int i = 0; i < flist.length; i++) {
-      if (flist[i].isDirectory()) {
-        size = size + getFolderSize(flist[i]);
+    File[] flist = f.listFiles();
+    for (File file : Objects.requireNonNull(flist)) {
+      if (file.isDirectory()) {
+        size = size + getFolderSize(file);
       } else {
-        size = size + getFileSize(flist[i]);
+        size = size + getFileSize(file);
       }
     }
     return size;
@@ -129,16 +124,16 @@ public class FileSizeUtil {
     double fileSizeLong = 0;
     switch (sizeType) {
       case SIZETYPE_B:
-        fileSizeLong = Double.valueOf(df.format((double) fileSize));
+        fileSizeLong = Double.parseDouble(df.format((double) fileSize));
         break;
       case SIZETYPE_KB:
-        fileSizeLong = Double.valueOf(df.format((double) fileSize / 1024));
+        fileSizeLong = Double.parseDouble(df.format((double) fileSize / 1024));
         break;
       case SIZETYPE_MB:
-        fileSizeLong = Double.valueOf(df.format((double) fileSize / 1048576));
+        fileSizeLong = Double.parseDouble(df.format((double) fileSize / 1048576));
         break;
       case SIZETYPE_GB:
-        fileSizeLong = Double.valueOf(df.format((double) fileSize / 1073741824));
+        fileSizeLong = Double.parseDouble(df.format((double) fileSize / 1073741824));
         break;
       default:
         break;

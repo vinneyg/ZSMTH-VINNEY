@@ -2,6 +2,8 @@ package com.zfdang.zsmth_android.helpers;
 
 import android.content.Context;
 import com.google.android.material.appbar.AppBarLayout;
+
+import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
@@ -21,8 +23,8 @@ import android.view.View;
     super(context, attrs);
   }
 
-  @Override public boolean onStartNestedScroll(CoordinatorLayout coordinatorLayout, View child, View directTargetChild, View target,
-      int nestedScrollAxes) {
+  @Override public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, View directTargetChild, View target,
+                                               int nestedScrollAxes) {
     if (appBarLayout != null) {
       // We need to check from when a scroll is started, as we may not have had the chance to update the layout at
       // the start of a scroll or fling event.
@@ -31,8 +33,8 @@ import android.view.View;
     return super.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, nestedScrollAxes);
   }
 
-  @Override public boolean onMeasureChild(CoordinatorLayout parent, final View child, int parentWidthMeasureSpec, int widthUsed,
-      int parentHeightMeasureSpec, int heightUsed) {
+  @Override public boolean onMeasureChild(@NonNull CoordinatorLayout parent, @NonNull final View child, int parentWidthMeasureSpec, int widthUsed,
+                                          int parentHeightMeasureSpec, int heightUsed) {
     if (appBarLayout != null) {
       final int bottomPadding = calculateBottomPadding(appBarLayout);
       if (bottomPadding != child.getPaddingBottom()) {

@@ -67,16 +67,10 @@ public class ActivityUtils {
     });
     weburl.setOnLongClickListener(new Link.OnLongClickListener() {
       @Override public void onLongClick(String clickedText) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
           final android.content.ClipboardManager clipboardManager =
               (android.content.ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
           final android.content.ClipData clipData = android.content.ClipData.newPlainText("PostContent", clickedText);
           clipboardManager.setPrimaryClip(clipData);
-        } else {
-          final android.text.ClipboardManager clipboardManager =
-              (android.text.ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
-          clipboardManager.setText(clickedText);
-        }
         Toast.makeText(SMTHApplication.getAppContext(), "链接已复制到剪贴板", Toast.LENGTH_SHORT).show();
       }
     });
@@ -101,11 +95,8 @@ public class ActivityUtils {
   // show application info page
   public static void showAppInfoPage(final Context context){
     AlertDialog.Builder builder;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert);
-    } else {
-      builder = new AlertDialog.Builder(context);
-    }
+    builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert);
+
     builder.setTitle("zSMTH需要文件读写权限")
             .setMessage("现在前往\"应用程序信息\"里设置zSMTH的权限么？")
             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {

@@ -1,6 +1,7 @@
 package com.zfdang.multiple_images_selector;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -47,6 +48,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
 
 public class ImagesSelectorActivity extends AppCompatActivity
@@ -333,10 +336,10 @@ public class ImagesSelectorActivity extends AppCompatActivity
                         results.add(item);
 
                         // add current image item to all
-                        allImagesFolderItem.addImageItem(item);
+                        Objects.requireNonNull(allImagesFolderItem).addImageItem(item);
 
                         // find the parent folder for this image, and add path to folderList if not existed
-                        String folderPath = new File(path).getParentFile().getAbsolutePath();
+                        String folderPath = Objects.requireNonNull(new File(path).getParentFile()).getAbsolutePath();
                         FolderItem folderItem = FolderListContent.getItem(folderPath);
                         if (folderItem == null) {
                             // does not exist, create it
@@ -357,7 +360,7 @@ public class ImagesSelectorActivity extends AppCompatActivity
             @Override public void onNext(@NonNull ImageItem imageItem) {
                 // Log.d(TAG, "onNext: " + imageItem.toString());
                 ImageListContent.addItem(imageItem);
-                recyclerView.getAdapter().notifyItemChanged(ImageListContent.IMAGES.size() - 1);
+                Objects.requireNonNull(recyclerView.getAdapter()).notifyItemChanged(ImageListContent.IMAGES.size() - 1);
             }
 
             @Override public void onError(@NonNull Throwable throwable) {
@@ -391,7 +394,7 @@ public class ImagesSelectorActivity extends AppCompatActivity
 
             ImageListContent.IMAGES.clear();
             ImageListContent.IMAGES.addAll(folder.mImages);
-            recyclerView.getAdapter().notifyDataSetChanged();
+            Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
         } else {
             Log.d(TAG, "OnFolderChange: " + "Same folder selected, skip loading.");
         }
@@ -420,6 +423,7 @@ public class ImagesSelectorActivity extends AppCompatActivity
     }
 
 
+    @SuppressLint("QueryPermissionsNeeded")
     public void launchCamera() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);

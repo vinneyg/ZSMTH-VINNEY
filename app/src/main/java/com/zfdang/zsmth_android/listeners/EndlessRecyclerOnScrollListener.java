@@ -5,6 +5,7 @@ package com.zfdang.zsmth_android.listeners;
  * https://gist.github.com/ssinss/e06f12ef66c51252563e
  */
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +25,7 @@ public abstract class     EndlessRecyclerOnScrollListener extends RecyclerView.O
     this.mLinearLayoutManager = linearLayoutManager;
   }
 
-  @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+  @Override public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
     super.onScrolled(recyclerView, dx, dy);
 
     if (dy < 0) {

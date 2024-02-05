@@ -3,6 +3,8 @@ package com.zfdang.multiple_images_selector;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
+
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
@@ -54,7 +56,8 @@ public class FolderPopupWindow extends PopupWindow {
         this.setWidth(size.x);
         this.setHeight((int) (size.y * 0.618));
         // http://stackoverflow.com/questions/12232724/popupwindow-dismiss-when-clicked-outside
-        this.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.popup_background));
+        //this.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.popup_background));
+        this.setBackgroundDrawable(ContextCompat.getDrawable(context,R.drawable.popup_background));
         this.setOutsideTouchable(true);
         this.setFocusable(true);
         this.setAnimationStyle(R.style.AnimationPreview);

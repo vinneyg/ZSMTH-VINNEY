@@ -1,6 +1,9 @@
 package com.zfdang.multiple_images_selector;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,6 +32,7 @@ public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecycler
         mListener = listener;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -38,7 +42,7 @@ public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecycler
 
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         final ImageItem imageItem = mValues.get(position);
         holder.mItem = imageItem;
 
@@ -109,7 +113,7 @@ public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecycler
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final SimpleDraweeView mDrawee;
         public final ImageView mChecked;
@@ -130,6 +134,7 @@ public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecycler
             assert mImageName != null;
         }
 
+        @NonNull
         @Override
         public String toString() {
             return super.toString();
