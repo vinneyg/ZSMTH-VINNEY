@@ -393,10 +393,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
                 try {
                   String response = responseBody.string();
                   List<Topic> topics = SMTHHelper.ParseBoardTopicsFromWWW(response);
-                  // Log.d("vinney-999",Integer.toString(topics.size()));
-                  if (topics.size() == 0) {
-                    return Observable.empty(); // handle error case
-                  }
+                  if (topics.size() == 0)
+                    return null;
                   return Observable.fromIterable(topics);
                 } catch (Exception e) {
                   Log.e(TAG, "call: " + Log.getStackTraceString(e));
@@ -431,13 +429,11 @@ public class BoardTopicActivity extends SMTHBaseActivity
                 if (!topic.isSticky || mSetting.isShowSticky()) {
                   if (!MapHash.contains(topic.getTitle())) {
                     if (MapHash.size() < MAXSIZE) {
-                      // Log.d(TAG, "Vinney1 + " + topic.getTitle());
                       TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
                       MapHash.put(topic.getTitle(), topic.getTopicID());
                       Objects.requireNonNull(mRecyclerView.getAdapter())
                           .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
                     } else {
-                      // Log.d(TAG, "Vinney2 + " + topic.getTitle());
                       MapHash.clear();
                       TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
                       MapHash.put(topic.getTitle(), topic.getTopicID());
@@ -453,41 +449,25 @@ public class BoardTopicActivity extends SMTHBaseActivity
               @Override
               public void onError(@NonNull Throwable e) {
                 clearLoadingHints();
-
+                if(mCurrentPageNo != 1)
                 Toast.makeText(
                         SMTHApplication.getAppContext(),
-                        String.format(Locale.CHINA, "获取第%d页的帖子失败!\n", mCurrentPageNo)
-                            + e.toString(),
+                        String.format(Locale.CHINA, "错误:获取第%d页的帖子失败!\n"+e.toString(), mCurrentPageNo),
                         Toast.LENGTH_SHORT)
                     .show();
+                else
+                  Toast.makeText(
+                                  SMTHApplication.getAppContext(),
+                                  String.format(Locale.CHINA, "错误:\n版面不存在!"),
+                                  Toast.LENGTH_SHORT)
+                          .show();
                 mCurrentPageNo -= 1;
               }
 
               @Override
               public void onComplete() {
                 clearLoadingHints();
-
-
-                // Special User OFFLINE case: [] or [Category 第一页:]
-                if ((TopicListContent.BOARD_TOPICS.toString().length() == 2
-                    || TopicListContent.BOARD_TOPICS.toString().length() == 15)) {
-                  Toast.makeText(SMTHApplication.getAppContext(),"特殊掉线请重新登录！",Toast.LENGTH_SHORT).show();
-                  TopicListContent.clearBoardTopics();
-                  SMTHApplication.activeUser = null;
-
-                  try {
-                    Thread.sleep(500);
-                    onBackPressed();
-                  } catch (InterruptedException e) {
-                    e.printStackTrace();
-                  }
-                  if (!SMTHApplication.isValidUser()) {
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
-                  }
                 }
-
-              }
             });
   }
 

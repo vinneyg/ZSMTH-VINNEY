@@ -835,13 +835,6 @@ public class MainActivity extends SMTHBaseActivity
       if (fragment != favoriteBoardFragment) {
         setTitle(SMTHApplication.App_Title_Prefix + title);
       }
-
-      /*
-      if (SMTHApplication.isValidUser()) {
-          onRelogin(); //Check userstatus if not online then relogin}
-      }
-      */
-
     }
 
     mDrawer.closeDrawer(GravityCompat.START);
