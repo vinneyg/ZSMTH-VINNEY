@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import com.zfdang.zsmth_android.Settings;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
-import com.zfdang.zsmth_android.newsmth.SMTHWWWService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,10 +26,12 @@ import org.jsoup.select.Elements;
  */
 public class Post {
   private static final String ATTACHMENT_MARK = "###ZSMTH_ATTACHMENT###";
+  /*
   public static int ACTION_DEFAULT = 0;
   public static int ACTION_FIRST_POST_IN_SUBJECT = 1;
   public static int ACTION_PREVIOUS_POST_IN_SUBJECT = 2;
   public static int ACTION_NEXT_POST_IN_SUBJECT = 3;
+  */
   private String postID;
   private String title;
   private String author;
@@ -66,7 +67,7 @@ public class Post {
   }
 
   public String getAuthor() {
-    if (nickName == null || nickName.length() == 0) {
+    if (nickName == null || nickName.isEmpty()) {
       return this.author;
     } else {
       return String.format("%s(%s)", this.author, this.nickName);
@@ -106,7 +107,7 @@ public class Post {
   }
 
   public void parsePostContent(Element content, boolean isPost) {
-    Element pureContent = null;
+    Element pureContent;
     if (isPost) {
       // 1. parse likes node first
       // <div class="likes">
@@ -207,7 +208,8 @@ public class Post {
         String origImageSrc = a.attr("href");
 
         Element img = imgs.first();
-        String resizedImageSrc = img.attr("src");
+          assert img != null;
+          String resizedImageSrc = img.attr("src");
 
         Attachment attach = new Attachment(origImageSrc, resizedImageSrc);
         this.addAttachFile(attach);
@@ -215,17 +217,17 @@ public class Post {
         // replace a[href] with MARK
         // we will split the string with MARK, so make sure no two MAKR will stay together
         a.html(ATTACHMENT_MARK + " ");
-      } else if (imgs.size() == 0) {
+      } else if (imgs.isEmpty()) {
         // does not find any image element, handle the special webp
         String attachName = a.text();
-        if (attachName != null && attachName.endsWith(".webp")) {
+        if (attachName.endsWith(".webp")) {
           // this is a webp attachment, show it as image
           String origImageSrc = a.attr("href");
           Attachment attach = new Attachment(origImageSrc, origImageSrc);
           this.addAttachFile(attach);
 
           a.html(ATTACHMENT_MARK + " ");
-        } else if (attachName != null && attachName.endsWith(".mp4")) {
+        } else if (attachName.endsWith(".mp4")) {
           // this is a video attachment, show it as text with link
 
           String origVideoSrc = a.attr("href");
@@ -256,7 +258,7 @@ public class Post {
   public void mergePureContentAndLikes(){
       htmlContentAndLikes = this.htmlContent;
 
-      if (likes != null && likes.size() > 0) {
+      if (likes != null && !likes.isEmpty()) {
           StringBuilder wordList = new StringBuilder();
         wordList.append("有").append(likes.size()).append("位用户评价了这篇文章:");
         wordList.append("<br/>");
@@ -280,7 +282,7 @@ public class Post {
     }
     mSegments.clear();
 
-    if (attachFiles == null || attachFiles.size() == 0) {
+    if (attachFiles == null || attachFiles.isEmpty()) {
       // no attachment, add all content as one segment
       if (!htmlContentAndLikes.equals( "<br />") ) {
         mSegments.add(new ContentSegment(ContentSegment.SEGMENT_TEXT, htmlContentAndLikes));
@@ -304,7 +306,7 @@ public class Post {
         // add next image attachment to results
         if (attachFiles != null && attachIndex < attachFiles.size()) {
           Attachment attach = attachFiles.get(attachIndex);
-          String imageURL = null;
+          String imageURL;
           if (Settings.getInstance().isLoadOriginalImage()) {
             imageURL = attach.getOriginalImageSource();
           } else {
@@ -364,7 +366,7 @@ public class Post {
         // find nickname for author here, skip the line
         // 发信人: schower (schower), 信区: WorkLife
         String nickName = StringUtils.subStringBetween(line, "(", ")");
-        if (nickName != null && nickName.length() > 0) {
+        if (!nickName.isEmpty()) {
           this.setNickName(nickName);
         }
         continue;
@@ -416,7 +418,7 @@ public class Post {
         continue;
       }
 
-      if (line.trim().length() == 0) {
+      if (line.trim().isEmpty()) {
         linebreak++;
         if (linebreak >= 2) {
           // continuous linebreak, skip extra linebreak

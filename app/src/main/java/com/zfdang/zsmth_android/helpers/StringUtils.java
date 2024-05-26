@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android.helpers;
 
+import android.annotation.SuppressLint;
 import android.text.Html;
 import android.util.Log;
 import com.zfdang.SMTHApplication;
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
 public class StringUtils {
   private static SimpleDateFormat dateformat = null;
 
+  @SuppressLint("SimpleDateFormat")
   public static String getFormattedString(Date date) {
     if (dateformat == null) dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     if (date != null) return dateformat.format(date);

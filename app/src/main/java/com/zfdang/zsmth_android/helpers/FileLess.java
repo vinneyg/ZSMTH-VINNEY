@@ -1,7 +1,6 @@
 package com.zfdang.zsmth_android.helpers;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,23 +21,24 @@ public final class FileLess {
    *
    * @param file 文件
    * @return 文件内容字符串
-   * @throws IOException
    */
+  /*
   public static String $read(File file) throws IOException {
     String text;
-    try (InputStream is = new FileInputStream(file)) {
+    try (InputStream is = Files.newInputStream(file.toPath())) {
       text = $read(is);
     }
     return text;
   }
+  */
 
   /**
    * 读取输入流为字符串,最常见的是网络请求
    *
    * @param is 输入流
    * @return 输入流内容字符串
-   * @throws IOException
    */
+  /*
   public static String $read(InputStream is) throws IOException {
     StringBuilder strbuffer = new StringBuilder();
     String line;
@@ -49,29 +49,33 @@ public final class FileLess {
     }
     return strbuffer.toString();
   }
+  */
 
   /**
    * 把字符串写入到文件中
    *
    * @param file 被写入的目标文件
    * @param str 要写入的字符串内容
-   * @throws IOException
    */
+  /*
   public static void $write(File file, String str) throws IOException {
     try (DataOutputStream out = new DataOutputStream(new FileOutputStream(file))) {
       out.write(str.getBytes());
     }
   }
+  */
 
   /**
    * unzip zip file to dest folder
    */
+  /*
   public static void $unzip(String zipFilePath, String destPath) throws IOException {
     // check or create dest folder
     File destFile = new File(destPath);
     if (!destFile.exists()) {
       destFile.mkdirs();
     }
+
 
     // start unzip
     ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zipFilePath));
@@ -100,6 +104,7 @@ public final class FileLess {
     }
     zipInputStream.close();
   }
+  */
 
   /**
    * 删除文件或者文件夹，默认保留根目录

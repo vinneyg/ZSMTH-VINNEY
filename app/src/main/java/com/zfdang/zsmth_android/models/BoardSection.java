@@ -11,7 +11,7 @@ public class BoardSection {
   public String parentName;
 
   public String getSectionPath() {
-    if (parentName == null || parentName.length() == 0) {
+    if (parentName == null || parentName.isEmpty()) {
       return sectionName;
     } else {
       return String.format("%s | %s", parentName, sectionName);

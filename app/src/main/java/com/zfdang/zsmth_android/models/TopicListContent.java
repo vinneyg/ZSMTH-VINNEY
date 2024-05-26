@@ -23,7 +23,7 @@ public class TopicListContent {
 
   public static final List<Topic> BOARD_TOPICS = new ArrayList<>();
 
-  public static void addBoardTopic(Topic item, String boardName) {
+  public static void addBoardTopic(Topic item) {
     BOARD_TOPICS.add(item);
   }
 

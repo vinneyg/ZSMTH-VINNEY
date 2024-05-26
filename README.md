@@ -1,4 +1,4 @@
-# zSMTH-Vinney
+# zSMTH-v
 
 基于zSMTH [http://zsmth-android.zfdang.com/](http://zsmth-android.zfdang.com/) 的水木社区BBS的
 更新开源Android客户端
@@ -32,4 +32,4 @@ zSMTH项目使用了当前Android开发流行的技术，比如
 6.支持瀑布流浏览帖子
 ...
 
-欢迎更多的人参与进来一起改进！
+

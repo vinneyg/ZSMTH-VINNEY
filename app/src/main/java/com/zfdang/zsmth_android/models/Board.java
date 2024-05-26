@@ -15,7 +15,7 @@ import java.io.ObjectOutput;
  */
 public class Board implements Externalizable, Parcelable {
   // for Externalizable
-  static final long serialVersionUID = 20160322L;
+  private static final long serialVersionUID = 20160322L;
 
   public enum BoardType {
     BOARD,
@@ -101,9 +101,11 @@ public class Board implements Externalizable, Parcelable {
     return boardType == BoardType.INVALID;
   }
 
+  /*
   public String getBoardID() {
     return boardID;
   }
+  */
 
   public String getBoardEngName() {
     return boardEngName;
@@ -138,7 +140,7 @@ public class Board implements Externalizable, Parcelable {
   }
 
   public String getBoardName() {
-    if (boardChsName == null || boardChsName.length() == 0) {
+    if (boardChsName == null || boardChsName.isEmpty()) {
       return boardEngName;
     } else {
       return String.format("%s [%s]", boardChsName, boardEngName);
@@ -212,7 +214,7 @@ public class Board implements Externalizable, Parcelable {
   };
 
   @Override
-  public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+  public void readExternal(ObjectInput in) throws IOException {
     if (in.readBoolean()) {
       boardType = BoardType.values()[in.readShort()];
     }

@@ -36,7 +36,7 @@ public class ComposePostContext implements Parcelable {
   }
 
   public boolean isValidPost() {
-    return postTitle != null && postTitle.length() > 0;
+    return postTitle != null && !postTitle.isEmpty();
   }
 
   public String getBoardEngName() {

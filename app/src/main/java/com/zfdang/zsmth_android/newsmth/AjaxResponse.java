@@ -43,25 +43,31 @@ public class AjaxResponse implements Parcelable {
     return ajax_st;
   }
 
+  /*
   public void setAjax_st(int ajax_st) {
     this.ajax_st = ajax_st;
   }
+  */
 
   public String getAjax_code() {
     return ajax_code;
   }
 
+  /*
   public void setAjax_code(String ajax_code) {
     this.ajax_code = ajax_code;
   }
+  */
 
   public String getAjax_msg() {
     return ajax_msg;
   }
 
+  /*
   public void setAjax_msg(String ajax_msg) {
     this.ajax_msg = ajax_msg;
   }
+  */
 
   public String getContent() {
     return content;
@@ -75,9 +81,11 @@ public class AjaxResponse implements Parcelable {
     return group_id;
   }
 
+  /*
   public void setGroup_id(int group_id) {
     this.group_id = group_id;
   }
+  */
 
   @NonNull
   @Override public String toString() {

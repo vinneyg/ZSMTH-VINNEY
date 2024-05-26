@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public abstract class     EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
   public static String TAG = EndlessRecyclerOnScrollListener.class.getSimpleName();
 
-  private final int previousTotal = 0; // The total number of items in the dataset after the last load
+  //private final int previousTotal = 0; // The total number of items in the dataset after the last load
   private boolean loading = false; // True if we are still waiting for the last set of data to load.
     int firstVisibleItem, visibleItemCount, totalItemCount;
 

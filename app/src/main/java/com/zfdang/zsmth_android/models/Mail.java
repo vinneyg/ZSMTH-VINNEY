@@ -36,14 +36,14 @@ public class Mail implements Parcelable {
 
   public String getFrom() {
     String result = author;
-    if (fromBoard != null && fromBoard.length() > 0) {
+    if (fromBoard != null && !fromBoard.isEmpty()) {
       result += String.format(" @ [%s]", fromBoard);
     }
     return result;
   }
 
   public String getMailIDFromURL() {
-    if (url != null && url.length() > 0) {
+    if (url != null && !url.isEmpty()) {
       // '/nForum/mail/inbox/192.json'
       Pattern pattern = Pattern.compile("(\\d+)", Pattern.DOTALL);
       Matcher matcher = pattern.matcher(url);
@@ -55,7 +55,7 @@ public class Mail implements Parcelable {
   }
 
   public boolean isRefferedPost() {
-    return this.fromBoard != null && this.fromBoard.length() > 0;
+    return this.fromBoard != null && !this.fromBoard.isEmpty();
   }
 
   @NonNull

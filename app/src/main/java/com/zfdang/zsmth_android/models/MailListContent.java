@@ -19,7 +19,7 @@ public class MailListContent {
     }
   }
 
-  public static final List<Mail> MAILS = new ArrayList<Mail>();
+  public static final List<Mail> MAILS = new ArrayList<>();
 
   public static void clear() {
     MAILS.clear();

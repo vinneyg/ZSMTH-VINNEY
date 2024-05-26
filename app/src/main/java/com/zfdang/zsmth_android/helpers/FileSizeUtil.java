@@ -10,11 +10,13 @@ import java.util.Objects;
  * Created by zfdang on 2016-4-9.
  */
 public class FileSizeUtil {
+  /*
   public static final int SIZETYPE_B = 1;//获取文件大小单位为B的double值
   public static final int SIZETYPE_KB = 2;//获取文件大小单位为KB的double值
   public static final int SIZETYPE_MB = 3;//获取文件大小单位为MB的double值
   public static final int SIZETYPE_GB = 4;//获取文件大小单位为GB的double值
 
+  */
   private static final String TAG = "FileSizeUtil";
 
   /**
@@ -24,6 +26,7 @@ public class FileSizeUtil {
    * @param sizeType 获取大小的类型1为B、2为KB、3为MB、4为GB
    * @return double值的大小
    */
+  /*
   public static double getFileOrFolderSize(String filePath, int sizeType) {
     File file = new File(filePath);
     long blockSize = 0;
@@ -38,7 +41,7 @@ public class FileSizeUtil {
     }
     return FormatFileSize(blockSize, sizeType);
   }
-
+  */
   /**
    * 调用此方法自动计算指定文件或指定文件夹的大小
    *
@@ -63,9 +66,8 @@ public class FileSizeUtil {
   /**
    * 获取指定文件大小
    *
-   * @throws Exception
    */
-  public static long getFileSize(File file) throws Exception {
+  public static long getFileSize(File file) {
     long size = 0;
     if (file.exists()) {
       try (FileInputStream fis = new FileInputStream(file)) {
@@ -80,9 +82,8 @@ public class FileSizeUtil {
   /**
    * 获取指定文件夹
    *
-   * @throws Exception
    */
-  public static long getFolderSize(File f) throws Exception {
+  public static long getFolderSize(File f) {
     long size = 0;
     File[] flist = f.listFiles();
     for (File file : Objects.requireNonNull(flist)) {
@@ -119,6 +120,7 @@ public class FileSizeUtil {
   /**
    * 转换文件大小,指定转换的类型
    */
+  /*
   private static double FormatFileSize(long fileSize, int sizeType) {
     DecimalFormat df = new DecimalFormat("#.00");
     double fileSizeLong = 0;
@@ -140,4 +142,6 @@ public class FileSizeUtil {
     }
     return fileSizeLong;
   }
+  */
+
 }

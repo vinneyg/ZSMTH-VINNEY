@@ -43,7 +43,6 @@ import java.util.ArrayList;
 /**
  * Works when either height or width is set to wrap_content
  * The imageview will be resized after image was fetched;
- *
  * this view is also capable of handling very long image:
  * it will split the long images into multiple bitmaps, and draw them one by one in OnDraw
  */
@@ -58,7 +57,7 @@ public class WrapContentDraweeView extends SimpleDraweeView {
   private ArrayList<Bitmap> bmps;
 
   // we set a listener and update the view's aspect ratio depending on the loaded image
-  private final ControllerListener listener = new BaseControllerListener<ImageInfo>() {
+  private final ControllerListener<ImageInfo> listener = new BaseControllerListener<ImageInfo>() {
     @Override public void onIntermediateImageSet(String id, @Nullable ImageInfo imageInfo) {
       updateViewSize(imageInfo);
     }
@@ -81,10 +80,12 @@ public class WrapContentDraweeView extends SimpleDraweeView {
     setAspectRatio((float) imageInfo.getWidth() / imageInfo.getHeight());
   }
 
+  /*
   public WrapContentDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
     super(context, hierarchy);
     initDraweeView();
   }
+  */
 
   public WrapContentDraweeView(Context context) {
     super(context);
@@ -101,10 +102,12 @@ public class WrapContentDraweeView extends SimpleDraweeView {
     initDraweeView();
   }
 
+  /*
   public WrapContentDraweeView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     initDraweeView();
   }
+  */
 
   public void initDraweeView() {
     getHierarchy().setProgressBarImage(new LoadingProgressDrawable(SMTHApplication.getAppContext()));
@@ -241,8 +244,11 @@ public class WrapContentDraweeView extends SimpleDraweeView {
     this.setImageURI(Uri.parse(url));
   }
 
+  /*
   // load image from local file
   public void setImageFromLocalFilename(final String filename) {
     this.setImageURI(Uri.fromFile(new File(filename)));
   }
+  */
+
 }

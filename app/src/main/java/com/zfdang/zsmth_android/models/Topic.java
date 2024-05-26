@@ -122,7 +122,7 @@ public class Topic implements Parcelable {
   }
 
   public String getBoardName() {
-    if (boardChsName != null && boardChsName.length() > 0) {
+    if (boardChsName != null && !boardChsName.isEmpty()) {
       return boardChsName + " [" + boardEngName + "]";
     } else {
       return boardEngName;
@@ -185,9 +185,11 @@ public class Topic implements Parcelable {
     this.likes = likes;
   }
 
+  /*
   public String getReplyCounts() {
     return replyCounts;
   }
+  */
 
   public void setReplyCounts(String replyCounts) {
     this.replyCounts = replyCounts;
@@ -203,7 +205,7 @@ public class Topic implements Parcelable {
 
   public String getStatusSummary() {
     String result = String.format("回复: %-4s", replyCounts);
-    if (likes != null && likes.length() > 0) {
+    if (likes != null && !likes.isEmpty()) {
       result += String.format("    Likes: %-4s    评分: %-4s", likes, score);
     }
     return result;

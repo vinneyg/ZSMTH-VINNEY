@@ -370,7 +370,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
               public void onSubscribe(@NonNull Disposable disposable) {
                 Topic topic = new Topic(String.format(Locale.CHINA, "第%d页:", mCurrentPageNo));
                 topic.isCategory = true;
-                TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
+                TopicListContent.addBoardTopic(topic);
                 // mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
                 mRecyclerView.post(
                         () -> {
@@ -388,7 +388,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                       if (MapHash.size() >= MAXSIZE) {
                           MapHash.clear();
                       }
-                      TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
+                      TopicListContent.addBoardTopic(topic);
                       MapHash.put(topic.getTitle(), topic.getTopicID());
                       Objects.requireNonNull(mRecyclerView.getAdapter())
                           .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
@@ -511,7 +511,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
           }
 
           @Override public void onNext(@NonNull Topic topic) {
-            TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
+            TopicListContent.addBoardTopic(topic);
             mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
 
           }

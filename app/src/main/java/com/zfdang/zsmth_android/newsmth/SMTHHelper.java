@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.RectF;
-import android.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -32,13 +32,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.File;
-import java.io.FileInputStream;
+//import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Collections;
+//import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -93,7 +94,7 @@ public class SMTHHelper {
 
   public static synchronized SMTHHelper getInstance() {
     if (instance == null) {
-      instance = new SMTHHelper(SMTHApplication.getAppContext());
+      instance = new SMTHHelper();
     }
     return instance;
   }
@@ -111,7 +112,7 @@ public class SMTHHelper {
   }
 
   // protected constructor, can only be called by getInstance
-  protected SMTHHelper(final Context context) {
+  protected SMTHHelper() {
 
     // set your desired log level
     HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -227,13 +228,13 @@ public class SMTHHelper {
   private static byte[] getBytesFromFile(File file) {
     byte[] bytes = null;
     try {
-      InputStream is = new FileInputStream(file);
+      InputStream is = Files.newInputStream(file.toPath());
 
       // Get the size of the file
       long length = file.length();
       if (length > Integer.MAX_VALUE) {
         Log.e(TAG, "getBytesFromFile: " + "File is too large to process");
-        return bytes;
+        return null;
       }
 
       // Create the byte array to hold the data
