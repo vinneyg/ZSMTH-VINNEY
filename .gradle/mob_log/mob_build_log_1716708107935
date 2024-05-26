@@ -1,0 +1,823 @@
+
+[step][2024.05.26_15:21:47:937][2][2][tid:3486][:app] apply started null, version: 2024.0423.1418.
+
+[info][2024.05.26_15:21:47:938][3][1][tid:3486][MobPropertyManager] init properties: [android.injected.signing.key.password:zsmthdev, org.gradle.parallel:true, android.useAndroidX:true, android.injected.signing.store.file:E:\APK\ZSMTH-VINNEY\app\zsmth.release.jks, android.suppressUnsupportedCompileSdk:34,35, android.studio.version:233.14808.21.2331.11842104, AGP_INTERNAL__MIN_PLUGIN_VERSION_CHECK_STARTED:true, MobSDK.spEdition:FP, FRESCO_VERSION:2.6.0, android.injected.invoked.from.ide:true, org.gradle.configureondemand:true, android.injected.apk.location:E:\APK\ZSMTH-VINNEY\app, android.injected.signing.key.alias:zsmth-release, RXANDROID2_VERSION:2.1.1, buildToolsVersion:34.0.0, RXJAVA2_VERSION:2.2.21, org.gradle.daemon:true, targetSdkVersion:34, org.gradle.jvmargs:-Xmx4096m -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8, android.enableJetifier:true, minSdkVersion:26, compileSdkVersion:34, android.injected.signing.store.password:zsmthdev, android.injected.attribution.file.location:E:\APK\ZSMTH-VINNEY\.gradle]
+
+[step][2024.05.26_15:21:47:940][5][2][tid:3486][MobPropertyManager] gotten mob properties: [MobSDK.spEdition:FP]
+
+[info][2024.05.26_15:21:47:941][6][1][tid:3486][:app] usingDebugServer: false
+
+[info][2024.05.26_15:21:47:942][7][1][tid:3486][:app] mobRepos: [], usingDebugServer: false
+
+[step][2024.05.26_15:21:47:943][8][1][tid:3486][BuildSession] initialize start.
+
+[info][2024.05.26_15:21:48:218][283][275][tid:3486][BuildSession] projectsEvaluated state: STARTED
+
+[step][2024.05.26_15:21:48:219][284][1][tid:3486][:app][ConfigManager] mergeAndroidManifest configSet: 2
+
+[info][2024.05.26_15:21:48:220][285][1][tid:3486]disableAI=null
+
+[info][2024.05.26_15:21:48:221][286][1][tid:3486][:app][ManifestManager] mergeAndroidManifest permissionSet: [android.permission.INTERNET, android.permission.ACCESS_WIFI_STATE, android.permission.CHANGE_WIFI_STATE, android.permission.ACCESS_NETWORK_STATE, android.permission.QUERY_ALL_PACKAGES],customPermissionSet: [], featureSet: [], subNodeOfManifestSet: [    
+					<queries
+						xmlns:android="http://schemas.android.com/apk/res/android">
+						<package android:name="com.tencent.mm" /> 
+					</queries>
+				], assignActivityActionMap: [:], metaDataMap: [Mob-AppKey:12112614fca5f, Mob-AppSecret:9c55055a1a63e8120c4773a077c42aaa], providerMap: [com.mob.MobProvider:
+                <provider
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:name="com.mob.MobProvider"
+                    android:multiprocess="true"
+                    android:authorities="#MobApplicationId#.com.mob.MobProvider"
+                    android:exported="false"/>
+            , cn.sharesdk.framework.utils.ShareSDKFileProvider:
+                <provider
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:name="cn.sharesdk.framework.utils.ShareSDKFileProvider"
+                    android:authorities="#MobApplicationId#.cn.sharesdk.ShareSDKFileProvider"
+                    android:exported="false"
+                    android:grantUriPermissions="true" >
+                </provider>
+            ], serviceMap: [:], receiverMap: [:], activityMap: [com.mob.tools.MobUIShell:
+                <activity
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    tools:node="merge"
+                    android:theme="@android:style/Theme.Translucent.NoTitleBar"
+                    android:name="com.mob.tools.MobUIShell"
+                    android:exported="true"
+                    android:configChanges="keyboardHidden|orientation|screenSize"
+                    android:windowSoftInputMode="stateHidden|adjustResize"/>
+            , cn.sharesdk.wechat.utils.WechatHandlerActivity:
+        <activity
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            tools:node="merge"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:name="cn.sharesdk.wechat.utils.WechatHandlerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false" />
+        , .wxapi.WXEntryActivity:
+        <activity-alias
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            tools:node="merge"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:name="#MobApplicationId#.wxapi.WXEntryActivity"
+            android:exported="true"
+            android:targetActivity="cn.sharesdk.wechat.utils.WechatHandlerActivity" />
+        , cn.sharesdk.tencent.qq.ReceiveActivity:
+				<activity
+						xmlns:android="http://schemas.android.com/apk/res/android"
+						xmlns:tools="http://schemas.android.com/tools"
+						android:name="cn.sharesdk.tencent.qq.ReceiveActivity"
+						android:exported="true"
+						android:launchMode="singleTask"
+						android:noHistory="true">
+					<intent-filter>
+						<data android:scheme="tencent100371282" />
+						<action android:name="android.intent.action.VIEW" />
+						<category android:name="android.intent.category.DEFAULT" />
+						<category android:name="android.intent.category.BROWSABLE" />
+					</intent-filter>
+				</activity>
+			, com.tencent.tauth.AuthActivity:
+                    <activity
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:tools="http://schemas.android.com/tools"
+                        android:name="com.tencent.tauth.AuthActivity"
+                        android:exported="false"
+                        android:launchMode="singleTask"
+                        android:noHistory="true" >
+                    </activity>
+                , com.tencent.connect.common.AssistActivity:
+                    <activity
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:tools="http://schemas.android.com/tools"
+                        android:name="com.tencent.connect.common.AssistActivity"
+                        android:configChanges="orientation|keyboardHidden|screenSize"
+                        android:screenOrientation="behind"
+                        android:exported="false"
+                        android:theme="@android:style/Theme.Translucent.NoTitleBar">
+                    </activity>
+                ], mobConfigMetaDataMap: [Mob-AppKey:12112614fca5f, Mob-AppSecret:9c55055a1a63e8120c4773a077c42aaa], encryptConfig: null
+
+[info][2024.05.26_15:21:48:221][286][0][tid:3486][:app][ManifestManager] mergeAndroidManifest autoConfig: null
+
+[info][2024.05.26_15:21:48:222][287][1][tid:3486][:app][ManifestManager] mergeAndroidManifest appBundleMode: null, disableNamespaceAware: null
+
+[info][2024.05.26_15:21:48:222][287][0][tid:3486][:app][ManifestManager] mergeAndroidManifest appModel: true, variants: [com.android.build.gradle.internal.api.ApplicationVariantImpl_Decorated@4fa01cd8, com.android.build.gradle.internal.api.ApplicationVariantImpl_Decorated@343243c9]
+
+[info][2024.05.26_15:21:48:223][288][1][tid:3486][:app][ManifestManager] mergeAndroidManifest abiDirList: []
+
+[info][2024.05.26_15:21:48:224][289][1][tid:3486][:app][ManifestManager] mergeAndroidManifest packageName: com.zfdang.zsmth_android, abiDir: null, variant: com.android.build.gradle.internal.api.ApplicationVariantImpl_Decorated@4fa01cd8
+
+[info][2024.05.26_15:21:48:224][289][0][tid:3486][:app][ManifestManager] mergeAndroidManifest task: task ':app:processDebugManifest'
+
+[info][2024.05.26_15:21:48:226][291][2][tid:3486][:app][ManifestManager] ShareSDKConfig.listenAssetsTaskAndDeleteTmpDir: null
+
+[info][2024.05.26_15:21:48:226][291][0][tid:3486][:app][ManifestManager] mergeAndroidManifest packageName: com.zfdang.zsmth_android, abiDir: null, variant: com.android.build.gradle.internal.api.ApplicationVariantImpl_Decorated@343243c9
+
+[info][2024.05.26_15:21:48:227][292][1][tid:3486][:app][ManifestManager] mergeAndroidManifest task: task ':app:processReleaseManifest'
+
+[info][2024.05.26_15:21:48:228][293][1][tid:3486][:app][ManifestManager] ShareSDKConfig.listenAssetsTaskAndDeleteTmpDir: null
+
+[step][2024.05.26_15:21:48:228][293][0][tid:3486][:app][ConfigManager] mergeAndroidManifest result: true
+
+[step][2024.05.26_15:21:48:229][294][1][tid:3486][:app][ConfigManager] doActionWhenProjectsEvaluated configSet: 2
+
+[step][2024.05.26_15:21:48:229][294][0][tid:3486][:app][ShareSDK] build ShareSDK.xml actionAfterProjectsEvaluated disableConfigCache used: null, conf: null
+
+[info][2024.05.26_15:21:48:230][295][1][tid:3486][:app][ShareSDK] actionAfterProjectsEvaluated useOldXML: true, encryptXML: false
+
+[info][2024.05.26_15:21:48:231][296][1][tid:3486][:app][ShareSDK] actionAfterProjectsEvaluated xmlFile: E:\APK\ZSMTH-VINNEY\tmpmob\assets\ShareSDK.xml
+
+[info][2024.05.26_15:21:48:233][298][2][tid:3486][:app] beforeResolve dependencies ':classpath', configureOnDemand: true, hasMobConfigEndTag: false
+
+[info][2024.05.26_15:21:48:234][299][1][tid:3486]executeOnce addDependency:beforeResolve buildState: EVALUATED
+
+[step][2024.05.26_15:21:48:236][301][2][tid:3486][:app][ConfigManager] addDependencies extension: "MobSDKExtension": {"appKey":"12112614fca5f", "appSecret":"9c55055a1a63e8120c4773a077c42aaa", "version":"null", "hiddenFields":{"fields":{},"unknown":{"permissions":"MobSDK_bb0ryhcka2433m6g6rjyq64h7$_run_closure1$_closure3@3da40a88"}}, "SDKConfigs":{"MobSDK":null,"ShareSDK":null}, "excludePermissionConfig":PermissionConfig={"excludePermissions":[android.permission.RECEIVE_SMS, android.permission.READ_SMS, android.permission.PACKAGE_USAGE_STATS, android.permission.GET_TASKS]}}
+
+[info][2024.05.26_15:21:48:237][302][1][tid:3486][:app][BaseDependency][ShareSDK] version used: +, conf: null
+
+[info][2024.05.26_15:21:48:237][302][0][tid:3486][:app][ShareSDK] dependency filter used: null, conf: null
+
+[info][2024.05.26_15:21:48:238][303][1][tid:3486][:app][ShareSDK] dependency filter used: , conf: 
+
+[step][2024.05.26_15:21:48:238][303][0][tid:3486][:app][ShareSDK] addDependency: cn.sharesdk:ShareSDK:+@aar，api: false, versionEqualOrAbove3: true, gradleVersion: 8.0.2
+
+[step][2024.05.26_15:21:48:239][304][1][tid:3486][:app][ShareSDK] addDependency: cn.sharesdk:OneKeyShare:+@aar，api: false, versionEqualOrAbove3: true, gradleVersion: 8.0.2
+
+[info][2024.05.26_15:21:48:240][305][1][tid:3486]getPlatformDependencyName p=SinaWeibo;v=+;tag=null
+
+[step][2024.05.26_15:21:48:241][306][1][tid:3486][:app][ShareSDK] addDependency: cn.sharesdk:ShareSDK-SinaWeiboX:+，api: false, versionEqualOrAbove3: true, gradleVersion: 8.0.2
+
+[step][2024.05.26_15:21:48:241][306][0][tid:3486][:app][ShareSDK] addDependency: cn.sharesdk:ShareSDK-SinaWeiboX-Core:+@aar，api: false, versionEqualOrAbove3: true, gradleVersion: 8.0.2
+
+[info][2024.05.26_15:21:48:242][307][1][tid:3486]getPlatformDependencyName p=Facebook;v=+;tag=null
+
+[step][2024.05.26_15:21:48:242][307][0][tid:3486][:app][ShareSDK] addDependency: cn.sharesdk:ShareSDK-Facebook:+，api: false, versionEqualOrAbove3: true, gradleVersion: 8.0.2
+
+[info][2024.05.26_15:21:48:243][308][1][tid:3486]getPlatformDependencyName p=Twitter;v=+;tag=null
+
+[step][2024.05.26_15:21:48:244][309][1][tid:3486][:app][ShareSDK] addDependency: cn.sharesdk:ShareSDK-Twitter:+，api: false, versionEqualOrAbove3: true, gradleVersion: 8.0.2
+
+[info][2024.05.26_15:21:48:245][310][1][tid:3486]getPlatformDependencyName p=LinkedIn;v=+;tag=null
+
+[step][2024.05.26_15:21:48:245][310][0][tid:3486][:app][ShareSDK] addDependency: cn.sharesdk:ShareSDK-Linkedin:+，api: false, versionEqualOrAbove3: true, gradleVersion: 8.0.2
+
+[info][2024.05.26_15:21:48:246][311][1][tid:3486]getPlatformDependencyName p=Email;v=+;tag=null
+
+[step][2024.05.26_15:21:48:246][311][0][tid:3486][:app][ShareSDK] addDependency: cn.sharesdk:ShareSDK-Email:+，api: false, versionEqualOrAbove3: true, gradleVersion: 8.0.2
+
+[info][2024.05.26_15:21:48:247][312][1][tid:3486]getPlatformDependencyName p=Wechat;v=+;tag=null
+
+[step][2024.05.26_15:21:48:247][312][0][tid:3486][:app][ShareSDK] addDependency: cn.sharesdk:ShareSDK-Wechat:+，api: false, versionEqualOrAbove3: true, gradleVersion: 8.0.2
+
+[step][2024.05.26_15:21:48:249][314][2][tid:3486][:app][ShareSDK] addDependency: cn.sharesdk:ShareSDK-Wechat-Core:+，api: false, versionEqualOrAbove3: true, gradleVersion: 8.0.2
+
+[info][2024.05.26_15:21:48:249][314][0][tid:3486]getPlatformDependencyName p=WechatMoments;v=+;tag=null
+
+[step][2024.05.26_15:21:48:250][315][1][tid:3486][:app][ShareSDK] addDependency: cn.sharesdk:ShareSDK-Wechat-Moments:+，api: false, versionEqualOrAbove3: true, gradleVersion: 8.0.2
+
+[step][2024.05.26_15:21:48:251][316][1][tid:3486][:app][ShareSDK] addDependency: cn.sharesdk:ShareSDK-Wechat-Core:+，api: false, versionEqualOrAbove3: true, gradleVersion: 8.0.2
+
+[info][2024.05.26_15:21:48:251][316][0][tid:3486]getPlatformDependencyName p=QQ;v=+;tag=null
+
+[step][2024.05.26_15:21:48:252][317][1][tid:3486][:app][ShareSDK] addDependency: cn.sharesdk:ShareSDK-QQ:+，api: false, versionEqualOrAbove3: true, gradleVersion: 8.0.2
+
+[info][2024.05.26_15:21:48:252][317][0][tid:3486][:app][BaseDependency][MobSDK] version used: +, conf: null
+
+[info][2024.05.26_15:21:48:253][318][1][tid:3486][:app][MobSDKDependency] MobSDKDependency_old_custom_artifacts_suffix used: null, conf: null
+
+[info][2024.05.26_15:21:48:253][318][0][tid:3486][:app][MobSDKDependency] MobSDKDependency_spEdition used: null, conf: null
+
+[info][2024.05.26_15:21:48:254][319][1][tid:3486][:app][MobSDKDependency] MobSDKDependency_svip used: null, conf: null
+
+[info][2024.05.26_15:21:48:255][320][1][tid:3486][:app][MobSDKDependency] MobSDKDependency_appKey used: null, conf: null
+
+[info][2024.05.26_15:21:48:256][321][1][tid:3486][:app][MobSDKDependency] after filter dependency: null
+
+[info][2024.05.26_15:21:48:257][322][1][tid:3486][:app][MobSDKDependency] stand version support ult used: true, conf: true, forceRevert: false
+
+[info][2024.05.26_15:21:48:258][323][1][tid:3486][:app][MobSDKDependency] awk used: false, config: false
+
+[info][2024.05.26_15:21:48:260][325][2][tid:3486][:app][MobSDKDependency] gui used: null, MobGUI used: null, gui config: null, MobGUI config: null, disableMC: false, isIdsOff: false, suffix: ，cacheDependencyStr: ||ULT, tmpDependencyStr: ||ULT
+
+[step][2024.05.26_15:21:48:260][325][0][tid:3486][:app][MobSDK] addDependency: com.mob:MobCoreULT:+@aar，api: false, versionEqualOrAbove3: true, gradleVersion: 8.0.2
+
+[step][2024.05.26_15:21:48:261][326][1][tid:3486][:app][MobSDK] addDependency: com.mob:MobGUIULT:+，api: false, versionEqualOrAbove3: true, gradleVersion: 8.0.2
+
+[step][2024.05.26_15:21:48:261][326][0][tid:3486][:app][MobSDK] addDependency: com.mob:MobSupportV1:+，api: false, versionEqualOrAbove3: true, gradleVersion: 8.0.2
+
+[step][2024.05.26_15:21:48:262][327][1][tid:3486][:app][MobSDK] addDependency: com.mob:MobIDSULT:+@aar，api: false, versionEqualOrAbove3: true, gradleVersion: 8.0.2
+
+[info][2024.05.26_15:21:48:262][327][0][tid:3486][:app] beforeResolve configureOnDemand res: true
+
+[info][2024.05.26_15:21:50:007][2072][1745][tid:3486][BuildSession] buildFinished state: EVALUATED
+
+[step][2024.05.26_15:21:50:008][2073][1][tid:3486][:app][ConfigManager] doActionWhenBuildFinished configSet: 2
+
+[info][2024.05.26_15:21:50:009][2074][1][tid:3486]================= finished log record start ===================
+
+[info][2024.05.26_15:21:50:009][2074][0][tid:3486]========>buildResult: action:Build, failure: 
+
+[info][2024.05.26_15:21:50:010][2075][1][tid:3486]========>ConfigStep: 4369
+
+[info][2024.05.26_15:21:50:012][2077][2][tid:3486]==[addDependency: true]
+
+[info][2024.05.26_15:21:50:016][2081][4][tid:3486]==[getMergeManifestTask: true]
+
+[info][2024.05.26_15:21:50:018][2083][2][tid:3486]==[mergeManifestSuccess: false]
+
+[info][2024.05.26_15:21:50:019][2084][1][tid:3486]==[mergeManifestFailed: false]
+
+[info][2024.05.26_15:21:50:020][2085][1][tid:3486]==[actionAfterProjectsEvaluated: true]
+
+[info][2024.05.26_15:21:50:020][2085][0][tid:3486]==[actionAfterBuildFinished: true]
+
+[info][2024.05.26_15:21:50:021][2086][1][tid:3486]========>env info:
+
+[info][2024.05.26_15:21:50:022][2087][1][tid:3486]==[gradleVersion: 8.2]
+
+[info][2024.05.26_15:21:50:022][2087][0][tid:3486]==[gradlePluginVersion: 8.0.2]
+
+[info][2024.05.26_15:21:50:023][2088][1][tid:3486]========>gradle.properties:
+
+[info][2024.05.26_15:21:50:025][2090][2][tid:3486][android.injected.signing.key.password:zsmthdev, org.gradle.parallel:true, android.useAndroidX:true, android.injected.signing.store.file:E:\APK\ZSMTH-VINNEY\app\zsmth.release.jks, android.suppressUnsupportedCompileSdk:34,35, android.studio.version:233.14808.21.2331.11842104, AGP_INTERNAL__MIN_PLUGIN_VERSION_CHECK_STARTED:true, MobSDK.spEdition:FP, FRESCO_VERSION:2.6.0, android.injected.invoked.from.ide:true, org.gradle.configureondemand:true, android.injected.apk.location:E:\APK\ZSMTH-VINNEY\app, android.injected.signing.key.alias:zsmth-release, RXANDROID2_VERSION:2.1.1, buildToolsVersion:34.0.0, RXJAVA2_VERSION:2.2.21, org.gradle.daemon:true, targetSdkVersion:34, org.gradle.jvmargs:-Xmx4096m -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8, android.enableJetifier:true, minSdkVersion:26, compileSdkVersion:34, android.injected.signing.store.password:zsmthdev, android.injected.attribution.file.location:E:\APK\ZSMTH-VINNEY\.gradle]
+
+[info][2024.05.26_15:21:50:026][2091][1][tid:3486]================>projects info:================
+
+[info][2024.05.26_15:21:50:027][2092][1][tid:3486]========>[:ZSMTH-VINNEY] MobSDKExtension: null========
+
+[info][2024.05.26_15:21:50:028][2093][1][tid:3486]========[:ZSMTH-VINNEY] dependencies android: null variants: null========
+
+[info][2024.05.26_15:21:50:028][2093][0][tid:3486]========>[:app] MobSDKExtension: "MobSDKExtension": {"appKey":"12112614fca5f", "appSecret":"9c55055a1a63e8120c4773a077c42aaa", "version":"null", "hiddenFields":{"fields":{},"unknown":{"permissions":"MobSDK_bb0ryhcka2433m6g6rjyq64h7$_run_closure1$_closure3@3da40a88"}}, "SDKConfigs":{"MobSDK":null,"ShareSDK":null}, "excludePermissionConfig":PermissionConfig={"excludePermissions":[android.permission.RECEIVE_SMS, android.permission.READ_SMS, android.permission.PACKAGE_USAGE_STATS, android.permission.GET_TASKS]}}========
+
+[info][2024.05.26_15:21:50:029][2094][1][tid:3486]====[:app][MobSDK]: com.mob.confs.commons.MobSDKConfig@12b5e8d5
+
+[info][2024.05.26_15:21:50:033][2098][4][tid:3486]====[:app][ShareSDK]: "ShareSDKConfig": {"gui":"true", "encryptXML":"false", "version":"null", "customFields":{"fields":{"custEdition":"","zxing":false,"ffmpeg":false,"loopShare":false},"unknown":{}}, "devInfo":{"SinaWeibo":{"CallbackUri":"http://www.sharesdk.cn","OfficialVersion":null,"RegionType":null,"AgentId":null,"HostType":null,"BypassApproval":null,"customHiddenFields":{"Id":null,"SortId":"4","AppId":null,"AppKey":"568898243","AppSecret":"38a4f8204cc784f81f9f0daaf31e02e3","CallbackUri":"http://www.sharesdk.cn","ShareByAppClient":"true","Enable":null,"BypassApproval":null,"UserName":null,"Path":null,"HostType":null,"WithShareTicket":null,"MiniprogramType":null,"Callbackscheme":null,"AgentId":null,"Schema":null,"CallbackAct":null,"FaceBookLoginProtocolScheme":null,"OfficialVersion":null,"FaceBookAppType":null,"IsUseV2":null,"FaceBookClientToken":null,"IsUseDTS":null,"RegionType":null,"Tag":null,"fileProviderAuthority":null,"cachePath":null},"Tag":null,"totalFields":{"fields":{"SortId":"4","AppKey":"568898243","AppSecret":"38a4f8204cc784f81f9f0daaf31e02e3","CallbackUri":"http://www.sharesdk.cn","ShareByAppClient":"true"},"unknown":{}},"IsUseV2":null,"FaceBookLoginProtocolScheme":null,"AppSecret":"38a4f8204cc784f81f9f0daaf31e02e3","FaceBookClientToken":null,"permissions":[],"CallbackAct":null,"providerMap":{},"AppId":null,"fileProviderAuthority":null,"IsUseDTS":null,"MiniprogramType":null,"UserName":null,"cachePath":null,"WithShareTicket":null,"metaData":{},"FaceBookAppType":null,"Schema":null,"Callbackscheme":null,"notNullFields":{"SortId":"4","AppKey":"568898243","AppSecret":"38a4f8204cc784f81f9f0daaf31e02e3","ShareByAppClient":"true","RedirectUrl":"http://www.sharesdk.cn"},"SortId":"4","AppKey":"568898243","Path":null,"Id":null,"ShareByAppClient":"true","Enable":null},"Facebook":{"CallbackUri":"https://mob.com","OfficialVersion":null,"RegionType":null,"AgentId":null,"HostType":null,"BypassApproval":null,"customHiddenFields":{"Id":null,"SortId":"7","AppId":null,"AppKey":"1412473428822331","AppSecret":"a42f4f3f867dc947b9ed6020c2e93558","CallbackUri":"https://mob.com","ShareByAppClient":"true","Enable":null,"BypassApproval":null,"UserName":null,"Path":null,"HostType":null,"WithShareTicket":null,"MiniprogramType":null,"Callbackscheme":null,"AgentId":null,"Schema":null,"CallbackAct":null,"FaceBookLoginProtocolScheme":null,"OfficialVersion":null,"FaceBookAppType":null,"IsUseV2":null,"FaceBookClientToken":null,"IsUseDTS":null,"RegionType":null,"Tag":null,"fileProviderAuthority":null,"cachePath":null},"Tag":null,"totalFields":{"fields":{"SortId":"7","AppKey":"1412473428822331","AppSecret":"a42f4f3f867dc947b9ed6020c2e93558","CallbackUri":"https://mob.com","ShareByAppClient":"true"},"unknown":{}},"IsUseV2":null,"FaceBookLoginProtocolScheme":null,"AppSecret":"a42f4f3f867dc947b9ed6020c2e93558","FaceBookClientToken":null,"permissions":[],"CallbackAct":null,"providerMap":{},"AppId":null,"fileProviderAuthority":null,"IsUseDTS":null,"MiniprogramType":null,"UserName":null,"cachePath":null,"WithShareTicket":null,"metaData":{},"FaceBookAppType":null,"Schema":null,"Callbackscheme":null,"notNullFields":{"SortId":"7","ShareByAppClient":"true","ConsumerKey":"1412473428822331","ConsumerSecret":"a42f4f3f867dc947b9ed6020c2e93558","RedirectUrl":"https://mob.com"},"SortId":"7","AppKey":"1412473428822331","Path":null,"Id":null,"ShareByAppClient":"true","Enable":null},"Twitter":{"CallbackUri":"http://mob.com","OfficialVersion":null,"RegionType":null,"AgentId":null,"HostType":null,"BypassApproval":null,"customHiddenFields":{"Id":null,"SortId":"8","AppId":null,"AppKey":"LRBM0H75rWrU9gNHvlEAA2aOy","AppSecret":"gbeWsZvA9ELJSdoBzJ5oLKX0TU09UOwrzdGfo9Tg7DjyGuMe8G","CallbackUri":"http://mob.com","ShareByAppClient":null,"Enable":null,"BypassApproval":null,"UserName":null,"Path":null,"HostType":null,"WithShareTicket":null,"MiniprogramType":null,"Callbackscheme":null,"AgentId":null,"Schema":null,"CallbackAct":null,"FaceBookLoginProtocolScheme":null,"OfficialVersion":null,"FaceBookAppType":null,"IsUseV2":null,"FaceBookClientToken":null,"IsUseDTS":null,"RegionType":null,"Tag":null,"fileProviderAuthority":null,"cachePath":null},"Tag":null,"totalFields":{"fields":{"SortId":"8","AppKey":"LRBM0H75rWrU9gNHvlEAA2aOy","AppSecret":"gbeWsZvA9ELJSdoBzJ5oLKX0TU09UOwrzdGfo9Tg7DjyGuMe8G","CallbackUri":"http://mob.com"},"unknown":{}},"IsUseV2":null,"FaceBookLoginProtocolScheme":null,"AppSecret":"gbeWsZvA9ELJSdoBzJ5oLKX0TU09UOwrzdGfo9Tg7DjyGuMe8G","FaceBookClientToken":null,"permissions":[],"CallbackAct":null,"providerMap":{},"AppId":null,"fileProviderAuthority":null,"IsUseDTS":null,"MiniprogramType":null,"UserName":null,"cachePath":null,"WithShareTicket":null,"metaData":{},"FaceBookAppType":null,"Schema":null,"Callbackscheme":null,"notNullFields":{"SortId":"8","ConsumerKey":"LRBM0H75rWrU9gNHvlEAA2aOy","ConsumerSecret":"gbeWsZvA9ELJSdoBzJ5oLKX0TU09UOwrzdGfo9Tg7DjyGuMe8G","CallbackUrl":"http://mob.com"},"SortId":"8","AppKey":"LRBM0H75rWrU9gNHvlEAA2aOy","Path":null,"Id":null,"ShareByAppClient":null,"Enable":null},"LinkedIn":{"CallbackUri":"http://www.sharesdk.cn","OfficialVersion":null,"RegionType":null,"AgentId":null,"HostType":null,"BypassApproval":null,"customHiddenFields":{"Id":null,"SortId":"9","AppId":null,"AppKey":"ejo5ibkye3vo","AppSecret":"cC7B2jpxITqPLZ5M","CallbackUri":"http://www.sharesdk.cn","ShareByAppClient":"true","Enable":null,"BypassApproval":null,"UserName":null,"Path":null,"HostType":null,"WithShareTicket":null,"MiniprogramType":null,"Callbackscheme":null,"AgentId":null,"Schema":null,"CallbackAct":null,"FaceBookLoginProtocolScheme":null,"OfficialVersion":null,"FaceBookAppType":null,"IsUseV2":null,"FaceBookClientToken":null,"IsUseDTS":null,"RegionType":null,"Tag":null,"fileProviderAuthority":null,"cachePath":null},"Tag":null,"totalFields":{"fields":{"SortId":"9","AppKey":"ejo5ibkye3vo","AppSecret":"cC7B2jpxITqPLZ5M","CallbackUri":"http://www.sharesdk.cn","ShareByAppClient":"true"},"unknown":{}},"IsUseV2":null,"FaceBookLoginProtocolScheme":null,"AppSecret":"cC7B2jpxITqPLZ5M","FaceBookClientToken":null,"permissions":[],"CallbackAct":null,"providerMap":{},"AppId":null,"fileProviderAuthority":null,"IsUseDTS":null,"MiniprogramType":null,"UserName":null,"cachePath":null,"WithShareTicket":null,"metaData":{},"FaceBookAppType":null,"Schema":null,"Callbackscheme":null,"notNullFields":{"SortId":"9","ShareByAppClient":"true","ApiKey":"ejo5ibkye3vo","SecretKey":"cC7B2jpxITqPLZ5M","RedirectUrl":"http://www.sharesdk.cn"},"SortId":"9","AppKey":"ejo5ibkye3vo","Path":null,"Id":null,"ShareByAppClient":"true","Enable":null},"Email":{"CallbackUri":null,"OfficialVersion":null,"RegionType":null,"AgentId":null,"HostType":null,"BypassApproval":null,"customHiddenFields":{"Id":null,"SortId":"5","AppId":null,"AppKey":null,"AppSecret":null,"CallbackUri":null,"ShareByAppClient":null,"Enable":null,"BypassApproval":null,"UserName":null,"Path":null,"HostType":null,"WithShareTicket":null,"MiniprogramType":null,"Callbackscheme":null,"AgentId":null,"Schema":null,"CallbackAct":null,"FaceBookLoginProtocolScheme":null,"OfficialVersion":null,"FaceBookAppType":null,"IsUseV2":null,"FaceBookClientToken":null,"IsUseDTS":null,"RegionType":null,"Tag":null,"fileProviderAuthority":null,"cachePath":null},"Tag":null,"totalFields":{"fields":{"SortId":"5"},"unknown":{}},"IsUseV2":null,"FaceBookLoginProtocolScheme":null,"AppSecret":null,"FaceBookClientToken":null,"permissions":[],"CallbackAct":null,"providerMap":{},"AppId":null,"fileProviderAuthority":null,"IsUseDTS":null,"MiniprogramType":null,"UserName":null,"cachePath":null,"WithShareTicket":null,"metaData":{},"FaceBookAppType":null,"Schema":null,"Callbackscheme":null,"notNullFields":{"SortId":"5"},"SortId":"5","AppKey":null,"Path":null,"Id":null,"ShareByAppClient":null,"Enable":null},"Wechat":{"CallbackUri":null,"OfficialVersion":null,"RegionType":null,"AgentId":null,"HostType":null,"BypassApproval":"false","customHiddenFields":{"Id":null,"SortId":"1","AppId":"wxa0a604767238b433","AppKey":null,"AppSecret":"220cf0f4825b84faf07a8ffc633e8eb1","CallbackUri":null,"ShareByAppClient":null,"Enable":null,"BypassApproval":"false","UserName":"gh_afb25ac019c9","Path":"pages/index/index.html?id=1","HostType":null,"WithShareTicket":"true","MiniprogramType":"2","Callbackscheme":null,"AgentId":null,"Schema":null,"CallbackAct":null,"FaceBookLoginProtocolScheme":null,"OfficialVersion":null,"FaceBookAppType":null,"IsUseV2":null,"FaceBookClientToken":null,"IsUseDTS":null,"RegionType":null,"Tag":null,"fileProviderAuthority":null,"cachePath":null},"Tag":null,"totalFields":{"fields":{"SortId":"1","AppId":"wxa0a604767238b433","AppSecret":"220cf0f4825b84faf07a8ffc633e8eb1","BypassApproval":"false","UserName":"gh_afb25ac019c9","Path":"pages/index/index.html?id=1","WithShareTicket":"true","MiniprogramType":"2"},"unknown":{}},"IsUseV2":null,"FaceBookLoginProtocolScheme":null,"AppSecret":"220cf0f4825b84faf07a8ffc633e8eb1","FaceBookClientToken":null,"permissions":[],"CallbackAct":null,"providerMap":{},"AppId":"wxa0a604767238b433","fileProviderAuthority":null,"IsUseDTS":null,"MiniprogramType":"2","UserName":"gh_afb25ac019c9","cachePath":null,"WithShareTicket":"true","metaData":{},"FaceBookAppType":null,"Schema":null,"Callbackscheme":null,"notNullFields":{"SortId":"1","AppId":"wxa0a604767238b433","AppSecret":"220cf0f4825b84faf07a8ffc633e8eb1","BypassApproval":"false","UserName":"gh_afb25ac019c9","Path":"pages/index/index.html?id=1","WithShareTicket":"true","MiniprogramType":"2"},"SortId":"1","AppKey":null,"Path":"pages/index/index.html?id=1","Id":null,"ShareByAppClient":null,"Enable":null},"WechatMoments":{"CallbackUri":null,"OfficialVersion":null,"RegionType":null,"AgentId":null,"HostType":null,"BypassApproval":"false","customHiddenFields":{"Id":null,"SortId":"2","AppId":"wxa0a604767238b433","AppKey":null,"AppSecret":"220cf0f4825b84faf07a8ffc633e8eb1","CallbackUri":null,"ShareByAppClient":null,"Enable":null,"BypassApproval":"false","UserName":null,"Path":null,"HostType":null,"WithShareTicket":null,"MiniprogramType":null,"Callbackscheme":null,"AgentId":null,"Schema":null,"CallbackAct":null,"FaceBookLoginProtocolScheme":null,"OfficialVersion":null,"FaceBookAppType":null,"IsUseV2":null,"FaceBookClientToken":null,"IsUseDTS":null,"RegionType":null,"Tag":null,"fileProviderAuthority":null,"cachePath":null},"Tag":null,"totalFields":{"fields":{"SortId":"2","AppId":"wxa0a604767238b433","AppSecret":"220cf0f4825b84faf07a8ffc633e8eb1","BypassApproval":"false"},"unknown":{}},"IsUseV2":null,"FaceBookLoginProtocolScheme":null,"AppSecret":"220cf0f4825b84faf07a8ffc633e8eb1","FaceBookClientToken":null,"permissions":[],"CallbackAct":null,"providerMap":{},"AppId":"wxa0a604767238b433","fileProviderAuthority":null,"IsUseDTS":null,"MiniprogramType":null,"UserName":null,"cachePath":null,"WithShareTicket":null,"metaData":{},"FaceBookAppType":null,"Schema":null,"Callbackscheme":null,"notNullFields":{"SortId":"2","AppId":"wxa0a604767238b433","AppSecret":"220cf0f4825b84faf07a8ffc633e8eb1","BypassApproval":"false"},"SortId":"2","AppKey":null,"Path":null,"Id":null,"ShareByAppClient":null,"Enable":null},"QQ":{"CallbackUri":null,"OfficialVersion":null,"RegionType":null,"AgentId":null,"HostType":null,"BypassApproval":"false","customHiddenFields":{"Id":null,"SortId":"3","AppId":"100371282","AppKey":"aed9b0303e3ed1e27bae87c33761161d","AppSecret":null,"CallbackUri":null,"ShareByAppClient":"true","Enable":null,"BypassApproval":"false","UserName":null,"Path":null,"HostType":null,"WithShareTicket":null,"MiniprogramType":null,"Callbackscheme":null,"AgentId":null,"Schema":null,"CallbackAct":null,"FaceBookLoginProtocolScheme":null,"OfficialVersion":null,"FaceBookAppType":null,"IsUseV2":null,"FaceBookClientToken":null,"IsUseDTS":null,"RegionType":null,"Tag":null,"fileProviderAuthority":null,"cachePath":null},"Tag":null,"totalFields":{"fields":{"SortId":"3","AppId":"100371282","AppKey":"aed9b0303e3ed1e27bae87c33761161d","ShareByAppClient":"true","BypassApproval":"false"},"unknown":{}},"IsUseV2":null,"FaceBookLoginProtocolScheme":null,"AppSecret":null,"FaceBookClientToken":null,"permissions":[],"CallbackAct":null,"providerMap":{},"AppId":"100371282","fileProviderAuthority":null,"IsUseDTS":null,"MiniprogramType":null,"UserName":null,"cachePath":null,"WithShareTicket":null,"metaData":{},"FaceBookAppType":null,"Schema":null,"Callbackscheme":null,"notNullFields":{"SortId":"3","AppId":"100371282","AppKey":"aed9b0303e3ed1e27bae87c33761161d","ShareByAppClient":"true","BypassApproval":"false"},"SortId":"3","AppKey":"aed9b0303e3ed1e27bae87c33761161d","Path":null,"Id":null,"ShareByAppClient":"true","Enable":null}}}
+
+[info][2024.05.26_15:21:50:034][2099][1][tid:3486]========[:app] dependencies android: extension 'android' variants: [com.android.build.gradle.internal.api.ApplicationVariantImpl_Decorated@4fa01cd8, com.android.build.gradle.internal.api.ApplicationVariantImpl_Decorated@343243c9]========
+
+[info][2024.05.26_15:21:50:035][2100][1][tid:3486]====debug====
+
+[info][2024.05.26_15:21:50:060][2125][25][tid:3486]Could not resolve all dependencies for configuration ':app:debugRuntimeClasspath'.
+
+[info][2024.05.26_15:21:50:061][2126][1][tid:3486]====release====
+
+[info][2024.05.26_15:21:50:066][2131][5][tid:3486]==androidx.exifinterface:exifinterface:1.3.7
+
+[info][2024.05.26_15:21:50:066][2131][0][tid:3486]==androidx.multidex:multidex:2.0.1
+
+[info][2024.05.26_15:21:50:067][2132][1][tid:3486]==junit:junit:4.13.2
+
+[info][2024.05.26_15:21:50:067][2132][0][tid:3486]==com.facebook.fresco:fresco:2.6.0
+
+[info][2024.05.26_15:21:50:068][2133][1][tid:3486]==com.facebook.fresco:animated-gif:2.6.0
+
+[info][2024.05.26_15:21:50:068][2133][0][tid:3486]==com.facebook.fresco:webpsupport:2.6.0
+
+[info][2024.05.26_15:21:50:069][2134][1][tid:3486]==com.facebook.fresco:animated-webp:2.6.0
+
+[info][2024.05.26_15:21:50:070][2135][1][tid:3486]==com.facebook.fresco:imagepipeline-okhttp3:2.6.0
+
+[info][2024.05.26_15:21:50:070][2135][0][tid:3486]==com.github.maksim88:PasswordEditText:0.9
+
+[info][2024.05.26_15:21:50:071][2136][1][tid:3486]==com.google.android.material:material:1.12.0
+
+[info][2024.05.26_15:21:50:072][2137][1][tid:3486]==androidx.preference:preference:1.0.0
+
+[info][2024.05.26_15:21:50:072][2137][0][tid:3486]==com.jude:swipebackhelper:3.1.2
+
+[info][2024.05.26_15:21:50:073][2138][1][tid:3486]==com.mikepenz:aboutlibraries:6.1.1
+
+[info][2024.05.26_15:21:50:073][2138][0][tid:3486]==androidx.appcompat:appcompat:1.6.1
+
+[info][2024.05.26_15:21:50:074][2139][1][tid:3486]==androidx.constraintlayout:constraintlayout:2.1.4
+
+[info][2024.05.26_15:21:50:074][2139][0][tid:3486]==androidx.legacy:legacy-support-v4:1.0.0
+
+[info][2024.05.26_15:21:50:075][2140][1][tid:3486]==androidx.recyclerview:recyclerview:1.3.2
+
+[info][2024.05.26_15:21:50:075][2140][0][tid:3486]==androidx.cardview:cardview:1.0.0
+
+[info][2024.05.26_15:21:50:076][2141][1][tid:3486]==io.reactivex.rxjava2:rxandroid:2.1.1
+
+[info][2024.05.26_15:21:50:076][2141][0][tid:3486]==androidx.work:work-runtime:2.9.0
+
+[info][2024.05.26_15:21:50:077][2142][1][tid:3486]==androidx.work:work-rxjava2:2.9.0
+
+[info][2024.05.26_15:21:50:077][2142][0][tid:3486]==com.squareup.retrofit2:adapter-rxjava2:2.9.0
+
+[info][2024.05.26_15:21:50:078][2143][1][tid:3486]==io.reactivex.rxjava2:rxjava:2.2.21
+
+[info][2024.05.26_15:21:50:079][2144][1][tid:3486]==com.squareup.okhttp3:logging-interceptor:4.11.0
+
+[info][2024.05.26_15:21:50:081][2146][2][tid:3486]==com.squareup.retrofit2:converter-scalars:2.9.0
+
+[info][2024.05.26_15:21:50:082][2147][1][tid:3486]==com.squareup.retrofit2:converter-gson:2.9.0
+
+[info][2024.05.26_15:21:50:082][2147][0][tid:3486]==com.squareup.retrofit2:retrofit:2.9.0
+
+[info][2024.05.26_15:21:50:083][2148][1][tid:3486]==com.squareup.okhttp3:okhttp:4.11.0
+
+[info][2024.05.26_15:21:50:083][2148][0][tid:3486]==com.umeng.sdk:common:1.5.3
+
+[info][2024.05.26_15:21:50:084][2149][1][tid:3486]==com.umeng.sdk:analytics:7.5.3
+
+[info][2024.05.26_15:21:50:085][2150][1][tid:3486]==org.jsoup:jsoup:1.14.3
+
+[info][2024.05.26_15:21:50:085][2150][0][tid:3486]==com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1
+
+[info][2024.05.26_15:21:50:086][2151][1][tid:3486]==me.relex:circleindicator:2.1.6
+
+[info][2024.05.26_15:21:50:086][2151][0][tid:3486]==com.github.chrisbanes:PhotoView:2.3.0
+
+[info][2024.05.26_15:21:50:087][2152][1][tid:3486]==com.oguzdev:CircularFloatingActionMenu:1.0.2
+
+[info][2024.05.26_15:21:50:087][2152][0][tid:3486]==com.github.gzu-liyujiang.AndroidPicker:WheelView:4.1.5
+
+[info][2024.05.26_15:21:50:088][2153][1][tid:3486]==io.github.scwang90:refresh-layout-kernel:2.0.5
+
+[info][2024.05.26_15:21:50:088][2153][0][tid:3486]==io.github.scwang90:refresh-header-classics:2.0.5
+
+[info][2024.05.26_15:21:50:089][2154][1][tid:3486]==io.github.scwang90:refresh-footer-classics:2.0.5
+
+[info][2024.05.26_15:21:50:089][2154][0][tid:3486]==com.klinkerapps:link_builder:1.6.1
+
+[info][2024.05.26_15:21:50:091][2156][2][tid:3486]==com.esotericsoftware:kryo:4.0.2
+
+[info][2024.05.26_15:21:50:092][2157][1][tid:3486]==com.github.nisrulz:screenshott:2.0.0
+
+[info][2024.05.26_15:21:50:092][2157][0][tid:3486]==com.squareup.okhttp:okhttp:1.3.0
+
+[info][2024.05.26_15:21:50:093][2158][1][tid:3486]==com.squareup.mimecraft:mimecraft:1.1.0
+
+[info][2024.05.26_15:21:50:093][2158][0][tid:3486]==ZSMTH-VINNEY:multiple-images-selector:unspecified
+
+[info][2024.05.26_15:21:50:094][2159][1][tid:3486]==cn.sharesdk:ShareSDK:3.10.16
+
+[info][2024.05.26_15:21:50:094][2159][0][tid:3486]==cn.sharesdk:OneKeyShare:3.10.16
+
+[info][2024.05.26_15:21:50:095][2160][1][tid:3486]==cn.sharesdk:ShareSDK-SinaWeiboX:3.10.16
+
+[info][2024.05.26_15:21:50:095][2160][0][tid:3486]==cn.sharesdk:ShareSDK-SinaWeiboX-Core:3.10.16
+
+[info][2024.05.26_15:21:50:096][2161][1][tid:3486]==cn.sharesdk:ShareSDK-Facebook:3.10.16
+
+[info][2024.05.26_15:21:50:096][2161][0][tid:3486]==cn.sharesdk:ShareSDK-Twitter:3.10.16
+
+[info][2024.05.26_15:21:50:097][2162][1][tid:3486]==cn.sharesdk:ShareSDK-Linkedin:3.10.16
+
+[info][2024.05.26_15:21:50:097][2162][0][tid:3486]==cn.sharesdk:ShareSDK-Email:3.10.16
+
+[info][2024.05.26_15:21:50:098][2163][1][tid:3486]==cn.sharesdk:ShareSDK-Wechat:3.10.16
+
+[info][2024.05.26_15:21:50:098][2163][0][tid:3486]==cn.sharesdk:ShareSDK-Wechat-Core:3.10.16
+
+[info][2024.05.26_15:21:50:099][2164][1][tid:3486]==cn.sharesdk:ShareSDK-Wechat-Moments:3.10.16
+
+[info][2024.05.26_15:21:50:099][2164][0][tid:3486]==cn.sharesdk:ShareSDK-QQ:3.10.16
+
+[info][2024.05.26_15:21:50:100][2165][1][tid:3486]==com.mob:MobCoreULT:2024.0522.1905
+
+[info][2024.05.26_15:21:50:100][2165][0][tid:3486]==com.mob:MobGUIULT:2024.0522.1905
+
+[info][2024.05.26_15:21:50:101][2166][1][tid:3486]==com.mob:MobSupportV1:2024.0522.1905
+
+[info][2024.05.26_15:21:50:102][2167][1][tid:3486]==com.mob:MobIDSULT:2024.0522.1905
+
+[info][2024.05.26_15:21:50:102][2167][0][tid:3486]==org.hamcrest:hamcrest-core:1.3
+
+[info][2024.05.26_15:21:50:104][2169][2][tid:3486]==com.facebook.fresco:fbcore:2.6.0
+
+[info][2024.05.26_15:21:50:104][2169][0][tid:3486]==com.facebook.fresco:drawee:2.6.0
+
+[info][2024.05.26_15:21:50:105][2170][1][tid:3486]==com.facebook.fresco:imagepipeline:2.6.0
+
+[info][2024.05.26_15:21:50:105][2170][0][tid:3486]==com.facebook.fresco:imagepipeline-native:2.6.0
+
+[info][2024.05.26_15:21:50:106][2171][1][tid:3486]==com.facebook.fresco:memory-type-ashmem:2.6.0
+
+[info][2024.05.26_15:21:50:106][2171][0][tid:3486]==com.facebook.fresco:memory-type-native:2.6.0
+
+[info][2024.05.26_15:21:50:107][2172][1][tid:3486]==com.facebook.fresco:memory-type-java:2.6.0
+
+[info][2024.05.26_15:21:50:107][2172][0][tid:3486]==com.facebook.fresco:nativeimagefilters:2.6.0
+
+[info][2024.05.26_15:21:50:108][2173][1][tid:3486]==com.facebook.fresco:nativeimagetranscoder:2.6.0
+
+[info][2024.05.26_15:21:50:108][2173][0][tid:3486]==androidx.viewpager2:viewpager2:1.1.0-beta02
+
+[info][2024.05.26_15:21:50:109][2174][1][tid:3486]==androidx.fragment:fragment:1.3.6
+
+[info][2024.05.26_15:21:50:109][2174][0][tid:3486]==androidx.activity:activity:1.8.0
+
+[info][2024.05.26_15:21:50:110][2175][1][tid:3486]==androidx.drawerlayout:drawerlayout:1.1.1
+
+[info][2024.05.26_15:21:50:110][2175][0][tid:3486]==androidx.coordinatorlayout:coordinatorlayout:1.1.0
+
+[info][2024.05.26_15:21:50:111][2176][1][tid:3486]==androidx.dynamicanimation:dynamicanimation:1.0.0
+
+[info][2024.05.26_15:21:50:112][2177][1][tid:3486]==androidx.transition:transition:1.5.0
+
+[info][2024.05.26_15:21:50:112][2177][0][tid:3486]==androidx.vectordrawable:vectordrawable:1.1.0
+
+[info][2024.05.26_15:21:50:112][2177][0][tid:3486]==androidx.lifecycle:lifecycle-runtime:2.6.2
+
+[info][2024.05.26_15:21:50:113][2178][1][tid:3486]==androidx.core:core:1.13.0
+
+[info][2024.05.26_15:21:50:113][2178][0][tid:3486]==androidx.annotation:annotation:1.6.0
+
+[info][2024.05.26_15:21:50:114][2179][1][tid:3486]==androidx.annotation:annotation-experimental:1.4.0
+
+[info][2024.05.26_15:21:50:115][2180][1][tid:3486]==androidx.resourceinspection:resourceinspection-annotation:1.0.1
+
+[info][2024.05.26_15:21:50:115][2180][0][tid:3486]==androidx.collection:collection:1.1.0
+
+[info][2024.05.26_15:21:50:116][2181][1][tid:3486]==com.mikepenz:iconics-core:3.0.4
+
+[info][2024.05.26_15:21:50:117][2182][1][tid:3486]==com.mikepenz:fastadapter:3.2.7
+
+[info][2024.05.26_15:21:50:117][2182][0][tid:3486]==androidx.appcompat:appcompat-resources:1.6.1
+
+[info][2024.05.26_15:21:50:119][2184][2][tid:3486]==androidx.cursoradapter:cursoradapter:1.0.0
+
+[info][2024.05.26_15:21:50:119][2184][0][tid:3486]==androidx.savedstate:savedstate:1.2.1
+
+[info][2024.05.26_15:21:50:120][2185][1][tid:3486]==androidx.legacy:legacy-support-core-ui:1.0.0
+
+[info][2024.05.26_15:21:50:120][2185][0][tid:3486]==androidx.media:media:1.0.0
+
+[info][2024.05.26_15:21:50:121][2186][1][tid:3486]==androidx.legacy:legacy-support-core-utils:1.0.0
+
+[info][2024.05.26_15:21:50:121][2186][0][tid:3486]==androidx.customview:customview:1.1.0
+
+[info][2024.05.26_15:21:50:122][2187][1][tid:3486]==androidx.lifecycle:lifecycle-livedata:2.6.2
+
+[info][2024.05.26_15:21:50:123][2188][1][tid:3486]==org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1
+
+[info][2024.05.26_15:21:50:123][2188][0][tid:3486]==org.jetbrains.kotlin:kotlin-stdlib:1.8.22
+
+[info][2024.05.26_15:21:50:124][2189][1][tid:3486]==com.google.guava:listenablefuture:1.0
+
+[info][2024.05.26_15:21:50:124][2189][0][tid:3486]==androidx.startup:startup-runtime:1.1.1
+
+[info][2024.05.26_15:21:50:125][2190][1][tid:3486]==org.reactivestreams:reactive-streams:1.0.3
+
+[info][2024.05.26_15:21:50:125][2190][0][tid:3486]==org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22
+
+[info][2024.05.26_15:21:50:126][2191][1][tid:3486]==com.google.code.gson:gson:2.8.5
+
+[info][2024.05.26_15:21:50:126][2191][0][tid:3486]==com.squareup.okio:okio:3.2.0
+
+[info][2024.05.26_15:21:50:127][2192][1][tid:3486]==io.github.scwang90:refresh-drawable-paint:2.0.5
+
+[info][2024.05.26_15:21:50:127][2192][0][tid:3486]==com.esotericsoftware:reflectasm:1.11.3
+
+[info][2024.05.26_15:21:50:127][2192][0][tid:3486]==com.esotericsoftware:minlog:1.3.0
+
+[info][2024.05.26_15:21:50:128][2193][1][tid:3486]==org.objenesis:objenesis:2.5.1
+
+[info][2024.05.26_15:21:50:128][2193][0][tid:3486]==com.squareup.okhttp:okhttp-protocols:1.3.0
+
+[info][2024.05.26_15:21:50:130][2195][2][tid:3486]==com.facebook.fresco:imagepipeline-base:2.6.0
+
+[info][2024.05.26_15:21:50:130][2195][0][tid:3486]==androidx.viewpager:viewpager:1.0.0
+
+[info][2024.05.26_15:21:50:131][2196][1][tid:3486]==androidx.loader:loader:1.0.0
+
+[info][2024.05.26_15:21:50:131][2196][0][tid:3486]==androidx.lifecycle:lifecycle-livedata-core:2.6.2
+
+[info][2024.05.26_15:21:50:132][2197][1][tid:3486]==androidx.lifecycle:lifecycle-viewmodel:2.6.2
+
+[info][2024.05.26_15:21:50:132][2197][0][tid:3486]==androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2
+
+[info][2024.05.26_15:21:50:133][2198][1][tid:3486]==androidx.lifecycle:lifecycle-common:2.6.2
+
+[info][2024.05.26_15:21:50:133][2198][0][tid:3486]==androidx.arch.core:core-common:2.2.0
+
+[info][2024.05.26_15:21:50:134][2199][1][tid:3486]==androidx.versionedparcelable:versionedparcelable:1.1.1
+
+[info][2024.05.26_15:21:50:134][2199][0][tid:3486]==androidx.annotation:annotation-jvm:1.6.0
+
+[info][2024.05.26_15:21:50:134][2199][0][tid:3486]==androidx.vectordrawable:vectordrawable-animated:1.1.0
+
+[info][2024.05.26_15:21:50:135][2200][1][tid:3486]==androidx.slidingpanelayout:slidingpanelayout:1.0.0
+
+[info][2024.05.26_15:21:50:135][2200][0][tid:3486]==androidx.swiperefreshlayout:swiperefreshlayout:1.0.0
+
+[info][2024.05.26_15:21:50:136][2201][1][tid:3486]==androidx.asynclayoutinflater:asynclayoutinflater:1.0.0
+
+[info][2024.05.26_15:21:50:136][2201][0][tid:3486]==androidx.interpolator:interpolator:1.0.0
+
+[info][2024.05.26_15:21:50:137][2202][1][tid:3486]==androidx.documentfile:documentfile:1.0.0
+
+[info][2024.05.26_15:21:50:137][2202][0][tid:3486]==androidx.localbroadcastmanager:localbroadcastmanager:1.0.0
+
+[info][2024.05.26_15:21:50:138][2203][1][tid:3486]==androidx.print:print:1.0.0
+
+[info][2024.05.26_15:21:50:138][2203][0][tid:3486]==androidx.arch.core:core-runtime:2.2.0
+
+[info][2024.05.26_15:21:50:139][2204][1][tid:3486]==org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1
+
+[info][2024.05.26_15:21:50:139][2204][0][tid:3486]==org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.7.1
+
+[info][2024.05.26_15:21:50:140][2205][1][tid:3486]==org.jetbrains.kotlin:kotlin-stdlib-common:1.8.22
+
+[info][2024.05.26_15:21:50:140][2205][0][tid:3486]==org.jetbrains:annotations:23.0.0
+
+[info][2024.05.26_15:21:50:142][2207][2][tid:3486]==org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22
+
+[info][2024.05.26_15:21:50:142][2207][0][tid:3486]==com.squareup.okio:okio-jvm:3.2.0
+
+[info][2024.05.26_15:21:50:143][2208][1][tid:3486]==org.ow2.asm:asm:5.0.4
+
+[info][2024.05.26_15:21:50:143][2208][0][tid:3486]==androidx.core:core-ktx:1.13.0
+
+[info][2024.05.26_15:21:50:144][2209][1][tid:3486]==org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.7.1
+
+[info][2024.05.26_15:21:50:144][2209][0][tid:3486]========>[:multiple-images-selector] MobSDKExtension: null========
+
+[info][2024.05.26_15:21:50:145][2210][1][tid:3486]========[:multiple-images-selector] dependencies android: extension 'android' variants: [com.android.build.gradle.internal.api.LibraryVariantImpl_Decorated@72928830, com.android.build.gradle.internal.api.LibraryVariantImpl_Decorated@6d58043b]========
+
+[info][2024.05.26_15:21:50:146][2211][1][tid:3486]====debug====
+
+[info][2024.05.26_15:21:50:171][2236][25][tid:3486]==junit:junit:4.13.2
+
+[info][2024.05.26_15:21:50:171][2236][0][tid:3486]==androidx.appcompat:appcompat:1.6.1
+
+[info][2024.05.26_15:21:50:172][2237][1][tid:3486]==xyz.danoz:recyclerviewfastscroller:0.1.3
+
+[info][2024.05.26_15:21:50:172][2237][0][tid:3486]==androidx.legacy:legacy-support-v4:1.0.0
+
+[info][2024.05.26_15:21:50:173][2238][1][tid:3486]==androidx.recyclerview:recyclerview:1.3.2
+
+[info][2024.05.26_15:21:50:173][2238][0][tid:3486]==io.reactivex.rxjava2:rxandroid:2.1.1
+
+[info][2024.05.26_15:21:50:174][2239][1][tid:3486]==io.reactivex.rxjava2:rxjava:2.2.21
+
+[info][2024.05.26_15:21:50:174][2239][0][tid:3486]==com.facebook.fresco:fresco:2.6.0
+
+[info][2024.05.26_15:21:50:175][2240][1][tid:3486]==com.facebook.fresco:animated-gif:2.6.0
+
+[info][2024.05.26_15:21:50:175][2240][0][tid:3486]==com.facebook.fresco:animated-webp:2.6.0
+
+[info][2024.05.26_15:21:50:176][2241][1][tid:3486]==com.facebook.fresco:webpsupport:2.6.0
+
+[info][2024.05.26_15:21:50:176][2241][0][tid:3486]==org.hamcrest:hamcrest-core:1.3
+
+[info][2024.05.26_15:21:50:177][2242][1][tid:3486]==androidx.fragment:fragment:1.3.6
+
+[info][2024.05.26_15:21:50:177][2242][0][tid:3486]==androidx.activity:activity:1.6.0
+
+[info][2024.05.26_15:21:50:178][2243][1][tid:3486]==androidx.appcompat:appcompat-resources:1.6.1
+
+[info][2024.05.26_15:21:50:178][2243][0][tid:3486]==androidx.drawerlayout:drawerlayout:1.0.0
+
+[info][2024.05.26_15:21:50:180][2245][2][tid:3486]==androidx.core:core:1.9.0
+
+[info][2024.05.26_15:21:50:180][2245][0][tid:3486]==androidx.cursoradapter:cursoradapter:1.0.0
+
+[info][2024.05.26_15:21:50:181][2246][1][tid:3486]==androidx.savedstate:savedstate:1.2.0
+
+[info][2024.05.26_15:21:50:182][2247][1][tid:3486]==androidx.annotation:annotation:1.3.0
+
+[info][2024.05.26_15:21:50:183][2248][1][tid:3486]==androidx.legacy:legacy-support-core-ui:1.0.0
+
+[info][2024.05.26_15:21:50:183][2248][0][tid:3486]==androidx.media:media:1.0.0
+
+[info][2024.05.26_15:21:50:183][2248][0][tid:3486]==androidx.legacy:legacy-support-core-utils:1.0.0
+
+[info][2024.05.26_15:21:50:184][2249][1][tid:3486]==androidx.customview:customview:1.0.0
+
+[info][2024.05.26_15:21:50:184][2249][0][tid:3486]==org.reactivestreams:reactive-streams:1.0.3
+
+[info][2024.05.26_15:21:50:185][2250][1][tid:3486]==com.facebook.fresco:fbcore:2.6.0
+
+[info][2024.05.26_15:21:50:185][2250][0][tid:3486]==com.facebook.fresco:drawee:2.6.0
+
+[info][2024.05.26_15:21:50:186][2251][1][tid:3486]==com.facebook.fresco:imagepipeline:2.6.0
+
+[info][2024.05.26_15:21:50:186][2251][0][tid:3486]==com.facebook.fresco:imagepipeline-native:2.6.0
+
+[info][2024.05.26_15:21:50:187][2252][1][tid:3486]==com.facebook.fresco:memory-type-ashmem:2.6.0
+
+[info][2024.05.26_15:21:50:187][2252][0][tid:3486]==com.facebook.fresco:memory-type-native:2.6.0
+
+[info][2024.05.26_15:21:50:188][2253][1][tid:3486]==com.facebook.fresco:memory-type-java:2.6.0
+
+[info][2024.05.26_15:21:50:188][2253][0][tid:3486]==com.facebook.fresco:nativeimagefilters:2.6.0
+
+[info][2024.05.26_15:21:50:189][2254][1][tid:3486]==com.facebook.fresco:nativeimagetranscoder:2.6.0
+
+[info][2024.05.26_15:21:50:189][2254][0][tid:3486]==androidx.viewpager:viewpager:1.0.0
+
+[info][2024.05.26_15:21:50:191][2256][2][tid:3486]==androidx.loader:loader:1.0.0
+
+[info][2024.05.26_15:21:50:191][2256][0][tid:3486]==androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1
+
+[info][2024.05.26_15:21:50:192][2257][1][tid:3486]==androidx.lifecycle:lifecycle-viewmodel:2.5.1
+
+[info][2024.05.26_15:21:50:192][2257][0][tid:3486]==androidx.collection:collection:1.1.0
+
+[info][2024.05.26_15:21:50:193][2258][1][tid:3486]==androidx.lifecycle:lifecycle-livedata-core:2.5.1
+
+[info][2024.05.26_15:21:50:193][2258][0][tid:3486]==androidx.annotation:annotation-experimental:1.3.0
+
+[info][2024.05.26_15:21:50:194][2259][1][tid:3486]==androidx.lifecycle:lifecycle-runtime:2.5.1
+
+[info][2024.05.26_15:21:50:195][2260][1][tid:3486]==org.jetbrains.kotlin:kotlin-stdlib:1.7.10
+
+[info][2024.05.26_15:21:50:195][2260][0][tid:3486]==androidx.vectordrawable:vectordrawable-animated:1.1.0
+
+[info][2024.05.26_15:21:50:196][2261][1][tid:3486]==androidx.vectordrawable:vectordrawable:1.1.0
+
+[info][2024.05.26_15:21:50:196][2261][0][tid:3486]==androidx.versionedparcelable:versionedparcelable:1.1.1
+
+[info][2024.05.26_15:21:50:197][2262][1][tid:3486]==androidx.coordinatorlayout:coordinatorlayout:1.0.0
+
+[info][2024.05.26_15:21:50:198][2263][1][tid:3486]==androidx.slidingpanelayout:slidingpanelayout:1.0.0
+
+[info][2024.05.26_15:21:50:199][2264][1][tid:3486]==androidx.swiperefreshlayout:swiperefreshlayout:1.0.0
+
+[info][2024.05.26_15:21:50:199][2264][0][tid:3486]==androidx.asynclayoutinflater:asynclayoutinflater:1.0.0
+
+[info][2024.05.26_15:21:50:200][2265][1][tid:3486]==androidx.interpolator:interpolator:1.0.0
+
+[info][2024.05.26_15:21:50:200][2265][0][tid:3486]==androidx.documentfile:documentfile:1.0.0
+
+[info][2024.05.26_15:21:50:201][2266][1][tid:3486]==androidx.localbroadcastmanager:localbroadcastmanager:1.0.0
+
+[info][2024.05.26_15:21:50:201][2266][0][tid:3486]==androidx.print:print:1.0.0
+
+[info][2024.05.26_15:21:50:203][2268][2][tid:3486]==com.facebook.fresco:imagepipeline-base:2.6.0
+
+[info][2024.05.26_15:21:50:204][2269][1][tid:3486]==androidx.lifecycle:lifecycle-livedata:2.0.0
+
+[info][2024.05.26_15:21:50:204][2269][0][tid:3486]==androidx.core:core-ktx:1.9.0
+
+[info][2024.05.26_15:21:50:205][2270][1][tid:3486]==org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1
+
+[info][2024.05.26_15:21:50:205][2270][0][tid:3486]==androidx.lifecycle:lifecycle-common:2.5.1
+
+[info][2024.05.26_15:21:50:206][2271][1][tid:3486]==androidx.arch.core:core-common:2.1.0
+
+[info][2024.05.26_15:21:50:206][2271][0][tid:3486]==org.jetbrains.kotlin:kotlin-stdlib-common:1.7.10
+
+[info][2024.05.26_15:21:50:207][2272][1][tid:3486]==org.jetbrains:annotations:13.0
+
+[info][2024.05.26_15:21:50:207][2272][0][tid:3486]==androidx.arch.core:core-runtime:2.1.0
+
+[info][2024.05.26_15:21:50:208][2273][1][tid:3486]==org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1
+
+[info][2024.05.26_15:21:50:208][2273][0][tid:3486]==org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.6.1
+
+[info][2024.05.26_15:21:50:209][2274][1][tid:3486]==org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.0
+
+[info][2024.05.26_15:21:50:210][2275][1][tid:3486]==org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.1
+
+[info][2024.05.26_15:21:50:210][2275][0][tid:3486]==org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.0
+
+[info][2024.05.26_15:21:50:211][2276][1][tid:3486]====release====
+
+[info][2024.05.26_15:21:50:213][2278][2][tid:3486]==junit:junit:4.13.2
+
+[info][2024.05.26_15:21:50:214][2279][1][tid:3486]==androidx.appcompat:appcompat:1.6.1
+
+[info][2024.05.26_15:21:50:214][2279][0][tid:3486]==xyz.danoz:recyclerviewfastscroller:0.1.3
+
+[info][2024.05.26_15:21:50:214][2279][0][tid:3486]==androidx.recyclerview:recyclerview:1.3.2
+
+[info][2024.05.26_15:21:50:216][2281][2][tid:3486]==androidx.legacy:legacy-support-v4:1.0.0
+
+[info][2024.05.26_15:21:50:217][2282][1][tid:3486]==io.reactivex.rxjava2:rxandroid:2.1.1
+
+[info][2024.05.26_15:21:50:217][2282][0][tid:3486]==io.reactivex.rxjava2:rxjava:2.2.21
+
+[info][2024.05.26_15:21:50:218][2283][1][tid:3486]==com.facebook.fresco:fresco:2.6.0
+
+[info][2024.05.26_15:21:50:219][2284][1][tid:3486]==com.facebook.fresco:animated-gif:2.6.0
+
+[info][2024.05.26_15:21:50:219][2284][0][tid:3486]==com.facebook.fresco:animated-webp:2.6.0
+
+[info][2024.05.26_15:21:50:221][2286][2][tid:3486]==com.facebook.fresco:webpsupport:2.6.0
+
+[info][2024.05.26_15:21:50:221][2286][0][tid:3486]==org.hamcrest:hamcrest-core:1.3
+
+[info][2024.05.26_15:21:50:222][2287][1][tid:3486]==androidx.fragment:fragment:1.3.6
+
+[info][2024.05.26_15:21:50:223][2288][1][tid:3486]==androidx.activity:activity:1.6.0
+
+[info][2024.05.26_15:21:50:223][2288][0][tid:3486]==androidx.appcompat:appcompat-resources:1.6.1
+
+[info][2024.05.26_15:21:50:224][2289][1][tid:3486]==androidx.drawerlayout:drawerlayout:1.0.0
+
+[info][2024.05.26_15:21:50:224][2289][0][tid:3486]==androidx.core:core:1.9.0
+
+[info][2024.05.26_15:21:50:225][2290][1][tid:3486]==androidx.cursoradapter:cursoradapter:1.0.0
+
+[info][2024.05.26_15:21:50:225][2290][0][tid:3486]==androidx.savedstate:savedstate:1.2.0
+
+[info][2024.05.26_15:21:50:226][2291][1][tid:3486]==androidx.annotation:annotation:1.3.0
+
+[info][2024.05.26_15:21:50:226][2291][0][tid:3486]==androidx.customview:customview:1.0.0
+
+[info][2024.05.26_15:21:50:227][2292][1][tid:3486]==androidx.legacy:legacy-support-core-ui:1.0.0
+
+[info][2024.05.26_15:21:50:227][2292][0][tid:3486]==androidx.media:media:1.0.0
+
+[info][2024.05.26_15:21:50:228][2293][1][tid:3486]==androidx.legacy:legacy-support-core-utils:1.0.0
+
+[info][2024.05.26_15:21:50:229][2294][1][tid:3486]==org.reactivestreams:reactive-streams:1.0.3
+
+[info][2024.05.26_15:21:50:229][2294][0][tid:3486]==com.facebook.fresco:fbcore:2.6.0
+
+[info][2024.05.26_15:21:50:230][2295][1][tid:3486]==com.facebook.fresco:drawee:2.6.0
+
+[info][2024.05.26_15:21:50:231][2296][1][tid:3486]==com.facebook.fresco:imagepipeline:2.6.0
+
+[info][2024.05.26_15:21:50:231][2296][0][tid:3486]==com.facebook.fresco:imagepipeline-native:2.6.0
+
+[info][2024.05.26_15:21:50:233][2298][2][tid:3486]==com.facebook.fresco:memory-type-ashmem:2.6.0
+
+[info][2024.05.26_15:21:50:234][2299][1][tid:3486]==com.facebook.fresco:memory-type-native:2.6.0
+
+[info][2024.05.26_15:21:50:234][2299][0][tid:3486]==com.facebook.fresco:memory-type-java:2.6.0
+
+[info][2024.05.26_15:21:50:235][2300][1][tid:3486]==com.facebook.fresco:nativeimagefilters:2.6.0
+
+[info][2024.05.26_15:21:50:235][2300][0][tid:3486]==com.facebook.fresco:nativeimagetranscoder:2.6.0
+
+[info][2024.05.26_15:21:50:236][2301][1][tid:3486]==androidx.viewpager:viewpager:1.0.0
+
+[info][2024.05.26_15:21:50:237][2302][1][tid:3486]==androidx.loader:loader:1.0.0
+
+[info][2024.05.26_15:21:50:237][2302][0][tid:3486]==androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1
+
+[info][2024.05.26_15:21:50:238][2303][1][tid:3486]==androidx.lifecycle:lifecycle-viewmodel:2.5.1
+
+[info][2024.05.26_15:21:50:238][2303][0][tid:3486]==androidx.collection:collection:1.1.0
+
+[info][2024.05.26_15:21:50:239][2304][1][tid:3486]==androidx.lifecycle:lifecycle-livedata-core:2.5.1
+
+[info][2024.05.26_15:21:50:239][2304][0][tid:3486]==androidx.annotation:annotation-experimental:1.3.0
+
+[info][2024.05.26_15:21:50:240][2305][1][tid:3486]==androidx.lifecycle:lifecycle-runtime:2.5.1
+
+[info][2024.05.26_15:21:50:240][2305][0][tid:3486]==org.jetbrains.kotlin:kotlin-stdlib:1.7.10
+
+[info][2024.05.26_15:21:50:240][2305][0][tid:3486]==androidx.vectordrawable:vectordrawable-animated:1.1.0
+
+[info][2024.05.26_15:21:50:241][2306][1][tid:3486]==androidx.vectordrawable:vectordrawable:1.1.0
+
+[info][2024.05.26_15:21:50:241][2306][0][tid:3486]==androidx.versionedparcelable:versionedparcelable:1.1.1
+
+[info][2024.05.26_15:21:50:242][2307][1][tid:3486]==androidx.coordinatorlayout:coordinatorlayout:1.0.0
+
+[info][2024.05.26_15:21:50:242][2307][0][tid:3486]==androidx.slidingpanelayout:slidingpanelayout:1.0.0
+
+[info][2024.05.26_15:21:50:242][2307][0][tid:3486]==androidx.swiperefreshlayout:swiperefreshlayout:1.0.0
+
+[info][2024.05.26_15:21:50:243][2308][1][tid:3486]==androidx.asynclayoutinflater:asynclayoutinflater:1.0.0
+
+[info][2024.05.26_15:21:50:243][2308][0][tid:3486]==androidx.interpolator:interpolator:1.0.0
+
+[info][2024.05.26_15:21:50:245][2310][2][tid:3486]==androidx.documentfile:documentfile:1.0.0
+
+[info][2024.05.26_15:21:50:245][2310][0][tid:3486]==androidx.localbroadcastmanager:localbroadcastmanager:1.0.0
+
+[info][2024.05.26_15:21:50:246][2311][1][tid:3486]==androidx.print:print:1.0.0
+
+[info][2024.05.26_15:21:50:246][2311][0][tid:3486]==com.facebook.fresco:imagepipeline-base:2.6.0
+
+[info][2024.05.26_15:21:50:247][2312][1][tid:3486]==androidx.lifecycle:lifecycle-livedata:2.0.0
+
+[info][2024.05.26_15:21:50:247][2312][0][tid:3486]==androidx.core:core-ktx:1.9.0
+
+[info][2024.05.26_15:21:50:248][2313][1][tid:3486]==org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1
+
+[info][2024.05.26_15:21:50:248][2313][0][tid:3486]==androidx.lifecycle:lifecycle-common:2.5.1
+
+[info][2024.05.26_15:21:50:249][2314][1][tid:3486]==androidx.arch.core:core-common:2.1.0
+
+[info][2024.05.26_15:21:50:249][2314][0][tid:3486]==org.jetbrains.kotlin:kotlin-stdlib-common:1.7.10
+
+[info][2024.05.26_15:21:50:250][2315][1][tid:3486]==org.jetbrains:annotations:13.0
+
+[info][2024.05.26_15:21:50:250][2315][0][tid:3486]==androidx.arch.core:core-runtime:2.1.0
+
+[info][2024.05.26_15:21:50:251][2316][1][tid:3486]==org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1
+
+[info][2024.05.26_15:21:50:251][2316][0][tid:3486]==org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.6.1
+
+[info][2024.05.26_15:21:50:251][2316][0][tid:3486]==org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.0
+
+[info][2024.05.26_15:21:50:252][2317][1][tid:3486]==org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.1
+
+[info][2024.05.26_15:21:50:253][2318][1][tid:3486]==org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.0
+
+[info][2024.05.26_15:21:50:253][2318][0][tid:3486]================= finished log record end ===================
+
+[step][2024.05.26_15:21:50:254][2319][1][tid:3486]================= finished ===================
