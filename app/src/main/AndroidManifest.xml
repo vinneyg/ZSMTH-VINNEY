@@ -28,7 +28,8 @@
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         android:preserveLegacyExternalStorage="true"
-        tools:replace="android:name">
+        tools:replace="android:name"
+      tools:targetApi="r">
     <activity
         android:name=".MainActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
@@ -86,7 +87,7 @@
 
     <!-- service -->
         <!-- aadapt to S8 and Mix2 -->
-        <meta-data
+    <meta-data
             android:name="android.max_aspect"
             android:value="2.5" />
   </application>

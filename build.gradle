@@ -6,8 +6,8 @@ buildscript {
         mavenCentral()
         google()
         maven {
-         url "http://mvn.mob.com/android/";
-            allowInsecureProtocol = true;
+         url "http://mvn.mob.com/android/"
+            allowInsecureProtocol = true
         }
         maven {
             url "https://plugins.gradle.org/m2/"
@@ -30,7 +30,7 @@ allprojects {
         mavenCentral()
         maven {
             url "http://maven.aliyun.com/nexus/content/repositories/jcenter"
-            allowInsecureProtocol = true;
+            allowInsecureProtocol = true
         }
         maven {
             url "https://jitpack.io"

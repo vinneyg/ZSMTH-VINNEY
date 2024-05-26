@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: cn.sharesdk:OneKeyShare:3.10.16@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/dc9d98ef4332c07dd8a6b8d3189cb5d1/transformed/jetified-OneKeyShare-3.10.16/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/dc9d98ef4332c07dd8a6b8d3189cb5d1/transformed/jetified-OneKeyShare-3.10.16/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/dc9d98ef4332c07dd8a6b8d3189cb5d1/transformed/jetified-OneKeyShare-3.10.16/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

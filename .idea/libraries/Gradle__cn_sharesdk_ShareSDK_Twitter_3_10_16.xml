@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: cn.sharesdk:ShareSDK-Twitter:3.10.16" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="cn.sharesdk" artifactId="ShareSDK-Twitter" version="3.10.16" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/cn.sharesdk/ShareSDK-Twitter/3.10.16/d7b3563ed4d27c5c1601248644a5dd914df0bde7/ShareSDK-Twitter-3.10.16.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
