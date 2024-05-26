@@ -43,6 +43,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     mListener = listener;
   }
 
+  @NonNull
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_item, parent, false);
     return new ViewHolder(view);
@@ -50,14 +51,14 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
   //    MailContentActivity.inflateContentViewGroup is using the same logic, please make sure they are consistent
   @SuppressLint("SetTextI18n")
-  public void inflateContentViewGroup(ViewGroup viewGroup, TextView contentView, final Post post) {
+  public void inflateContentViewGroup(ViewGroup viewGroup, final Post post) {
     // remove all child view in viewgroup
     viewGroup.removeAllViews();
 
     List<ContentSegment> contents = post.getContentSegments();
     if (contents == null) return;
     final LayoutInflater inflater = mListener.getLayoutInflater();
-    if (contents.size() > 0) {
+    if (!contents.isEmpty()) {
       // there are multiple segments, add the first contentView first
       // contentView is always available, we don't have to inflate it again
       ContentSegment content = contents.get(0);
@@ -84,23 +85,17 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                   .setHighlightAlpha(.4f)                                     // optional, defaults to .15f
                   .setUnderlined(false)                                       // optional, defaults to true
                   .setBold(false)                                              // optional, defaults to false
-                  .setOnLongClickListener(new Link.OnLongClickListener() {
-                    @Override
-                    public void onLongClick(String clickedText) {
-                      // long clicked
-                    }
+                  .setOnLongClickListener(clickedText -> {
+                    // long clicked
                   })
-                  .setOnClickListener(new Link.OnClickListener() {
-                    @Override
-                    public void onClick(String clickedText) {
-                      // single clicked
-                      Uri uri = Uri.parse(attach.getOriginalVideoSource());
-                      Intent intent = new Intent(Intent.ACTION_VIEW);
-                      //intent.setType("video/*");
-                      intent.setDataAndType(uri, "video/*");
-                      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                      mListener.startActivity(Intent.createChooser(intent, "选择视频播放器"));
-                    }
+                  .setOnClickListener(clickedText -> {
+                    // single clicked
+                    Uri uri = Uri.parse(attach.getOriginalVideoSource());
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    //intent.setType("video/*");
+                    intent.setDataAndType(uri, "video/*");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mListener.startActivity(Intent.createChooser(intent, "选择视频播放器"));
                   });
           LinkBuilder.on(tv).addLink(link).build();
 
@@ -131,24 +126,22 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
           // set onclicklistener
           image.setTag(R.id.image_tag, content.getImgIndex());
-          image.setOnClickListener(new View.OnClickListener() {
-         @Override public void onClick(View v) {
-              int position = (int) v.getTag(R.id.image_tag);
+          image.setOnClickListener(v -> {
+               int position = (int) v.getTag(R.id.image_tag);
 
-              Intent intent = new Intent(mListener, FSImageViewerActivity.class);
+               Intent intent = new Intent(mListener, FSImageViewerActivity.class);
 
-              ArrayList<String> urls = new ArrayList<>();
-              List<Attachment> attaches = post.getAttachFiles();
-              for (Attachment attach : attaches) {
-                // load original image in FS image viewer
-                urls.add(attach.getOriginalImageSource());
-              }
+               ArrayList<String> urls = new ArrayList<>();
+               List<Attachment> attaches = post.getAttachFiles();
+               for (Attachment attach : attaches) {
+                 // load original image in FS image viewer
+                 urls.add(attach.getOriginalImageSource());
+               }
 
-              intent.putStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS, urls);
-              intent.putExtra(SMTHApplication.ATTACHMENT_CURRENT_POS, position);
-              mListener.startActivity(intent);
-            }
-          });
+               intent.putStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS, urls);
+               intent.putExtra(SMTHApplication.ATTACHMENT_CURRENT_POS, position);
+               mListener.startActivity(intent);
+             });
 
           // Add the text view to the parent layout
           viewGroup.addView(image);
@@ -173,23 +166,17 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                       .setHighlightAlpha(.4f)                                     // optional, defaults to .15f
                       .setUnderlined(false)                                       // optional, defaults to true
                       .setBold(false)                                              // optional, defaults to false
-                      .setOnLongClickListener(new Link.OnLongClickListener() {
-                        @Override
-                        public void onLongClick(String clickedText) {
-                          // long clicked
-                        }
+                      .setOnLongClickListener(clickedText -> {
+                        // long clicked
                       })
-                      .setOnClickListener(new Link.OnClickListener() {
-                        @Override
-                        public void onClick(String clickedText) {
-                          // single clicked
-                          Uri uri = Uri.parse(attach.getOriginalVideoSource());
-                          Intent intent = new Intent(Intent.ACTION_VIEW);
-                          //intent.setType("video/*");
-                          intent.setDataAndType(uri, "video/*");
-                          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                          mListener.startActivity(Intent.createChooser(intent, "选择视频播放器"));
-                        }
+                      .setOnClickListener(clickedText -> {
+                        // single clicked
+                        Uri uri = Uri.parse(attach.getOriginalVideoSource());
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        //intent.setType("video/*");
+                        intent.setDataAndType(uri, "video/*");
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mListener.startActivity(Intent.createChooser(intent, "选择视频播放器"));
                       });
               LinkBuilder.on(tv).addLink(link).build();
 
@@ -216,22 +203,18 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     holder.mPostPublishDate.setText(post.getFormatedDate());
     holder.mPostIndex.setText(post.getPosition());
 
-    holder.mPostAuthor.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if(Settings.getInstance().isSetIdCheck()) {
-          Intent intent = new Intent(v.getContext(), QueryUserActivity.class);
-          intent.putExtra(SMTHApplication.QUERY_USER_INFO, post.getRawAuthor());
-          v.getContext().startActivity(intent);
-        }
+    holder.mPostAuthor.setOnClickListener(v -> {
+      if(Settings.getInstance().isSetIdCheck()) {
+        Intent intent = new Intent(v.getContext(), QueryUserActivity.class);
+        intent.putExtra(SMTHApplication.QUERY_USER_INFO, post.getRawAuthor());
+        v.getContext().startActivity(intent);
       }
     });
 
-    inflateContentViewGroup(holder.mViewGroup, holder.mPostContent, post);
+    inflateContentViewGroup(holder.mViewGroup, post);
     // http://stackoverflow.com/questions/4415528/how-to-pass-the-onclick-event-to-its-parent-on-android
     // http://stackoverflow.com/questions/24885223/why-doesnt-recyclerview-have-onitemclicklistener-and-how-recyclerview-is-dif
-    holder.mView.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-      }
+    holder.mView.setOnClickListener(v -> {
     });
     holder.mView.setOnTouchListener(new View.OnTouchListener() {
       @SuppressLint("ClickableViewAccessibility")
@@ -260,11 +243,11 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     public ViewHolder(View view) {
       super(view);
       mView = view;
-      mPostAuthor = (TextView) view.findViewById(R.id.post_author);
-      mPostIndex = (TextView) view.findViewById(R.id.post_index);
-      mPostPublishDate = (TextView) view.findViewById(R.id.post_publish_date);
-      mViewGroup = (LinearLayout) view.findViewById(R.id.post_content_holder);
-      mPostContent = (LinkConsumableTextView) view.findViewById(R.id.post_content);
+      mPostAuthor = view.findViewById(R.id.post_author);
+      mPostIndex = view.findViewById(R.id.post_index);
+      mPostPublishDate = view.findViewById(R.id.post_publish_date);
+      mViewGroup = view.findViewById(R.id.post_content_holder);
+      mPostContent = view.findViewById(R.id.post_content);
     }
 
     @NonNull

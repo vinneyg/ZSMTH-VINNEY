@@ -169,7 +169,7 @@ public class WrapContentDraweeView extends SimpleDraweeView {
             int imageCount = getTimes(imageTotalHeight, imageMaxAllowedHeight);
             // Log.d(TAG, "process: h = " + imageTotalHeight + " w = " + destBitmap.getWidth() + " allowed: " + imageMaxAllowedHeight + " count: " + imageCount);
             if (imageCount > 1) {
-              bmps = new ArrayList<Bitmap>();
+              bmps = new ArrayList<>();
               Rect bsrc = new Rect();
 
               ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -181,7 +181,8 @@ public class WrapContentDraweeView extends SimpleDraweeView {
                 bsrc.top = i * imageMaxAllowedHeight;
                 bsrc.right = destBitmap.getWidth();
                 bsrc.bottom = Math.min(bsrc.top + imageMaxAllowedHeight, imageTotalHeight);
-                Bitmap bmp = decoder.decodeRegion(bsrc, null);
+                  assert decoder != null;
+                  Bitmap bmp = decoder.decodeRegion(bsrc, null);
                 bmps.add(bmp);
               }
             }
@@ -236,7 +237,7 @@ public class WrapContentDraweeView extends SimpleDraweeView {
 
   // load image from string URL
   public void setImageFromStringURL(final String url) {
-    if (url == null || url.length() == 0) return;
+    if (url == null || url.isEmpty()) return;
     this.setImageURI(Uri.parse(url));
   }
 

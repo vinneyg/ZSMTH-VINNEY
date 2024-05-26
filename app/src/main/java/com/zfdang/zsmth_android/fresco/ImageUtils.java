@@ -10,7 +10,7 @@ import javax.microedition.khronos.egl.EGLDisplay;
  */
 public class ImageUtils {
   private static final int DEFAULT_MAX_BITMAP_DIMENSION = 2048;
-  private static int maxHeight = 0;
+  private static final int maxHeight;
 
   // http://stackoverflow.com/questions/15313807/android-maximum-allowed-width-height-of-bitmap
   static {

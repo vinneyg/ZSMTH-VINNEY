@@ -8,6 +8,9 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import androidx.annotation.NonNull;
+
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -64,7 +67,7 @@ public class MyPhotoView extends PhotoView {
     mDraweeHolder.onAttach();
   }
 
-  @Override protected boolean verifyDrawable(Drawable dr) {
+  @Override protected boolean verifyDrawable(@NonNull Drawable dr) {
     super.verifyDrawable(dr);
     return dr == mDraweeHolder.getHierarchy().getTopLevelDrawable();
   }

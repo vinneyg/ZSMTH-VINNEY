@@ -22,8 +22,6 @@ import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.BoardListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -42,8 +40,7 @@ import java.util.Objects;
  */
 public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener {
 
-  final private String TAG = "AllBoardFragment";
-  private RecyclerView mRecyclerView = null;
+    private RecyclerView mRecyclerView = null;
   private QueryTextListener mQueryListener = null;
 
   private OnBoardFragmentInteractionListener mListener = null;
@@ -64,7 +61,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_all_board, container, false);
 
-    mRecyclerView = (RecyclerView) view.findViewById(R.id.all_board_list);
+    mRecyclerView = view.findViewById(R.id.all_board_list);
     // Set the adapter
     mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 0));
     Context context = view.getContext();
@@ -76,12 +73,12 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     }
     mRecyclerView.setAdapter(mAdapter);
 
-    SearchView mSearchView = (SearchView) view.findViewById(R.id.all_board_search);
+    SearchView mSearchView = view.findViewById(R.id.all_board_search);
     mSearchView.setIconifiedByDefault(false);
 
     // http://stackoverflow.com/questions/11321129/is-it-possible-to-change-the-textcolor-on-an-android-searchview
     int id = mSearchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
-    TextView textView = (TextView) mSearchView.findViewById(id);
+    TextView textView = mSearchView.findViewById(id);
     textView.setTextColor(getResources().getColor(R.color.status_text_night,null));
     textView.setHintTextColor(getResources().getColor(R.color.status_text_night,null));
 
@@ -93,7 +90,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     // set focus to recyclerview
     mRecyclerView.requestFocus();
 
-    if (BoardListContent.ALL_BOARDS.size() == 0) {
+    if (BoardListContent.ALL_BOARDS.isEmpty()) {
       // only load boards on the first timer
       LoadAllBoards();
     }
@@ -121,36 +118,28 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     showLoadingHints();
 
     // all boards loaded in cached file
-    final Observable<List<Board>> cache = Observable.create(new ObservableOnSubscribe<List<Board>>() {
-      @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
-        List<Board> boards = SMTHHelper.LoadBoardListFromCache(SMTHHelper.BOARD_TYPE_ALL, null);
-        if (boards != null && boards.size() > 0) {
-          observableEmitter.onNext(boards);
-        } else {
-          observableEmitter.onComplete();
-        }
+    final Observable<List<Board>> cache = Observable.create(observableEmitter -> {
+      List<Board> boards = SMTHHelper.LoadBoardListFromCache(SMTHHelper.BOARD_TYPE_ALL, null);
+      if (boards != null && !boards.isEmpty()) {
+        observableEmitter.onNext(boards);
+      } else {
+        observableEmitter.onComplete();
       }
     });
 
     // all boards loaded from network
-    final Observable<List<Board>> network = Observable.create(new ObservableOnSubscribe<List<Board>>() {
-      @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
-        List<Board> boards = SMTHHelper.LoadAllBoardsFromWWW();
-        if (boards.size() > 0) {
-          observableEmitter.onNext(boards);
-        } else {
-          observableEmitter.onComplete();
-        }
+    final Observable<List<Board>> network = Observable.create(observableEmitter -> {
+      List<Board> boards = SMTHHelper.LoadAllBoardsFromWWW();
+      if (!boards.isEmpty()) {
+        observableEmitter.onNext(boards);
+      } else {
+        observableEmitter.onComplete();
       }
     });
 
     // use the first available source to load all boards
     List<Board> boards = new ArrayList<>();
-    Observable.concat(cache, network).first(boards).toObservable().flatMap(new Function<List<Board>, Observable<Board>>() {
-      @Override public Observable<Board> apply(@NonNull List<Board> boards) throws Exception {
-        return Observable.fromIterable(boards);
-      }
-    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Board>() {
+    Observable.concat(cache, network).first(boards).toObservable().flatMap((Function<List<Board>, Observable<Board>>) Observable::fromIterable).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Board>() {
       @SuppressLint("NotifyDataSetChanged")
       @Override public void onSubscribe(@NonNull Disposable disposable) {
         BoardListContent.clearAllBoards();
@@ -203,7 +192,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     return super.onOptionsItemSelected(item);
   }
 
-  public class QueryTextListener implements SearchView.OnQueryTextListener {
+  public static class QueryTextListener implements SearchView.OnQueryTextListener {
     private final BoardRecyclerViewAdapter mAdapter ;
 
     public QueryTextListener(BoardRecyclerViewAdapter mAdapter) {
@@ -215,7 +204,8 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     }
 
     @Override public boolean onQueryTextChange(String newText) {
-      Log.d(TAG, newText);
+        String TAG = "AllBoardFragment";
+        Log.d(TAG, newText);
       mAdapter.getFilter().filter(newText);
       return true;
     }
@@ -223,9 +213,9 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
 
   @Override public boolean onVolumeUpDown(int keyCode) {
     if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-     ( (MainActivity) requireActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
+     requireActivity().findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
     } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-     ( (MainActivity) requireActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
+     requireActivity().findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
     }
     return true;
   }

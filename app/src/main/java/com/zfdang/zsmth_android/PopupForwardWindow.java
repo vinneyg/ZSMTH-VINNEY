@@ -54,51 +54,36 @@ public class PopupForwardWindow extends PopupWindow {
     LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     @SuppressLint("InflateParams") View contentView = layoutInflater.inflate(R.layout.popup_forward_layout, null, false);
 
-    mTargetSelf = (RadioButton) contentView.findViewById(R.id.popup_forward_target_self);
-    mTargetSelf.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (mTargetSelf.isChecked()) {
-          mTargetOther.setChecked(false);
-          mTargetOtherContent.setEnabled(false);
-        }
+    mTargetSelf = contentView.findViewById(R.id.popup_forward_target_self);
+    mTargetSelf.setOnClickListener(v -> {
+      if (mTargetSelf.isChecked()) {
+        mTargetOther.setChecked(false);
+        mTargetOtherContent.setEnabled(false);
       }
     });
-    mTargetOther = (RadioButton) contentView.findViewById(R.id.popup_forward_target_other);
-    mTargetOther.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (mTargetOther.isChecked()) {
-          mTargetSelf.setChecked(false);
-          mTargetOtherContent.setEnabled(true);
-        }
+    mTargetOther = contentView.findViewById(R.id.popup_forward_target_other);
+    mTargetOther.setOnClickListener(v -> {
+      if (mTargetOther.isChecked()) {
+        mTargetSelf.setChecked(false);
+        mTargetOtherContent.setEnabled(true);
       }
     });
-    mTargetOtherContent = (EditText) contentView.findViewById(R.id.popup_forward_target_other_content);
+    mTargetOtherContent = contentView.findViewById(R.id.popup_forward_target_other_content);
 
-    mThread = (CheckBox) contentView.findViewById(R.id.popup_forward_thread);
-    mNoRef = (CheckBox) contentView.findViewById(R.id.popup_forward_noref);
+    mThread = contentView.findViewById(R.id.popup_forward_thread);
+    mNoRef = contentView.findViewById(R.id.popup_forward_noref);
 
-    mNoAtt = (CheckBox) contentView.findViewById(R.id.popup_forward_noatt);
+    mNoAtt = contentView.findViewById(R.id.popup_forward_noatt);
 
-    mThread.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        mNoRef.setEnabled(mThread.isChecked());
-        Settings.getInstance().setThread(!Settings.getInstance().isThread());
-      }
+    mThread.setOnClickListener(v -> {
+      mNoRef.setEnabled(mThread.isChecked());
+      Settings.getInstance().setThread(!Settings.getInstance().isThread());
     });
 
-    mNoRef.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        Settings.getInstance().setRef(!Settings.getInstance().isRef());
-      }
-    });
-    mNoAtt.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        Settings.getInstance().setAtt(!Settings.getInstance().isAtt());
-      }
-    });
+    mNoRef.setOnClickListener(v -> Settings.getInstance().setRef(!Settings.getInstance().isRef()));
+    mNoAtt.setOnClickListener(v -> Settings.getInstance().setAtt(!Settings.getInstance().isAtt()));
 
     // init status
-    //Vinney
     if(Settings.getInstance().isTopicFwdSelf()) {
       mTargetSelf.setChecked(true);
       mTargetOther.setChecked(false);
@@ -111,84 +96,64 @@ public class PopupForwardWindow extends PopupWindow {
       mTargetOtherContent.setText(Settings.getInstance().getTarget());
     }
 
-   // mTargetOtherContent.setText(Settings.getInstance().getTarget());
     mThread.setChecked(Settings.getInstance().isThread());
     mNoRef.setChecked(Settings.getInstance().isRef());
     mNoAtt.setChecked(Settings.getInstance().isAtt());
 
+    Button cancel = contentView.findViewById(R.id.popup_forward_cancel);
+    cancel.setOnClickListener(v -> dismiss());
 
-   // mThread.setChecked(false);
-   // mNoRef.setEnabled(false);
-
-    Button cancel = (Button) contentView.findViewById(R.id.popup_forward_cancel);
-    cancel.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        dismiss();
-      }
-    });
-
-    Button confirm = (Button) contentView.findViewById(R.id.popup_forward_confirm);
-    confirm.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (mListener != null) {
-          String target = null;
-          if (SMTHApplication.activeUser != null) {
-            target = SMTHApplication.activeUser.getId();
-          }
-          if (mTargetOther.isChecked()) {
-            target = mTargetOtherContent.getText().toString().trim();
-            Settings.getInstance().setTarget(target);
-          }
-          mListener.OnForwardAction(PopupForwardWindow.post, target, mThread.isChecked(), mNoRef.isChecked(), mNoAtt.isChecked());
+    Button confirm = contentView.findViewById(R.id.popup_forward_confirm);
+    confirm.setOnClickListener(v -> {
+      if (mListener != null) {
+        String target = null;
+        if (SMTHApplication.activeUser != null) {
+          target = SMTHApplication.activeUser.getId();
         }
-        dismiss();
+        if (mTargetOther.isChecked()) {
+          target = mTargetOtherContent.getText().toString().trim();
+          Settings.getInstance().setTarget(target);
+        }
+        mListener.OnForwardAction(PopupForwardWindow.post, target, mThread.isChecked(), mNoRef.isChecked(), mNoAtt.isChecked());
       }
+      dismiss();
     });
 
     // implement post repost part
-    mTargetBoard = (AutoCompleteTextView) contentView.findViewById(R.id.popup_post_target);
-    // AutoCompleteTextView can't be used in PopupWindow
-    //        loadBoardsForAutoCompletion();
+    mTargetBoard = contentView.findViewById(R.id.popup_post_target);
 
-    Button cancel2 = (Button) contentView.findViewById(R.id.popup_post_cancel);
-    cancel2.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        dismiss();
-      }
-    });
+    Button cancel2 = contentView.findViewById(R.id.popup_post_cancel);
+    cancel2.setOnClickListener(v -> dismiss());
 
-    Button confirm2 = (Button) contentView.findViewById(R.id.popup_post_confirm);
-    confirm2.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (mListener != null) {
-          String target = mTargetBoard.getText().toString().trim();
-          String [] newTarget = target.split(",");
-          ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
-          for (String s : newTarget) {
-            //mListener.OnRePostAction(PopupForwardWindow.post, target, "on");
-            mListener.OnRePostAction(PopupForwardWindow.post, s, "on");
+    Button confirm2 = contentView.findViewById(R.id.popup_post_confirm);
+    confirm2.setOnClickListener(v -> {
+      if (mListener != null) {
+        String target = mTargetBoard.getText().toString().trim();
+        String [] newTarget = target.split(",");
+        ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+        for (String s : newTarget) {
+          mListener.OnRePostAction(PopupForwardWindow.post, s, "on");
 
-            /*
-             final int index = i;
-              singleThreadExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                  try {
-                    System.out.println(newTarget[index]);
-                    mListener.OnRePostAction(PopupForwardWindow.post, newTarget[index], "on");
-                    Thread.sleep(1000);
+          /*
+           final int index = i;
+            singleThreadExecutor.execute(new Runnable() {
+              @Override
+              public void run() {
+                try {
+                  System.out.println(newTarget[index]);
+                  mListener.OnRePostAction(PopupForwardWindow.post, newTarget[index], "on");
+                  Thread.sleep(1000);
 
-                  } catch (InterruptedException e) {
-                    e.printStackTrace();
-                  }
-
+                } catch (InterruptedException e) {
+                  e.printStackTrace();
                 }
-              });
-            */
-          }
-          }
-        dismiss();
-      }
+
+              }
+            });
+          */
+        }
+        }
+      dismiss();
     });
 
     // get device size
@@ -199,8 +164,6 @@ public class PopupForwardWindow extends PopupWindow {
     this.setContentView(contentView);
     this.setWidth((int) (size.x * 0.95));
     this.setHeight((int) (size.y * 0.65));
-    // http://stackoverflow.com/questions/12232724/popupwindow-dismiss-when-clicked-outside
-    // this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     this.setFocusable(true);
   }
 

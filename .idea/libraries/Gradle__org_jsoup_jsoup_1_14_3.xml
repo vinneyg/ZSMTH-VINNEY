@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Gradle: org.jsoup:jsoup:1.14.3">
+  <library name="Gradle: org.jsoup:jsoup:1.14.3" external-system-id="GRADLE">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.14.3/c43a81e18e6d0eb71951aa031d55d5c293c531a6/jsoup-1.14.3.jar!/" />
     </CLASSES>

@@ -11,9 +11,6 @@ import android.util.Log;
 import com.zfdang.SMTHApplication;
 
 
-//import java.text.SimpleDateFormat;
-//import java.util.Date;
-
 /**
  * Usage:
  * String username = Settings.getInstance().getUsername();
@@ -110,9 +107,11 @@ public class Settings {
   private static final String USER_ONLINE = "user_online";
   private boolean bUserOnline;
 
+  /*
   public boolean isUserOnline() {
     return bUserOnline;
   }
+  */
 
   public void setUserOnline(boolean bUserOnline) {
     if (this.bUserOnline != bUserOnline) {
@@ -141,7 +140,7 @@ public class Settings {
   private String mSignature;
 
   public String getSignature() {
-    if (mSignature != null && mSignature.length() > 0) {
+    if (mSignature != null && !mSignature.isEmpty()) {
       return mSignature;
     } else {
       return "Android";
@@ -160,7 +159,7 @@ public class Settings {
   private String mWebAddr = "https://www.newsmth.net";
 
   public String getWebAddr() {
-    if (mWebAddr != null && mWebAddr.length() > 0) {
+    if (mWebAddr != null && !mWebAddr.isEmpty()) {
       return mWebAddr;
     } else {
       return "https://www.newsmth.net";
@@ -182,6 +181,7 @@ public class Settings {
     return mShowSticky;
   }
 
+  /*
   public void setShowSticky(boolean mShowSticky) {
     if (this.mShowSticky != mShowSticky) {
       this.mShowSticky = mShowSticky;
@@ -189,6 +189,7 @@ public class Settings {
       mEditor.commit();
     }
   }
+  */
 
   public void toggleShowSticky() {
     this.mShowSticky = !this.mShowSticky;
@@ -644,14 +645,10 @@ public class Settings {
   }
 
 
-
-  private final String Preference_Name = "ZSMTH_Config";
-
-  private SharedPreferences mPreference;
-  private SharedPreferences.Editor mEditor;
+    private SharedPreferences.Editor mEditor;
 
   // Singleton
-  private static Settings ourInstance = new Settings();
+  private static final Settings ourInstance = new Settings();
 
   public static Settings getInstance() {
     return ourInstance;
@@ -664,7 +661,8 @@ public class Settings {
   // load all settings from SharedPreference
   private void initSettings() {
     // this
-    mPreference = SMTHApplication.getAppContext().getSharedPreferences(Preference_Name, Activity.MODE_PRIVATE);
+      String preference_Name = "ZSMTH_Config";
+      SharedPreferences mPreference = SMTHApplication.getAppContext().getSharedPreferences(preference_Name, Activity.MODE_PRIVATE);
     mEditor = mPreference.edit();
 
     // load all values from preference to variables
@@ -679,13 +677,13 @@ public class Settings {
 
     bUseSignature = mPreference.getBoolean(USE_DEVICE_SIGNATURE, true);
     mSignature = mPreference.getString(DEVICE_SIGNATURE, "");
-    if (mSignature.length() == 0) {
+    if (mSignature.isEmpty()) {
       String marketingName = Build.BRAND +" " +Build.MODEL;
       setSignature(marketingName);
     }
 
     mWebAddr = mPreference.getString(WEB_ADDR, "");
-    if (mWebAddr.length() == 0) {
+    if (mWebAddr.isEmpty()) {
       String webAddr = "https://www.newsmth.net";
       setWebAddr(webAddr);
     }
@@ -718,7 +716,7 @@ public class Settings {
 
     bSetIdCheck = mPreference.getBoolean(SET_ID_CHECK,true);
 
-    bOpenTopicAdd =mPreference.getBoolean(OPEN_TOPIC_ADD,false);
+    bOpenTopicAdd = mPreference.getBoolean(OPEN_TOPIC_ADD,false);
 
 
     bPostNavBar = mPreference.getBoolean(SHOW_POST_NAVITATION_BAR, false);
@@ -729,9 +727,9 @@ public class Settings {
 
     bThread = mPreference.getBoolean(Target_Thread,false);
     bRef = mPreference.getBoolean(Target_Ref,false);
-    bAtt =mPreference.getBoolean(Target_Att,false);
+    bAtt = mPreference.getBoolean(Target_Att,false);
 
-    bLeftNavSlide =mPreference.getBoolean(left_nav_slide,false);
+    bLeftNavSlide = mPreference.getBoolean(left_nav_slide,false);
     bLoginWithVerification = mPreference.getBoolean(LOGIN_WITH_VERIFICATION, true);
   }
 }

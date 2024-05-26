@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerViewAdapter.ViewHolder> {
 
-  private static final String TAG = "MailAdapter";
+  //private static final String TAG = "MailAdapter";
   private final List<Mail> mValues;
   private final OnMailInteractionListener mListener;
 
@@ -65,24 +65,20 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
       holder.mTopic.setText(mail.title);
       holder.mDate.setText(mail.date);
 
-      holder.mAuthor.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
-          if (Settings.getInstance().isSetIdCheck()) {
-            Intent intent = new Intent(v.getContext(), QueryUserActivity.class);
-            intent.putExtra(SMTHApplication.QUERY_USER_INFO, mail.author);
-            v.getContext().startActivity(intent);
-          }
+      holder.mAuthor.setOnClickListener(v -> {
+        if (Settings.getInstance().isSetIdCheck()) {
+          Intent intent = new Intent(v.getContext(), QueryUserActivity.class);
+          intent.putExtra(SMTHApplication.QUERY_USER_INFO, mail.author);
+          v.getContext().startActivity(intent);
         }
       });
 
-      holder.mView.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
-          if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            //mListener.onMailInteraction(holder.mItem, holder.getPosition());
-            mListener.onMailInteraction(holder.mItem, holder.getLayoutPosition());
-          }
+      holder.mView.setOnClickListener(v -> {
+        if (null != mListener) {
+          // Notify the active callbacks interface (the activity, if the
+          // fragment is attached to one) that an item has been selected.
+          //mListener.onMailInteraction(holder.mItem, holder.getPosition());
+          mListener.onMailInteraction(holder.mItem, holder.getLayoutPosition());
         }
       });
     }
@@ -104,11 +100,11 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
     public ViewHolder(View view) {
       super(view);
       mView = view;
-      mPage = (TextView) view.findViewById(R.id.mail_item_page);
-      mTopic = (TextView) view.findViewById(R.id.mail_item_topic);
-      mAuthorLabel = (TextView) view.findViewById(R.id.mail_item_author_label);
-      mAuthor = (TextView) view.findViewById(R.id.mail_item_author);
-      mDate = (TextView) view.findViewById(R.id.mail_item_date);
+      mPage = view.findViewById(R.id.mail_item_page);
+      mTopic = view.findViewById(R.id.mail_item_topic);
+      mAuthorLabel = view.findViewById(R.id.mail_item_author_label);
+      mAuthor = view.findViewById(R.id.mail_item_author);
+      mDate = view.findViewById(R.id.mail_item_date);
     }
 
     @NonNull

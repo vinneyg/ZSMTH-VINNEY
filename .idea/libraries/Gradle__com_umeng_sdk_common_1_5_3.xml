@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Gradle: com.umeng.sdk:common:1.5.3">
+  <library name="Gradle: com.umeng.sdk:common:1.5.3" external-system-id="GRADLE">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.umeng.sdk/common/1.5.3/4862353900994359ee2b2c2f9667413978cbb0cf/common-1.5.3.jar!/" />
     </CLASSES>

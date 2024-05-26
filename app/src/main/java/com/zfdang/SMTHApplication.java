@@ -46,7 +46,7 @@ public class SMTHApplication extends Application {
   // MaintainUserStatusService to UserStatusReceiver, to onNewIntent
   public static final String SERVICE_NOTIFICATION_MESSAGE = "SERVICE_NOTIFICATION_MESSAGE";
 
-  public static final String USER_SERVICE_RECEIVER = "USER_SERVICE_RECEIVER";
+  //public static final String USER_SERVICE_RECEIVER = "USER_SERVICE_RECEIVER";
 
   public static final String COMPOSE_POST_CONTEXT = "Compose_Post_Context";
 
@@ -59,7 +59,7 @@ public class SMTHApplication extends Application {
   public static final int INTERVAL_TO_CHECK_MESSAGE = 2; // 2 minutes for interval to check messages
   public static UserStatusReceiver mUserStatusReceiver = null;
 
-  public static List<String> ReadTopicLists = new ArrayList<String>();
+  public static List<String> ReadTopicLists = new ArrayList<>();
   public static Post ReadPostFirst = null;
   public static boolean ReadRec = false;
 
@@ -114,8 +114,6 @@ public class SMTHApplication extends Application {
     UMConfigure.init(this, "56e8c05567e58e0a9e0011cc", "UMENG_CHANNEL", UMConfigure.DEVICE_TYPE_PHONE, null);
 
     // init Fresco
-    // Set<RequestListener> requestListeners = new HashSet<>();
-    // requestListeners.add(new RequestLoggingListener());
     OkHttpClient httpClient = SMTHHelper.getInstance().mHttpClient;
     ImagePipelineConfig config = OkHttpImagePipelineConfigFactory.newBuilder(context, httpClient)
             //                .setRequestListeners(requestListeners)

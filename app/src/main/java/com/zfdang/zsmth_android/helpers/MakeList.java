@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MakeList {
   public static <E> List<E> makeList(Iterable<E> iter) {
-    List<E> list = new ArrayList<E>();
+    List<E> list = new ArrayList<>();
     for (E item : iter) {
       list.add(item);
     }

@@ -23,8 +23,8 @@ import com.zfdang.zsmth_android.R;
  */
 public class LoadingProgressDrawable extends Drawable {
 
-  private static final String TAG = "LoadingProgressDrawable";
-  private static int[] Loadings = {
+  //private static final String TAG = "LoadingProgressDrawable";
+  private static final int[] Loadings = {
       R.mipmap.load_progress_1, R.mipmap.load_progress_3, R.mipmap.load_progress_4, R.mipmap.load_progress_6, R.mipmap.load_progress_7,
       R.mipmap.load_progress_8, R.mipmap.load_progress_9, R.mipmap.load_progress_10, R.mipmap.load_progress_11, R.mipmap.load_progress_12
   };

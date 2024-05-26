@@ -18,11 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
-import com.scwang.smart.refresh.layout.api.RefreshLayout;
-//import com.scwang.smart.refresh.footer.ClassicsFooter;
-//import com.scwang.smart.refresh.header.ClassicsHeader;
-//import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 
 import com.zfdang.SMTHApplication;
@@ -81,18 +76,14 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
     // pull to refresh for android recyclerview
     mRefreshLayout = (SmartRefreshLayout) rootView;
     mRefreshLayout.setEnableLoadMore(false);
-    mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-      @Override public void onRefresh(@androidx.annotation.NonNull RefreshLayout refreshLayout) {
-        RefreshGuidanceFromWWW();
-      }
-    });
+    mRefreshLayout.setOnRefreshListener(refreshLayout -> RefreshGuidanceFromWWW());
 
     // http://blog.csdn.net/lmj623565791/article/details/45059587
     // 你想要控制Item间的间隔（可绘制），请通过ItemDecoration
     // 你想要控制Item增删的动画，请通过ItemAnimator
     // 你想要控制点击、长按事件，请自己写
     // item被按下的时候的highlight,这个是通过guidance item的backgroun属性来实现的 (android:background="@drawable/recyclerview_item_bg")
-    mRecyclerView = (RecyclerView) rootView.findViewById(R.id.guidance_recycler_view);
+    mRecyclerView = rootView.findViewById(R.id.guidance_recycler_view);
     // Set the adapter
     if (mRecyclerView != null) {
       mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 0));
@@ -107,10 +98,6 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
           @Override
           public void onScrollStateChanged(@androidx.annotation.NonNull RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
-            /*
-            if (newState == SCROLL_STATE_IDLE)
-              mRecyclerView.getAdapter().notifyDataSetChanged();
-          */
           }
 
         @Override
@@ -125,7 +112,7 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
 
     requireActivity().setTitle(SMTHApplication.App_Title_Prefix + "首页");
 
-    if (TopicListContent.HOT_TOPICS.size() == 0) {
+    if (TopicListContent.HOT_TOPICS.isEmpty()) {
       RefreshGuidance();
     }
     return rootView;
@@ -158,17 +145,15 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
   public void RefreshGuidanceFromWWW() {
     final SMTHHelper helper = SMTHHelper.getInstance();
 
-    helper.wService.getAllHotTopics().flatMap(new Function<ResponseBody, ObservableSource<Topic>>() {
-      @Override public ObservableSource<Topic> apply(@NonNull ResponseBody responseBody) throws Exception {
-        try {
-          String response = responseBody.string();
-          List<Topic> results = SMTHHelper.ParseHotTopicsFromWWW(response);
-          return Observable.fromIterable(results);
-        } catch (Exception e) {
-          Log.d(TAG, Log.getStackTraceString(e));
-        }
-        return null;
+    helper.wService.getAllHotTopics().flatMap((Function<ResponseBody, ObservableSource<Topic>>) responseBody -> {
+      try {
+        String response = responseBody.string();
+        List<Topic> results = SMTHHelper.ParseHotTopicsFromWWW(response);
+        return Observable.fromIterable(results);
+      } catch (Exception e) {
+        Log.d(TAG, Log.getStackTraceString(e));
       }
+      return null;
     }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Topic>() {
       @SuppressLint("NotifyDataSetChanged")
       @Override public void onSubscribe(@NonNull Disposable disposable) {
@@ -226,10 +211,10 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
   @Override public boolean onVolumeUpDown(int keyCode) {
     if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
       RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
-      ( (MainActivity) requireActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
+      requireActivity().findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
     } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
       RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
-      ( (MainActivity) requireActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
+      requireActivity().findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
     }
     return true;
   }

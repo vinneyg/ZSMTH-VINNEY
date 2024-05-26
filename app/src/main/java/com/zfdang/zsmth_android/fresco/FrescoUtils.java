@@ -21,10 +21,12 @@ public class FrescoUtils {
       CacheKey cacheKey = DefaultCacheKeyFactory.getInstance().getEncodedCacheKey(ImageRequest.fromUri(loadUri), "FrescoUtils");
       if (ImagePipelineFactory.getInstance().getMainFileCache().hasKey(cacheKey)) {
         BinaryResource resource = ImagePipelineFactory.getInstance().getMainFileCache().getResource(cacheKey);
-        localFile = ((FileBinaryResource) resource).getFile();
+          assert resource != null;
+          localFile = ((FileBinaryResource) resource).getFile();
       } else if (ImagePipelineFactory.getInstance().getSmallImageFileCache().hasKey(cacheKey)) {
         BinaryResource resource = ImagePipelineFactory.getInstance().getSmallImageFileCache().getResource(cacheKey);
-        localFile = ((FileBinaryResource) resource).getFile();
+          assert resource != null;
+          localFile = ((FileBinaryResource) resource).getFile();
       }
     }
     return localFile;

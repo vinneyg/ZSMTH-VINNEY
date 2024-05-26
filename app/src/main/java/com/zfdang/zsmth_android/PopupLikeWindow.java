@@ -42,35 +42,25 @@ public class PopupLikeWindow extends PopupWindow {
     @SuppressLint("InflateParams") View contentView = layoutInflater.inflate(R.layout.popup_like_layout, null, false);
 
     String[] scores = { "-5", "-4", "-3", "-2", "-1", "0", "+1", "+2", "+3", "+4", "+5" };
-    wheelView = (WheelView) contentView.findViewById(R.id.like_score);
-   // wheelView.setWheelAdapter(new ArrayWheelAdapter(mContext)); // 文本数据源
-   // wheelView.setSkin(WheelView.Skin.Common); // common皮肤
-   // wheelView.setWheelData(Arrays.asList(scores));  // 数据集合
-    //wheelView.setSelection(5);
+    wheelView = contentView.findViewById(R.id.like_score);
 
     wheelView.setData(Arrays.asList(scores));
     wheelView.setStyle( 2 ); //to be upgraded
     wheelView.setDefaultPosition(5);
 
-    etMessage = (EditText) contentView.findViewById(R.id.like_message);
+    etMessage = contentView.findViewById(R.id.like_message);
 
-    Button cancel = (Button) contentView.findViewById(R.id.like_cancel);
-    cancel.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        dismiss();
+    Button cancel = contentView.findViewById(R.id.like_cancel);
+    cancel.setOnClickListener(v -> dismiss());
+
+    Button confirm = contentView.findViewById(R.id.like_add);
+    confirm.setOnClickListener(v -> {
+      if (mListener != null) {
+        //mListener.OnLikeAction(wheelView.getSelectionItem().toString(), etMessage.getText().toString());
+        mListener.OnLikeAction(wheelView.getCurrentItem().toString(), etMessage.getText().toString());
+
       }
-    });
-
-    Button confirm = (Button) contentView.findViewById(R.id.like_add);
-    confirm.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (mListener != null) {
-          //mListener.OnLikeAction(wheelView.getSelectionItem().toString(), etMessage.getText().toString());
-          mListener.OnLikeAction(wheelView.getCurrentItem().toString(), etMessage.getText().toString());
-
-        }
-        dismiss();
-      }
+      dismiss();
     });
 
     // get device size
@@ -81,9 +71,6 @@ public class PopupLikeWindow extends PopupWindow {
     this.setContentView(contentView);
     this.setWidth((int) (size.x * 0.75));
     this.setHeight((int) (size.y * 0.4));
-    // http://stackoverflow.com/questions/12232724/popupwindow-dismiss-when-clicked-outside
-    // this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-    // this.setOutsideTouchable(true);
     this.setFocusable(true);
   }
 

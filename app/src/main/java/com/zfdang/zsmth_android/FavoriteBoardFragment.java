@@ -24,8 +24,6 @@ import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.BoardListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -47,7 +45,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownListener {
 
-  private final String TAG = "FavoriteBoardFragment";
+  //private final String TAG = "FavoriteBoardFragment";
   private OnBoardFragmentInteractionListener mListener;
 
   private RecyclerView mRecyclerView = null;
@@ -60,13 +58,13 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
   }
 
   public void popPath() {
-    if (mFavoritePaths.size() > 0) {
+    if (!mFavoritePaths.isEmpty()) {
       this.mFavoritePaths.remove(this.mFavoritePaths.size() - 1);
     }
   }
 
   public Board getCurrentPath() {
-    if (mFavoritePaths.size() > 0) {
+    if (!mFavoritePaths.isEmpty()) {
       return this.mFavoritePaths.get(this.mFavoritePaths.size() - 1);
     } else {
       return null;
@@ -88,7 +86,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
   }
 
   public boolean isAtRoot() {
-    return mFavoritePaths.size() == 0;
+    return mFavoritePaths.isEmpty();
   }
 
   /**
@@ -103,7 +101,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
     setHasOptionsMenu(true);
 
     if (mFavoritePaths == null) {
-      mFavoritePaths = new ArrayList<Board>();
+      mFavoritePaths = new ArrayList<>();
     }
     updateFavoriteTitle();
   }
@@ -120,7 +118,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
       mRecyclerView.setAdapter(new BoardRecyclerViewAdapter(BoardListContent.FAVORITE_BOARDS, mListener));
     }
 
-    if (BoardListContent.FAVORITE_BOARDS.size() == 0) {
+    if (BoardListContent.FAVORITE_BOARDS.isEmpty()) {
       // only load boards on the first time
       RefreshFavoriteBoards();
     }
@@ -158,14 +156,12 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
     final String finalCurrentPath = getCurrentPathInString();
 
     // all boards loaded in cached file
-    final Observable<List<Board>> cache = Observable.create(new ObservableOnSubscribe<List<Board>>() {
-      @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
-        List<Board> boards = SMTHHelper.LoadBoardListFromCache(SMTHHelper.BOARD_TYPE_FAVORITE, finalCurrentPath);
-        if (boards != null && boards.size() > 0) {
-          observableEmitter.onNext(boards);
-        } else {
-          observableEmitter.onComplete();
-        }
+    final Observable<List<Board>> cache = Observable.create(observableEmitter -> {
+      List<Board> boards = SMTHHelper.LoadBoardListFromCache(SMTHHelper.BOARD_TYPE_FAVORITE, finalCurrentPath);
+      if (boards != null && !boards.isEmpty()) {
+        observableEmitter.onNext(boards);
+      } else {
+        observableEmitter.onComplete();
       }
     });
 
@@ -173,37 +169,29 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
     Observable<List<Board>> network = null;
     if (board == null || board.isFolder()) {
       // 用户在收藏夹里创建的目录
-      network = Observable.create(new ObservableOnSubscribe<List<Board>>() {
-        @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
-          List<Board> boards = SMTHHelper.LoadFavoriteBoardsInFolder(finalCurrentPath);
-          if (boards.size() > 0) {
-            observableEmitter.onNext(boards);
-          } else {
-            observableEmitter.onComplete();
-          }
+      network = Observable.create(observableEmitter -> {
+        List<Board> boards = SMTHHelper.LoadFavoriteBoardsInFolder(finalCurrentPath);
+        if (!boards.isEmpty()) {
+          observableEmitter.onNext(boards);
+        } else {
+          observableEmitter.onComplete();
         }
       });
     } else if(board.isSection()){
       // 用户在收藏夹里收藏的系统的二级目录
-      network = Observable.create(new ObservableOnSubscribe<List<Board>>() {
-        @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
-          List<Board> boards = SMTHHelper.LoadFavoriteBoardsInSection(finalCurrentPath);
-          if (boards.size() > 0) {
-            observableEmitter.onNext(boards);
-          } else {
-            observableEmitter.onComplete();
-          }
+      network = Observable.create(observableEmitter -> {
+        List<Board> boards = SMTHHelper.LoadFavoriteBoardsInSection(finalCurrentPath);
+        if (!boards.isEmpty()) {
+          observableEmitter.onNext(boards);
+        } else {
+          observableEmitter.onComplete();
         }
       });
     }
 
     List<Board> boards = new ArrayList<>();
     assert network != null;
-    Observable.concat(cache, network).first(boards).toObservable().flatMap(new Function<List<Board>, ObservableSource<Board>>() {
-      @Override public ObservableSource<Board> apply(@NonNull List<Board> boards) throws Exception {
-        return Observable.fromIterable(boards);
-      }
-    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Board>() {
+    Observable.concat(cache, network).first(boards).toObservable().flatMap((Function<List<Board>, ObservableSource<Board>>) Observable::fromIterable).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Board>() {
       @SuppressLint("NotifyDataSetChanged")
       @Override public void onSubscribe(@NonNull Disposable disposable) {
         BoardListContent.clearFavorites();
@@ -237,7 +225,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
     }
     StringBuilder title ;
     String mDefaultTitle = "收藏";
-    if(mFavoritePaths.size() == 0) {
+    if(mFavoritePaths.isEmpty()) {
       title = new StringBuilder(SMTHApplication.App_Title_Prefix + mDefaultTitle);
     } else {
       title = new StringBuilder(mDefaultTitle);
@@ -280,9 +268,9 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
     if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
       RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
 
-      ( (MainActivity) requireActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
+      requireActivity().findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
     } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-      ( (MainActivity) requireActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
+      requireActivity().findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
     }
     return true;
   }

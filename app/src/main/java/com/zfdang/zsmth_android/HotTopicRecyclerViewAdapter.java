@@ -56,31 +56,29 @@ public class HotTopicRecyclerViewAdapter extends RecyclerView.Adapter<HotTopicRe
       holder.mBoardName.setText(holder.mItem.getBoardName());
       holder.mReplyCount.setText(holder.mItem.getTotalPostNoAsStr());
 
-      //Vinney
       if(Settings.getInstance().isDiffReadTopic()) {
-        if ((!SMTHApplication.ReadTopicLists.isEmpty()) && SMTHApplication.ReadTopicLists.contains(holder.mItem.getTitle())) {
-         //Log.d("Vinney",holder.mItem.getTopicID());
+          //R.color.colorPrimary
+          //R.color.colorPrimary
+          if ((!SMTHApplication.ReadTopicLists.isEmpty()) && SMTHApplication.ReadTopicLists.contains(holder.mItem.getTitle())) {
           holder.mTopicTitle.setTextColor(Color.parseColor("#607D8B")); //R.color.colorPrimary
-          holder.mBoardName.setTextColor(Color.parseColor("#607D8B")); //R.color.colorPrimary
-          holder.mReplyCount.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
 
-        }
+          }
         else
         {
-          //First byte 0xFF ...... means transparent mode.
-          if (Settings.getInstance().isNightMode()) {
-           //holder.mTopicTitle.setTextColor(0xFFABC2DA);
+            //First byte 0xFF ...... means transparent mode.
+            //R.color.colorPrimary
+            //R.color.colorPrimary
+            if (Settings.getInstance().isNightMode()) {
+            //holder.mTopicTitle.setTextColor(0xFFABC2DA);
             holder.mTopicTitle.setTextColor(Color.parseColor("#ABC2DA")); //R.color.status_text_night
-            holder.mBoardName.setTextColor(Color.parseColor("#607D8B")); //R.color.colorPrimary
-            holder.mReplyCount.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
-          }
+            }
           else
           {
             holder.mTopicTitle.setTextColor(Color.parseColor("#000000")); //R.color.status_text_night
-            holder.mBoardName.setTextColor(Color.parseColor("#607D8B")); //R.color.colorPrimary
-            holder.mReplyCount.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
           }
         }
+          holder.mBoardName.setTextColor(Color.parseColor("#607D8B")); //R.color.colorPrimary
+          holder.mReplyCount.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
       }
     }
 
@@ -94,7 +92,6 @@ public class HotTopicRecyclerViewAdapter extends RecyclerView.Adapter<HotTopicRe
           SMTHApplication.ReadPostFirst=null;
           mListener.onTopicFragmentInteraction(holder.mItem);
 
-          //Vinney
           if (Settings.getInstance().isDiffReadTopic()) {
             SMTHApplication.ReadTopicLists.add(holder.mItem.getTitle());
             holder.mTopicTitle.setTextColor(Color.parseColor("#607D8B")); //R.color.colorPrimary
@@ -121,10 +118,10 @@ public class HotTopicRecyclerViewAdapter extends RecyclerView.Adapter<HotTopicRe
     public ViewHolder(View view) {
       super(view);
       mView = view;
-      mSeperator = (TextView) view.findViewById(R.id.category_name);
-      mBoardName = (TextView) view.findViewById(R.id.board_name);
-      mTopicTitle = (TextView) view.findViewById(R.id.topic_title);
-      mReplyCount = (TextView) view.findViewById(R.id.topic_reply_count);
+      mSeperator = view.findViewById(R.id.category_name);
+      mBoardName = view.findViewById(R.id.board_name);
+      mTopicTitle = view.findViewById(R.id.topic_title);
+      mReplyCount = view.findViewById(R.id.topic_reply_count);
     }
 
     @NonNull

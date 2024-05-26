@@ -31,11 +31,9 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
             password = extras.getString(LoginActivity.PASSWORD);
         }
 
-        WebView mWebView = (WebView) findViewById(R.id.webview_login);
+        WebView mWebView = findViewById(R.id.webview_login);
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         mWebView.getSettings().setGeolocationEnabled(false);
-        mWebView.getSettings().setSaveFormData(false);
-       // mWebView.getSettings().setSavePassword(false);
         mWebView.getSettings().setJavaScriptEnabled(true);
 
         // https://stackoverflow.com/questions/9602124/enable-horizontal-scrolling-in-a-webview

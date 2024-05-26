@@ -1,14 +1,11 @@
 package com.zfdang.zsmth_android.helpers;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.widget.Toast;
 import com.klinker.android.link_builder.Link;
 import com.zfdang.SMTHApplication;
@@ -19,7 +16,7 @@ import java.util.List;
  * Created by zfdang on 2016-5-14.
  */
 public class ActivityUtils {
-  private static final String TAG = "ActivityUtils";
+  //private static final String TAG = "ActivityUtils";
 
   public static void openLink(String link, Activity activity) {
     Uri uri = Uri.parse(link);
@@ -30,7 +27,7 @@ public class ActivityUtils {
     try {
       activity.startActivity(browserIntent);
     } catch (ActivityNotFoundException e) {
-      Toast.makeText(activity, "链接打开错误:" + e.toString(), Toast.LENGTH_LONG).show();
+      Toast.makeText(activity, "链接打开错误:" + e, Toast.LENGTH_LONG).show();
     }
   }
 
@@ -47,7 +44,7 @@ public class ActivityUtils {
     try {
       activity.startActivity(Intent.createChooser(emailIntent, "发邮件..."));
     } catch (ActivityNotFoundException e) {
-      Toast.makeText(activity, "链接打开错误:" + e.toString(), Toast.LENGTH_LONG).show();
+      Toast.makeText(activity, "链接打开错误:" + e, Toast.LENGTH_LONG).show();
     }
   }
 
@@ -60,19 +57,13 @@ public class ActivityUtils {
     //weburl.setTextColor(Color.parseColor("#00BCD4"));
     weburl.setTextColor(Color.parseColor("#607D8B"));
     weburl.setHighlightAlpha(.4f);
-    weburl.setOnClickListener(new Link.OnClickListener() {
-      @Override public void onClick(String clickedText) {
-        ActivityUtils.openLink(clickedText, activity);
-      }
-    });
-    weburl.setOnLongClickListener(new Link.OnLongClickListener() {
-      @Override public void onLongClick(String clickedText) {
-          final android.content.ClipboardManager clipboardManager =
-              (android.content.ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
-          final android.content.ClipData clipData = android.content.ClipData.newPlainText("PostContent", clickedText);
-          clipboardManager.setPrimaryClip(clipData);
-        Toast.makeText(SMTHApplication.getAppContext(), "链接已复制到剪贴板", Toast.LENGTH_SHORT).show();
-      }
+    weburl.setOnClickListener(clickedText -> ActivityUtils.openLink(clickedText, activity));
+    weburl.setOnLongClickListener(clickedText -> {
+        final android.content.ClipboardManager clipboardManager =
+            (android.content.ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+        final android.content.ClipData clipData = android.content.ClipData.newPlainText("PostContent", clickedText);
+        clipboardManager.setPrimaryClip(clipData);
+      Toast.makeText(SMTHApplication.getAppContext(), "链接已复制到剪贴板", Toast.LENGTH_SHORT).show();
     });
 
     // email link
@@ -80,40 +71,11 @@ public class ActivityUtils {
     //emaillink.setTextColor(Color.parseColor("#00BCD4"));
     emaillink.setTextColor(Color.parseColor("#607D8B"));
     emaillink.setHighlightAlpha(.4f);
-    emaillink.setOnClickListener(new Link.OnClickListener() {
-      @Override public void onClick(String clickedText) {
-        ActivityUtils.sendEmail(clickedText, activity);
-      }
-    });
+    emaillink.setOnClickListener(clickedText -> ActivityUtils.sendEmail(clickedText, activity));
 
     links.add(weburl);
     links.add(emaillink);
 
     return links;
-  }
-
-  // show application info page
-  public static void showAppInfoPage(final Context context){
-    AlertDialog.Builder builder;
-    builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert);
-
-    builder.setTitle("zSMTH需要文件读写权限")
-            .setMessage("现在前往\"应用程序信息\"里设置zSMTH的权限么？")
-            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int which) {
-                // open app setting page
-                Uri packageURI=Uri.parse("package:" + "com.zfdang.zsmth_android");
-                Intent intent=new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,packageURI);
-                context.startActivity(intent);
-              }
-            })
-            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int which) {
-                // do nothing
-              }
-            })
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .show();
-
   }
 }

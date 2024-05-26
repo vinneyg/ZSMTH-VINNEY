@@ -22,7 +22,7 @@ public class GEODatabase extends SQLiteAssetHelper {
     setForcedUpgrade();
 
     //        Log.d("GEODatabase", String.format("IP=166.111.8.28 GEO=%s", getLocation("166.111.8.1")));
-    //        Log.d("GEODatabase", String.format("IP=59.66.211.1 GEO=%s", getLocation("59.66.211.1")));
+
   }
 
   private String Dot2LongIP(String dottedIP) {
@@ -33,7 +33,7 @@ public class GEODatabase extends SQLiteAssetHelper {
     long num = 0;
     for (int i = 0; i < addrArray.length; i++) {
       int power = 3 - i;
-      num += ((Integer.parseInt(addrArray[i]) % 256) * Math.pow(256, power));
+      num += (long) ((Integer.parseInt(addrArray[i]) % 256) * Math.pow(256, power));
     }
     if (num < int_max) {
       return String.valueOf(num);

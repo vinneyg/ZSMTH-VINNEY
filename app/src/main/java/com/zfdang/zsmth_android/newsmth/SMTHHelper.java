@@ -47,9 +47,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.reactivex.Observable;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
@@ -74,11 +72,7 @@ public class SMTHHelper {
 
   public OkHttpClient mHttpClient;
 
-  // WWW service of SMTH, but actually most of services are actually from nForum
-  //private final String SMTH_WWW_URL = "https://www.newsmth.net";
-  //private final String SMTH_WWW_URL = "https://www.mysmth.net";
-  private  String SMTH_WWW_URL = SMTHApplication.getWebAddress();
-  //https://att.mysmth.net OR https://static.mysmth.net"
+    //https://att.mysmth.net OR https://static.mysmth.net"
   static private final String SMTH_IMAGE_PREFIX_CDN = "https://att.newsmth.net";
   //static private final String SMTH_IMAGE_PREFIX_CDN = "https://static.newsmth.net";
   static private final String SMTH_IMAGE_PREFIX_DIRECT = "https://www.newsmth.net";
@@ -158,7 +152,11 @@ public class SMTHHelper {
     //                .client(mHttpClient)
     //                .build();
 
-    Retrofit wRetrofit = new Retrofit.Builder().baseUrl(SMTH_WWW_URL)
+      // WWW service of SMTH, but actually most of services are actually from nForum
+      //private final String SMTH_WWW_URL = "https://www.newsmth.net";
+      //private final String SMTH_WWW_URL = "https://www.mysmth.net";
+      String SMTH_WWW_URL = SMTHApplication.getWebAddress();
+      Retrofit wRetrofit = new Retrofit.Builder().baseUrl(SMTH_WWW_URL)
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
@@ -174,18 +172,16 @@ public class SMTHHelper {
     return helper.wService.queryActiveUserStatus()
         .subscribeOn(Schedulers.io())
         .observeOn(Schedulers.io())
-        .map(new Function<UserStatus, UserStatus>() {
-          @Override public UserStatus apply(@NonNull UserStatus userStatus) throws Exception {
-            String userid = userStatus.getId();
-            if (userid != null && !userid.equals("guest")) {
-              // get correct faceURL
-              UserInfo user = helper.wService.queryUserInformation(userid).blockingFirst();
-              if (user != null) {
-                userStatus.setFace_url(user.getFace_url());
-              }
+        .map(userStatus -> {
+          String userid = userStatus.getId();
+          if (userid != null && !userid.equals("guest")) {
+            // get correct faceURL
+            UserInfo user = helper.wService.queryUserInformation(userid).blockingFirst();
+            if (user != null) {
+              userStatus.setFace_url(user.getFace_url());
             }
-            return userStatus;
           }
+          return userStatus;
         });
   }
 
@@ -363,14 +359,14 @@ public class SMTHHelper {
   }
 
   public static List<Post> ParsePostListFromWWW(String content, Topic topic) {
-    final String TAG = "ParsePostListFromWWW";
+    //final String TAG = "ParsePostListFromWWW";
     List<Post> results = new ArrayList<>();
 
     Document doc = Jsoup.parse(content);
 
     // find total posts for this topic, and total pages
     Elements lis = doc.select("li.page-pre");
-    if (lis.size() > 0) {
+    if (!lis.isEmpty()) {
       Element li = lis.first();
       // 贴数:152 分页:
       //            Log.d(TAG, li.text());
@@ -396,7 +392,7 @@ public class SMTHHelper {
       // find author for this post
       // <span class="a-u-name"><a href="/nForum/user/query/CZB">CZB</a></span>
       Elements authors = table.select("span.a-u-name");
-      if (authors.size() > 0) {
+      if (!authors.isEmpty()) {
         Element author = authors.get(0);
         String authorName = author.text();
         post.setAuthor(authorName);
@@ -405,7 +401,7 @@ public class SMTHHelper {
       // find post id for this post
       // <samp class="ico-pos-reply"></samp><a href="/nForum/article/WorkLife/post/1113865" class="a-post">回复</a></li>
       Elements links = table.select("li a.a-post");
-      if (links.size() > 0) {
+      if (!links.isEmpty()) {
         Element link = links.first();
         assert link != null;
         String postID = StringUtils.getLastStringSegment(link.attr("href"));
@@ -415,7 +411,7 @@ public class SMTHHelper {
       // find post position
       // <span class="a-pos">第1楼</span>
       Elements positions = table.select("span.a-pos");
-      if (positions.size() > 0) {
+      if (!positions.isEmpty()) {
         Element position = positions.first();
         assert position != null;
         post.setPosition(position.text());
@@ -429,7 +425,7 @@ public class SMTHHelper {
       results.add(post);
     }
 
-    if (results.size() == 0) {
+    if (results.isEmpty()) {
 
       // there might be some problems with the response
       //            <div class="error">
@@ -440,7 +436,7 @@ public class SMTHHelper {
       //            </ul>
       //            </div>
       Elements divs = doc.select("div.error");
-      if (divs.size() > 0) {
+      if (!divs.isEmpty()) {
         Element div = divs.first();
 
         topic.setTotalPostNoFromString("1");
@@ -482,7 +478,7 @@ public class SMTHHelper {
 
         Topic topic = new Topic();
         String reply_count = StringUtils.getReplyCountInParentheses(title);
-        if (reply_count.length() > 0) {
+        if (!reply_count.isEmpty()) {
           title = title.substring(0, title.length() - reply_count.length() - 2);
           topic.setTotalPostNoFromString(reply_count);
         }
@@ -530,7 +526,7 @@ public class SMTHHelper {
   // parse guidance page, to find all hot topics
   public static List<Topic> ParseHotTopicsFromWWW(String content) {
     List<Topic> results = new ArrayList<>();
-    if (content == null || content.length() == 0) {
+    if (content == null || content.isEmpty()) {
       return results;
     }
 
@@ -650,7 +646,7 @@ public class SMTHHelper {
     String currentPage = null;
     Elements lis = doc.select("li.page-select");
 
-    if (lis.size() > 0) {
+    if (!lis.isEmpty()) {
       Element li = lis.first();
       assert li != null;
       currentPage = li.text();
@@ -699,9 +695,10 @@ public class SMTHHelper {
         if (TextUtils.equals(tdClass, "title_9")) {
           // <td class="title_9"><a href="/nForum/article/FamilyLife/1757972219">2岁女孩找妈妈 其父母终于被找到</a>
           Elements as = td.getElementsByTag("a");
-          if (as.size() > 0) {
+          if (!as.isEmpty()) {
             Element a = as.first();
-            topic.setTitle(a.text());
+              assert a != null;
+              topic.setTitle(a.text());
 
             String topicURL = a.attr("href");
             topic.setTopicID(StringUtils.getLastStringSegment(topicURL));
@@ -709,14 +706,14 @@ public class SMTHHelper {
           // <samp class="tag-att ico-pos-article-attach"></samp>
           // find attachment flag
           Elements samps = td.getElementsByTag("samp");
-          if (samps != null && samps.size() > 0) {
+          if (!samps.isEmpty()) {
             topic.setHasAttach(true);
           }
         } else if (TextUtils.equals(tdClass, "title_10")) {
           // <td class="title_10">2016-05-05</td>
           // <td class="title_10"><a href="/nForum/article/FamilyLife/1757972219?p=2#a14" title="跳转至最后回复">21:38:58&emsp;</a></td>
           String publishDate = topic.getPublishDate();
-          if (publishDate == null || publishDate.length() == 0) {
+          if (publishDate == null || publishDate.isEmpty()) {
             topic.setPublishDate(td.text());
           } else {
             topic.setReplyDate(td.text());
@@ -726,7 +723,7 @@ public class SMTHHelper {
           // <td class="title_12">|&ensp;<a href="/nForum/user/query/kxxx" class="c09f">kxxx</a></td>
           String author = topic.getAuthor();
           String value = td.text().replace("|", "").trim();
-          if (author == null || author.length() == 0) {
+          if (author == null || author.isEmpty()) {
             topic.setAuthor(value);
           } else {
             topic.setReplier(value);
@@ -749,7 +746,7 @@ public class SMTHHelper {
       }
 
       // Log.d("ParseBoardTopics", topic.toString());
-      if (topic.getTitle() != null && topic.getTitle().length() > 0) {
+      if (topic.getTitle() != null && !topic.getTitle().isEmpty()) {
         results.add(topic);
       }
     }
@@ -786,7 +783,7 @@ public class SMTHHelper {
 
     // get all lis
     Elements divs = doc.select("div.b-content");
-    if (divs.size() == 0) {
+    if (divs.isEmpty()) {
       Log.d(TAG, "ParseSearchResultFromWWW: " + "Did not find div.b-content");
       return results;
     }
@@ -797,7 +794,7 @@ public class SMTHHelper {
     for (Element tr : trs) {
       // Log.d(TAG, "ParseSearchResultFromWWW: " + tr.toString());
       Elements tds = tr.getElementsByTag("td");
-      if (tds.size() == 0) {
+      if (tds.isEmpty()) {
         continue;
       }
 
@@ -813,20 +810,20 @@ public class SMTHHelper {
         if (TextUtils.equals(td.attr("class"), "title_9")) {
           title = td.text();
           Elements As = td.getElementsByTag("A");
-          if (As.size() > 0) {
+          if (!As.isEmpty()) {
             Element A = As.first();
             assert A != null;
             topicID = StringUtils.getLastStringSegment(A.attr("href"));
           }
         } else if (TextUtils.equals(td.attr("class"), "title_10")) {
-          if (publishDate.length() == 0) {
+          if (publishDate.isEmpty()) {
             publishDate = td.text();
           } else {
             replyDate = td.text();
           }
         } else if (TextUtils.equals(td.attr("class"), "title_12")) {
           String person = td.text().replace("|", "").trim();
-          if (author.length() == 0) {
+          if (author.isEmpty()) {
             author = person;
           } else {
             replier = person;
@@ -841,7 +838,7 @@ public class SMTHHelper {
       topic.setReplyDate(replyDate);
 
       // Log.d(TAG, "ParseSearchResultFromWWW: " + topic.toString());
-      if (topic.getTitle() != null && topic.getTitle().length() > 0) {
+      if (topic.getTitle() != null && !topic.getTitle().isEmpty()) {
         results.add(topic);
       }
     }
@@ -886,7 +883,7 @@ public class SMTHHelper {
     matcher = pattern.matcher(content);
     while (matcher.find()) {
       String boardType = matcher.group(1);
-      String boardID = matcher.group(2);
+      //String boardID = matcher.group(2);
       String category = matcher.group(3);
       String engName = matcher.group(4);
       String chsName = matcher.group(5);
@@ -917,7 +914,7 @@ public class SMTHHelper {
 
     // <div class="error"><h5>产生错误的可能原因：</h5><ul><li><samp class="ico-pos-dot"></samp>请勿频繁登录</li></ul></div>
     Elements errors = doc.select("div.error");
-    if (errors.size() > 0) {
+    if (!errors.isEmpty()) {
       Element error = errors.first();
       assert error != null;
       Mail mail = new Mail(error.text());
@@ -928,7 +925,7 @@ public class SMTHHelper {
     // <li class="page-pre">邮件总数:<i>177</i>&emsp;分页:</li>
     // <li class="page-pre">文章总数:<i>17</i>&emsp;分页:</li>
     Elements is = doc.select("div.page li.page-pre i");
-    if (is.size() > 0) {
+    if (!is.isEmpty()) {
       Element i = is.first();
       assert i != null;
       String totalMails = i.text();
@@ -939,7 +936,7 @@ public class SMTHHelper {
     // <li class="page-select"><a title="当前页">1</a></li>
     Elements lis = doc.select("div.page li.page-select");
     // Log.d(TAG, "ParseMailsFromWWW: " + lis.toString());
-    if (lis.size() > 0) {
+    if (!lis.isEmpty()) {
       // find
       Element li = lis.first();
       assert li != null;
@@ -969,7 +966,7 @@ public class SMTHHelper {
         if (TextUtils.equals(td.attr("class"), "title_2")) {
           // <td class="title_2"><a href="/nForum/user/query/Wunderman">Wunderman</a></td>
           // <td class="title_2"><a href="/nForum/board/PocketLife">PocketLife</a></td>
-          if (mail.author == null || mail.author.length() == 0) {
+          if (mail.author == null || mail.author.isEmpty()) {
             mail.author = td.text();
           } else {
             mail.fromBoard = td.text();
@@ -978,7 +975,7 @@ public class SMTHHelper {
           // <td class="title_3"><a href="/nForum/article/PocketLife/ajax_single/2228708.json" class="m-single" _index="16">Re: zSMTH 1.0.0版发布</a></td>
           mail.title = td.text();
           Elements as = td.getElementsByTag("a");
-          if (as.size() > 0) {
+          if (!as.isEmpty()) {
             Element a = as.first();
             assert a != null;
             mail.url = a.attr("href");
@@ -990,14 +987,14 @@ public class SMTHHelper {
         }
       }
 
-      if (mail.author != null && mail.author.length() > 0 && !TextUtils.equals(mail.author, "作者")) {
+      if (mail.author != null && !mail.author.isEmpty() && !TextUtils.equals(mail.author, "作者")) {
         // only valid mail will be added
         // referred post have table head, so we make sure author != "作者"
         mails.add(mail);
       }
     }
 
-    if (mails.size() == 0) {
+    if (mails.isEmpty()) {
       Mail mail = new Mail(".无信件.");
       mails.add(mail);
     }
@@ -1011,7 +1008,7 @@ public class SMTHHelper {
     Document doc = Jsoup.parse(response);
     Elements bodies = doc.getElementsByTag("body");
 
-    if (bodies.size() > 0) {
+    if (!bodies.isEmpty()) {
       Element body = bodies.first();
 
       assert body != null;
@@ -1045,7 +1042,7 @@ public class SMTHHelper {
 
     Document doc = Jsoup.parse(response);
     Elements errors = doc.select("table.error");
-    if (errors.size() > 0) {
+    if (!errors.isEmpty()) {
       Element error = errors.first();
       assert error != null;
       return error.text();
@@ -1062,7 +1059,7 @@ public class SMTHHelper {
     if (type == BOARD_TYPE_ALL) {
       return ALL_BOARD_CACHE_FILE;
     } else if (type == BOARD_TYPE_FAVORITE) {
-      if (folder == null || folder.length() == 0) {
+      if (folder == null || folder.isEmpty()) {
         folder = "ROOT";
       }
       return String.format(Locale.CHINA,"%s-%s", FAVORITE_BOARD_CACHE_PREFIX, folder);
@@ -1114,18 +1111,16 @@ public class SMTHHelper {
   }
 
   public static List<Board> LoadFavoriteBoardsInFolder(final String path) {
-    Iterable<Board> its = SMTHHelper.getInstance().wService.getFavoriteBoardsInFolder(path).flatMap(new Function<ResponseBody, Observable<Board>>() {
-      @Override public Observable<Board> apply(@NonNull ResponseBody responseBody) throws Exception {
-        try {
-          String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
-          // Log.d(TAG, response);
-          List<Board> boards = SMTHHelper.ParseFavoriteBoardsFromWWW(response);
-          return Observable.fromIterable(boards);
-        } catch (Exception e) {
-          Log.e(TAG, "Failed to load favorite {" + path + "}");
-          Log.e(TAG, Log.getStackTraceString(e));
-          return null;
-        }
+    Iterable<Board> its = SMTHHelper.getInstance().wService.getFavoriteBoardsInFolder(path).flatMap((Function<ResponseBody, Observable<Board>>) responseBody -> {
+      try {
+        String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
+        // Log.d(TAG, response);
+        List<Board> boards = SMTHHelper.ParseFavoriteBoardsFromWWW(response);
+        return Observable.fromIterable(boards);
+      } catch (Exception e) {
+        Log.e(TAG, "Failed to load favorite {" + path + "}");
+        Log.e(TAG, Log.getStackTraceString(e));
+        return null;
       }
     }).blockingIterable();
 
@@ -1137,20 +1132,18 @@ public class SMTHHelper {
   }
 
   public static List<Board> LoadFavoriteBoardsInSection(final String path) {
-    Iterable<Board> its = SMTHHelper.getInstance().wService.getFavoriteBoardsInSection(path).flatMap(new Function<ResponseBody, Observable<Board>>() {
-     @Override public Observable<Board> apply(@NonNull ResponseBody responseBody) throws Exception {
-        try {
-          String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
-          // Log.d(TAG, response);
-          List<Board> boards = SMTHHelper.ParseFavoriteBoardsFromWWW(response);
-          return Observable.fromIterable(boards);
-        } catch (Exception e) {
-          Log.e(TAG, "Failed to load favorite {" + path + "}");
-          Log.e(TAG, Log.getStackTraceString(e));
-          return null;
-        }
-      }
-    }).blockingIterable();
+    Iterable<Board> its = SMTHHelper.getInstance().wService.getFavoriteBoardsInSection(path).flatMap((Function<ResponseBody, Observable<Board>>) responseBody -> {
+       try {
+         String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
+         // Log.d(TAG, response);
+         List<Board> boards = SMTHHelper.ParseFavoriteBoardsFromWWW(response);
+         return Observable.fromIterable(boards);
+       } catch (Exception e) {
+         Log.e(TAG, "Failed to load favorite {" + path + "}");
+         Log.e(TAG, Log.getStackTraceString(e));
+         return null;
+       }
+     }).blockingIterable();
 
     List<Board> results = MakeList.makeList(its);
 
@@ -1173,19 +1166,7 @@ public class SMTHHelper {
     }
 
     Iterable<Board> its =
-        Observable.fromIterable(sections).flatMap(new Function<BoardSection, Observable<Board>>() {
-          @Override public Observable<Board> apply(@NonNull BoardSection boardSection) throws Exception {
-            return SMTHHelper.loadBoardsInSectionFromWWW(boardSection);
-          }
-        }).flatMap(new Function<Board, Observable<Board>>() {
-          @Override public Observable<Board> apply(@NonNull Board board) throws Exception {
-            return SMTHHelper.loadChildBoardsRecursivelyFromWWW(board);
-          }
-        }).filter(new Predicate<Board>() {
-          @Override public boolean test(@NonNull Board board) throws Exception {
-            return board.isBoard();
-          }
-        }).blockingIterable();
+        Observable.fromIterable(sections).flatMap((Function<BoardSection, Observable<Board>>) SMTHHelper::loadBoardsInSectionFromWWW).flatMap((Function<Board, Observable<Board>>) SMTHHelper::loadChildBoardsRecursivelyFromWWW).filter(Board::isBoard).blockingIterable();
 
 
     List<Board> boards = MakeList.makeList(its);
@@ -1193,7 +1174,7 @@ public class SMTHHelper {
 
     // sort the board list by chinese name
     //Collections.sort(boards, new BoardListContent.ChineseComparator());
-    Collections.sort(boards, new BoardListContent.EnglishComparator());
+    boards.sort(new BoardListContent.EnglishComparator());
     Log.d("LoadAllBoardsFromWWW", String.format(Locale.CHINA,"%d boards loaded from network", boards.size()));
 
     // save boards to disk
@@ -1215,11 +1196,7 @@ public class SMTHHelper {
       return SMTHHelper.loadBoardsInSectionFromWWW(section)
           .subscribeOn(Schedulers.io())
           .observeOn(Schedulers.io())
-          .flatMap(new Function<Board, Observable<Board>>() {
-            @Override public Observable<Board> apply(@NonNull Board board) throws Exception {
-              return loadChildBoardsRecursivelyFromWWW(board);
-            }
-          });
+          .flatMap((Function<Board, Observable<Board>>) SMTHHelper::loadChildBoardsRecursivelyFromWWW);
     } else {
       return Observable.just(board);
     }
@@ -1227,16 +1204,14 @@ public class SMTHHelper {
 
   public static Observable<Board> loadBoardsInSectionFromWWW(final BoardSection section) {
     String sectionURL = section.sectionURL;
-    return SMTHHelper.getInstance().wService.getBoardsBySection(sectionURL).flatMap(new Function<ResponseBody, Observable<Board>>() {
-      @Override public Observable<Board> apply(@NonNull ResponseBody responseBody) throws Exception {
-        try {
-          String response = responseBody.string();
-          List<Board> boards = SMTHHelper.ParseBoardsInSectionFromWWW(response, section);
-          return Observable.fromIterable(boards);
-        } catch (Exception e) {
-          Log.e(TAG, Log.getStackTraceString(e));
-          return null;
-        }
+    return SMTHHelper.getInstance().wService.getBoardsBySection(sectionURL).flatMap((Function<ResponseBody, Observable<Board>>) responseBody -> {
+      try {
+        String response = responseBody.string();
+        List<Board> boards = SMTHHelper.ParseBoardsInSectionFromWWW(response, section);
+        return Observable.fromIterable(boards);
+      } catch (Exception e) {
+        Log.e(TAG, Log.getStackTraceString(e));
+        return null;
       }
     });
   }
@@ -1324,8 +1299,6 @@ public class SMTHHelper {
           // images in post or avatar
           return "https:" + original;
         } else if (original.startsWith("/nForum")) {
-          //return "http://att.newsmth.net" + original;
-          //return Settings.getInstance().getWebAddr()+original;
           url = Settings.getInstance().getWebAddr() + original;
         }
         if(Settings.getInstance().isImageSourceCDN()) {

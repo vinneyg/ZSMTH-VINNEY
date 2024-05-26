@@ -1,6 +1,5 @@
 package com.zfdang.zsmth_android;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.content.res.Resources;

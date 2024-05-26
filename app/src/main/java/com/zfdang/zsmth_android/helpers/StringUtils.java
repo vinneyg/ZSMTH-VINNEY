@@ -22,7 +22,7 @@ public class StringUtils {
   }
 
   public static String subStringBetween(String line, String str1, String str2) {
-    if (line == null || line.length() == 0) {
+    if (line == null || line.isEmpty()) {
       return "";
     }
 
@@ -50,7 +50,7 @@ public class StringUtils {
   // /nForum/board/ADAgent_TG ==> ADAgent_TG
   // /nForum/article/RealEstate/5017593 ==> 5017593
   public static String getLastStringSegment(String content) {
-    if (content == null || content.length() == 0) {
+    if (content == null || content.isEmpty()) {
       return "";
     }
     String[] segments = content.split("/");

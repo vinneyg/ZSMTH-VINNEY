@@ -51,30 +51,15 @@ public class FSImagePagerAdapter extends PagerAdapter {
     // use only this method to set image
     image.setImageUri(mURLs.get(position));
 
-    //        image.setOnLongClickListener(new View.OnLongClickListener() {
-    //            @Override
-    //            public boolean onLongClick(View v) {
-    //                if (mListener != null && mListener instanceof View.OnLongClickListener) {
-    //                    return ((View.OnLongClickListener) mListener).onLongClick(v);
-    //                }
-    //                return false;
-    //            }
-    //        });
-    image.setOnPhotoTapListener(new OnPhotoTapListener() {
-      @Override
-      public void onPhotoTap(ImageView view, float x, float y) {
-        if (mListener != null && mListener instanceof OnPhotoTapListener) {
-          ((OnPhotoTapListener) mListener).onPhotoTap(view, x, y);
-        }
+    image.setOnPhotoTapListener((view, x, y) -> {
+      if (mListener != null && mListener instanceof OnPhotoTapListener) {
+        ((OnPhotoTapListener) mListener).onPhotoTap(view, x, y);
       }
     });
 
-    image.setOnOutsidePhotoTapListener(new OnOutsidePhotoTapListener() {
-      @Override
-      public void onOutsidePhotoTap(ImageView imageView) {
-        if (mListener != null && mListener instanceof OnOutsidePhotoTapListener) {
-          ((OnOutsidePhotoTapListener) mListener).onOutsidePhotoTap(imageView);
-        }
+    image.setOnOutsidePhotoTapListener(imageView -> {
+      if (mListener != null && mListener instanceof OnOutsidePhotoTapListener) {
+        ((OnOutsidePhotoTapListener) mListener).onOutsidePhotoTap(imageView);
       }
     });
 

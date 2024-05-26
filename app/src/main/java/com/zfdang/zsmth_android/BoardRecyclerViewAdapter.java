@@ -70,25 +70,21 @@ public class BoardRecyclerViewAdapter extends RecyclerView.Adapter<BoardRecycler
       holder.mEngNameView.setVisibility(View.GONE);
     }
 
-    holder.mView.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (null != mListener) {
-          // Notify the active callbacks interface (the activity, if the
-          // fragment is attached to one) that an item has been selected.
-          mListener.onBoardFragmentInteraction(holder.mItem);
-        }
+    holder.mView.setOnClickListener(v -> {
+      if (null != mListener) {
+        // Notify the active callbacks interface (the activity, if the
+        // fragment is attached to one) that an item has been selected.
+        mListener.onBoardFragmentInteraction(holder.mItem);
       }
     });
 
-    holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
-      @Override public boolean onLongClick(View v) {
-        if (null != mListener) {
-          // Notify the active callbacks interface (the activity, if the
-          // fragment is attached to one) that an item has been selected.
-          mListener.onBoardLongClick(holder.mItem);
-        }
-        return false;
+    holder.mView.setOnLongClickListener(v -> {
+      if (null != mListener) {
+        // Notify the active callbacks interface (the activity, if the
+        // fragment is attached to one) that an item has been selected.
+        mListener.onBoardLongClick(holder.mItem);
       }
+      return false;
     });
   }
 
@@ -158,10 +154,10 @@ public class BoardRecyclerViewAdapter extends RecyclerView.Adapter<BoardRecycler
     public ViewHolder(View view) {
       super(view);
       mView = view;
-      mCategoryView = (TextView) view.findViewById(R.id.CategoryName);
-      mModeratorView = (TextView) view.findViewById(R.id.ModeratorID);
-      mNameView = (TextView) view.findViewById(R.id.BoardName);
-      mEngNameView = (TextView) view.findViewById(R.id.BoardEngName);
+      mCategoryView =  view.findViewById(R.id.CategoryName);
+      mModeratorView =  view.findViewById(R.id.ModeratorID);
+      mNameView =  view.findViewById(R.id.BoardName);
+      mEngNameView =  view.findViewById(R.id.BoardEngName);
     }
 
     @NonNull

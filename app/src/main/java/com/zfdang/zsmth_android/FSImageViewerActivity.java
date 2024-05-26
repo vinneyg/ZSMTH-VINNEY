@@ -2,7 +2,6 @@ package com.zfdang.zsmth_android;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.ExifInterface;
@@ -10,7 +9,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-//import androidx.appcompat.app.ActionBar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -72,7 +70,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
 
     setContentView(R.layout.activity_fs_image_viewer);
 
-    mViewPager = (HackyViewPager) findViewById(R.id.fullscreen_image_pager);
+    mViewPager = findViewById(R.id.fullscreen_image_pager);
 
     // find parameters from parent
     mURLs = getIntent().getStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS);
@@ -86,58 +84,46 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
     mViewPager.setAdapter(mPagerAdapter);
     mViewPager.setCurrentItem(pos);
 
-    CircleIndicator mIndicator = (CircleIndicator) findViewById(R.id.fullscreen_image_indicator);
+    CircleIndicator mIndicator = findViewById(R.id.fullscreen_image_indicator);
     mIndicator.setViewPager(mViewPager);
 
     // initialize toolbar and its child buttons
-    layoutToolbar = (LinearLayout) findViewById(R.id.fullscreen_toolbar);
+    layoutToolbar = findViewById(R.id.fullscreen_toolbar);
 
-    ImageView btBack = (ImageView) findViewById(R.id.fullscreen_button_back);
-    btBack.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        finish();
-      }
+    ImageView btBack = findViewById(R.id.fullscreen_button_back);
+    btBack.setOnClickListener(v -> finish());
+
+    ImageView btInfo = findViewById(R.id.fullscreen_button_info);
+    btInfo.setOnClickListener(v -> {
+      int position = mViewPager.getCurrentItem();
+      final String imagePath = mURLs.get(position);
+
+      showExifDialog(imagePath);
     });
 
-    ImageView btInfo = (ImageView) findViewById(R.id.fullscreen_button_info);
-    btInfo.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        int position = mViewPager.getCurrentItem();
-        final String imagePath = mURLs.get(position);
+    ImageView btSave = findViewById(R.id.fullscreen_button_save);
+    btSave.setOnClickListener(v -> {
 
-        showExifDialog(imagePath);
-      }
-    });
-
-    ImageView btSave = (ImageView) findViewById(R.id.fullscreen_button_save);
-    btSave.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-
-        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-          if (ContextCompat.checkSelfPermission(FSImageViewerActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(FSImageViewerActivity.this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    MY_PERMISSIONS_REQUEST_STORAGE_CODE);
-          }
-          else
-          {
-            realSaveImageToFile();
-          }
+      if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+        if (ContextCompat.checkSelfPermission(FSImageViewerActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+          ActivityCompat.requestPermissions(FSImageViewerActivity.this,
+                  new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                  MY_PERMISSIONS_REQUEST_STORAGE_CODE);
         }
-        else{
-          /*
-          if (ContextCompat.checkSelfPermission(FSImageViewerActivity.this, Manifest.permission.MANAGE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(FSImageViewerActivity.this,  new String[]{  Manifest.permission.MANAGE_EXTERNAL_STORAGE},  MY_PERMISSIONS_REQUEST_STORAGE_CODE);
-          }*/
-          if(Environment.isExternalStorageManager())
-          {
-            realSaveImageToFile();
-          }
-          else
-          {
-            Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-            startActivity(intent);
-          }
+        else
+        {
+          realSaveImageToFile();
+        }
+      }
+      else{
+        if(Environment.isExternalStorageManager())
+        {
+          realSaveImageToFile();
+        }
+        else
+        {
+          Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+          startActivity(intent);
         }
       }
     });
@@ -165,45 +151,35 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode,permissions,grantResults);
-    switch (requestCode) {
-      case MY_PERMISSIONS_REQUEST_STORAGE_CODE:
-      {
-        // If request is cancelled, the result arrays are empty.
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q ){
+      if (requestCode == MY_PERMISSIONS_REQUEST_STORAGE_CODE) {// If request is cancelled, the result arrays are empty.
+          if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
 
-          if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            // permission was granted, yay! Do the
-            // contacts-related task you need to do.
-            realSaveImageToFile();
+              if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                  // permission was granted, yay! Do the
+                  // contacts-related task you need to do.
+                  realSaveImageToFile();
 
-          } else{
-            //在版本低于此的时候，做一些处理
+              } else {
+                  //在版本低于此的时候，做一些处理
 
-            // permission denied, boo! Disable the
-            // functionality that depends on this permission.
-            Toast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
+                  // permission denied, boo! Disable the
+                  // functionality that depends on this permission.
+                  Toast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
+              }
+          } else {
+              if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                      && grantResults[1] == PackageManager.PERMISSION_GRANTED
+                      || Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                  // permission was granted, yay! Do the
+                  // contacts-related task you need to do.
+                  realSaveImageToFile();
+              } else {
+                  // permission denied, boo! Disable the
+                  // functionality that depends on this permission.
+                  Toast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
+              }
           }
-        }
-        else
-        {
-          if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                  && grantResults[1] == PackageManager.PERMISSION_GRANTED
-                  ||Build.VERSION.SDK_INT>=Build.VERSION_CODES.R) {
-            // permission was granted, yay! Do the
-            // contacts-related task you need to do.
-            realSaveImageToFile();
-          }
-
-          else {
-            // permission denied, boo! Disable the
-            // functionality that depends on this permission.
-            Toast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
-          }
-          return;
-        }
-        return;
       }
-    }
   }
   @Override
   public void onWindowFocusChanged(boolean hasFocus) {
@@ -327,7 +303,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
   // get image attribute from exif
   private void setImageAttributeFromExif(View layout, int tv_id, ExifInterface exif, String attr) {
     if (layout == null || exif == null) return;
-    TextView tv = (TextView) layout.findViewById(tv_id);
+    TextView tv = layout.findViewById(tv_id);
     if (tv == null) {
       Log.d(TAG, "setImageAttributeFromExif: " + "Invalid resource ID: " + tv_id);
       return;
@@ -479,7 +455,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
 
       ExifInterface exif = new ExifInterface(sFileName);
       // basic information
-      TextView tvFilename = (TextView) layout.findViewById(R.id.ii_filename);
+      TextView tvFilename = layout.findViewById(R.id.ii_filename);
       tvFilename.setText(imagePath);
       setImageAttributeFromExif(layout, R.id.ii_datetime, exif, ExifInterface.TAG_DATETIME);
       setImageAttributeFromExif(layout, R.id.ii_width, exif, ExifInterface.TAG_IMAGE_WIDTH);
@@ -488,7 +464,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
       // get filesize
       try {
         long filesize = FileSizeUtil.getFileSize(imageFile);
-        TextView tv = (TextView) layout.findViewById(R.id.ii_size);
+        TextView tv = layout.findViewById(R.id.ii_size);
         if (tv != null) {
           tv.setText(FileSizeUtil.FormatFileSize(filesize));
         }
@@ -509,9 +485,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
       Log.d("read ExifInfo", "can't read Exif information");
     }
 
-    new AlertDialog.Builder(FSImageViewerActivity.this).setView(layout).setOnDismissListener(new DialogInterface.OnDismissListener() {
-      @Override public void onDismiss(DialogInterface dialog) {
-      }
+    new AlertDialog.Builder(FSImageViewerActivity.this).setView(layout).setOnDismissListener(dialog -> {
     }).show();
   }
 

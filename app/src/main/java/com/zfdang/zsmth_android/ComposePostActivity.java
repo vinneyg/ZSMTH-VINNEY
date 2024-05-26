@@ -1,7 +1,6 @@
 package com.zfdang.zsmth_android;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
@@ -25,7 +24,6 @@ import com.zfdang.multiple_images_selector.SelectorSettings;
 import com.zfdang.zsmth_android.helpers.KeyboardLess;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.ComposePostContext;
-//import com.zfdang.zsmth_android.models.PostListContent;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import io.reactivex.Observable;
@@ -33,7 +31,6 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -112,7 +109,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_compose_post);
 
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
     ActionBar bar = getSupportActionBar();
@@ -122,21 +119,19 @@ public class ComposePostActivity extends SMTHBaseActivity {
 
     mPhotos = new ArrayList<>();
 
-    mUserRow = (LinearLayout) findViewById(R.id.compose_post_userid_row);
-    mUserID = (EditText) findViewById(R.id.compose_post_userid);
-    mTitle = (EditText) findViewById(R.id.compose_post_title);
-    mAttachRow = (LinearLayout) findViewById(R.id.compose_post_attach_row);
-    mAttachments = (EditText) findViewById(R.id.compose_post_attach);
-    mCompress = (Switch) findViewById(R.id.compose_post_attach_switch);
-    mContent = (EditText) findViewById(R.id.compose_post_content);
-    mContentCount = (TextView) findViewById(R.id.compose_post_content_label);
+    mUserRow = findViewById(R.id.compose_post_userid_row);
+    mUserID = findViewById(R.id.compose_post_userid);
+    mTitle = findViewById(R.id.compose_post_title);
+    mAttachRow = findViewById(R.id.compose_post_attach_row);
+    mAttachments = findViewById(R.id.compose_post_attach);
+    mCompress = findViewById(R.id.compose_post_attach_switch);
+    mContent = findViewById(R.id.compose_post_content);
+    mContentCount = findViewById(R.id.compose_post_content_label);
 
-    Button mButton = (Button) findViewById(R.id.compose_post_attach_button);
-    mButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        KeyboardLess.$hide(v.getContext(), mContent);
-        startImageSelector();
-      }
+    Button mButton = findViewById(R.id.compose_post_attach_button);
+    mButton.setOnClickListener(v -> {
+      KeyboardLess.$hide(v.getContext(), mContent);
+      startImageSelector();
     });
 
     mContent.addTextChangedListener(new TextWatcher() {
@@ -163,22 +158,18 @@ public class ComposePostActivity extends SMTHBaseActivity {
   // three methods to manage content cache
   private void restorePostContentFromCache() {
     final String content = Settings.getInstance().getPostCache();
-    if (content != null && content.length() > 0 && content.length() != mContent.getText().toString().length()) {
+    if (content != null && !content.isEmpty() && content.length() != mContent.getText().toString().length()) {
       AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ComposePostActivity.this);
       alertDialogBuilder.setTitle("恢复缓存的内容?")
           .setMessage(StringUtils.getEllipsizedMidString(content, 240))
           .setCancelable(false)
-          .setPositiveButton("恢复内容", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-              // if this button is clicked, close current activity
-              mContent.setText(content);
-            }
+          .setPositiveButton("恢复内容", (dialog, id) -> {
+            // if this button is clicked, close current activity
+            mContent.setText(content);
           })
-          .setNegativeButton("放弃内容", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-              // if this button is clicked, just close the dialog box and do nothing
-              dialog.cancel();
-            }
+          .setNegativeButton("放弃内容", (dialog, id) -> {
+            // if this button is clicked, just close the dialog box and do nothing
+            dialog.cancel();
           })
           .create()
           .show();
@@ -290,6 +281,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
   }
 
   @Override public void onBackPressed() {
+    super.onBackPressed();
     onBackAction();
   }
 
@@ -333,23 +325,19 @@ public class ComposePostActivity extends SMTHBaseActivity {
 
     // update attachments
     final boolean bCompress = this.mCompress.isChecked();
-    Observable<AjaxResponse> resp1 = Observable.fromIterable(mPhotos).map(new Function<String, BytesContainer>() {
-      @Override public BytesContainer apply(@NonNull String filename) throws Exception {
-        byte[] bytes = SMTHHelper.getBitmapBytesWithResize(filename, bCompress);
-        return new BytesContainer(filename, bytes);
-      }
-    }).map(new Function<BytesContainer, AjaxResponse>() {
-      @Override public AjaxResponse apply(@NonNull BytesContainer container) throws Exception {
-        RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), container.bytes);
-        AjaxResponse resp =
-            helper.wService.uploadAttachment(mPostContext.getBoardEngName(), StringUtils.getLastStringSegment(container.filename),
-                requestBody).blockingFirst();
-        if (resp != null) {
-          return resp;
-        } else {
-          Log.d(TAG, "call: " + "failed to upload attachment " + container.filename);
-          return null;
-        }
+    Observable<AjaxResponse> resp1 = Observable.fromIterable(mPhotos).map(filename -> {
+      byte[] bytes = SMTHHelper.getBitmapBytesWithResize(filename, bCompress);
+      return new BytesContainer(filename, bytes);
+    }).map(container -> {
+      RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), container.bytes);
+      AjaxResponse resp =
+          helper.wService.uploadAttachment(mPostContext.getBoardEngName(), StringUtils.getLastStringSegment(container.filename),
+              requestBody).blockingFirst();
+      if (resp != null) {
+        return resp;
+      } else {
+        Log.d(TAG, "call: " + "failed to upload attachment " + container.filename);
+        return null;
       }
     });
 
@@ -457,20 +445,16 @@ public class ComposePostActivity extends SMTHBaseActivity {
     alertDialogBuilder.setTitle("退出确认")
         .setMessage("结束编辑，或者停留在当前界面继续编辑？")
         .setCancelable(false)
-        .setPositiveButton("结束编辑", new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int id) {
-            // if this button is clicked, close current activity
-            KeyboardLess.$hide(ComposePostActivity.this, mContent);
-            mContent.setText("");
-            clearPostContentCache();
-            ComposePostActivity.this.finish();
-          }
+        .setPositiveButton("结束编辑", (dialog, id) -> {
+          // if this button is clicked, close current activity
+          KeyboardLess.$hide(ComposePostActivity.this, mContent);
+          mContent.setText("");
+          clearPostContentCache();
+          ComposePostActivity.this.finish();
         })
-        .setNegativeButton("继续编辑", new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int id) {
-            // if this button is clicked, just close the dialog box and do nothing
-            dialog.cancel();
-          }
+        .setNegativeButton("继续编辑", (dialog, id) -> {
+          // if this button is clicked, just close the dialog box and do nothing
+          dialog.cancel();
         })
         .create()
         .show();

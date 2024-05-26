@@ -25,7 +25,7 @@ public final class FileLess {
    * @throws IOException
    */
   public static String $read(File file) throws IOException {
-    String text = null;
+    String text;
     try (InputStream is = new FileInputStream(file)) {
       text = $read(is);
     }

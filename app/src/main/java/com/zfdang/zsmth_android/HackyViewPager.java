@@ -9,7 +9,6 @@ import android.view.MotionEvent;
 /**
  * Found at http://stackoverflow.com/questions/7814017/is-it-possible-to-disable-scrolling-on-a-viewpager.
  * Convenient way to temporarily disable ViewPager navigation while interacting with ImageView.
- *
  * Julia Zudikova
  */
 
@@ -28,7 +27,7 @@ import android.view.MotionEvent;
  */
 public class HackyViewPager extends ViewPager {
 
-  private boolean isLocked;
+  private final boolean isLocked;
 
   public HackyViewPager(Context context) {
     super(context);
@@ -57,6 +56,7 @@ public class HackyViewPager extends ViewPager {
     return !isLocked && super.onTouchEvent(event);
   }
 
+  /*
   public void toggleLock() {
     isLocked = !isLocked;
   }
@@ -68,4 +68,5 @@ public class HackyViewPager extends ViewPager {
   public boolean isLocked() {
     return isLocked;
   }
+  */
 }

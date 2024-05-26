@@ -32,7 +32,6 @@ import com.zfdang.zsmth_android.models.ContentSegment;
 import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.Topic;
-import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
 import java.util.List;
@@ -42,12 +41,11 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class MailContentActivity extends AppCompatActivity {
 
-  private static final String TAG = "MailContent";
+  //private static final String TAG = "MailContent";
   private Mail mMail;
   private int mPostGroupId;
   private Post mPost;
@@ -75,27 +73,25 @@ public class MailContentActivity extends AppCompatActivity {
 
     setContentView(R.layout.activity_mail_content);
 
-    mMailTitle = (TextView) findViewById(R.id.mail_content_title);
+    mMailTitle = findViewById(R.id.mail_content_title);
     // init post widget
-    mPostAuthor = (TextView) findViewById(R.id.post_author);
-    mPostIndex = (TextView) findViewById(R.id.post_index);
+    mPostAuthor = findViewById(R.id.post_author);
+    mPostIndex = findViewById(R.id.post_index);
     mPostIndex.setVisibility(View.GONE);
-    mPostPublishDate = (TextView) findViewById(R.id.post_publish_date);
-    mViewGroup = (LinearLayout) findViewById(R.id.post_content_holder);
-    mPostContent = (LinkConsumableTextView) findViewById(R.id.post_content);
+    mPostPublishDate = findViewById(R.id.post_publish_date);
+    mViewGroup = findViewById(R.id.post_content_holder);
+    mPostContent = findViewById(R.id.post_content);
 
-    mPostAuthor.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (Settings.getInstance().isSetIdCheck()) {
-          Intent intent = new Intent(v.getContext(), QueryUserActivity.class);
-          // intent.putExtra(SMTHApplication.QUERY_USER_INFO, mMail.getFrom());
-          intent.putExtra(SMTHApplication.QUERY_USER_INFO, mMail.author);
-          v.getContext().startActivity(intent);
-        }
+    mPostAuthor.setOnClickListener(v -> {
+      if (Settings.getInstance().isSetIdCheck()) {
+        Intent intent = new Intent(v.getContext(), QueryUserActivity.class);
+        // intent.putExtra(SMTHApplication.QUERY_USER_INFO, mMail.getFrom());
+        intent.putExtra(SMTHApplication.QUERY_USER_INFO, mMail.author);
+        v.getContext().startActivity(intent);
       }
     });
 
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
     // Show the Up button in the action bar.
@@ -106,21 +102,19 @@ public class MailContentActivity extends AppCompatActivity {
 
     // load mMail content
     Bundle bundle = getIntent().getExtras();
-    mMail = (Mail) Objects.requireNonNull(bundle).getParcelable(SMTHApplication.MAIL_OBJECT);
+    mMail = Objects.requireNonNull(bundle).getParcelable(SMTHApplication.MAIL_OBJECT);
     loadMailContent();
   }
 
   public void loadMailContent() {
     SMTHHelper helper = SMTHHelper.getInstance();
-    helper.wService.getMailContent(mMail.url).map(new Function<AjaxResponse, Post>() {
-      @Override public Post apply(@NonNull AjaxResponse ajaxResponse) throws Exception {
-        String msg = ajaxResponse.getAjax_msg();
-        if( !TextUtils.equals(msg, "操作成功")) {
-          throw new Exception(msg);
-        }
-        mPostGroupId = ajaxResponse.getGroup_id();
-        return SMTHHelper.ParseMailContentFromWWW(ajaxResponse.getContent());
+    helper.wService.getMailContent(mMail.url).map(ajaxResponse -> {
+      String msg = ajaxResponse.getAjax_msg();
+      if( !TextUtils.equals(msg, "操作成功")) {
+        throw new Exception(msg);
       }
+      mPostGroupId = ajaxResponse.getGroup_id();
+      return SMTHHelper.ParseMailContentFromWWW(ajaxResponse.getContent());
     }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Post>() {
       @Override public void onSubscribe(@NonNull Disposable disposable) {
 
@@ -159,7 +153,7 @@ public class MailContentActivity extends AppCompatActivity {
     List<ContentSegment> contents = post.getContentSegments();
     if (contents == null) return;
 
-    if (contents.size() > 0) {
+    if (!contents.isEmpty()) {
       // there are multiple segments, add the first contentView first
       // contentView is always available, we don't have to inflate it again
       ContentSegment content = contents.get(0);

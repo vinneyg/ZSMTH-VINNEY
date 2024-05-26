@@ -148,17 +148,17 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
     public ViewHolder(View view) {
       super(view);
       mView = view;
-      mPageIndicator = (TextView) view.findViewById(R.id.topic_page_indicator);
-      mTitle = (TextView) view.findViewById(R.id.topic_title);
-      mAuthor = (TextView) view.findViewById(R.id.topic_author);
-      mReplier = (TextView) view.findViewById(R.id.topic_replier);
-      mPublishDate = (TextView) view.findViewById(R.id.topic_public_date);
-      mReplyDate = (TextView) view.findViewById(R.id.topic_reply_date);
-      mStatusSummary = (TextView) view.findViewById(R.id.topic_status_summary);
-      mAttach = (ImageView) view.findViewById(R.id.topic_status_attach);
-      mPinned = (ImageView) view.findViewById(R.id.topic_status_pinned);
-      mAuthorReplierRow = (RelativeLayout) view.findViewById(R.id.topic_author_replier_row);
-      mStatusRow = (RelativeLayout) view.findViewById(R.id.topic_status_row);
+      mPageIndicator = view.findViewById(R.id.topic_page_indicator);
+      mTitle = view.findViewById(R.id.topic_title);
+      mAuthor = view.findViewById(R.id.topic_author);
+      mReplier =  view.findViewById(R.id.topic_replier);
+      mPublishDate =  view.findViewById(R.id.topic_public_date);
+      mReplyDate =  view.findViewById(R.id.topic_reply_date);
+      mStatusSummary =  view.findViewById(R.id.topic_status_summary);
+      mAttach =  view.findViewById(R.id.topic_status_attach);
+      mPinned =  view.findViewById(R.id.topic_status_pinned);
+      mAuthorReplierRow = view.findViewById(R.id.topic_author_replier_row);
+      mStatusRow = view.findViewById(R.id.topic_status_row);
     }
 
     @NonNull

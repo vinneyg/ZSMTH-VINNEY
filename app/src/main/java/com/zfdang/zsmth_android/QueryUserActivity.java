@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
-//import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +28,7 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.Observer;
 
 public class QueryUserActivity extends SMTHBaseActivity {
-  private static final String TAG = "QueryUserActivity";
+  //private static final String TAG = "QueryUserActivity";
   private String mUsername;
 
   private WrapContentDraweeView mImageView;
@@ -55,23 +53,21 @@ public class QueryUserActivity extends SMTHBaseActivity {
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_query_user);
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
     Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
     assignViews();
 
-    findViewById(R.id.query_user_action_query).setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        EditText tv = (EditText) findViewById(R.id.query_user_input);
-        String userid = tv.getText().toString();
-        if (userid.length() > 0) {
-          mUsername = userid;
-          KeyboardLess.$hide(QueryUserActivity.this, tv);
-          tv.clearFocus();
-          LoadUserInfo();
-        }
+    findViewById(R.id.query_user_action_query).setOnClickListener(v -> {
+      EditText tv = findViewById(R.id.query_user_input);
+      String userid = tv.getText().toString();
+      if (!userid.isEmpty()) {
+        mUsername = userid;
+        KeyboardLess.$hide(QueryUserActivity.this, tv);
+        tv.clearFocus();
+        LoadUserInfo();
       }
     });
 
@@ -84,24 +80,24 @@ public class QueryUserActivity extends SMTHBaseActivity {
   }
 
   private void assignViews() {
-    mImageView = (WrapContentDraweeView) findViewById(R.id.imageView);
+    mImageView = findViewById(R.id.imageView);
 
-    mUserId = (TextView) findViewById(R.id.query_user_id);
-    mUserNickname = (TextView) findViewById(R.id.query_user_nickname);
-    mUserGender = (TextView) findViewById(R.id.query_user_gender);
-    mUserConstellation = (TextView) findViewById(R.id.query_user_constellation);
-    mUserQq = (TextView) findViewById(R.id.query_user_qq);
-    mUserHomepage = (TextView) findViewById(R.id.query_user_homepage);
+    mUserId = findViewById(R.id.query_user_id);
+    mUserNickname = findViewById(R.id.query_user_nickname);
+    mUserGender = findViewById(R.id.query_user_gender);
+    mUserConstellation = findViewById(R.id.query_user_constellation);
+    mUserQq = findViewById(R.id.query_user_qq);
+    mUserHomepage = findViewById(R.id.query_user_homepage);
 
-    mUserLevel = (TextView) findViewById(R.id.query_user_level);
-    mUserTotalpost = (TextView) findViewById(R.id.query_user_totalpost);
-    mUserLogincount = (TextView) findViewById(R.id.query_user_logincount);
-    mUserLife = (TextView) findViewById(R.id.query_user_life);
-    mUserScore = (TextView) findViewById(R.id.query_user_score);
-    mUserFirstLogintime = (TextView) findViewById(R.id.query_user_first_logintime);
-    mUserLastLogintime = (TextView) findViewById(R.id.query_user_last_logintime);
-    mUserLoginip = (TextView) findViewById(R.id.query_user_loginip);
-    mUserCurrentstatus = (TextView) findViewById(R.id.query_user_currentstatus);
+    mUserLevel = findViewById(R.id.query_user_level);
+    mUserTotalpost = findViewById(R.id.query_user_totalpost);
+    mUserLogincount = findViewById(R.id.query_user_logincount);
+    mUserLife = findViewById(R.id.query_user_life);
+    mUserScore = findViewById(R.id.query_user_score);
+    mUserFirstLogintime = findViewById(R.id.query_user_first_logintime);
+    mUserLastLogintime = findViewById(R.id.query_user_last_logintime);
+    mUserLoginip = findViewById(R.id.query_user_loginip);
+    mUserCurrentstatus = findViewById(R.id.query_user_currentstatus);
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -172,7 +168,7 @@ public class QueryUserActivity extends SMTHBaseActivity {
           @Override public void onNext(@NonNull UserInfo user) {
             if(user.getId() == null)
             {
-              EditText tv = (EditText) findViewById(R.id.query_user_input);
+              EditText tv = findViewById(R.id.query_user_input);
               tv.setText(mUsername+"不存在！");
               tv.setTextColor(Color.RED);
               dismissProgress();

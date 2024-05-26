@@ -23,7 +23,7 @@ import android.view.View;
     super(context, attrs);
   }
 
-  @Override public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, View directTargetChild, View target,
+  @Override public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, @NonNull View directTargetChild, @NonNull View target,
                                                int nestedScrollAxes) {
     if (appBarLayout != null) {
       // We need to check from when a scroll is started, as we may not have had the chance to update the layout at
@@ -50,7 +50,7 @@ import android.view.View;
     return super.onMeasureChild(parent, child, parentWidthMeasureSpec, widthUsed, parentHeightMeasureSpec, heightUsed);
   }
 
-  @Override public boolean onDependentViewChanged(CoordinatorLayout parent, final View child, final View dependency) {
+  @Override public boolean onDependentViewChanged(@NonNull CoordinatorLayout parent, @NonNull final View child, @NonNull final View dependency) {
     if (appBarLayout == null) appBarLayout = (AppBarLayout) dependency;
 
     final boolean result = super.onDependentViewChanged(parent, child, dependency);

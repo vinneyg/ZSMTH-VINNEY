@@ -2,7 +2,6 @@ package com.zfdang.zsmth_android;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -43,19 +42,8 @@ import com.jude.swipbackhelper.SwipeBackHelper;
 
 
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
-import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.ClassicsHeader;
-import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
-/*
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
-import com.scwang.smartrefresh.layout.header.ClassicsHeader;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-*/
 
 import com.zfdang.SMTHApplication;
 
@@ -190,11 +178,7 @@ public class PostListActivity extends SMTHBaseActivity
 
     setContentView(R.layout.activity_post_list);
 
-    //LayoutInflater inflate = LayoutInflater.from(this);
-    //View view = inflate.inflate(R.layout.activity_post_list,null);
-    //setContentView(view);
-
-    Toolbar toolbar = (Toolbar) findViewById(R.id.post_list_toolbar);
+    Toolbar toolbar = findViewById(R.id.post_list_toolbar);
     setSupportActionBar(toolbar);
 
     // Show the Up button in the action bar.
@@ -203,42 +187,38 @@ public class PostListActivity extends SMTHBaseActivity
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    mTitle = (TextView) findViewById(R.id.post_list_title);
+    mTitle = findViewById(R.id.post_list_title);
     assert mTitle != null;
-    mPageNo = (EditText) findViewById(R.id.post_list_page_no);
+    mPageNo = findViewById(R.id.post_list_page_no);
     assert mPageNo != null;
 
     // define swipe refresh function
-    mRefreshLayout = (SmartRefreshLayout) findViewById(R.id.post_list_swipe_refresh_layout);
+    mRefreshLayout = findViewById(R.id.post_list_swipe_refresh_layout);
     mRefreshLayout.setEnableAutoLoadMore(false);
     mRefreshLayout.setEnableScrollContentWhenLoaded(false);
     mRefreshLayout.setEnableOverScrollBounce(false);
 
-    mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-      @Override public void onRefresh(@androidx.annotation.NonNull RefreshLayout refreshLayout) {
-        // reload current page
-        if(Settings.getInstance().isautoloadmore()) {
-          reloadPostListWithoutAlert();
-        }
-        else { //Waterfall mode  insert item
-          InsertPostListWithoutAlert();
-        }
+    mRefreshLayout.setOnRefreshListener(refreshLayout -> {
+      // reload current page
+      if(Settings.getInstance().isautoloadmore()) {
+        reloadPostListWithoutAlert();
+      }
+      else { //Waterfall mode  insert item
+        InsertPostListWithoutAlert();
       }
     });
-    mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
-      @Override public void onLoadMore(@androidx.annotation.NonNull RefreshLayout refreshLayout) {
-        // load next page if available
-        if(Settings.getInstance().isautoloadmore()) {
-          goToNextPage();
-        }
-        else {
-          //goToNextPage();
-          reloadPostListWithoutAlertNew();
-        }
+    mRefreshLayout.setOnLoadMoreListener(refreshLayout -> {
+      // load next page if available
+      if(Settings.getInstance().isautoloadmore()) {
+        goToNextPage();
+      }
+      else {
+        //goToNextPage();
+        reloadPostListWithoutAlertNew();
       }
     });
 
-    mRecyclerView = (RecyclerView) findViewById(R.id.post_list);
+    mRecyclerView = findViewById(R.id.post_list);
     assert mRecyclerView != null;
     mRecyclerView.addItemDecoration(
         new DividerItemDecoration(this, LinearLayoutManager.VERTICAL, R.drawable.recyclerview_divider));
@@ -298,15 +278,13 @@ public class PostListActivity extends SMTHBaseActivity
             //int firstVisibleItem = manager.findFirstVisibleItemPosition();
             // reach bottom
             if (lastVisiblePos == (totalItemCount - 1) && isSlidingToLast && (mCurrentPageNo < mTopic.getTotalPageNo())) {
-              //Toast.makeText(getApplicationContext(), "加载更多", Toast.LENGTH_SHORT).show();
-              //goToNextPage();
               LoadMoreItems();
             }
             else if(lastVisiblePos == (totalItemCount - 1) && isSlidingToLast && (mCurrentPageNo ==mTopic.getTotalPageNo())) {
               clearLoadingHints();
             }
             else if((!isSlidingToLast)||  (lastVisiblePos < (totalItemCount - 1))) {
-              TextView mIndexView = (TextView) (Objects.requireNonNull(manager.findViewByPosition(lastVisiblePos))).findViewById(R.id.post_index);
+              TextView mIndexView = (Objects.requireNonNull(manager.findViewByPosition(lastVisiblePos))).findViewById(R.id.post_index);
               String temp = mIndexView.getText().toString();
              //  int index =0;
               if (temp.equals("楼主")) {
@@ -322,9 +300,7 @@ public class PostListActivity extends SMTHBaseActivity
               mTitle.setText(title);
               mPageNo.setText(String.format(Locale.CHINA,"%d", mCurrentPageNo));
               mCurrentReadPageNo = mCurrentPageNo;
-              //recyclerView.getAdapter().notifyDataSetChanged();
-             // recyclerView.getAdapter().notifyItemRangeChanged(1,1,"x");
-              //recyclerView.getAdapter().notifyItemRangeChanged(0,1);
+
             }
           }
         }
@@ -340,7 +316,7 @@ public class PostListActivity extends SMTHBaseActivity
 
 
 
-    if (mTopic == null || !mTopic.getTopicID().equals(topic.getTopicID()) || PostListContent.POSTS.size() == 0) {
+    if (mTopic == null || !mTopic.getTopicID().equals(topic.getTopicID()) || PostListContent.POSTS.isEmpty()) {
       // new topic, different topic, or no post loaded
       mTopic = topic;
       mFilterUser = null;
@@ -369,19 +345,19 @@ public class PostListActivity extends SMTHBaseActivity
     int alphaValue = 50;
 
     ImageButton imageButton;
-    imageButton = (ImageButton) findViewById(R.id.post_list_action_top);
+    imageButton = findViewById(R.id.post_list_action_top);
     imageButton.setImageAlpha(alphaValue);
     imageButton.setOnClickListener(this);
 
-    imageButton = (ImageButton) findViewById(R.id.post_list_action_up);
+    imageButton = findViewById(R.id.post_list_action_up);
     imageButton.setImageAlpha(alphaValue);
     imageButton.setOnClickListener(this);
 
-    imageButton = (ImageButton) findViewById(R.id.post_list_action_down);
+    imageButton = findViewById(R.id.post_list_action_down);
     imageButton.setImageAlpha(alphaValue);
     imageButton.setOnClickListener(this);
 
-    imageButton = (ImageButton) findViewById(R.id.post_list_action_bottom);
+    imageButton = findViewById(R.id.post_list_action_bottom);
     imageButton.setImageAlpha(alphaValue);
     imageButton.setOnClickListener(this);
   }
@@ -398,8 +374,7 @@ public class PostListActivity extends SMTHBaseActivity
   }
 
   public void InsertPostListWithoutAlert() {
-    //PostListContent.clear();
-    //mRecyclerView.getAdapter().notifyDataSetChanged();
+
     if(mCurrentPageNo != 1) {
       mCurrentPageNo = mCurrentPageNo-1;
       loadPostListByPagesNew();
@@ -458,27 +433,25 @@ public class PostListActivity extends SMTHBaseActivity
     final SMTHHelper helper = SMTHHelper.getInstance();
 
     helper.wService.getPostListByPage(mTopic.getTopicURL(), mTopic.getTopicID(), mCurrentPageNo, mFilterUser)
-            .flatMap(new Function<ResponseBody, Observable<Post>>() {
-              @Override public Observable<Post> apply(@NonNull ResponseBody responseBody) throws Exception {
-                try {
-                  String response = responseBody.string();
+            .flatMap((Function<ResponseBody, Observable<Post>>) responseBody -> {
+              try {
+                String response = responseBody.string();
 
-                  List<Post> posts = SMTHHelper.ParsePostListFromWWW(response, mTopic);
-                  if(posts.size()==0) {
-                    return Observable.empty(); //handle error case
-                  }
-                  if(!SMTHApplication.ReadRec) {
-                    SMTHApplication.ReadPostFirst = posts.get(0);
-                    SMTHApplication.ReadRec=true;
-                  }
-                  return Observable.fromIterable(posts);
-                } catch (Exception e) {
-                  SMTHApplication.ReadRec=false;
-                  SMTHApplication.ReadPostFirst=null;
-                  Log.e(TAG, Log.getStackTraceString(e));
+                List<Post> posts = SMTHHelper.ParsePostListFromWWW(response, mTopic);
+                if(posts.isEmpty()) {
+                  return Observable.empty(); //handle error case
                 }
-                return null;
+                if(!SMTHApplication.ReadRec) {
+                  SMTHApplication.ReadPostFirst = posts.get(0);
+                  SMTHApplication.ReadRec=true;
+                }
+                return Observable.fromIterable(posts);
+              } catch (Exception e) {
+                SMTHApplication.ReadRec=false;
+                SMTHApplication.ReadPostFirst=null;
+                Log.e(TAG, Log.getStackTraceString(e));
               }
+              return null;
             })
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -549,7 +522,7 @@ public class PostListActivity extends SMTHBaseActivity
                 clearLoadingHints();
 
                   //Special User OFFLINE case: [] or [Category 第一页:]
-                  if (PostListContent.POSTS.size() == 0) {
+                  if (PostListContent.POSTS.isEmpty()) {
                     //Toast.makeText(SMTHApplication.getAppContext(),"请重新登录-"+ PostListContent.POSTS.size()+"-!",Toast.LENGTH_SHORT).show();
                     PostListContent.clear();
                     try {
@@ -572,28 +545,25 @@ public class PostListActivity extends SMTHBaseActivity
         .wService
         .getPostListByPage(mTopic.getTopicURL(), mTopic.getTopicID(), mCurrentPageNo, mFilterUser)
         .flatMap(
-            new Function<ResponseBody, Observable<Post>>() {
-              @Override
-              public Observable<Post> apply(@NonNull ResponseBody responseBody) throws Exception {
-                try {
-                  String response = responseBody.string();
-                  List<Post> posts = SMTHHelper.ParsePostListFromWWW(response, mTopic);
-                  if (posts.size() == 0) {
-                    return Observable.empty(); // handle error case
+                (Function<ResponseBody, Observable<Post>>) responseBody -> {
+                  try {
+                    String response = responseBody.string();
+                    List<Post> posts = SMTHHelper.ParsePostListFromWWW(response, mTopic);
+                    if (posts.isEmpty()) {
+                      return Observable.empty(); // handle error case
+                    }
+                    if (!SMTHApplication.ReadRec) {
+                      SMTHApplication.ReadPostFirst = posts.get(0);
+                      SMTHApplication.ReadRec = true;
+                    }
+                    return Observable.fromIterable(posts);
+                  } catch (Exception e) {
+                    SMTHApplication.ReadRec = false;
+                    SMTHApplication.ReadPostFirst = null;
+                    Log.e(TAG, Log.getStackTraceString(e));
                   }
-                  if (!SMTHApplication.ReadRec) {
-                    SMTHApplication.ReadPostFirst = posts.get(0);
-                    SMTHApplication.ReadRec = true;
-                  }
-                  return Observable.fromIterable(posts);
-                } catch (Exception e) {
-                  SMTHApplication.ReadRec = false;
-                  SMTHApplication.ReadPostFirst = null;
-                  Log.e(TAG, Log.getStackTraceString(e));
-                }
-                return null;
-              }
-            })
+                  return null;
+                })
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
@@ -604,7 +574,7 @@ public class PostListActivity extends SMTHBaseActivity
               @Override
               public void onNext(@NonNull Post post) {
                 // Log.d(TAG, post.toString());
-                if (post.getContentSegments().size() != 0) {
+                if (!post.getContentSegments().isEmpty()) {
                   PostListContent.addItem(post);
                   Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(PostListContent.POSTS.size() - 1);
                 }
@@ -638,7 +608,7 @@ public class PostListActivity extends SMTHBaseActivity
 
 
                   // Special User OFFLINE case: [] or [Category 第一页:]
-                  if (PostListContent.POSTS.size() == 0) {
+                  if (PostListContent.POSTS.isEmpty()) {
                     // Toast.makeText(SMTHApplication.getAppContext(),"请重新登录-"+
                     // PostListContent.POSTS.size()+"-!",Toast.LENGTH_SHORT).show();
                     PostListContent.clear();
@@ -668,28 +638,25 @@ public class PostListActivity extends SMTHBaseActivity
         .wService
         .getPostListByPage(mTopic.getTopicURL(), mTopic.getTopicID(), mCurrentPageNo, mFilterUser)
         .flatMap(
-            new Function<ResponseBody, Observable<Post>>() {
-              @Override
-              public Observable<Post> apply(@NonNull ResponseBody responseBody) throws Exception {
-                try {
-                  String response = responseBody.string();
-                  List<Post> posts = SMTHHelper.ParsePostListFromWWW(response, mTopic);
-                  if (posts.size() == 0) {
-                    return Observable.empty(); // handle error case
+                (Function<ResponseBody, Observable<Post>>) responseBody -> {
+                  try {
+                    String response = responseBody.string();
+                    List<Post> posts = SMTHHelper.ParsePostListFromWWW(response, mTopic);
+                    if (posts.isEmpty()) {
+                      return Observable.empty(); // handle error case
+                    }
+                    if (!SMTHApplication.ReadRec) {
+                      SMTHApplication.ReadPostFirst = posts.get(0);
+                      SMTHApplication.ReadRec = true;
+                    }
+                    return Observable.fromIterable(posts);
+                  } catch (Exception e) {
+                    SMTHApplication.ReadRec = false;
+                    SMTHApplication.ReadPostFirst = null;
+                    Log.e(TAG, Log.getStackTraceString(e));
                   }
-                  if (!SMTHApplication.ReadRec) {
-                    SMTHApplication.ReadPostFirst = posts.get(0);
-                    SMTHApplication.ReadRec = true;
-                  }
-                  return Observable.fromIterable(posts);
-                } catch (Exception e) {
-                  SMTHApplication.ReadRec = false;
-                  SMTHApplication.ReadPostFirst = null;
-                  Log.e(TAG, Log.getStackTraceString(e));
-                }
-                return null;
-              }
-            })
+                  return null;
+                })
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
@@ -741,7 +708,7 @@ public class PostListActivity extends SMTHBaseActivity
 
                 // Special User OFFLINE case: [] or [Category 第一页:]
 
-                  if (PostListContent.POSTS.size() == 0) {
+                  if (PostListContent.POSTS.isEmpty()) {
                     // Toast.makeText(SMTHApplication.getAppContext(),"请重新登录-"+
                     // PostListContent.POSTS.size()+"-!",Toast.LENGTH_SHORT).show();
                     PostListContent.clear();
@@ -990,16 +957,17 @@ public class PostListActivity extends SMTHBaseActivity
     ListAdapter adapter = new ArrayAdapter<PostActionAlertDialogItem>(getApplicationContext(), R.layout.post_popup_menu_item, menuItems) {
       ViewHolder holder;
 
+      @androidx.annotation.NonNull
       @SuppressLint("InflateParams")
-      public View getView(int position, View convertView, ViewGroup parent) {
+      public View getView(int position, View convertView, @androidx.annotation.NonNull ViewGroup parent) {
         final LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (convertView == null) {
           convertView = inflater.inflate(R.layout.post_popup_menu_item, null);
 
           holder = new ViewHolder();
-          holder.mIcon = (ImageView) convertView.findViewById(R.id.post_popupmenu_icon);
-          holder.mTitle = (TextView) convertView.findViewById(R.id.post_popupmenu_title);
+          holder.mIcon = convertView.findViewById(R.id.post_popupmenu_icon);
+          holder.mTitle = convertView.findViewById(R.id.post_popupmenu_title);
           convertView.setTag(holder);
         } else {
           // view already defined, retrieve view holder
@@ -1018,11 +986,7 @@ public class PostListActivity extends SMTHBaseActivity
     };
 
     AlertDialog dialog = new AlertDialog.Builder(this).setTitle(getString(R.string.post_alert_title))
-        .setAdapter(adapter, new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            onPostPopupMenuItem(position, which);
-          }
-        })
+        .setAdapter(adapter, (dialog1, which) -> onPostPopupMenuItem(position, which))
         .create();
     dialog.setCanceledOnTouchOutside(true);
     dialog.setCancelable(true);
@@ -1276,16 +1240,14 @@ public class PostListActivity extends SMTHBaseActivity
   public void deletePost(Post post) {
     SMTHHelper helper = SMTHHelper.getInstance();
 
-    helper.wService.deletePost(mTopic.getBoardEngName(), post.getPostID()).map(new Function<ResponseBody, String>() {
-      @Override public String apply(@NonNull ResponseBody responseBody) throws Exception {
-        try {
-          String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
-          return SMTHHelper.parseDeleteResponse(response);
-        } catch (Exception e) {
-          Log.e(TAG, "call: " + Log.getStackTraceString(e));
-        }
-        return null;
+    helper.wService.deletePost(mTopic.getBoardEngName(), post.getPostID()).map(responseBody -> {
+      try {
+        String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
+        return SMTHHelper.parseDeleteResponse(response);
+      } catch (Exception e) {
+        Log.e(TAG, "call: " + Log.getStackTraceString(e));
       }
+      return null;
     }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
       @Override public void onSubscribe(@NonNull Disposable disposable) {
 
@@ -1333,7 +1295,7 @@ public class PostListActivity extends SMTHBaseActivity
     // default: use zSMTH logo
     String imageURL = "http://zsmth-android.zfdang.com/zsmth.png";
     List<Attachment> attaches = post.getAttachFiles();
-    if (attaches != null && attaches.size() > 0) {
+    if (attaches != null && !attaches.isEmpty()) {
       // use the first attached image
       imageURL = attaches.get(0).getResizedImageSource();
     }
@@ -1465,16 +1427,14 @@ public class PostListActivity extends SMTHBaseActivity
 
   @Override public void OnRePostAction(Post post, String target, String outgo) {
     SMTHHelper helper = SMTHHelper.getInstance();
-    helper.wService.repostPost(mTopic.getBoardEngName(), post.getPostID(), target, outgo).map(new Function<ResponseBody, String>() {
-      @Override public String apply(@NonNull ResponseBody responseBody) throws Exception {
-        try {
-          String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
-          return SMTHHelper.parseRepostResponse(response);
-        } catch (Exception e) {
-          Log.e(TAG, "call: " + Log.getStackTraceString(e));
-        }
-        return null;
+    helper.wService.repostPost(mTopic.getBoardEngName(), post.getPostID(), target, outgo).map(responseBody -> {
+      try {
+        String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
+        return SMTHHelper.parseRepostResponse(response);
+      } catch (Exception e) {
+        Log.e(TAG, "call: " + Log.getStackTraceString(e));
       }
+      return null;
     }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
       @Override public void onSubscribe(@NonNull Disposable disposable) {
 

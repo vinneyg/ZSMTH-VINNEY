@@ -100,7 +100,7 @@ public class FileSizeUtil {
    */
   public static String FormatFileSize(long fileSize) {
     DecimalFormat df = new DecimalFormat("#.00");
-    String formattedSize = "";
+    String formattedSize;
     if (fileSize == 0) {
       return "0B";
     }

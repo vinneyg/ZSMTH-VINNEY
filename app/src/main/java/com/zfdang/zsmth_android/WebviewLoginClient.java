@@ -2,7 +2,6 @@ package com.zfdang.zsmth_android;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.webkit.ValueCallback;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
@@ -14,7 +13,7 @@ import android.webkit.WebViewClient;
 //     ==> 302 location: http://m.mysmth.net/index?m=0108
 public class WebviewLoginClient extends WebViewClient {
 
-    private static final String TAG = "WebviewLoginClient";
+    //private static final String TAG = "WebviewLoginClient";
     private final String username;
     private final String password;
 
@@ -59,10 +58,7 @@ public class WebviewLoginClient extends WebViewClient {
                     "checkbox[0].checked = '" + true + "';" +
                     "document.getElementById('TencentCaptcha').click();";
 
-            view.evaluateJavascript(js, new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(String s) {
-                }
+            view.evaluateJavascript(js, s -> {
             });
         }
         super.onPageFinished(view, url);

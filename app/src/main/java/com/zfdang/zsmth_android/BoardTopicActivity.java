@@ -86,7 +86,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
   private boolean isSearchMode = false;
 
   private static final int MAXSIZE = 100;
-  private static Hashtable MapHash = new Hashtable(MAXSIZE);
+  private static final Hashtable MapHash = new Hashtable(MAXSIZE);
 
   @Override protected void onDestroy() {
     super.onDestroy();
@@ -124,32 +124,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     super.onBackPressed();
     //mRecyclerView.getAdapter().notifyDataSetChanged();
   }
-/*
-  private void UpdateNavigationViewHeaderNew() {
-    getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
-    LayoutInflater factory = LayoutInflater.from(BoardTopicActivity.this);
 
-    //View layout = factory.inflate(R.layout.activity_main, null);
-    View layout = factory.inflate(R.layout.nav_header_main, null);
-
-    TextView mUsername = (TextView) layout.findViewById(R.id.nav_user_name);
-    WrapContentDraweeView mAvatar = (WrapContentDraweeView) layout.findViewById(R.id.nav_user_avatar);
-
-    if (SMTHApplication.isValidUser()) {
-      // update user to login user
-      mUsername.setText(SMTHApplication.activeUser.getId());
-      String faceURL = SMTHApplication.activeUser.getFace_url();
-      if (faceURL != null) {
-        mAvatar.setImageFromStringURL(faceURL);
-      }
-    } else {
-      // only user to guest
-      mUsername.setText(getString(R.string.nav_header_click_to_login));
-      mAvatar.setImageResource(R.drawable.ic_person_black_48dp);
-    }
-
-  }
-*/
 
   private static BoardTopicActivity mActivity1 = null;
 
@@ -160,7 +135,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
     setContentView(R.layout.activity_board_topic);
 
-    Toolbar toolbar = (Toolbar) findViewById(R.id.board_topic_toolbar);
+    Toolbar toolbar = findViewById(R.id.board_topic_toolbar);
     setSupportActionBar(toolbar);
     assert toolbar != null;
     toolbar.setTitle(getTitle());
@@ -168,11 +143,11 @@ public class BoardTopicActivity extends SMTHBaseActivity
     mSetting = Settings.getInstance();
 
     // enable pull down to refresh
-    mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+    mSwipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
     if (mSwipeRefreshLayout == null) throw new AssertionError();
     mSwipeRefreshLayout.setOnRefreshListener(this);
 
-    mRecyclerView = (RecyclerView) findViewById(R.id.board_topic_list);
+    mRecyclerView = findViewById(R.id.board_topic_list);
     assert mRecyclerView != null;
     mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL, 0));
@@ -193,18 +168,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
       @Override
       public void onScrollStateChanged(@androidx.annotation.NonNull RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
-        /*
-       if(newState == RecyclerView.SCROLL_STATE_IDLE)
-        mRecyclerView.getAdapter().notifyDataSetChanged();
-
-         */
       }
-      /*
-      @Override
-      public void onScrolled (RecyclerView recyclerView,int dx , int dy){
-        super.onScrolled(recyclerView,dx,dy);
-      }
-       */
 
     };
     mRecyclerView.addOnScrollListener(mScrollListener);
@@ -246,7 +210,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
     updateTitle();
 
-    if (TopicListContent.BOARD_TOPICS.size() == 0) {
+    if (TopicListContent.BOARD_TOPICS.isEmpty()) {
       // only load boards on the first time
       RefreshBoardTopicsWithoutClear();
     }
@@ -365,7 +329,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     showProgress("刷新版面文章...");
 
     TopicListContent.clearBoardTopics();
-    mRecyclerView.getAdapter().notifyDataSetChanged();
+    Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
 
     mCurrentPageNo = 1;
     LoadBoardTopics();
@@ -386,22 +350,18 @@ public class BoardTopicActivity extends SMTHBaseActivity
         .wService
         .getBoardTopicsByPage(mBoard.getBoardEngName(), Integer.toString(mCurrentPageNo))
         .flatMap(
-            new Function<ResponseBody, ObservableSource<Topic>>() {
-              @Override
-              public ObservableSource<Topic> apply(@NonNull ResponseBody responseBody)
-                  throws Exception {
-                try {
-                  String response = responseBody.string();
-                  List<Topic> topics = SMTHHelper.ParseBoardTopicsFromWWW(response);
-                  if (topics.size() == 0)
+                (Function<ResponseBody, ObservableSource<Topic>>) responseBody -> {
+                  try {
+                    String response = responseBody.string();
+                    List<Topic> topics = SMTHHelper.ParseBoardTopicsFromWWW(response);
+                    if (topics.isEmpty())
+                      return null;
+                    return Observable.fromIterable(topics);
+                  } catch (Exception e) {
+                    Log.e(TAG, "call: " + Log.getStackTraceString(e));
                     return null;
-                  return Observable.fromIterable(topics);
-                } catch (Exception e) {
-                  Log.e(TAG, "call: " + Log.getStackTraceString(e));
-                  return null;
-                }
-              }
-            })
+                  }
+                })
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
@@ -413,14 +373,11 @@ public class BoardTopicActivity extends SMTHBaseActivity
                 TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
                 // mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
                 mRecyclerView.post(
-                    new Runnable() {
-                      @Override
-                      public void run() {
-                        // Notify adapter with appropriate notify methods
-                        Objects.requireNonNull(mRecyclerView.getAdapter())
-                            .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
-                      }
-                    });
+                        () -> {
+                          // Notify adapter with appropriate notify methods
+                          Objects.requireNonNull(mRecyclerView.getAdapter())
+                              .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                        });
               }
 
               @Override
@@ -428,18 +385,13 @@ public class BoardTopicActivity extends SMTHBaseActivity
                 // Log.d(TAG, topic.toString());
                 if (!topic.isSticky || mSetting.isShowSticky()) {
                   if (!MapHash.contains(topic.getTitle())) {
-                    if (MapHash.size() < MAXSIZE) {
+                      if (MapHash.size() >= MAXSIZE) {
+                          MapHash.clear();
+                      }
                       TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
                       MapHash.put(topic.getTitle(), topic.getTopicID());
                       Objects.requireNonNull(mRecyclerView.getAdapter())
                           .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
-                    } else {
-                      MapHash.clear();
-                      TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
-                      MapHash.put(topic.getTitle(), topic.getTopicID());
-                      Objects.requireNonNull(mRecyclerView.getAdapter())
-                          .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
-                    }
                   } else {
                     Log.d(TAG, "Vinney3 + " + topic.getTitle());
                   }
@@ -458,7 +410,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                 else
                   Toast.makeText(
                                   SMTHApplication.getAppContext(),
-                                  String.format(Locale.CHINA, "错误:\n版面不存在!"),
+                                  "错误:\n版面不存在!",
                                   Toast.LENGTH_SHORT)
                           .show();
                 mCurrentPageNo -= 1;
@@ -541,18 +493,16 @@ public class BoardTopicActivity extends SMTHBaseActivity
     helper.wService.searchTopicInBoard(keyword, author, eliteStr, attachmentStr, this.mBoard.getBoardEngName())
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .flatMap(new Function<ResponseBody, ObservableSource<Topic>>() {
-          @Override public ObservableSource<Topic> apply(@NonNull ResponseBody responseBody) throws Exception {
-            try {
-              String response = responseBody.string();
-              List<Topic> topics = SMTHHelper.ParseSearchResultFromWWW(response);
-              Topic topic = new Topic("搜索模式 - 下拉或按返回键退出搜索模式");
-              topics.add(0, topic);
-              return Observable.fromIterable(topics);
-            } catch (Exception e) {
-              Log.d(TAG, Log.getStackTraceString(e));
-              return null;
-            }
+        .flatMap((Function<ResponseBody, ObservableSource<Topic>>) responseBody -> {
+          try {
+            String response = responseBody.string();
+            List<Topic> topics = SMTHHelper.ParseSearchResultFromWWW(response);
+            Topic topic = new Topic("搜索模式 - 下拉或按返回键退出搜索模式");
+            topics.add(0, topic);
+            return Observable.fromIterable(topics);
+          } catch (Exception e) {
+            Log.d(TAG, Log.getStackTraceString(e));
+            return null;
           }
         })
         .subscribe(new Observer<Topic>() {

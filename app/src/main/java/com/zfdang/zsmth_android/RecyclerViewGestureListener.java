@@ -23,14 +23,11 @@ public class RecyclerViewGestureListener extends GestureDetector.SimpleOnGesture
     void onItemTopClicked(int position, View v);
   }
 
-  private OnItemLongClickListener mListener;
-  private RecyclerView recyclerView;
-  private int mScreenHeight;
-  private int mScreenWidth;
+  private final OnItemLongClickListener mListener;
+  private final RecyclerView recyclerView;
+  private final int mScreenHeight;
+  private final int mScreenWidth;
 
-
-  public RecyclerViewGestureListener() {
-  }
 
   public RecyclerViewGestureListener(OnItemLongClickListener listener, RecyclerView recyclerView) {
     this.mListener = listener;
@@ -38,9 +35,6 @@ public class RecyclerViewGestureListener extends GestureDetector.SimpleOnGesture
 
     WindowManager wm = (WindowManager) this.recyclerView.getContext().getSystemService(Context.WINDOW_SERVICE);
 
-    // Old version of Android
-    //mScreenHeight = wm.getDefaultDisplay().getHeight();
-    //mScreenWidth = wm.getDefaultDisplay().getWidth();
     DisplayMetrics dm = new DisplayMetrics();
     wm.getDefaultDisplay().getMetrics(dm);
     mScreenWidth = dm.widthPixels;

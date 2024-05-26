@@ -168,23 +168,20 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
                 // {"ajax_st":0,"ajax_code":"0105","ajax_msg":"请勿频繁登录"}
                 // {"ajax_st":1,"ajax_code":"0005","ajax_msg":"操作成功"}
                 Log.d(TAG, ajaxResponse.toString());
-                switch (ajaxResponse.getAjax_st()) {
-                  case AjaxResponse.AJAX_RESULT_OK:
-                    Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
+                  if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+                      Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
 
-                    // save username & password
-                    Settings.getInstance().setUsername(username);
-                    Settings.getInstance().setPassword(password);
-                    Settings.getInstance().setLastLoginSuccess(true);
+                      // save username & password
+                      Settings.getInstance().setUsername(username);
+                      Settings.getInstance().setPassword(password);
+                      Settings.getInstance().setLastLoginSuccess(true);
 
-                    Intent resultIntent = new Intent();
-                    setResult(Activity.RESULT_OK, resultIntent);
-                    finish();
-                    break;
-                  default:
-                    Toast.makeText(SMTHApplication.getAppContext(), ajaxResponse.toString(), Toast.LENGTH_LONG).show();
-                    break;
-                }
+                      Intent resultIntent = new Intent();
+                      setResult(Activity.RESULT_OK, resultIntent);
+                      finish();
+                  } else {
+                      Toast.makeText(SMTHApplication.getAppContext(), ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+                  }
               }
 
               @Override public void onError(@NonNull Throwable e) {
@@ -206,12 +203,10 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case android.R.id.home:
-        onBackPressed();
-        return true;
-      default:
-        return super.onOptionsItemSelected(item);
-    }
+      if (item.getItemId() == android.R.id.home) {
+          onBackPressed();
+          return true;
+      }
+      return super.onOptionsItemSelected(item);
   }
 }

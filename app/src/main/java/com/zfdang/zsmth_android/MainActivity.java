@@ -6,7 +6,6 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -15,7 +14,6 @@ import android.content.res.ColorStateList;
 
 import android.graphics.Point;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -115,8 +113,7 @@ public class MainActivity extends SMTHBaseActivity
   private DrawerLayout mDrawer = null;
   private ActionBarDrawerToggle mToggle = null;
 
-  private UserStatusReceiver mReceiver;
-  // press BACK in 2 seconds, app will quit
+    // press BACK in 2 seconds, app will quit
   private boolean mDoubleBackToExit = false;
   private Handler mHandler = null;
   private FloatingActionMenu mActionMenu;
@@ -208,11 +205,10 @@ public class MainActivity extends SMTHBaseActivity
       titleTextView = (TextView) f.get(toolbar);
       assert titleTextView != null;
       titleTextView.setEllipsize(TextUtils.TruncateAt.START);
-    } catch (NoSuchFieldException e) {
-    } catch (IllegalAccessException e) {
+    } catch (NoSuchFieldException | IllegalAccessException ignored) {
     }
 
-    // init all fragments
+      // init all fragments
     initFragments();
 
     FragmentManager fm = getSupportFragmentManager();
@@ -222,26 +218,24 @@ public class MainActivity extends SMTHBaseActivity
       fm.beginTransaction().replace(R.id.content_frame, favoriteBoardFragment).commit();
     }
 
-    getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-      public void onBackStackChanged() {
-        //Enable Up button only  if there are entries in the back stack
-        boolean canback = getSupportFragmentManager().getBackStackEntryCount() > 0;
-        if (canback) {
-          mToggle.setDrawerIndicatorEnabled(false);
-          ActionBar bar = getSupportActionBar();
-          if (bar != null) {
-            bar.setDisplayShowHomeEnabled(true);
-            bar.setHomeButtonEnabled(true);
-            bar.setDisplayHomeAsUpEnabled(true);
-          }
-        } else {
-          ActionBar bar = getSupportActionBar();
-          if (bar != null) {
-            bar.setDisplayHomeAsUpEnabled(false);
-          }
-          mToggle.setDrawerIndicatorEnabled(true);
-          mDrawer.addDrawerListener(mToggle);
+    getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+      //Enable Up button only  if there are entries in the back stack
+      boolean canback = getSupportFragmentManager().getBackStackEntryCount() > 0;
+      if (canback) {
+        mToggle.setDrawerIndicatorEnabled(false);
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+          bar.setDisplayShowHomeEnabled(true);
+          bar.setHomeButtonEnabled(true);
+          bar.setDisplayHomeAsUpEnabled(true);
         }
+      } else {
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+          bar.setDisplayHomeAsUpEnabled(false);
+        }
+        mToggle.setDrawerIndicatorEnabled(true);
+        mDrawer.addDrawerListener(mToggle);
       }
     });
 
@@ -267,11 +261,9 @@ public class MainActivity extends SMTHBaseActivity
     if (Settings.getInstance().isFirstRun()) {
       // show info dialog after 5 seconds for the first run
       final Handler handler = new Handler();
-      handler.postDelayed(new Runnable() {
-        @Override public void run() {
-          showInfoDialog();
-          MobSDK.submitPolicyGrantResult(true,null);
-        }
+      handler.postDelayed(() -> {
+        showInfoDialog();
+        MobSDK.submitPolicyGrantResult(true,null);
       }, 1000);
     }
 
@@ -348,12 +340,10 @@ public class MainActivity extends SMTHBaseActivity
     SubActionButton button1 = itemBuilder.setContentView(itemIcon1)
             .setBackgroundDrawable(getResources().getDrawable(R.drawable.navigation_button_background,null))
             .build();
-    button1.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        mActionMenu.close(true);
-        onNavigationItemID(R.id.nav_guidance);
-        mNavigationView.setCheckedItem(R.id.nav_guidance);
-      }
+    button1.setOnClickListener(v -> {
+      mActionMenu.close(true);
+      onNavigationItemID(R.id.nav_guidance);
+      mNavigationView.setCheckedItem(R.id.nav_guidance);
     });
 
     ImageView itemIcon2 = new ImageView(this);
@@ -361,12 +351,10 @@ public class MainActivity extends SMTHBaseActivity
     SubActionButton button2 = itemBuilder.setContentView(itemIcon2)
             .setBackgroundDrawable(getResources().getDrawable(R.drawable.navigation_button_background,null))
             .build();
-    button2.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        mActionMenu.close(true);
-        onNavigationItemID(R.id.nav_favorite);
-        mNavigationView.setCheckedItem(R.id.nav_favorite);
-      }
+    button2.setOnClickListener(v -> {
+      mActionMenu.close(true);
+      onNavigationItemID(R.id.nav_favorite);
+      mNavigationView.setCheckedItem(R.id.nav_favorite);
     });
 
     ImageView itemIcon3 = new ImageView(this);
@@ -374,12 +362,10 @@ public class MainActivity extends SMTHBaseActivity
     SubActionButton button3 = itemBuilder.setContentView(itemIcon3)
             .setBackgroundDrawable(getResources().getDrawable(R.drawable.navigation_button_background,null))
             .build();
-    button3.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        mActionMenu.close(true);
-        onNavigationItemID(R.id.nav_all_boards);
-        mNavigationView.setCheckedItem(R.id.nav_all_boards);
-      }
+    button3.setOnClickListener(v -> {
+      mActionMenu.close(true);
+      onNavigationItemID(R.id.nav_all_boards);
+      mNavigationView.setCheckedItem(R.id.nav_all_boards);
     });
 
     ImageView itemIcon4 = new ImageView(this);
@@ -387,12 +373,10 @@ public class MainActivity extends SMTHBaseActivity
     SubActionButton button4 = itemBuilder.setContentView(itemIcon4)
             .setBackgroundDrawable(getResources().getDrawable(R.drawable.navigation_button_background,null))
             .build();
-    button4.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        mActionMenu.close(true);
-        onNavigationItemID(R.id.nav_mail);
-        mNavigationView.setCheckedItem(R.id.nav_mail);
-      }
+    button4.setOnClickListener(v -> {
+      mActionMenu.close(true);
+      onNavigationItemID(R.id.nav_mail);
+      mNavigationView.setCheckedItem(R.id.nav_mail);
     });
 
     mActionMenu = new FloatingActionMenu.Builder(this).addSubActionView(button1)
@@ -412,19 +396,17 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   private void setupUserStatusReceiver() {
-    mReceiver = new UserStatusReceiver(new Handler());
-    mReceiver.setReceiver(new UserStatusReceiver.Receiver() {
-      @Override public void onReceiveResult(int resultCode, Bundle resultData) {
-        if (resultCode == RESULT_OK) {
-          //Log.d(TAG, "onReceiveResult: " + "to update navigationview" + SMTHApplication.activeUser.toString());
-          UpdateNavigationViewHeader();
+      UserStatusReceiver mReceiver = new UserStatusReceiver(new Handler());
+    mReceiver.setReceiver((resultCode, resultData) -> {
+      if (resultCode == RESULT_OK) {
+        //Log.d(TAG, "onReceiveResult: " + "to update navigationview" + SMTHApplication.activeUser.toString());
+        UpdateNavigationViewHeader();
 
-          // show notification if necessary
-          String message = resultData.getString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE);
-          //Log.d(TAG, "OnReceiveResult" + message);
-          if (message != null) {
-            showNotification(message);
-          }
+        // show notification if necessary
+        String message = resultData.getString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE);
+        //Log.d(TAG, "OnReceiveResult" + message);
+        if (message != null) {
+          showNotification(message);
         }
       }
     });
@@ -453,7 +435,6 @@ public class MainActivity extends SMTHBaseActivity
 
       NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         mBuilder.setChannelId(getPackageName()); //必须添加（Android 8.0） 【唯一标识】
         NotificationChannel channel = new NotificationChannel(
                 getPackageName(),
@@ -461,9 +442,8 @@ public class MainActivity extends SMTHBaseActivity
                 NotificationManager.IMPORTANCE_DEFAULT
         );
         mNotifyMgr.createNotificationChannel(channel);
-      }
 
-      Notification notification = mBuilder.build();
+        Notification notification = mBuilder.build();
       mNotifyMgr.notify(notificationID, notification);
     } catch (Exception se) {
       Log.e(TAG, "showNotification: " + se);
@@ -604,6 +584,7 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   @Override public void onBackPressed() {
+    super.onBackPressed();
     if (mDrawer.isDrawerOpen(GravityCompat.START)) {
       mDrawer.closeDrawer(GravityCompat.START);
       return;
@@ -682,11 +663,8 @@ public class MainActivity extends SMTHBaseActivity
     final AlertDialog dlg =
             new AlertDialog.Builder(this).setIcon(R.drawable.ic_launcher).setTitle(R.string.about_title).setMessage(msg).create();
 
-    dlg.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.about_close), new DialogInterface.OnClickListener() {
-
-      @Override public void onClick(DialogInterface dialog, int which) {
-        // do nothing here
-      }
+    dlg.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.about_close), (dialog, which) -> {
+      // do nothing here
     });
 
     dlg.show();
@@ -932,51 +910,43 @@ public class MainActivity extends SMTHBaseActivity
 
         // Log.d(TAG, favoriteBoardFragment.getCurrentFavoritePath());
 
-        builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+        builder.setPositiveButton("删除", (dialog, which) -> {
+          dialog.dismiss();
 
-            SMTHHelper helper = SMTHHelper.getInstance();
-            helper.wService.manageFavoriteBoard("0", "db", board.getBoardEngName())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<AjaxResponse>() {
-                      @Override
-                      public void onSubscribe(@NonNull Disposable disposable) {
+          SMTHHelper helper = SMTHHelper.getInstance();
+          helper.wService.manageFavoriteBoard("0", "db", board.getBoardEngName())
+                  .subscribeOn(Schedulers.io())
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .subscribe(new Observer<AjaxResponse>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable disposable) {
 
+                    }
+
+                    @Override
+                    public void onNext(@NonNull AjaxResponse ajaxResponse) {
+                      //Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                      if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+                        Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg() + "\n" + "请刷新收藏！", Toast.LENGTH_SHORT).show();
+                      } else {
+                        Toast.makeText(MainActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
                       }
 
-                      @Override
-                      public void onNext(@NonNull AjaxResponse ajaxResponse) {
-                        //Log.d(TAG, "onNext: " + ajaxResponse.toString());
-                        if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-                          Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg() + "\n" + "请刷新收藏！", Toast.LENGTH_SHORT).show();
-                        } else {
-                          Toast.makeText(MainActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
-                        }
+                    }
 
-                      }
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                      Toast.makeText(MainActivity.this, "删除收藏版面失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
 
-                      @Override
-                      public void onError(@NonNull Throwable e) {
-                        Toast.makeText(MainActivity.this, "删除收藏版面失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                    }
 
-                      }
+                    @Override
+                    public void onComplete() {
 
-                      @Override
-                      public void onComplete() {
-
-                      }
-                    });
-          }
+                    }
+                  });
         });
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-          }
-        });
+        builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
         AlertDialog noticeDialog = builder.create();
         noticeDialog.show();
       } else if(board.isSection()) {
@@ -985,52 +955,44 @@ public class MainActivity extends SMTHBaseActivity
         String title = String.format("将版面二级目录\"%s\"从收藏中删除么？", board.getFolderName());
         builder.setTitle("收藏操作").setMessage(title);
 
-        builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+        builder.setPositiveButton("删除", (dialog, which) -> {
+          dialog.dismiss();
 
-            SMTHHelper helper = SMTHHelper.getInstance();
-            //Log.d(TAG, favoriteBoardFragment.getCurrentPathInString());
-            helper.wService.manageFavoriteBoard("0", "db", board.getSectionID())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<AjaxResponse>() {
-                      @Override
-                      public void onSubscribe(@NonNull Disposable disposable) {
+          SMTHHelper helper = SMTHHelper.getInstance();
+          //Log.d(TAG, favoriteBoardFragment.getCurrentPathInString());
+          helper.wService.manageFavoriteBoard("0", "db", board.getSectionID())
+                  .subscribeOn(Schedulers.io())
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .subscribe(new Observer<AjaxResponse>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable disposable) {
 
+                    }
+
+                    @Override
+                    public void onNext(@NonNull AjaxResponse ajaxResponse) {
+                      //(TAG, "onNext: " + ajaxResponse.toString());
+                      if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+                        Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg() + "\n" + "请刷新收藏！", Toast.LENGTH_SHORT).show();
+                      } else {
+                        Toast.makeText(MainActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
                       }
 
-                      @Override
-                      public void onNext(@NonNull AjaxResponse ajaxResponse) {
-                        //(TAG, "onNext: " + ajaxResponse.toString());
-                        if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-                          Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg() + "\n" + "请刷新收藏！", Toast.LENGTH_SHORT).show();
-                        } else {
-                          Toast.makeText(MainActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
-                        }
+                    }
 
-                      }
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                      Toast.makeText(MainActivity.this, "删除收藏目录失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
 
-                      @Override
-                      public void onError(@NonNull Throwable e) {
-                        Toast.makeText(MainActivity.this, "删除收藏目录失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                    }
 
-                      }
+                    @Override
+                    public void onComplete() {
 
-                      @Override
-                      public void onComplete() {
-
-                      }
-                    });
-          }
+                    }
+                  });
         });
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-          }
-        });
+        builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
         AlertDialog noticeDialog = builder.create();
         noticeDialog.show();
       }
@@ -1040,52 +1002,44 @@ public class MainActivity extends SMTHBaseActivity
         String title = String.format("将版面二级目录\"%s\"从收藏中删除么？", board.getFolderName());
         builder.setTitle("收藏操作").setMessage(title);
 
-        builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+        builder.setPositiveButton("删除", (dialog, which) -> {
+          dialog.dismiss();
 
-            SMTHHelper helper = SMTHHelper.getInstance();
-            //Log.d(TAG, favoriteBoardFragment.getCurrentPathInString());
-            helper.wService.manageFavoriteBoard("0", "db", board.getFolderID())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<AjaxResponse>() {
-                      @Override
-                      public void onSubscribe(@NonNull Disposable disposable) {
+          SMTHHelper helper = SMTHHelper.getInstance();
+          //Log.d(TAG, favoriteBoardFragment.getCurrentPathInString());
+          helper.wService.manageFavoriteBoard("0", "db", board.getFolderID())
+                  .subscribeOn(Schedulers.io())
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .subscribe(new Observer<AjaxResponse>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable disposable) {
 
+                    }
+
+                    @Override
+                    public void onNext(@NonNull AjaxResponse ajaxResponse) {
+                      //Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                      if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+                        Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg() + "\n" + "请刷新收藏！", Toast.LENGTH_SHORT).show();
+                      } else {
+                        Toast.makeText(MainActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
                       }
 
-                      @Override
-                      public void onNext(@NonNull AjaxResponse ajaxResponse) {
-                        //Log.d(TAG, "onNext: " + ajaxResponse.toString());
-                        if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-                          Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg() + "\n" + "请刷新收藏！", Toast.LENGTH_SHORT).show();
-                        } else {
-                          Toast.makeText(MainActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
-                        }
+                    }
 
-                      }
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                      Toast.makeText(MainActivity.this, "删除收藏目录失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
 
-                      @Override
-                      public void onError(@NonNull Throwable e) {
-                        Toast.makeText(MainActivity.this, "删除收藏目录失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                    }
 
-                      }
+                    @Override
+                    public void onComplete() {
 
-                      @Override
-                      public void onComplete() {
-
-                      }
-                    });
-          }
+                    }
+                  });
         });
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-          }
-        });
+        builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
         AlertDialog noticeDialog = builder.create();
         noticeDialog.show();
       }
@@ -1124,9 +1078,7 @@ public class MainActivity extends SMTHBaseActivity
       activity.getWindowManager().getDefaultDisplay().getSize(displaySize);
       edgeSizeField.setInt(leftDragger, Math.max(edgeSize, (int) (displaySize.x *
               displayWidthPercentage)));
-    } catch (NoSuchFieldException e) {
-    } catch (IllegalArgumentException e) {
-    } catch (IllegalAccessException e) {
+    } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException ignored) {
     }
   }
 
