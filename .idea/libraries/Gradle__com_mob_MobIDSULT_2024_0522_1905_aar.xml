@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.mob:MobIDSULT:2024.0522.1905@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/13b4abe05f165436f6c0fa934970b9da/transformed/jetified-MobIDSULT-2024.0522.1905/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/13b4abe05f165436f6c0fa934970b9da/transformed/jetified-MobIDSULT-2024.0522.1905/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/2bcd39b8015f8ac7a1b4ad822541f022/transformed/jetified-MobIDSULT-2024.0522.1905/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/2bcd39b8015f8ac7a1b4ad822541f022/transformed/jetified-MobIDSULT-2024.0522.1905/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

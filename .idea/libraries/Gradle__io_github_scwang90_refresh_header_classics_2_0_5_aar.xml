@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: io.github.scwang90:refresh-header-classics:2.0.5@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d9c8f1fc07135071600ae7434fad73a8/transformed/jetified-refresh-header-classics-2.0.5/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d9c8f1fc07135071600ae7434fad73a8/transformed/jetified-refresh-header-classics-2.0.5/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/d9c8f1fc07135071600ae7434fad73a8/transformed/jetified-refresh-header-classics-2.0.5/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/e9a4506f8f3ffbbeafa6200ee46fe3d9/transformed/jetified-refresh-header-classics-2.0.5/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e9a4506f8f3ffbbeafa6200ee46fe3d9/transformed/jetified-refresh-header-classics-2.0.5/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e9a4506f8f3ffbbeafa6200ee46fe3d9/transformed/jetified-refresh-header-classics-2.0.5/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

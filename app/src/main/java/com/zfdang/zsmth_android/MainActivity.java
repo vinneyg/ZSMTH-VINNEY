@@ -33,6 +33,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -126,6 +128,16 @@ public class MainActivity extends SMTHBaseActivity
     setContentView(R.layout.activity_main);
     Toolbar toolbar =  findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
+
+    OnBackPressedDispatcher dispatcher = getOnBackPressedDispatcher();
+
+    dispatcher.addCallback(this, new OnBackPressedCallback(true) {
+      @Override
+      public void handleOnBackPressed() {
+        // Handle the back button press here
+        onHandleBackPressed();
+      }
+    });
 
     // how to adjust the height of toolbar
     // http://stackoverflow.com/questions/17439683/how-to-change-action-bar-size
@@ -583,8 +595,7 @@ public class MainActivity extends SMTHBaseActivity
     }
   }
 
-  @Override public void onBackPressed() {
-    super.onBackPressed();
+  public void onHandleBackPressed() {
     if (mDrawer.isDrawerOpen(GravityCompat.START)) {
       mDrawer.closeDrawer(GravityCompat.START);
       return;
