@@ -20,9 +20,7 @@
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/all_board_list"
       android:name="com.zfdang.zsmth_android.AllBoardFragment"
-      xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_below="@+id/all_board_search"

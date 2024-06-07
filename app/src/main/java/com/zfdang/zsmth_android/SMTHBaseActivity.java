@@ -37,8 +37,9 @@ public class SMTHBaseActivity extends AppCompatActivity {
   @Override public Resources getResources() {
     Resources res = super.getResources();
     Configuration config = res.getConfiguration();
-    config.fontScale = Settings.getInstance().getFontSizeFloatValue();
-    res.updateConfiguration(config, res.getDisplayMetrics());
+    Configuration newConfig = new Configuration();
+    newConfig.fontScale = Settings.getInstance().getFontSizeFloatValue();
+    config.updateFrom(newConfig);
     //Log.d("SMTHBaseActivity", "getResources: " + config.fontScale);
     return res;
   }

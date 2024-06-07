@@ -21,6 +21,7 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.DraweeHolder;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
@@ -91,11 +92,11 @@ public class MyPhotoView extends PhotoView {
     final ImageRequest imageRequest =
         ImageRequestBuilder.newBuilderWithSource(Uri.parse(uri))
                 .setResizeOptions(new ResizeOptions(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE))
-                .setAutoRotateEnabled(true)
+                .setRotationOptions(RotationOptions.autoRotate())
                 .build();
     final ImagePipeline imagePipeline = Fresco.getImagePipeline();
     final DataSource<CloseableReference<CloseableImage>> dataSource = imagePipeline.fetchDecodedImage(imageRequest, this);
-    final AbstractDraweeController controller = Fresco.newDraweeControllerBuilder()
+    final AbstractDraweeController controller= Fresco.newDraweeControllerBuilder()
         .setOldController(mDraweeHolder.getController())
         .setAutoPlayAnimations(true)
         .setImageRequest(imageRequest)

@@ -16,11 +16,11 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.controller.ControllerListener;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.BasePostprocessor;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -29,11 +29,10 @@ import com.facebook.imagepipeline.request.Postprocessor;
 import com.zfdang.SMTHApplication;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-/**
+/*
  * Created by zfdang on 2016-4-8.
  */
 
@@ -199,8 +198,9 @@ public class WrapContentDraweeView extends SimpleDraweeView {
       }
     };
 
-    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri).setAutoRotateEnabled(true)
-        // this will reduce image's size if it's wider than screen width
+    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+                                .setRotationOptions(RotationOptions.autoRotate())
+            // this will reduce image's size if it's wider than screen width
                         .setResizeOptions(new ResizeOptions(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE))
         .setPostprocessor(postProcessor).build();
 
