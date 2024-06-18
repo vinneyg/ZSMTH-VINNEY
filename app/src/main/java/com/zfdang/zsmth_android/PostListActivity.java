@@ -1,18 +1,25 @@
 package com.zfdang.zsmth_android;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.net.Uri;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -314,8 +321,6 @@ public class PostListActivity extends SMTHBaseActivity
       }
     });
 
-
-
     if (mTopic == null || !mTopic.getTopicID().equals(topic.getTopicID()) || PostListContent.POSTS.isEmpty()) {
       // new topic, different topic, or no post loaded
       mTopic = topic;
@@ -323,10 +328,10 @@ public class PostListActivity extends SMTHBaseActivity
       reloadPostList();
       setTitle(mTopic.getBoardChsName() + " - 阅读文章");
     }
-    else //Add by Vinney for recording article address
+    else
     {
-        mTopic = topic;
-        mFilterUser = null;
+      mTopic = topic;
+      mFilterUser = null;
       setTitle(mTopic.getBoardChsName() + " - 阅读文章");
       if(!Settings.getInstance().isOpenTopicAdd()) {
         reloadPostList();
@@ -951,7 +956,6 @@ public class PostListActivity extends SMTHBaseActivity
         new PostActionAlertDialogItem(getString(R.string.post_convert_image), R.drawable.ic_photo_black_48dp), // 11
         //new PostActionAlertDialogItem(getString(R.string.post_reply_author),R.drawable.ic_expand_less_36dp) // 11
         new PostActionAlertDialogItem(getString(R.string.post_reply_author),R.drawable.ic_reply_black_48dp) // 11
-        //Vinney add reply head author
     };
 
     ListAdapter adapter = new ArrayAdapter<PostActionAlertDialogItem>(getApplicationContext(), R.layout.post_popup_menu_item, menuItems) {
@@ -1128,9 +1132,9 @@ public class PostListActivity extends SMTHBaseActivity
       String content;
       if (post != null) {
         content = post.getRawContent();
-        final android.content.ClipboardManager clipboardManager =
-                (android.content.ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
-        final android.content.ClipData clipData = android.content.ClipData.newPlainText("PostContent", content);
+        final ClipboardManager clipboardManager =
+                (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+        final ClipData clipData = ClipData.newPlainText("PostContent", content);
         clipboardManager.setPrimaryClip(clipData);
         Toast.makeText(PostListActivity.this, "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT).show();
       } else {
@@ -1173,9 +1177,23 @@ public class PostListActivity extends SMTHBaseActivity
 
       // convert title + post to image
       assert v != null;
-      captureView(mTitle, v, post.getPostID());
+
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        if(Environment.isExternalStorageManager())
+        {
+          captureView(mTitle, v, post.getPostID());
+        }
+        else
+        {
+          Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+          startActivity(intent);
+        }
+      } else{
+          captureView(mTitle, v, post.getPostID());
+      }
+
+
     }
-    //Vinney
     else if (which == 12) {
       // post_reply_post
       ComposePostContext postContext = new ComposePostContext();
@@ -1214,7 +1232,7 @@ public class PostListActivity extends SMTHBaseActivity
     // save image to sdcard
     try {
       if (TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
-        String path = Environment.getExternalStorageDirectory().getPath() + "/zSMTH/";
+        String path = Environment.getExternalStorageDirectory().getPath() + "/zSMTH-v/";
         File dir = new File(path);
         if (!dir.exists()) {
           dir.mkdirs();
@@ -1226,13 +1244,13 @@ public class PostListActivity extends SMTHBaseActivity
         FileOutputStream out = new FileOutputStream(outFile);
 
         image.compress(Bitmap.CompressFormat.JPEG, 90, out); //Output
-        Toast.makeText(PostListActivity.this, "截图已存为: /zSMTH/" + outFile.getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(PostListActivity.this, "截图已存为: /zSMTH-v/" + outFile.getName(), Toast.LENGTH_SHORT).show();
 
         // make sure the new file can be recognized soon
         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(outFile)));
       }
     } catch (Exception e) {
-      Log.e(TAG, "saveImageToFile: " + Log.getStackTraceString(e));
+        Log.e(TAG, "saveImageToFile: " + Log.getStackTraceString(e));
         Toast.makeText(PostListActivity.this, "保存截图失败:\n请授予应用存储权限！\n" + e, Toast.LENGTH_LONG).show();
     }
   }
@@ -1264,7 +1282,6 @@ public class PostListActivity extends SMTHBaseActivity
 
       @SuppressLint("NotifyDataSetChanged")
       @Override public void onComplete() {
-        //Vinney：修改删除回复后导致页面减少显示不正常。删除后，退回board再进入文章显示第一页
           mCurrentPageNo = 1;
           mCurrentReadPageNo = 1;
           Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
