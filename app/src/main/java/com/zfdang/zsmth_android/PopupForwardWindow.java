@@ -130,7 +130,7 @@ public class PopupForwardWindow extends PopupWindow {
       if (mListener != null) {
         String target = mTargetBoard.getText().toString().trim();
         String [] newTarget = target.split(",");
-        ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+        //ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
         for (String s : newTarget) {
           mListener.OnRePostAction(PopupForwardWindow.post, s, "on");
 

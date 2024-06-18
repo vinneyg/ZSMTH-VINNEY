@@ -11,9 +11,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 import android.content.res.ColorStateList;
-
 import android.graphics.Point;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -40,6 +38,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.customview.widget.ViewDragHelper;
@@ -47,8 +46,6 @@ import androidx.customview.widget.ViewDragHelper;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-//import androidx.preference.CheckBoxPreference;
-//import androidx.preference.PreferenceFragment;
 
 import androidx.work.Data;
 import androidx.work.ExistingWorkPolicy;
@@ -82,7 +79,6 @@ import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserInfo;
 
 import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
-
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
 
 import java.lang.reflect.Field;
@@ -275,7 +271,7 @@ public class MainActivity extends SMTHBaseActivity
       final Handler handler = new Handler();
       handler.postDelayed(() -> {
         showInfoDialog();
-        MobSDK.submitPolicyGrantResult(true,null);
+        MobSDK.submitPolicyGrantResult(true);
       }, 1000);
     }
 
@@ -436,27 +432,25 @@ public class MainActivity extends SMTHBaseActivity
       PendingIntent resultPendingIntent =
               PendingIntent.getActivity(MainActivity.this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
 
-      Notification.Builder mBuilder = new Notification.Builder(this).setSmallIcon(R.drawable.ic_launcher)
+      NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+
+      NotificationChannel notificationChannel = new NotificationChannel("zSMTHChannel","zSMTH-v通知消息",
+                NotificationManager.IMPORTANCE_HIGH);
+      mNotifyMgr.createNotificationChannel(notificationChannel);
+
+      Notification notification = new NotificationCompat.Builder(this,"zSMTHChannel")
+              .setSmallIcon(R.drawable.ic_launcher)
               .setContentTitle("zSMTH-v提醒")
               .setWhen(System.currentTimeMillis())
               .setAutoCancel(true)
               .setOnlyAlertOnce(true)
               .setDefaults(Notification.DEFAULT_VIBRATE)
               .setContentText(text)
-              .setContentIntent(resultPendingIntent);
+              .setContentIntent(resultPendingIntent)
+              .build();
 
-      NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        mBuilder.setChannelId(getPackageName()); //必须添加（Android 8.0） 【唯一标识】
-        NotificationChannel channel = new NotificationChannel(
-                getPackageName(),
-                "zSMTH-v通知消息",
-                NotificationManager.IMPORTANCE_DEFAULT
-        );
-        mNotifyMgr.createNotificationChannel(channel);
-
-        Notification notification = mBuilder.build();
-      mNotifyMgr.notify(notificationID, notification);
+        mNotifyMgr.notify(notificationID, notification);
     } catch (Exception se) {
       Log.e(TAG, "showNotification: " + se);
     }
