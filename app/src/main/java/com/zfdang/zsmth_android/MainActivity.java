@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.Manifest;
 
 import android.content.res.ColorStateList;
 import android.graphics.Point;
@@ -38,7 +39,9 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.customview.widget.ViewDragHelper;
@@ -435,11 +438,11 @@ public class MainActivity extends SMTHBaseActivity
       NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
 
-      NotificationChannel notificationChannel = new NotificationChannel("zSMTHChannel","zSMTH-v通知消息",
-                NotificationManager.IMPORTANCE_HIGH);
+      NotificationChannel notificationChannel = new NotificationChannel("newChan","zSMTH-v通知消息",
+                NotificationManager.IMPORTANCE_DEFAULT);
       mNotifyMgr.createNotificationChannel(notificationChannel);
 
-      Notification notification = new NotificationCompat.Builder(this,"zSMTHChannel")
+      Notification notification = new NotificationCompat.Builder(this,"newChan")
               .setSmallIcon(R.drawable.ic_launcher)
               .setContentTitle("zSMTH-v提醒")
               .setWhen(System.currentTimeMillis())
@@ -450,7 +453,15 @@ public class MainActivity extends SMTHBaseActivity
               .setContentIntent(resultPendingIntent)
               .build();
 
-        mNotifyMgr.notify(notificationID, notification);
+        if(mNotifyMgr.areNotificationsEnabled()){
+          Log.d("vinney","108");
+          mNotifyMgr.notify(notificationID, notification);
+        } else{
+          Log.d("vinney","109");
+          Intent intent = new Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+          startActivity(intent);
+        }
+
     } catch (Exception se) {
       Log.e(TAG, "showNotification: " + se);
     }

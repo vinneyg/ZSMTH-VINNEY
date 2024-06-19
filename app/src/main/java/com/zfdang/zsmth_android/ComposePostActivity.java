@@ -232,8 +232,10 @@ public class ComposePostActivity extends SMTHBaseActivity {
       setTitle("写新信件");
       mUserID.setText(mPostContext.getPostAuthor());
       mUserID.setEnabled(false);
+      //Set focus to Title
+      mTitle.requestFocus();
       // set focus to content
-      mContent.requestFocus();
+      //mContent.requestFocus();
     } else if (mPostContext.getComposingMode() == ComposePostContext.MODE_REPLY_MAIL) {
       mAttachRow.setVisibility(View.GONE);
       setTitle("回复信件");
@@ -311,7 +313,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
     postPublishMessage = "";
     lastResponse = null;
 
-    final String progressHint = "发表文章中(%d/%d)...";
+    String progressHint = "发表中(%d/%d)...";
     ComposePostActivity.totalSteps = 1;
     ComposePostActivity.currentStep = 1;
 
