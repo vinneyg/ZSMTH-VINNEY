@@ -3,11 +3,17 @@ package com.zfdang.zsmth_android;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -30,6 +36,8 @@ import com.zfdang.zsmth_android.models.MailListContent;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserInfo;
+import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
+
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -385,6 +393,11 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
       @Override public void onNext(@NonNull Mail mail) {
         MailListContent.addItem(mail);
         recyclerView.getAdapter().notifyItemChanged(MailListContent.MAILS.size() - 1);
+
+        if(mail.isCategory && mail.category.startsWith("产生错误的可能原因")){
+            Intent intent = new Intent(requireActivity(), LoginActivity.class);
+            startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
+        }
       }
 
       @Override public void onError(@NonNull Throwable e) {
@@ -397,6 +410,16 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
         recyclerView.smoothScrollToPosition(0);
       }
     });
+  }
+
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == MainActivity.LOGIN_ACTIVITY_REQUEST_CODE) {
+      WorkRequest userStatusWorkRequest =
+              new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
+      WorkManager.getInstance(requireActivity()).enqueue(userStatusWorkRequest);
+    }
   }
 
   public void showLoadingHints() {

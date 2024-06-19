@@ -276,6 +276,8 @@ public class MainActivity extends SMTHBaseActivity
         showInfoDialog();
         MobSDK.submitPolicyGrantResult(true);
       }, 1000);
+    } else {
+      Toast.makeText(MainActivity.this, "请先登录！",Toast.LENGTH_SHORT).show();
     }
 
 

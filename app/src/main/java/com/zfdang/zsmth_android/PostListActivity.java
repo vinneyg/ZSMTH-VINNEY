@@ -16,6 +16,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -24,6 +26,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -64,6 +70,7 @@ import com.zfdang.zsmth_android.models.PostListContent;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
@@ -150,9 +157,14 @@ public class PostListActivity extends SMTHBaseActivity
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
     if(requestCode == ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE) {
       // returned from Compose activity, refresh current post
       reloadPostList();
+    } else if (requestCode == MainActivity.LOGIN_ACTIVITY_REQUEST_CODE) {
+      WorkRequest userStatusWorkRequest =
+              new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
+      WorkManager.getInstance(this).enqueue(userStatusWorkRequest);
     }
 
     super.onActivityResult(requestCode, resultCode, data);
@@ -625,8 +637,8 @@ public class PostListActivity extends SMTHBaseActivity
                     }
 
                     if (!SMTHApplication.isValidUser()) {
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
+                      Intent intent = new Intent(PostListActivity.this, LoginActivity.class);
+                      startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
                     }
                     else
                       Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请刷新页面！",Toast.LENGTH_SHORT).show();
@@ -723,6 +735,7 @@ public class PostListActivity extends SMTHBaseActivity
                     } catch (InterruptedException e) {
                       e.printStackTrace();
                     }
+
                     if (!SMTHApplication.isValidUser()) {
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);

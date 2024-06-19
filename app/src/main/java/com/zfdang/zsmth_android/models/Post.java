@@ -239,6 +239,7 @@ public class Post {
           // other attachment, add link for downloading
           String downloadURL = a.attr("href");
           downloadURL = SMTHHelper.preprocessSMTHImageURL(downloadURL);
+          Log.d("Vinney-Attach-3 -", downloadURL);
           if (downloadURL.contains("/nForum/att/")) {
             a.append("<br>" + downloadURL);
 

@@ -393,7 +393,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                       Objects.requireNonNull(mRecyclerView.getAdapter())
                           .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
                   } else {
-                    Log.d(TAG, "Vinney3 + " + topic.getTitle());
+                    Log.d(TAG, "sticky " + topic.getTitle());
                   }
                 }
               }
@@ -407,14 +407,24 @@ public class BoardTopicActivity extends SMTHBaseActivity
                         String.format(Locale.CHINA, "错误:获取第%d页的帖子失败!\n"+e.toString(), mCurrentPageNo),
                         Toast.LENGTH_SHORT)
                     .show();
-                else
-                  Toast.makeText(
-                                  SMTHApplication.getAppContext(),
-                                  "错误:\n版面不存在!",
-                                  Toast.LENGTH_SHORT)
-                          .show();
-                mCurrentPageNo -= 1;
-              }
+                else{
+                  mCurrentPageNo -= 1;
+
+                  try {
+                    Thread.sleep(500);
+                    onBackPressed();
+                  } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                  }
+                  if (!SMTHApplication.isValidUser()) {
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
+                  }
+                  else
+                    Toast.makeText(SMTHApplication.getAppContext(),"版面不存在，请刷新页面！",Toast.LENGTH_SHORT).show();
+                }
+
+                }
 
               @Override
               public void onComplete() {

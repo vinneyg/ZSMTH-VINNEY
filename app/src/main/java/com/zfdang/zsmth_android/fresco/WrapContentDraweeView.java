@@ -199,9 +199,9 @@ public class WrapContentDraweeView extends SimpleDraweeView {
     };
 
     ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-                                .setRotationOptions(RotationOptions.autoRotate())
-            // this will reduce image's size if it's wider than screen width
-                        .setResizeOptions(new ResizeOptions(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE))
+        .setRotationOptions(RotationOptions.autoRotate())
+        // this will reduce image's size if it's wider than screen width
+        .setResizeOptions(new ResizeOptions(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE))
         .setPostprocessor(postProcessor).build();
 
     DraweeController controller = ((PipelineDraweeControllerBuilder) getControllerBuilder()).setImageRequest(request)
