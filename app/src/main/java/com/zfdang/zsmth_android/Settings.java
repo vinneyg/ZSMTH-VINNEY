@@ -74,9 +74,11 @@ public class Settings {
   private static final String AUTO_LOGIN = "auto_login";
   private boolean bAutoLogin;
 
+  /*
   public boolean isAutoLogin() {
     return bAutoLogin;
   }
+  */
 
   public void setAutoLogin(boolean mAutoLogin) {
     if (this.bAutoLogin != mAutoLogin) {
@@ -89,9 +91,11 @@ public class Settings {
   private static final String LAST_LOGIN_SUCCESS = "last_login_success";
   private boolean bLastLoginSuccess;
 
+  /*
   public boolean isLastLoginSuccess() {
     return bLastLoginSuccess;
   }
+  */
 
   public void setLastLoginSuccess(boolean bLastLoginSuccess) {
     if (this.bLastLoginSuccess != bLastLoginSuccess) {

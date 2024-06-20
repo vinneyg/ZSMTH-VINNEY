@@ -1,12 +1,18 @@
 package com.zfdang.zsmth_android;
 
+/*
 import android.Manifest;
+import android.content.pm.PackageManager;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+*/
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -17,11 +23,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -547,7 +551,7 @@ public class PostListActivity extends SMTHBaseActivity
                       Settings.getInstance().setUserOnline(false); //User Offline
                       onBackPressed();
                     } catch (InterruptedException e) {
-                      e.printStackTrace();
+                      Log.e(TAG,"Error occurred: ", e);
                     }
                   }
               }
@@ -633,16 +637,25 @@ public class PostListActivity extends SMTHBaseActivity
                       Thread.sleep(500);
                       onBackPressed();
                     } catch (InterruptedException e) {
-                      e.printStackTrace();
+                      Log.e(TAG,"Error occurred: ", e);
                     }
 
-                    if (!SMTHApplication.isValidUser()) {
+                    Bundle req = getIntent().getExtras();
+                    String str = null;
+                    if(req != null) {
+                       str = req.getString(SMTHApplication.FROM_BOARD);
+                    }
+
+                    if (!SMTHApplication.isValidUser() && !Objects.equals(str, SMTHApplication.FROM_BOARD_HOT)) {
                       Intent intent = new Intent(PostListActivity.this, LoginActivity.class);
                       startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
                     }
-                    else
-                      Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请刷新页面！",Toast.LENGTH_SHORT).show();
-
+                    else{
+                      if(Objects.equals(str, SMTHApplication.FROM_BOARD_HOT))
+                        Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请登录！",Toast.LENGTH_SHORT).show();
+                      else
+                        Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请刷新页面！",Toast.LENGTH_SHORT).show();
+}
                   }
                 }
             });
@@ -733,7 +746,7 @@ public class PostListActivity extends SMTHBaseActivity
                       Thread.sleep(500);
                       onBackPressed();
                     } catch (InterruptedException e) {
-                      e.printStackTrace();
+                      Log.e(TAG,"Error occurred: ", e);
                     }
 
                     if (!SMTHApplication.isValidUser()) {

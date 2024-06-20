@@ -14,11 +14,12 @@ import androidx.annotation.NonNull;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.AbstractDraweeController;
+//import com.facebook.drawee.controller.AbstractDraweeController;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.DraweeHolder;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
@@ -96,7 +97,7 @@ public class MyPhotoView extends PhotoView {
                 .build();
     final ImagePipeline imagePipeline = Fresco.getImagePipeline();
     final DataSource<CloseableReference<CloseableImage>> dataSource = imagePipeline.fetchDecodedImage(imageRequest, this);
-    final AbstractDraweeController controller= Fresco.newDraweeControllerBuilder()
+    final DraweeController controller= Fresco.newDraweeControllerBuilder()
         .setOldController(mDraweeHolder.getController())
         .setAutoPlayAnimations(true)
         .setImageRequest(imageRequest)

@@ -18,8 +18,8 @@ import android.widget.RadioButton;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.models.Post;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+//import java.util.concurrent.ExecutorService;
+//import java.util.concurrent.Executors;
 
 /**
  * Created by zfdang on 2016-4-26.

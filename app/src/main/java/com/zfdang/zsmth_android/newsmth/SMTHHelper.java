@@ -13,6 +13,7 @@ import android.util.Log;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.Settings;
 import com.zfdang.zsmth_android.WebviewCookieHandler;

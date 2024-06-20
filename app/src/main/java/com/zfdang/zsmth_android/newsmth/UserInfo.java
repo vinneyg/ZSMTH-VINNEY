@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.text.Html;
 
 import androidx.annotation.NonNull;
+import androidx.core.text.HtmlCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -49,6 +50,7 @@ import java.util.Locale;
 //
 
 public class UserInfo implements Parcelable {
+
   public String getAjax_code() {
     return ajax_code;
   }
@@ -72,6 +74,7 @@ public class UserInfo implements Parcelable {
   public void setAjax_st(int ajax_st) {
     this.ajax_st = ajax_st;
   }
+
 
   public String getAstro() {
     return astro;
@@ -271,7 +274,7 @@ public class UserInfo implements Parcelable {
 
   public String getStatus() {
     // status : "目前在站上，状态如下：↵<span class='blue'>Web浏览</span> "
-    return Html.fromHtml(status).toString();
+    return HtmlCompat.fromHtml(status,HtmlCompat.FROM_HTML_MODE_LEGACY).toString().trim();
   }
 
   public void setStatus(String status) {

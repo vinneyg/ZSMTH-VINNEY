@@ -9,7 +9,6 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.Manifest;
 
 import android.content.res.ColorStateList;
 import android.graphics.Point;
@@ -39,9 +38,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
+
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.customview.widget.ViewDragHelper;
@@ -275,9 +273,10 @@ public class MainActivity extends SMTHBaseActivity
       handler.postDelayed(() -> {
         showInfoDialog();
         MobSDK.submitPolicyGrantResult(true);
-      }, 1000);
+      }, 3000);
     } else {
-      Toast.makeText(MainActivity.this, "请先登录！",Toast.LENGTH_SHORT).show();
+      if(!SMTHApplication.isValidUser())
+        Toast.makeText(MainActivity.this, "请先登录！",Toast.LENGTH_SHORT).show();
     }
 
 

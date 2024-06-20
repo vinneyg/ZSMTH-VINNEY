@@ -1,7 +1,7 @@
 package com.zfdang.zsmth_android.models;
 
-import android.text.Html;
 import android.text.Spanned;
+import androidx.core.text.HtmlCompat;
 
 /**
  * Post content will finally be processed as a list of ContentSegment
@@ -39,7 +39,7 @@ public class ContentSegment {
     // http://stackoverflow.com/questions/4793347/jsoup-not-translating-ampersand-in-links-in-html
     // Html.fromHtml has bugs to parse &mid: only &mid; should be converted, but it convert &mid wrongly
     String tempText = text.replaceAll("&mid([^;])", "&amp;mid$1");
-    this.spanned = Html.fromHtml(tempText);
+    this.spanned = HtmlCompat.fromHtml(tempText,HtmlCompat.FROM_HTML_MODE_LEGACY);
   }
 
   public Spanned getSpanned() {

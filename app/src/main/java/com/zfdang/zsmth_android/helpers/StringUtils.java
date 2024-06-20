@@ -63,7 +63,7 @@ public class StringUtils {
   }
 
   public static String lookupIPLocation(String content) {
-    Pattern myipPattern = Pattern.compile("FROM[: ]*(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)[\\d\\*]+");
+    Pattern myipPattern = Pattern.compile("FROM[: ]*(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)[\\d*]+");
     Matcher myipMatcher = myipPattern.matcher(content);
     while (myipMatcher.find()) {
       String ipl = myipMatcher.group(1);
@@ -78,7 +78,7 @@ public class StringUtils {
   }
 
   public static String lookupIPLocationInProfile(String content) {
-    Pattern myipPattern = Pattern.compile("(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)[\\d\\*]+");
+    Pattern myipPattern = Pattern.compile("(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)[\\d*]+");
     Matcher myipMatcher = myipPattern.matcher(content);
     while (myipMatcher.find()) {
       String ipl = myipMatcher.group(1);
