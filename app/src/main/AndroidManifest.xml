@@ -30,7 +30,11 @@
         android:requestLegacyExternalStorage="true"
         android:preserveLegacyExternalStorage="true"
         tools:replace="android:name"
-      tools:targetApi="r">
+        tools:targetApi="r">
+        <service
+            android:name=".services.KeepAliveService"
+            android:enabled="true"
+            android:exported="true"></service>
     <activity
         android:name=".MainActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"

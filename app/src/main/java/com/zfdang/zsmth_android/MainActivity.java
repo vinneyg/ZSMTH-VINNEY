@@ -2,14 +2,17 @@ package com.zfdang.zsmth_android;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-
+import android.os.Build;
 import android.content.res.ColorStateList;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -38,7 +41,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
-
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -78,13 +81,14 @@ import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserInfo;
-
+import com.zfdang.zsmth_android.services.KeepAliveService;
 import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -98,6 +102,8 @@ public class MainActivity extends SMTHBaseActivity
   // used by startActivityForResult
   static final int LOGIN_ACTIVITY_REQUEST_CODE = 9527;  // The request code
   private static final String TAG = "MainActivity";
+  // keep aive service
+  private Intent keepAliveService;
   // guidance fragment: display hot topics
   // this fragment is using RecyclerView to show all hot topics
   HotTopicFragment hotTopicFragment = null;
@@ -112,6 +118,7 @@ public class MainActivity extends SMTHBaseActivity
   private DrawerLayout mDrawer = null;
   private ActionBarDrawerToggle mToggle = null;
 
+  private UserStatusReceiver mReceiver;
     // press BACK in 2 seconds, app will quit
   private boolean mDoubleBackToExit = false;
   private Handler mHandler = null;
@@ -408,8 +415,9 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   private void setupUserStatusReceiver() {
-      UserStatusReceiver mReceiver = new UserStatusReceiver(new Handler());
-    mReceiver.setReceiver((resultCode, resultData) -> {
+    mReceiver = new UserStatusReceiver(new Handler());
+    mReceiver.setReceiver(new UserStatusReceiver.Receiver() {
+      @Override public void onReceiveResult(int resultCode, Bundle resultData) {
       if (resultCode == RESULT_OK) {
         //Log.d(TAG, "onReceiveResult: " + "to update navigationview" + SMTHApplication.activeUser.toString());
         UpdateNavigationViewHeader();
@@ -421,8 +429,41 @@ public class MainActivity extends SMTHBaseActivity
           showNotification(message);
         }
       }
+      }
+
+      @Override
+      public void onServerFailed() {
+        stopService(keepAliveService);
+        SMTHApplication.activeUser = null;
+        SMTHApplication.displayedUserId = "guest";
+        runOnUiThread(() -> {
+          mUsername.setText(getString(R.string.nav_header_click_to_login));
+          mAvatar.setImageResource(R.drawable.ic_person_black_48dp);
+        });
+      }
     });
     SMTHApplication.mUserStatusReceiver = mReceiver;
+  }
+
+  private void init_keep_alive_service() {
+    if (keepAliveService == null)
+      keepAliveService = new Intent(this, KeepAliveService.class);
+    if (!isKeepAliveServiceRunning()) {
+        startForegroundService(keepAliveService);
+    }
+  }
+  public Boolean isKeepAliveServiceRunning() {
+    String ServiceName = KeepAliveService.class.getName();
+    ActivityManager myManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+    ArrayList<ActivityManager.RunningServiceInfo> runningService =
+            (ArrayList<ActivityManager.RunningServiceInfo>)
+                    myManager.getRunningServices(Integer.MAX_VALUE);
+    for (int i = 0; i < runningService.size(); i++) {
+      if (runningService.get(i).service.getClassName().equals(ServiceName)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private void showNotification(String text) {
@@ -455,10 +496,8 @@ public class MainActivity extends SMTHBaseActivity
               .build();
 
         if(mNotifyMgr.areNotificationsEnabled()){
-          Log.d("vinney","108");
           mNotifyMgr.notify(notificationID, notification);
         } else{
-          Log.d("vinney","109");
           Intent intent = new Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS);
           startActivity(intent);
         }
@@ -593,11 +632,14 @@ public class MainActivity extends SMTHBaseActivity
         mAvatar.setImageFromStringURL(faceURL);
       }
       SMTHApplication.displayedUserId = SMTHApplication.activeUser.getId();
+      init_keep_alive_service();
     } else {
       // when user is invalid, set notice to login
       mUsername.setText(getString(R.string.nav_header_click_to_login));
       mAvatar.setImageResource(R.drawable.ic_person_black_48dp);
       SMTHApplication.displayedUserId = "guest";
+      if (keepAliveService != null)
+        stopService(keepAliveService);
     }
   }
 
@@ -651,6 +693,11 @@ public class MainActivity extends SMTHBaseActivity
     //user logout
     //onLogout();
     // quit
+	
+	// stop keep alive service
+    if (keepAliveService != null)
+      stopService(keepAliveService);
+
     finish();
     android.os.Process.killProcess(android.os.Process.myPid());
     System.exit(0);

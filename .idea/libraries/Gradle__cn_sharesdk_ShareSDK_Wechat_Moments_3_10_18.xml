@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: cn.sharesdk:ShareSDK-Wechat-Moments:3.10.18" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="cn.sharesdk" artifactId="ShareSDK-Wechat-Moments" version="3.10.18" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/cn.sharesdk/ShareSDK-Wechat-Moments/3.10.18/dae009b5faca457f33f5091bef2dae3570886a2c/ShareSDK-Wechat-Moments-3.10.18.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

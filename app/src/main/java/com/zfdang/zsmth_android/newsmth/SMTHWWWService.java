@@ -4,6 +4,7 @@ import java.util.Map;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
@@ -167,4 +168,7 @@ public interface SMTHWWWService {
     @POST("/bbsccc.php?do")
     Observable<ResponseBody> repostPost(@Query("board") String boardEngName,
                                         @Query("id") String postID, @Field("target") String target, @Field("outgo") String outgo);
+
+    @GET("/nForum/board/NewExpress?ajax")
+    Call<String> keepAlive();
 }
