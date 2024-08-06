@@ -119,17 +119,17 @@
     <orderEntry type="library" name="Gradle: cn.sharesdk:ShareSDK:3.10.18@aar" level="project" />
     <orderEntry type="library" name="Gradle: cn.sharesdk:OneKeyShare:3.10.18@aar" level="project" />
     <orderEntry type="library" name="Gradle: cn.sharesdk:ShareSDK-SinaWeiboX-Core:3.10.18@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.mob:MobCoreULT:2024.0522.1905@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.mob:MobIDSULT:2024.0522.1905@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.mob:MobCoreULT:2024.0801.1535@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.mob:MobIDSULT:2024.0801.1535@aar" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.13.2" level="project" />
     <orderEntry type="library" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
-    <orderEntry type="library" name="Gradle: com.squareup.okhttp3:okhttp:4.11.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.squareup.okio:okio-jvm:3.2.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.8.22" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.8.22" level="project" />
+    <orderEntry type="library" name="Gradle: com.squareup.okhttp3:okhttp:4.12.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.squareup.okio:okio-jvm:3.6.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.9.10" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.9.10" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains:annotations:23.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.10" level="project" />
     <orderEntry type="library" name="Gradle: androidx.annotation:annotation-jvm:1.6.0" level="project" />
     <orderEntry type="library" name="Gradle: androidx.arch.core:core-common:2.2.0" level="project" />
     <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-common:2.6.2" level="project" />
@@ -138,14 +138,14 @@
     <orderEntry type="library" name="Gradle: androidx.collection:collection:1.1.0" level="project" />
     <orderEntry type="library" name="Gradle: androidx.resourceinspection:resourceinspection-annotation:1.0.1" level="project" />
     <orderEntry type="library" name="Gradle: io.reactivex.rxjava2:rxjava:2.2.21" level="project" />
-    <orderEntry type="library" name="Gradle: org.reactivestreams:reactive-streams:1.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.reactivestreams:reactive-streams:1.0.4" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:listenablefuture:1.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.squareup.okhttp3:logging-interceptor:4.11.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.squareup.retrofit2:retrofit:2.9.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.squareup.retrofit2:converter-scalars:2.9.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.squareup.retrofit2:adapter-rxjava2:2.9.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.squareup.retrofit2:converter-gson:2.9.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.8.5" level="project" />
+    <orderEntry type="library" name="Gradle: com.squareup.okhttp3:logging-interceptor:4.12.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.squareup.retrofit2:retrofit:2.11.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.squareup.retrofit2:converter-scalars:2.11.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.squareup.retrofit2:adapter-rxjava2:2.11.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.squareup.retrofit2:converter-gson:2.11.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.10.1" level="project" />
     <orderEntry type="library" name="Gradle: com.umeng.sdk:common:1.5.3" level="project" />
     <orderEntry type="library" name="Gradle: com.umeng.sdk:analytics:7.5.3" level="project" />
     <orderEntry type="library" name="Gradle: org.jsoup:jsoup:1.14.3" level="project" />
@@ -167,7 +167,7 @@
     <orderEntry type="library" name="Gradle: cn.sharesdk:ShareSDK-Wechat-Core:3.10.18" level="project" />
     <orderEntry type="library" name="Gradle: cn.sharesdk:ShareSDK-Wechat-Moments:3.10.18" level="project" />
     <orderEntry type="library" name="Gradle: cn.sharesdk:ShareSDK-QQ:3.10.18" level="project" />
-    <orderEntry type="library" name="Gradle: com.mob:MobGUIULT:2024.0522.1905" level="project" />
-    <orderEntry type="library" name="Gradle: com.mob:MobSupportV1:2024.0522.1905" level="project" />
+    <orderEntry type="library" name="Gradle: com.mob:MobGUIULT:2024.0801.1535" level="project" />
+    <orderEntry type="library" name="Gradle: com.mob:MobSupportV1:2024.0801.1535" level="project" />
   </component>
 </module>

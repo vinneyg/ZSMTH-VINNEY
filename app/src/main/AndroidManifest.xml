@@ -17,6 +17,7 @@
   <uses-permission android:name="android.permission.WAKE_LOCK" />
   <uses-permission android:name="android.permission.CAMERA" />
   <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
   <application
         android:name="com.zfdang.SMTHApplication"
@@ -34,7 +35,12 @@
         <service
             android:name=".services.KeepAliveService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="false"
+            android:foregroundServiceType= "specialUse"
+            android:permission= "android.permission.FOREGROUND_SERVICE_SPECIAL_USE"
+            tools:ignore="ForegroundServicePermission">
+
+        </service>
     <activity
         android:name=".MainActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
