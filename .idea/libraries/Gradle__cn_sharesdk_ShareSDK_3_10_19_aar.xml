@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: cn.sharesdk:ShareSDK:3.10.19@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/7a5bb36976f3cbf9b5a8370fd7ba169e/transformed/jetified-ShareSDK-3.10.19/jars/libs/ShareSDK-3.10.19.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/7a5bb36976f3cbf9b5a8370fd7ba169e/transformed/jetified-ShareSDK-3.10.19/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/7a5bb36976f3cbf9b5a8370fd7ba169e/transformed/jetified-ShareSDK-3.10.19/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/7a5bb36976f3cbf9b5a8370fd7ba169e/transformed/jetified-ShareSDK-3.10.19/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
