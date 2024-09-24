@@ -2,11 +2,13 @@ package com.zfdang.multiple_images_selector.models;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.zfdang.multiple_images_selector.SelectorSettings;
 
 public class ImageItem {
     private static final String TAG = "ImageItem";
-    public static final String CAMERA_PATH = "Camera";
+    //public static final String CAMERA_PATH = "Camera";
 
     public String path;
     public String name;
@@ -34,6 +36,7 @@ public class ImageItem {
         return super.equals(o);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "ImageItem{" +

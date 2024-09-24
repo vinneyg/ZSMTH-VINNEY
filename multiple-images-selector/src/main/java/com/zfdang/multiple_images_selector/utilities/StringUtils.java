@@ -5,7 +5,7 @@ package com.zfdang.multiple_images_selector.utilities;
  */
 public class StringUtils {
     public static String getLastPathSegment(String content) {
-        if(content == null || content.length() == 0){
+        if(content == null || content.isEmpty()){
             return "";
         }
         String[] segments = content.split("/");

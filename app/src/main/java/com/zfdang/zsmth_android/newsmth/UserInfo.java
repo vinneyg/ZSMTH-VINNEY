@@ -2,7 +2,7 @@ package com.zfdang.zsmth_android.newsmth;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.Html;
+//import android.text.Html;
 
 import androidx.annotation.NonNull;
 import androidx.core.text.HtmlCompat;

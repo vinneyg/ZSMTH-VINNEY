@@ -1,5 +1,6 @@
 package com.zfdang.multiple_images_selector;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -33,7 +34,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     public DividerItemDecoration(Context context, int orientation, int dividerDrawableRes) {
         if(dividerDrawableRes == 0){
-            final TypedArray a = context.obtainStyledAttributes(ATTRS);
+            @SuppressLint("ResourceType") final TypedArray a = context.obtainStyledAttributes(ATTRS);
             mDivider = a.getDrawable(0);
             a.recycle();
             mHeight = Objects.requireNonNull(mDivider).getIntrinsicHeight();

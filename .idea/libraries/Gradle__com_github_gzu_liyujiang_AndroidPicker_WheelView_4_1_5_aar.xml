@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.gzu-liyujiang.AndroidPicker:WheelView:4.1.5@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/477faf9a112af85013a818744c367f65/transformed/jetified-WheelView-4.1.5/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/477faf9a112af85013a818744c367f65/transformed/jetified-WheelView-4.1.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/477faf9a112af85013a818744c367f65/transformed/jetified-WheelView-4.1.5/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/8e41a0d310743b32f6abbb8de2786408/transformed/jetified-WheelView-4.1.5/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/8e41a0d310743b32f6abbb8de2786408/transformed/jetified-WheelView-4.1.5/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/8e41a0d310743b32f6abbb8de2786408/transformed/jetified-WheelView-4.1.5/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

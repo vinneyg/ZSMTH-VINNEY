@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +24,7 @@ public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecycler
 
     private final List<ImageItem> mValues;
     private final OnImageRecyclerViewInteractionListener mListener;
-    private static final String TAG = "ImageAdapter";
+    //private static final String TAG = "ImageAdapter";
 
     public ImageRecyclerViewAdapter(List<ImageItem> items, OnImageRecyclerViewInteractionListener listener) {
         mValues = items;
@@ -77,33 +76,30 @@ public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecycler
         }
 
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Log.d(TAG, "onClick: " + holder.mItem.toString());
-                if(!holder.mItem.isCamera()) {
-                    if(!ImageListContent.isImageSelected(imageItem.path)) {
-                        // just select one new image, make sure total number is ok
-                        if(ImageListContent.SELECTED_IMAGES.size() < SelectorSettings.mMaxImageNumber) {
-                            ImageListContent.toggleImageSelected(imageItem.path);
-                            notifyItemChanged(position);
-                        } else {
-                            // set flag
-                            ImageListContent.bReachMaxNumber = true;
-                        }
-                    } else {
-                        // deselect
+        holder.mView.setOnClickListener(v -> {
+            // Log.d(TAG, "onClick: " + holder.mItem.toString());
+            if(!holder.mItem.isCamera()) {
+                if(!ImageListContent.isImageSelected(imageItem.path)) {
+                    // just select one new image, make sure total number is ok
+                    if(ImageListContent.SELECTED_IMAGES.size() < SelectorSettings.mMaxImageNumber) {
                         ImageListContent.toggleImageSelected(imageItem.path);
                         notifyItemChanged(position);
+                    } else {
+                        // set flag
+                        ImageListContent.bReachMaxNumber = true;
                     }
                 } else {
-                    // do nothing here, listener will launch camera to capture image
+                    // deselect
+                    ImageListContent.toggleImageSelected(imageItem.path);
+                    notifyItemChanged(position);
                 }
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onImageItemInteraction(holder.mItem);
-                }
+            } else {
+                // do nothing here, listener will launch camera to capture image
+            }
+            if (null != mListener) {
+                // Notify the active callbacks interface (the activity, if the
+                // fragment is attached to one) that an item has been selected.
+                mListener.onImageItemInteraction(holder.mItem);
             }
         });
     }
@@ -124,13 +120,13 @@ public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecycler
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mDrawee = (SimpleDraweeView) view.findViewById(R.id.image_drawee);
+            mDrawee = view.findViewById(R.id.image_drawee);
             assert mDrawee != null;
             mMask = view.findViewById(R.id.image_mask);
             assert mMask != null;
-            mChecked = (ImageView) view.findViewById(R.id.image_checked);
+            mChecked = view.findViewById(R.id.image_checked);
             assert mChecked != null;
-            mImageName = (TextView) view.findViewById(R.id.image_name);
+            mImageName = view.findViewById(R.id.image_name);
             assert mImageName != null;
         }
 

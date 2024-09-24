@@ -7,7 +7,7 @@ import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.image.ImageInfo;
+//import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
@@ -15,7 +15,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
  * Created by zfdang on 2016-4-17.
  */
 public class DraweeUtils {
-    private static String TAG = "DraweeUtils";
+    //private static final String TAG = "DraweeUtils";
 
     // http://www.jianshu.com/p/5364957dcf49
     public static void showThumb(Uri uri, SimpleDraweeView draweeView){
@@ -28,7 +28,7 @@ public class DraweeUtils {
                 .setImageRequest(request)
                 .setAutoPlayAnimations(true)
                 .setOldController(draweeView.getController())
-                .setControllerListener(new BaseControllerListener<ImageInfo>())
+                .setControllerListener(new BaseControllerListener<>())
                 .build();
         draweeView.setController(controller);
     }

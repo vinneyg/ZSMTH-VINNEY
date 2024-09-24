@@ -11,10 +11,27 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 2081,
-      "versionName": "24.08.06",
-      "outputFile": "zSMTH-v-24.08.06-2081.apk"
+      "versionCode": 2084,
+      "versionName": "24.09.20",
+      "outputFile": "zSMTH-v-24.09.20-2084.apk"
     }
   ],
-  "elementType": "File"
+  "elementType": "File",
+  "baselineProfiles": [
+    {
+      "minApi": 28,
+      "maxApi": 30,
+      "baselineProfiles": [
+        "baselineProfiles/1/zSMTH-v-24.09.20-2084.dm"
+      ]
+    },
+    {
+      "minApi": 31,
+      "maxApi": 2147483647,
+      "baselineProfiles": [
+        "baselineProfiles/0/zSMTH-v-24.09.20-2084.dm"
+      ]
+    }
+  ],
+  "minSdkVersionForDexing": 26
 }

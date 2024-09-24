@@ -19,7 +19,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.Settings;
@@ -56,12 +55,10 @@ public class ImagesSelectorActivity extends AppCompatActivity
         implements OnImageRecyclerViewInteractionListener, OnFolderRecyclerViewInteractionListener, View.OnClickListener{
 
     private static final String TAG = "ImageSelector";
-    private static final String ARG_COLUMN_COUNT = "column-count";
+    //private static final String ARG_COLUMN_COUNT = "column-count";
 
     private static final int MY_PERMISSIONS_REQUEST_STORAGE_CODE = 197;
     private static final int MY_PERMISSIONS_REQUEST_CAMERA_CODE = 341;
-
-    private int mColumnCount = 3;
 
     // custom action bars
     private ImageView mButtonBack;
@@ -99,15 +96,15 @@ public class ImagesSelectorActivity extends AppCompatActivity
 
         ArrayList<String> selected = intent.getStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST);
         ImageListContent.SELECTED_IMAGES.clear();
-        if(selected != null && selected.size() > 0) {
+        if(selected != null && !selected.isEmpty()) {
             ImageListContent.SELECTED_IMAGES.addAll(selected);
         }
 
         // initialize widgets in custom actionbar
-        mButtonBack = (ImageView) findViewById(R.id.selector_button_back);
+        mButtonBack = findViewById(R.id.selector_button_back);
         mButtonBack.setOnClickListener(this);
 
-        mButtonConfirm = (Button) findViewById(R.id.selector_button_confirm);
+        mButtonConfirm = findViewById(R.id.selector_button_confirm);
         mButtonConfirm.setOnClickListener(this);
 
         // initialize recyclerview
@@ -116,14 +113,11 @@ public class ImagesSelectorActivity extends AppCompatActivity
         if (rview instanceof RecyclerView) {
             Context context = rview.getContext();
             recyclerView = (RecyclerView) rview;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
+            int mColumnCount = 3;
+            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             recyclerView.setAdapter(new ImageRecyclerViewAdapter(ImageListContent.IMAGES, this));
 
-            VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) findViewById(R.id.recyclerview_fast_scroller);
+            VerticalRecyclerViewFastScroller fastScroller = findViewById(R.id.recyclerview_fast_scroller);
             // Connect the recycler to the scroller (to let the scroller scroll the list)
             fastScroller.setRecyclerView(recyclerView);
             // Connect the scroller to the recycler (to let the recycler scroll the scroller's handle)
@@ -134,22 +128,19 @@ public class ImagesSelectorActivity extends AppCompatActivity
         mPopupAnchorView = findViewById(R.id.selector_footer);
 
         // initialize buttons in footer
-        mFolderSelectButton = (TextView) findViewById(R.id.selector_image_folder_button);
+        mFolderSelectButton = findViewById(R.id.selector_image_folder_button);
         mFolderSelectButton.setText(R.string.selector_folder_all);
-        mFolderSelectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
+        mFolderSelectButton.setOnClickListener(view -> {
 
-                if (mFolderPopupWindow == null) {
-                    mFolderPopupWindow = new FolderPopupWindow();
-                    mFolderPopupWindow.initPopupWindow(ImagesSelectorActivity.this);
-                }
+            if (mFolderPopupWindow == null) {
+                mFolderPopupWindow = new FolderPopupWindow();
+                mFolderPopupWindow.initPopupWindow(ImagesSelectorActivity.this);
+            }
 
-                if (mFolderPopupWindow.isShowing()) {
-                    mFolderPopupWindow.dismiss();
-                } else {
-                    mFolderPopupWindow.showAtLocation(mPopupAnchorView, Gravity.BOTTOM, 10, 150);
-                }
+            if (mFolderPopupWindow.isShowing()) {
+                mFolderPopupWindow.dismiss();
+            } else {
+                mFolderPopupWindow.showAtLocation(mPopupAnchorView, Gravity.BOTTOM, 10, 150);
             }
         });
 
@@ -164,10 +155,6 @@ public class ImagesSelectorActivity extends AppCompatActivity
 
     public void requestReadStorageRuntimePermission() {
         if (ContextCompat.checkSelfPermission(ImagesSelectorActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            /*ActivityCompat.requestPermissions(ImagesSelectorActivity.this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    MY_PERMISSIONS_REQUEST_STORAGE_CODE);
-           */
             if(Build.VERSION.SDK_INT<Build.VERSION_CODES.R|| Environment.isExternalStorageManager()){
                 LoadFolderAndImages();
                 //Toast.makeText(this,"已获得所有文件的访问权限",Toast.LENGTH_SHORT).show();
@@ -207,7 +194,8 @@ public class ImagesSelectorActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @androidx.annotation.NonNull String[] permissions, @androidx.annotation.NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_STORAGE_CODE: {
                 // If request is cancelled, the result arrays are empty.
@@ -292,66 +280,64 @@ public class ImagesSelectorActivity extends AppCompatActivity
     // this method is to load images and folders for all
     public void LoadFolderAndImages() {
         Log.d(TAG, "Load Folder And Images...");
-        Observable.just("").flatMap(new Function<String, Observable<ImageItem>>() {
-            @Override public Observable<ImageItem> apply(@NonNull String s) throws Exception {
-                List<ImageItem> results = new ArrayList<>();
+        Observable.just("").flatMap((Function<String, Observable<ImageItem>>) s -> {
+            List<ImageItem> results = new ArrayList<>();
 
-                Uri contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                String where = MediaStore.Images.Media.SIZE + " > " + SelectorSettings.mMinImageSize;
-                String sortOrder = MediaStore.Images.Media.DATE_TAKEN + " DESC";
+            Uri contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            String where = MediaStore.Images.Media.SIZE + " > " + SelectorSettings.mMinImageSize;
+            String sortOrder = MediaStore.Images.Media.DATE_TAKEN + " DESC";
 
-                contentResolver = getContentResolver();
-                Cursor cursor = contentResolver.query(contentUri, projections, where, null, sortOrder);
-                if (cursor == null) {
-                    Log.d(TAG, "call: " + "Empty images");
-                } else if (cursor.moveToFirst()) {
-                    FolderItem allImagesFolderItem = null;
-                    int pathCol = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
-                    int nameCol = cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME);
-                    int DateCol = cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED);
-                    do {
-                        String path = cursor.getString(pathCol);
-                        String name = cursor.getString(nameCol);
-                        long dateTime = cursor.getLong(DateCol);
+            contentResolver = getContentResolver();
+            Cursor cursor = contentResolver.query(contentUri, projections, where, null, sortOrder);
+            if (cursor == null) {
+                Log.d(TAG, "call: " + "Empty images");
+            } else if (cursor.moveToFirst()) {
+                FolderItem allImagesFolderItem = null;
+                int pathCol = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
+                int nameCol = cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME);
+                int DateCol = cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED);
+                do {
+                    String path = cursor.getString(pathCol);
+                    String name = cursor.getString(nameCol);
+                    long dateTime = cursor.getLong(DateCol);
 
-                        ImageItem item = new ImageItem(name, path, dateTime);
+                    ImageItem item = new ImageItem(name, path, dateTime);
 
-                        // if FolderListContent is still empty, add "All Images" option
-                        if (FolderListContent.FOLDERS.size() == 0) {
-                            // add folder for all image
-                            FolderListContent.selectedFolderIndex = 0;
+                    // if FolderListContent is still empty, add "All Images" option
+                    if (FolderListContent.FOLDERS.isEmpty()) {
+                        // add folder for all image
+                        FolderListContent.selectedFolderIndex = 0;
 
-                            // use first image's path as cover image path
-                            allImagesFolderItem = new FolderItem(getString(R.string.selector_folder_all), "", path);
-                            FolderListContent.addItem(allImagesFolderItem);
+                        // use first image's path as cover image path
+                        allImagesFolderItem = new FolderItem(getString(R.string.selector_folder_all), "", path);
+                        FolderListContent.addItem(allImagesFolderItem);
 
-                            // show camera icon ?
-                            if (SelectorSettings.isShowCamera) {
-                                results.add(ImageListContent.cameraItem);
-                                allImagesFolderItem.addImageItem(ImageListContent.cameraItem);
-                            }
+                        // show camera icon ?
+                        if (SelectorSettings.isShowCamera) {
+                            results.add(ImageListContent.cameraItem);
+                            allImagesFolderItem.addImageItem(ImageListContent.cameraItem);
                         }
+                    }
 
-                        // add image item here, make sure it appears after the camera icon
-                        results.add(item);
+                    // add image item here, make sure it appears after the camera icon
+                    results.add(item);
 
-                        // add current image item to all
-                        Objects.requireNonNull(allImagesFolderItem).addImageItem(item);
+                    // add current image item to all
+                    Objects.requireNonNull(allImagesFolderItem).addImageItem(item);
 
-                        // find the parent folder for this image, and add path to folderList if not existed
-                        String folderPath = Objects.requireNonNull(new File(path).getParentFile()).getAbsolutePath();
-                        FolderItem folderItem = FolderListContent.getItem(folderPath);
-                        if (folderItem == null) {
-                            // does not exist, create it
-                            folderItem = new FolderItem(StringUtils.getLastPathSegment(folderPath), folderPath, path);
-                            FolderListContent.addItem(folderItem);
-                        }
-                        folderItem.addImageItem(item);
-                    } while (cursor.moveToNext());
-                    cursor.close();
-                } // } else if (cursor.moveToFirst()) {
-                return Observable.fromIterable(results);
-            }
+                    // find the parent folder for this image, and add path to folderList if not existed
+                    String folderPath = Objects.requireNonNull(new File(path).getParentFile()).getAbsolutePath();
+                    FolderItem folderItem = FolderListContent.getItem(folderPath);
+                    if (folderItem == null) {
+                        // does not exist, create it
+                        folderItem = new FolderItem(StringUtils.getLastPathSegment(folderPath), folderPath, path);
+                        FolderListContent.addItem(folderItem);
+                    }
+                    folderItem.addImageItem(item);
+                } while (cursor.moveToNext());
+                cursor.close();
+            } // } else if (cursor.moveToFirst()) {
+            return Observable.fromIterable(results);
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<ImageItem>() {
             @Override public void onSubscribe(@NonNull Disposable disposable) {
 
@@ -374,16 +360,13 @@ public class ImagesSelectorActivity extends AppCompatActivity
     }
 
     public void updateDoneButton() {
-        if(ImageListContent.SELECTED_IMAGES.size() == 0) {
-            mButtonConfirm.setEnabled(false);
-        } else {
-            mButtonConfirm.setEnabled(true);
-        }
+        mButtonConfirm.setEnabled(!ImageListContent.SELECTED_IMAGES.isEmpty());
 
         String caption = getResources().getString(R.string.selector_action_done, ImageListContent.SELECTED_IMAGES.size(), SelectorSettings.mMaxImageNumber);
         mButtonConfirm.setText(caption);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void OnFolderChange() {
         mFolderPopupWindow.dismiss();
 

@@ -26,6 +26,7 @@ public class BoardListContent {
     ALL_BOARDS.add(item);
   }
 
+  /*
   public static class ChineseComparator implements Comparator<Board> {
     RuleBasedCollator collator = (RuleBasedCollator) Collator.getInstance(Locale.CHINA);
 
@@ -33,6 +34,7 @@ public class BoardListContent {
       return collator.compare(b1.getBoardChsName(), b2.getBoardChsName());
     }
   }
+  */
 
   public static class EnglishComparator implements Comparator<Board> {
     RuleBasedCollator collator = (RuleBasedCollator) Collator.getInstance(Locale.CHINA);

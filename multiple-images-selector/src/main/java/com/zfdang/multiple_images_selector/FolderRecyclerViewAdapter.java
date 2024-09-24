@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,7 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
 
     private final List<FolderItem> mValues;
     private final OnFolderRecyclerViewInteractionListener mListener;
-    private final String TAG = "FolderAdapter";
+    //private final String TAG = "FolderAdapter";
 
     public FolderRecyclerViewAdapter(List<FolderItem> items, OnFolderRecyclerViewInteractionListener listener) {
         mValues = items;
@@ -54,21 +53,18 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
 
         DraweeUtils.showThumb(Uri.fromFile(new File(folderItem.coverImagePath)), holder.folderCover);
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Log.d(TAG, "onClick: " + holder.mItem.toString());
-                // pass the selected result to FolderListContent
-                int previousSelectedIndex = FolderListContent.selectedFolderIndex;
-                FolderListContent.setSelectedFolder(holder.mItem, position);
-                // we should notify previous item and current time to change
-                notifyItemChanged(previousSelectedIndex);
-                notifyItemChanged(position);
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onFolderItemInteraction(holder.mItem);
-                }
+        holder.mView.setOnClickListener(v -> {
+            // Log.d(TAG, "onClick: " + holder.mItem.toString());
+            // pass the selected result to FolderListContent
+            int previousSelectedIndex = FolderListContent.selectedFolderIndex;
+            FolderListContent.setSelectedFolder(holder.mItem, position);
+            // we should notify previous item and current time to change
+            notifyItemChanged(previousSelectedIndex);
+            notifyItemChanged(position);
+            if (null != mListener) {
+                // Notify the active callbacks interface (the activity, if the
+                // fragment is attached to one) that an item has been selected.
+                mListener.onFolderItemInteraction(holder.mItem);
             }
         });
     }
@@ -91,11 +87,11 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            folderCover = (SimpleDraweeView) view.findViewById(R.id.folder_cover_image);
-            folderName = (TextView) view.findViewById(R.id.folder_name);
-            folderPath = (TextView) view.findViewById(R.id.folder_path);
-            folderSize = (TextView) view.findViewById(R.id.folder_size);
-            folderIndicator = (ImageView) view.findViewById(R.id.folder_selected_indicator);
+            folderCover = view.findViewById(R.id.folder_cover_image);
+            folderName = view.findViewById(R.id.folder_name);
+            folderPath = view.findViewById(R.id.folder_path);
+            folderSize = view.findViewById(R.id.folder_size);
+            folderIndicator = view.findViewById(R.id.folder_selected_indicator);
         }
 
         @NonNull

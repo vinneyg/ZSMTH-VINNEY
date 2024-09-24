@@ -1,6 +1,6 @@
 package com.zfdang.multiple_images_selector;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 /**
  * Created by zfdang on 2016-4-18.
@@ -23,7 +23,7 @@ public class SelectorSettings {
      * initial selected images, full path of images
      */
     public static final String SELECTOR_INITIAL_SELECTED_LIST = "selector_initial_selected_list";
-    public static ArrayList<String> resultList = new ArrayList<>();
+    //public static ArrayList<String> resultList = new ArrayList<>();
 
     // results
     public static final String SELECTOR_RESULTS = "selector_results";

@@ -105,6 +105,7 @@ public class FileUtils {
         return individualCacheDir;
     }
 
+
     private static File getExternalCacheDir(Context context) {
         File dataDir = new File(new File(Environment.getExternalStorageDirectory(), "Android"), "data");
         File appCacheDir = new File(new File(dataDir, context.getPackageName()), "cache");

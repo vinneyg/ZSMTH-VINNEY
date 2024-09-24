@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +16,7 @@ import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
 import android.text.TextUtils;
-import android.util.Log;
+//import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,7 +36,7 @@ import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.MailListContent;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
-import com.zfdang.zsmth_android.newsmth.UserInfo;
+//import com.zfdang.zsmth_android.newsmth.UserInfo;
 import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 
 import io.reactivex.ObservableSource;
@@ -44,6 +45,8 @@ import io.reactivex.disposables.Disposable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
 import okhttp3.ResponseBody;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -59,7 +62,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class MailListFragment extends Fragment implements OnVolumeUpDownListener, View.OnClickListener {
 
-  private static final String TAG = "MailListFragment";
+  //private static final String TAG = "MailListFragment";
   public static final String INBOX_LABEL = "inbox";
   private static final String OUTBOX_LABEL = "outbox";
   private static final String DELETED_LABEL = "deleted";
@@ -101,7 +104,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_mail_list, container, false);
 
-    recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_mail_contents);
+    recyclerView = view.findViewById(R.id.recyclerview_mail_contents);
     Context context = view.getContext();
     LinearLayoutManager linearLayoutManager = new WrapContentLinearLayoutManager(context);
     recyclerView.setLayoutManager(linearLayoutManager);
@@ -121,27 +124,27 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
     // enable swipe to delete mail
     initItemHelper();
 
-    btInbox = (Button) view.findViewById(R.id.mail_button_inbox);
+    btInbox = view.findViewById(R.id.mail_button_inbox);
     btInbox.setOnClickListener(this);
-    btOutbox = (Button) view.findViewById(R.id.mail_button_outbox);
+    btOutbox = view.findViewById(R.id.mail_button_outbox);
     btOutbox.setOnClickListener(this);
-    btTrashbox = (Button) view.findViewById(R.id.mail_button_trashbox);
+    btTrashbox = view.findViewById(R.id.mail_button_trashbox);
     btTrashbox.setOnClickListener(this);
-    btAt = (Button) view.findViewById(R.id.mail_button_at);
+    btAt = view.findViewById(R.id.mail_button_at);
     btAt.setOnClickListener(this);
-    btReply = (Button) view.findViewById(R.id.mail_button_reply);
+    btReply = view.findViewById(R.id.mail_button_reply);
     btReply.setOnClickListener(this);
-    btLike = (Button) view.findViewById(R.id.mail_button_like);
+    btLike = view.findViewById(R.id.mail_button_like);
     btLike.setOnClickListener(this);
 
     colorNormal = getResources().getColor(R.color.status_text_night,null);
     //colorBlue = getResources().getColor(R.color.blue_text_night);
     colorBlue = getResources().getColor(R.color.colorPrimary,null);
 
-    if (MailListContent.MAILS.size() == 0) {
+    if (MailListContent.MAILS.isEmpty()) {
       LoadMailsFromBeginning();
       if(SMTHApplication.isValidUser())
-        ( (MainActivity)getActivity()).onRelogin();
+        ( (MainActivity) requireActivity()).onRelogin();
     }
 
     // highlight the current folder
@@ -154,7 +157,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
     //0则不执行拖动或者滑动
     ItemTouchHelper.Callback mCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
-      @Override public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+      @Override public boolean onMove(@androidx.annotation.NonNull RecyclerView recyclerView, @androidx.annotation.NonNull RecyclerView.ViewHolder viewHolder, @androidx.annotation.NonNull RecyclerView.ViewHolder target) {
         return false;
       }
 
@@ -164,12 +167,12 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
         if (!mail.isCategory) {
           String type = "mail";
           String mailId = mail.getMailIDFromURL();
-          if (mail.referIndex != null && mail.referIndex.length() > 0) {
+          if (mail.referIndex != null && !mail.referIndex.isEmpty()) {
             type = "refer";
             mailId = mail.referIndex;
           }
 
-          Map<String, String> mails = new HashMap<String, String>();
+          Map<String, String> mails = new HashMap<>();
           String mailKey = String.format("m_%s", mailId);
           mails.put(mailKey, "on");
 
@@ -186,7 +189,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
                   // Log.d(TAG, "onNext: " + ajaxResponse.toString());
                   if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
                     MailListContent.MAILS.remove(viewHolder.getAdapterPosition());
-                    recyclerView.getAdapter().notifyItemRemoved(viewHolder.getAdapterPosition());
+                    Objects.requireNonNull(recyclerView.getAdapter()).notifyItemRemoved(viewHolder.getAdapterPosition());
                   }
                   Toast.makeText(getActivity(), ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
                 }
@@ -201,7 +204,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
               });
         }
         else{
-          recyclerView.getAdapter().notifyItemChanged(position);
+          Objects.requireNonNull(recyclerView.getAdapter()).notifyItemChanged(position);
           Toast.makeText(SMTHApplication.getAppContext(), "目录无法删除", Toast.LENGTH_SHORT).show();
         }
       }
@@ -285,21 +288,19 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
           Mail mail = new Mail(".END.");
           MailListContent.addItem(mail);
          // recyclerView.getAdapter().notifyItemChanged(MailListContent.MAILS.size() - 1);
-          return;
-         }
-         else {
-         return;
        }
+        return;
     }
 
     currentPage += 1;
     LoadMailsOrReferPosts();
   }
 
+  @SuppressLint("NotifyDataSetChanged")
   public void LoadMailsFromBeginning() {
     currentPage = 1;
     MailListContent.clear();
-    recyclerView.getAdapter().notifyDataSetChanged();
+    Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
 
     showLoadingHints();
     LoadMailsOrReferPosts();
@@ -311,22 +312,34 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
     if (TextUtils.equals(currentFolder, INBOX_LABEL) || TextUtils.equals(currentFolder, OUTBOX_LABEL) || TextUtils.equals(currentFolder,
         DELETED_LABEL)) {
       // Load mails
-      if (TextUtils.equals(currentFolder, INBOX_LABEL) )
-        activity.setTitle(SMTHApplication.App_Title_Prefix+"邮件");
-      else if(TextUtils.equals(currentFolder,OUTBOX_LABEL))
-        activity.setTitle(SMTHApplication.App_Title_Prefix+"发件箱");
-      else if(TextUtils.equals(currentFolder,DELETED_LABEL))
-        activity.setTitle(SMTHApplication.App_Title_Prefix+"回收站");
+      if (TextUtils.equals(currentFolder, INBOX_LABEL) ) {
+          assert activity != null;
+          activity.setTitle(SMTHApplication.App_Title_Prefix+"邮件");
+      }
+      else if(TextUtils.equals(currentFolder,OUTBOX_LABEL)) {
+          assert activity != null;
+          activity.setTitle(SMTHApplication.App_Title_Prefix+"发件箱");
+      }
+      else if(TextUtils.equals(currentFolder,DELETED_LABEL)) {
+          assert activity != null;
+          activity.setTitle(SMTHApplication.App_Title_Prefix+"回收站");
+      }
       LoadMails();
 
     } else {
       // Load refer posts
-           if (TextUtils.equals(currentFolder, REPLY_LABEL) )
-              activity.setTitle(SMTHApplication.App_Title_Prefix+"回复我");
-           else if(TextUtils.equals(currentFolder,AT_LABEL))
-              activity.setTitle(SMTHApplication.App_Title_Prefix+"@我");
-           else if(TextUtils.equals(currentFolder,LIKE_LABEL))
-              activity.setTitle(SMTHApplication.App_Title_Prefix+"LIKE我");
+           if (TextUtils.equals(currentFolder, REPLY_LABEL) ) {
+               assert activity != null;
+               activity.setTitle(SMTHApplication.App_Title_Prefix+"回复我");
+           }
+           else if(TextUtils.equals(currentFolder,AT_LABEL)) {
+               assert activity != null;
+               activity.setTitle(SMTHApplication.App_Title_Prefix+"@我");
+           }
+           else if(TextUtils.equals(currentFolder,LIKE_LABEL)) {
+               assert activity != null;
+               activity.setTitle(SMTHApplication.App_Title_Prefix+"LIKE我");
+           }
       LoadReferPosts();
     }
   }
@@ -335,17 +348,15 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
     // Log.d(TAG, "LoadReferPosts: " + currentPage);
     SMTHHelper helper = SMTHHelper.getInstance();
 
-    helper.wService.getReferPosts(currentFolder, Integer.toString(currentPage)).flatMap(new Function<ResponseBody, ObservableSource<Mail>>() {
-      @Override public ObservableSource<Mail> apply(@NonNull ResponseBody responseBody) throws Exception {
-        try {
-          String response = responseBody.string();
-          List<Mail> results = SMTHHelper.ParseMailsFromWWW(response);
-          return Observable.fromIterable(results);
-        } catch (Exception e) {
-          Toast.makeText(SMTHApplication.getAppContext(), "加载文章提醒失败\n" + e.toString(), Toast.LENGTH_SHORT).show();
-        }
-        return null;
+    helper.wService.getReferPosts(currentFolder, Integer.toString(currentPage)).flatMap((Function<ResponseBody, ObservableSource<Mail>>) responseBody -> {
+      try {
+        String response = responseBody.string();
+        List<Mail> results = SMTHHelper.ParseMailsFromWWW(response);
+        return Observable.fromIterable(results);
+      } catch (Exception e) {
+        Toast.makeText(SMTHApplication.getAppContext(), "加载文章提醒失败\n" + e, Toast.LENGTH_SHORT).show();
       }
+      return null;
     }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Mail>() {
       @Override public void onSubscribe(@NonNull Disposable disposable) {
 
@@ -354,7 +365,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
       @Override public void onNext(@NonNull Mail mail) {
         // Log.d(TAG, "onNext: " + mail.toString());
         MailListContent.addItem(mail);
-        recyclerView.getAdapter().notifyItemChanged(MailListContent.MAILS.size() - 1);
+        Objects.requireNonNull(recyclerView.getAdapter()).notifyItemChanged(MailListContent.MAILS.size() - 1);
       }
 
       @Override public void onError(@NonNull Throwable e) {
@@ -374,17 +385,15 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
     // Log.d(TAG, "LoadMails: " + currentPage);
     SMTHHelper helper = SMTHHelper.getInstance();
 
-    helper.wService.getUserMails(currentFolder, Integer.toString(currentPage)).flatMap(new Function<ResponseBody, ObservableSource<Mail>>() {
-      @Override public ObservableSource<Mail> apply(@NonNull ResponseBody responseBody) throws Exception {
-        try {
-          String response = responseBody.string();
-          List<Mail> results = SMTHHelper.ParseMailsFromWWW(response);
-          return Observable.fromIterable(results);
-        } catch (Exception e) {
-          Toast.makeText(SMTHApplication.getAppContext(), "加载邮件错误\n" + e.toString(), Toast.LENGTH_SHORT).show();
-        }
-        return null;
+    helper.wService.getUserMails(currentFolder, Integer.toString(currentPage)).flatMap((Function<ResponseBody, ObservableSource<Mail>>) responseBody -> {
+      try {
+        String response = responseBody.string();
+        List<Mail> results = SMTHHelper.ParseMailsFromWWW(response);
+        return Observable.fromIterable(results);
+      } catch (Exception e) {
+        Toast.makeText(SMTHApplication.getAppContext(), "加载邮件错误\n" + e, Toast.LENGTH_SHORT).show();
       }
+      return null;
     }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Mail>() {
       @Override public void onSubscribe(@NonNull Disposable disposable) {
 
@@ -392,7 +401,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
 
       @Override public void onNext(@NonNull Mail mail) {
         MailListContent.addItem(mail);
-        recyclerView.getAdapter().notifyItemChanged(MailListContent.MAILS.size() - 1);
+        Objects.requireNonNull(recyclerView.getAdapter()).notifyItemChanged(MailListContent.MAILS.size() - 1);
 
         if(mail.isCategory && mail.category.startsWith("产生错误的可能原因")){
             Intent intent = new Intent(requireActivity(), LoginActivity.class);
@@ -449,7 +458,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
       if (TextUtils.equals(currentFolder, INBOX_LABEL) || TextUtils.equals(currentFolder, OUTBOX_LABEL) || TextUtils.equals(currentFolder,
           DELETED_LABEL)) {
         mail.isNew = false;
-        recyclerView.getAdapter().notifyItemChanged(position);
+        Objects.requireNonNull(recyclerView.getAdapter()).notifyItemChanged(position);
         return;
       }
 
@@ -468,7 +477,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
               if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
                 // succeed to mark the post as read in remote
                 mail.isNew = false;
-                recyclerView.getAdapter().notifyItemChanged(position);
+                Objects.requireNonNull(recyclerView.getAdapter()).notifyItemChanged(position);
               } else {
                 // mark remote failed, show the response message
                 Toast.makeText(getActivity(), ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
@@ -486,12 +495,12 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
     }
   }
 
-  @Override public void onAttach(Context context) {
+  @Override public void onAttach(@androidx.annotation.NonNull Context context) {
     super.onAttach(context);
     if (context instanceof OnMailInteractionListener) {
       mListener = (OnMailInteractionListener) context;
     } else {
-      throw new RuntimeException(context.toString() + " must implement OnMailInteractionListener");
+      throw new RuntimeException(context + " must implement OnMailInteractionListener");
     }
   }
 
@@ -500,7 +509,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
     mListener = null;
   }
 
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+  @Override public void onCreateOptionsMenu(Menu menu, @androidx.annotation.NonNull MenuInflater inflater) {
     MenuItem item = menu.findItem(R.id.mail_list_fragment_newmail);
     item.setVisible(true);
     item = menu.findItem(R.id.mail_list_read_all);
@@ -559,9 +568,9 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
   }
   @Override public boolean onVolumeUpDown(int keyCode) {
     if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-      ((MainActivity) requireActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
+      requireActivity().findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
     } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-      ((MainActivity) requireActivity()).findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
+      requireActivity().findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
     }
     return true;
   }

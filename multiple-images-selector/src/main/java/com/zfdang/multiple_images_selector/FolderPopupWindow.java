@@ -1,5 +1,6 @@
 package com.zfdang.multiple_images_selector;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
@@ -21,14 +22,10 @@ import com.zfdang.multiple_images_selector.models.FolderListContent;
 public class FolderPopupWindow extends PopupWindow {
 
     private static final String TAG = "FolderPopupWindow";
-    private Context mContext;
-    private View conentView;
-    private RecyclerView recyclerView;
     private OnFolderRecyclerViewInteractionListener mListener = null;
 
     // http://stackoverflow.com/questions/23464232/how-would-you-create-a-popover-view-in-android-like-facebook-comments
     public void initPopupWindow(final Activity context) {
-        mContext = context;
         if (context instanceof OnFolderRecyclerViewInteractionListener) {
             mListener = (OnFolderRecyclerViewInteractionListener) context;
         } else {
@@ -36,12 +33,12 @@ public class FolderPopupWindow extends PopupWindow {
         }
 
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        conentView = layoutInflater.inflate(R.layout.popup_folder_recyclerview, null, false);
+        @SuppressLint("InflateParams") View conentView = layoutInflater.inflate(R.layout.popup_folder_recyclerview, null, false);
 
         View rview = conentView.findViewById(R.id.folder_recyclerview);
         // Set the adapter
         if (rview instanceof RecyclerView) {
-            recyclerView = (RecyclerView) rview;
+            RecyclerView recyclerView = (RecyclerView) rview;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             recyclerView.addItemDecoration(new DividerItemDecoration(context, LinearLayoutManager.VERTICAL, 0));
             recyclerView.setAdapter(new FolderRecyclerViewAdapter(FolderListContent.FOLDERS, mListener));

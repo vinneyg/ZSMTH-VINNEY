@@ -9,7 +9,7 @@ public class ImageListContent {
     // Activity.OnImageInteraction will show the alert, and set it to false
     public static boolean bReachMaxNumber = false;
 
-    public static final ArrayList<ImageItem> IMAGES = new ArrayList<ImageItem>();
+    public static final ArrayList<ImageItem> IMAGES = new ArrayList<>();
 
     public static void clear()
     {

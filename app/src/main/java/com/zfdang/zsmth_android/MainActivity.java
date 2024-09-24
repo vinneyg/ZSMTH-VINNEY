@@ -8,11 +8,9 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.content.res.ColorStateList;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -118,7 +116,6 @@ public class MainActivity extends SMTHBaseActivity
   private DrawerLayout mDrawer = null;
   private ActionBarDrawerToggle mToggle = null;
 
-  private UserStatusReceiver mReceiver;
     // press BACK in 2 seconds, app will quit
   private boolean mDoubleBackToExit = false;
   private Handler mHandler = null;
@@ -415,7 +412,7 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   private void setupUserStatusReceiver() {
-    mReceiver = new UserStatusReceiver(new Handler());
+      UserStatusReceiver mReceiver = new UserStatusReceiver(new Handler());
     mReceiver.setReceiver(new UserStatusReceiver.Receiver() {
       @Override public void onReceiveResult(int resultCode, Bundle resultData) {
       if (resultCode == RESULT_OK) {

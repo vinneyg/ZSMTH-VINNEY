@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class FolderListContent {
 
-    public static final List<FolderItem> FOLDERS = new ArrayList<FolderItem>();
+    public static final List<FolderItem> FOLDERS = new ArrayList<>();
     public static final Map<String, FolderItem> FOLDERS_MAP = new HashMap<>();
 
     // used to locate item in popupwindow
@@ -33,10 +33,6 @@ public class FolderListContent {
     }
 
     public static FolderItem getItem(String folderPath) {
-        if (FOLDERS_MAP.containsKey(folderPath)) {
-            return FOLDERS_MAP.get(folderPath);
-        } else {
-            return null;
-        }
+        return FOLDERS_MAP.getOrDefault(folderPath, null);
     }
 }

@@ -22,7 +22,7 @@ import com.zfdang.zsmth_android.newsmth.UserStatus;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import io.reactivex.functions.Function;
+//import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 
 
@@ -159,12 +159,9 @@ public class MaintainUserStatusWorker extends Worker {
             public void onNext(UserStatus userStatus) {
                 //Log.d(TAG, "4.0 onNext: " + userStatus.toString());
                 // cache user if necessary, so we don't have to query User avatar url again in the future
-                boolean updateUserIcon = false;
-                if (!TextUtils.equals(userStatus.getId(), SMTHApplication.displayedUserId)) {
-                    // active user is null, or active user is different with userstatus, update the icon
-                    // Log.d(TAG, "onNext: " + "4.1 cache userStatus as activeUser");
-                    updateUserIcon = true;
-                }
+                boolean updateUserIcon = !TextUtils.equals(userStatus.getId(), SMTHApplication.displayedUserId);
+                // active user is null, or active user is different with userstatus, update the icon
+                // Log.d(TAG, "onNext: " + "4.1 cache userStatus as activeUser");
                 SMTHApplication.activeUser = userStatus;
 
                 String message = "";

@@ -1,5 +1,7 @@
 package com.zfdang.multiple_images_selector.models;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
 public class FolderItem {
@@ -22,6 +24,7 @@ public class FolderItem {
         return String.format("%d", mImages.size());
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "FolderItem{" +
