@@ -201,7 +201,7 @@ public class Post {
     for (Element a : as) {
       // process each a|href
       Elements imgs = a.select("img[src]");
-      Log.d("Vinney-Attach-1",Integer.toString(imgs.size()));
+      //Log.d("Attach-1",Integer.toString(imgs.size()));
 
       if (imgs.size() == 1) {
         // find one image attachment
@@ -231,15 +231,15 @@ public class Post {
           // this is a video attachment, show it as text with link
 
           String origVideoSrc = a.attr("href");
-          Log.d("Vinney-Attach-2 -", origVideoSrc);
-          Log.d("Vinney-Attach-2",attachName +"$"+SMTHHelper.preprocessSMTHImageURL(origVideoSrc));
+          //Log.d("Attach-2 -", origVideoSrc);
+          //Log.d("Attach-2",attachName +"$"+SMTHHelper.preprocessSMTHImageURL(origVideoSrc));
           Attachment attach = new Attachment(origVideoSrc);
           this.addAttachVideoFile(attach);
         } else {
           // other attachment, add link for downloading
           String downloadURL = a.attr("href");
           downloadURL = SMTHHelper.preprocessSMTHImageURL(downloadURL);
-          Log.d("Vinney-Attach-3 -", downloadURL);
+          //Log.d("Attach-3 -", downloadURL);
           if (downloadURL.contains("/nForum/att/")) {
             a.append("<br>" + downloadURL);
 

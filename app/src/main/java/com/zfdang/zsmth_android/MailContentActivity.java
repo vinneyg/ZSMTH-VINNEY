@@ -249,7 +249,7 @@ public class MailContentActivity extends AppCompatActivity {
       } else {
         Toast.makeText(MailContentActivity.this, "普通邮件，无法打开原贴!", Toast.LENGTH_SHORT).show();
       }
-    }else if(id == R.id.mail_content_copy) //Vinney: 增加邮件内容复制
+    }else if(id == R.id.mail_content_copy)
       {
         String content;
 

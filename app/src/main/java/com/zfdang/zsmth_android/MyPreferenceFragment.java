@@ -68,8 +68,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
   CheckBoxPreference notification_control_reply;
   CheckBoxPreference notification_control_at;
 
-  CheckBoxPreference topic_fwd_self; //Vinney
-  CheckBoxPreference set_id_check; //Vinney
+  CheckBoxPreference topic_fwd_self; //
+  CheckBoxPreference set_id_check; //
 
   CheckBoxPreference set_left_nav_slide;
 

@@ -840,7 +840,6 @@ public class PostListActivity extends SMTHBaseActivity
       goToNextPage();
     } else if (id == R.id.post_list_last_page) {
       if (!Settings.getInstance().isautoloadmore()) {
-        //Change by Vinney
         if (mCurrentPageNo == mTopic.getTotalPageNo() || mCurrentReadPageNo == mTotalPageNo) {
           Toast.makeText(PostListActivity.this, "已在末页！", Toast.LENGTH_SHORT).show();
         } else {

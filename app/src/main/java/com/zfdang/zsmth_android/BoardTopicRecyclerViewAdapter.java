@@ -66,7 +66,6 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
         holder.mStatusSummary.setTextColor(Color.parseColor("#607D8B"));
 
         if ((!SMTHApplication.ReadTopicLists.isEmpty()) && SMTHApplication.ReadTopicLists.contains(holder.mTopic.getTitle())) {
-          //Log.d("Vinney","read topics");
           holder.mTitle.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
         }
         else
@@ -110,7 +109,6 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
             // fragment is attached to one) that an item has been selected.
           mListener.onTopicFragmentInteraction(holder.mTopic);
             if (Settings.getInstance().isDiffReadTopic()) {
-              //Log.d("Vinney+", Integer.toString(SMTHApplication.ReadTopicLists.size()));
               SMTHApplication.ReadTopicLists.add(holder.mTopic.getTitle());
               holder.mTitle.setTextColor(Color.parseColor("#607D8B"));//R.color.status_text_night
               holder.mAuthor.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary

@@ -279,11 +279,9 @@ public class MainActivity extends SMTHBaseActivity
         MobSDK.submitPolicyGrantResult(true);
       }, 3000);
     } else {
-      if(!SMTHApplication.isValidUser())
-        Toast.makeText(MainActivity.this, "请先登录！",Toast.LENGTH_SHORT).show();
+        if(!SMTHApplication.isValidUser())
+          Toast.makeText(MainActivity.this, "请先登录！",Toast.LENGTH_SHORT).show();
     }
-
-
   }
 
   public void setApplicationNightMode() {
@@ -413,15 +411,15 @@ public class MainActivity extends SMTHBaseActivity
 
   private void setupUserStatusReceiver() {
       UserStatusReceiver mReceiver = new UserStatusReceiver(new Handler());
-    mReceiver.setReceiver(new UserStatusReceiver.Receiver() {
+      mReceiver.setReceiver(new UserStatusReceiver.Receiver() {
       @Override public void onReceiveResult(int resultCode, Bundle resultData) {
       if (resultCode == RESULT_OK) {
-        //Log.d(TAG, "onReceiveResult: " + "to update navigationview" + SMTHApplication.activeUser.toString());
+        //Log.d(TAG,"onReceiveResult: " + "to update navigationview " + SMTHApplication.activeUser.toString());
         UpdateNavigationViewHeader();
 
         // show notification if necessary
         String message = resultData.getString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE);
-        //Log.d(TAG, "OnReceiveResult" + message);
+        //Log.d(TAG, "OnReceiveResult: " + message);
         if (message != null) {
           showNotification(message);
         }
@@ -491,7 +489,6 @@ public class MainActivity extends SMTHBaseActivity
               .setContentText(text)
               .setContentIntent(resultPendingIntent)
               .build();
-
         if(mNotifyMgr.areNotificationsEnabled()){
           mNotifyMgr.notify(notificationID, notification);
         } else{
@@ -657,7 +654,7 @@ public class MainActivity extends SMTHBaseActivity
     }
 
     if (fragment != hotTopicFragment) {
-      // return to hottopic if we are not there yet
+      // return to hot topic if we are not there yet
       String title = "首页";
       FragmentManager fm = getSupportFragmentManager();
       fm.beginTransaction().replace(R.id.content_frame, hotTopicFragment).commit();
