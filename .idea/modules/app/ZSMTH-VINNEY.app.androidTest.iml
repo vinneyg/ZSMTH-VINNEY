@@ -117,8 +117,8 @@
     <orderEntry type="library" scope="TEST" name="Gradle: cn.sharesdk:ShareSDK:3.10.19@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: cn.sharesdk:OneKeyShare:3.10.19@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: cn.sharesdk:ShareSDK-SinaWeiboX-Core:3.10.19@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: com.mob:MobCoreULT:2024.0920.1717@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: com.mob:MobIDSULT:2024.0920.1717@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.mob:MobCoreULT:2024.0924.1415@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.mob:MobIDSULT:2024.0924.1415@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.annotation:annotation-jvm:1.6.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.9.10" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.9.10" level="project" />
@@ -171,8 +171,8 @@
     <orderEntry type="library" scope="TEST" name="Gradle: cn.sharesdk:ShareSDK-Wechat-Core:3.10.19" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: cn.sharesdk:ShareSDK-Wechat-Moments:3.10.19" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: cn.sharesdk:ShareSDK-QQ:3.10.19" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: com.mob:MobGUIULT:2024.0920.1717" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: com.mob:MobSupportV1:2024.0920.1717" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.mob:MobGUIULT:2024.0924.1415" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.mob:MobSupportV1:2024.0924.1415" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="ZSMTH-VINNEY.app.main" />
 </module>
