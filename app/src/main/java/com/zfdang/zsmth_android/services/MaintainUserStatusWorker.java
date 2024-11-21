@@ -105,7 +105,7 @@ public class MaintainUserStatusWorker extends Worker {
                 List<Integer> results = MakeList.makeList(its);
 
                 Log.d(TAG, "call: 2.2.2 " + results.size());
-                if (results != null && results.size() == 1) {
+                if (results.size() == 1) {
                     int result = results.get(0);
                     if (result == AjaxResponse.AJAX_RESULT_OK) {
                         // set flag, so that we will query user status again

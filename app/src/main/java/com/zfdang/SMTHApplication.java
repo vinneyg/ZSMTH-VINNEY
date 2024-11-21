@@ -29,6 +29,7 @@ import java.util.List;
 public class SMTHApplication extends Application {
   // http://blog.csdn.net/lieren666/article/details/7598288
   // Android Application的作用
+  @SuppressLint("StaticFieldLeak")
   private static Context context;
   public static String App_Title_Prefix = "zSMTH-v-";
 
@@ -103,7 +104,6 @@ public class SMTHApplication extends Application {
 
     SMTHApplication.context = getApplicationContext();
 
-
     // init IP lookup database
     geoDB = new GEODatabase(this);
 
@@ -116,11 +116,9 @@ public class SMTHApplication extends Application {
     // init Fresco
     OkHttpClient httpClient = SMTHHelper.getInstance().mHttpClient;
     ImagePipelineConfig config = OkHttpImagePipelineConfigFactory.newBuilder(context, httpClient)
-            //                .setRequestListeners(requestListeners)
             .setDownsampleEnabled(false)
             .build();
     Fresco.initialize(context, config);
-    // FLog.setMinimumLoggingLevel(FLog.VERBOSE);
 
     boolean bNightMode = Settings.getInstance().isNightMode();
     if (bNightMode) {
@@ -131,7 +129,9 @@ public class SMTHApplication extends Application {
 
   }
 
+
   public static Context getAppContext() {
     return SMTHApplication.context;
   }
+
 }

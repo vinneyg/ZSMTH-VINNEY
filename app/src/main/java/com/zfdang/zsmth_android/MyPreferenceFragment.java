@@ -486,7 +486,6 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       String alipay = "vinneyguo@outlook.com";
       final android.content.ClipboardManager clipboardManager =
               (android.content.ClipboardManager) requireActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-      //clipboardManager.setText(alipay);
       assert clipboardManager != null;
       clipboardManager.setPrimaryClip(ClipData.newPlainText(null,alipay));
       if (clipboardManager.hasPrimaryClip()){

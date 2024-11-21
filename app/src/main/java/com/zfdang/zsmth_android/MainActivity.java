@@ -39,7 +39,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.res.ResourcesCompat;
+//import androidx.core.content.res.ResourcesCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -278,9 +278,6 @@ public class MainActivity extends SMTHBaseActivity
         showInfoDialog();
         MobSDK.submitPolicyGrantResult(true);
       }, 3000);
-    } else {
-        if(!SMTHApplication.isValidUser())
-          Toast.makeText(MainActivity.this, "请先登录！",Toast.LENGTH_SHORT).show();
     }
   }
 
@@ -835,7 +832,6 @@ public class MainActivity extends SMTHBaseActivity
       //quitNow();
     } else if( menuID == R.id.nav_read)
     {
-      //Toast.makeText(this, "Click boards below",Toast.LENGTH_SHORT);
       return true;
     }
     else if( menuID == R.id.read_board1)
@@ -1168,7 +1164,6 @@ public class MainActivity extends SMTHBaseActivity
               }
 
               @Override public void onError(@NonNull Throwable e) {
-                //Toast.makeText(getApplicationContext(), "查询用户信息失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
                 Toast.makeText(getApplicationContext(), "用户掉线！\n" , Toast.LENGTH_SHORT).show();
               }
 

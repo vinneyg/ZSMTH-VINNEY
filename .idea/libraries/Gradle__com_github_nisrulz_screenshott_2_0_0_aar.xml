@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.nisrulz:screenshott:2.0.0@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/3c820ba4f8be954d84ddca290c8226cc/transformed/jetified-screenshott-2.0.0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/3c820ba4f8be954d84ddca290c8226cc/transformed/jetified-screenshott-2.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/cd21373b6c363cce73c7005e279b477c/transformed/jetified-screenshott-2.0.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/cd21373b6c363cce73c7005e279b477c/transformed/jetified-screenshott-2.0.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.nisrulz/screenshott/2.0.0/a573eb4f70265d11d382b7574ddbd244d5cf1810/screenshott-2.0.0-javadoc.jar!/" />
