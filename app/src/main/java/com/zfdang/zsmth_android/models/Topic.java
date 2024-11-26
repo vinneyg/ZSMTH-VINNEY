@@ -1,8 +1,8 @@
 package com.zfdang.zsmth_android.models;
 
-/**
- * Created by zfdang on 2016-3-14.
- */
+/*
+  Created by zfdang on 2016-3-14.
+*/
 
 import android.os.Parcel;
 import android.os.Parcelable;

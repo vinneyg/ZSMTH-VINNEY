@@ -3,8 +3,11 @@ package com.zfdang.zsmth_android.newsmth;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
+
+import java.util.Objects;
 
 /**
  * used by Observable<UserStatus> queryActiveUserStatus()
@@ -234,6 +237,7 @@ public class UserStatus implements Parcelable {
           return true;
         }
       } catch (NumberFormatException e) {
+        Log.d("UserStatus", Objects.requireNonNull(e.getMessage()));
       }
     }
 

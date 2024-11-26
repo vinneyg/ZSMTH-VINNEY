@@ -19,10 +19,10 @@ public class FileSizeUtil {
   */
   private static final String TAG = "FileSizeUtil";
 
-  /**
-   * 获取文件指定文件的指定单位的大小
-   *
-   * @param filePath 文件路径
+  /*
+    获取文件指定文件的指定单位的大小
+
+    @param filePath 文件路径
    * @param sizeType 获取大小的类型1为B、2为KB、3为MB、4为GB
    * @return double值的大小
    */
@@ -117,8 +117,8 @@ public class FileSizeUtil {
     return formattedSize;
   }
 
-  /**
-   * 转换文件大小,指定转换的类型
+  /*
+    转换文件大小,指定转换的类型
    */
   /*
   private static double FormatFileSize(long fileSize, int sizeType) {

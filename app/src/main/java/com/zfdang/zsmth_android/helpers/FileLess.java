@@ -18,12 +18,12 @@ import java.util.zip.ZipInputStream;
  */
 public final class FileLess {
 
-  /**
-   * 读取文件为字符串
-   *
-   * @param file 文件
+  /*
+    读取文件为字符串
+
+    @param file 文件
    * @return 文件内容字符串
-   */
+  */
   /*
   public static String $read(File file) throws IOException {
     String text;
@@ -34,10 +34,10 @@ public final class FileLess {
   }
   */
 
-  /**
-   * 读取输入流为字符串,最常见的是网络请求
-   *
-   * @param is 输入流
+  /*
+    读取输入流为字符串,最常见的是网络请求
+
+    @param is 输入流
    * @return 输入流内容字符串
    */
   /*
@@ -53,10 +53,10 @@ public final class FileLess {
   }
   */
 
-  /**
-   * 把字符串写入到文件中
-   *
-   * @param file 被写入的目标文件
+  /*
+    把字符串写入到文件中
+
+    @param file 被写入的目标文件
    * @param str 要写入的字符串内容
    */
   /*
@@ -67,8 +67,8 @@ public final class FileLess {
   }
   */
 
-  /**
-   * unzip zip file to dest folder
+  /*
+    unzip zip file to dest folder
    */
   /*
   public static void $unzip(String zipFilePath, String destPath) throws IOException {

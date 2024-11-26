@@ -1,5 +1,7 @@
 package com.zfdang.multiple_images_selector.models;
 
+import android.annotation.SuppressLint;
+
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public class FolderItem {
         this.mImages.add(imageItem);
     }
 
+    @SuppressLint("DefaultLocale")
     public String getNumOfImages() {
         return String.format("%d", mImages.size());
     }

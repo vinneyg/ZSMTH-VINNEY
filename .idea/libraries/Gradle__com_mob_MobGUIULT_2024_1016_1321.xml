@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: com.mob:MobGUIULT:2024.1016.1321" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="com.mob" artifactId="MobGUIULT" version="2024.1016.1321" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mob/MobGUIULT/2024.1016.1321/2ab5259f9774cfe2f18aa3f31260d3f3bbf9be91/MobGUIULT-2024.1016.1321.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

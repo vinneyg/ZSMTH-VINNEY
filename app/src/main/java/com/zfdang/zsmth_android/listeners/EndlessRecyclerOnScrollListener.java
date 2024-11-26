@@ -1,9 +1,9 @@
 package com.zfdang.zsmth_android.listeners;
 
-/**
- * Created by zfdang on 2016-3-26.
- * https://gist.github.com/ssinss/e06f12ef66c51252563e
- */
+/*
+  Created by zfdang on 2016-3-26.
+  https://gist.github.com/ssinss/e06f12ef66c51252563e
+*/
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;

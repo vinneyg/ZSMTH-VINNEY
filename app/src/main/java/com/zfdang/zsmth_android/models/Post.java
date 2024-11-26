@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -384,7 +386,8 @@ public class Post {
           this.setDate(localdate);
           continue;
         } catch (ParseException e1) {
-          e1.printStackTrace();
+          //e1.printStackTrace();
+          Log.d("POST", Objects.requireNonNull(e1.getMessage()));
         }
       }
 
@@ -423,11 +426,10 @@ public class Post {
         linebreak++;
         if (linebreak >= 2) {
           // continuous linebreak, skip extra linebreak
-          continue;
         } else {
           sb.append(line).append("<br />");
-          continue;
         }
+        continue;
       } else {
         // reset counter
         linebreak = 0;
@@ -499,7 +501,7 @@ public class Post {
 
   // used by copy post content menu, or quoted content while replying
   public String getRawContent() {
-    return Html.fromHtml(this.htmlContent.replace(ATTACHMENT_MARK, "")).toString();
+    return Html.fromHtml(this.htmlContent.replace(ATTACHMENT_MARK, ""),Html.FROM_HTML_MODE_LEGACY).toString();
   }
 
   // this method will be called when post content can't be fetched properly
