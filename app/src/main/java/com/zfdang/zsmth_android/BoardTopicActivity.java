@@ -414,7 +414,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
                     Thread.sleep(500);
                     onBackPressed();
                   } catch (InterruptedException ex) {
-                    ex.printStackTrace();
+                    //ex.printStackTrace();
+                    Log.d(TAG, ex.toString());
                   }
                   if (!SMTHApplication.isValidUser()) {
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);

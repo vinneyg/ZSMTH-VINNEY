@@ -39,6 +39,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 //import java.util.Collections;
 import java.util.List;
@@ -47,6 +50,13 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.security.cert.X509Certificate;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
@@ -95,7 +105,11 @@ public class SMTHHelper {
 
   public static synchronized SMTHHelper getInstance() {
     if (instance == null) {
-      instance = new SMTHHelper();
+        try {
+            instance = new SMTHHelper();
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            throw new RuntimeException(e);
+        }
     }
     return instance;
   }
@@ -113,7 +127,7 @@ public class SMTHHelper {
   }
 
   // protected constructor, can only be called by getInstance
-  protected SMTHHelper() {
+  protected SMTHHelper() throws NoSuchAlgorithmException, KeyManagementException {
 
     // set your desired log level
     HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -145,6 +159,8 @@ public class SMTHHelper {
         }
       }
     }).cookieJar(new WebviewCookieHandler())  // https://gist.github.com/scitbiz/8cb6d8484bb20e47d241cc8e117fa705
+            .sslSocketFactory(OkHttpUtil.getIgnoreInitedSslContext().getSocketFactory(), OkHttpUtil.IGNORE_SSL_TRUST_MANAGER_X509)
+      .hostnameVerifier(OkHttpUtil.getIgnoreSslHostnameVerifier())
       .cache(cache).readTimeout(15, TimeUnit.SECONDS).connectTimeout(10, TimeUnit.SECONDS).build();
 
     //        mRetrofit = new Retrofit.Builder()
@@ -1312,4 +1328,51 @@ public class SMTHHelper {
       return url;
     }
 
+}
+
+class OkHttpUtil {
+  /**
+   * X509TrustManager instance which ignored SSL certification
+   */
+  public static final X509TrustManager IGNORE_SSL_TRUST_MANAGER_X509 = new X509TrustManager() {
+    @Override
+    public void checkClientTrusted(X509Certificate[] chain, String authType) {
+    }
+
+    @Override
+    public void checkServerTrusted(X509Certificate[] chain, String authType) {
+    }
+
+    @Override
+    public X509Certificate[] getAcceptedIssuers() {
+      return new X509Certificate[] {};
+    }
+  };
+
+  /**
+   * Get initialized SSLContext instance which ignored SSL certification
+   *
+   * @return
+   * @throws NoSuchAlgorithmException
+   * @throws KeyManagementException
+   */
+  public static SSLContext getIgnoreInitedSslContext() throws NoSuchAlgorithmException, KeyManagementException {
+    SSLContext sslContext = SSLContext.getInstance("SSL");
+    sslContext.init(null, new TrustManager[] { IGNORE_SSL_TRUST_MANAGER_X509 }, new SecureRandom());
+    return sslContext;
+  }
+
+  /**
+   * Get HostnameVerifier which ignored SSL certification
+   *
+   * @return
+   */
+  public static HostnameVerifier getIgnoreSslHostnameVerifier() {
+    return new HostnameVerifier() {
+      @Override
+      public boolean verify(String arg0, SSLSession arg1) {
+        return true;
+      }
+    };
+  }
 }
