@@ -5,6 +5,8 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +46,12 @@ public class FSImagePagerAdapter extends PagerAdapter {
     final LayoutInflater inflater = (LayoutInflater) SMTHApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     // Add the text layout to the parent layout
     MyPhotoView image = (MyPhotoView) inflater.inflate(R.layout.image_viewer_pager, container, false);
-    assert image != null;
+
+    if (image == null) {
+      Log.e("FSImagePageAdapter", "image is null, please check initialization.");
+      return null;
+    }
+
 
     image.setTag(R.id.fsview_image_index, position);
     image.setMaximumScale(12.0f);

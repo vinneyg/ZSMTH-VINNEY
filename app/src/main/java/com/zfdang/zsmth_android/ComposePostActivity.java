@@ -1,11 +1,16 @@
 package com.zfdang.zsmth_android;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -26,6 +31,7 @@ import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -65,6 +71,10 @@ public class ComposePostActivity extends SMTHBaseActivity {
   private String postPublishMessage = null;
   private AjaxResponse lastResponse = null;
 
+  private ActivityResultLauncher<Intent> mActivityLoginResultLauncher;
+  private ActivityResultLauncher<Intent> mActivityComposeResultLauncher;
+
+
   public void startImageSelector() {
     // start multiple photos selector
     Intent intent = new Intent(ComposePostActivity.this, ImagesSelectorActivity.class);
@@ -77,33 +87,10 @@ public class ComposePostActivity extends SMTHBaseActivity {
     // pass current selected images as the initial value
     intent.putStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST, mPhotos);
     // start the selector
-    startActivityForResult(intent, REQUEST_CODE);
+    //startActivityForResult(intent, REQUEST_CODE);
+    mActivityComposeResultLauncher.launch(intent);
   }
 
-
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == REQUEST_CODE) {
-      if (resultCode == RESULT_OK && data != null) {
-        mPhotos = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
-        assert mPhotos != null;
-        mAttachments.setText(String.format(Locale.CHINA,"共有%d个附件", mPhotos.size()));
-        StringBuilder attachments = new StringBuilder();
-        for (int i = 0; i < mPhotos.size(); i++) {
-          String UPLOAD_TEMPLATE = " [upload=%d][/upload] ";
-          attachments.append(String.format(Locale.CHINA, UPLOAD_TEMPLATE, i + 1));
-        }
-
-        // https://stackoverflow.com/questions/3609174/android-insert-text-into-edittext-at-current-position
-        mContent.getText().insert(mContent.getSelectionStart(), attachments.toString());
-      }
-    } else if(requestCode == MainActivity.LOGIN_ACTIVITY_REQUEST_CODE){
-      if (resultCode == RESULT_OK)
-      {
-        publishPost();
-      }
-    }
-    super.onActivityResult(requestCode,resultCode,data);
-  }
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -116,6 +103,42 @@ public class ComposePostActivity extends SMTHBaseActivity {
     if (bar != null) {
       bar.setDisplayHomeAsUpEnabled(true);
     }
+
+    // Initialize the ActivityResultLauncher object.
+    mActivityLoginResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+              if(result.getResultCode() == Activity.RESULT_OK)
+              {
+                publishPost();
+              }
+            });
+
+    // Initialize the ActivityResultLauncher object.
+    mActivityComposeResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+              if(result.getResultCode() == Activity.RESULT_OK)
+              {
+                if (result.getData() != null) {
+                  mPhotos = result.getData().getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
+                  if (mPhotos == null) {
+                    Log.e(TAG, "mPhotos is null.");
+                    return;
+                  }
+                  mAttachments.setText(String.format(Locale.CHINA,"共有%d个附件", mPhotos.size()));
+                  StringBuilder attachments = new StringBuilder();
+                  for (int i = 0; i < mPhotos.size(); i++) {
+                    String UPLOAD_TEMPLATE = " [upload=%d][/upload] ";
+                    attachments.append(String.format(Locale.CHINA, UPLOAD_TEMPLATE, i + 1));
+                  }
+
+                  // https://stackoverflow.com/questions/3609174/android-insert-text-into-edittext-at-current-position
+                  mContent.getText().insert(mContent.getSelectionStart(), attachments.toString());
+
+                }
+              }
+            });
 
     mPhotos = new ArrayList<>();
 
@@ -145,7 +168,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
         mContentCount.setText(String.format(Locale.CHINA,"文章字数:%d", s.length()));
       }
     });
-    
+
     // init controls from Intent
     initFromIntent();
 
@@ -161,18 +184,18 @@ public class ComposePostActivity extends SMTHBaseActivity {
     if (content != null && !content.isEmpty() && content.length() != mContent.getText().toString().length()) {
       AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ComposePostActivity.this);
       alertDialogBuilder.setTitle("恢复缓存的内容?")
-          .setMessage(StringUtils.getEllipsizedMidString(content, 240))
-          .setCancelable(false)
-          .setPositiveButton("恢复内容", (dialog, id) -> {
-            // if this button is clicked, close current activity
-            mContent.setText(content);
-          })
-          .setNegativeButton("放弃内容", (dialog, id) -> {
-            // if this button is clicked, just close the dialog box and do nothing
-            dialog.cancel();
-          })
-          .create()
-          .show();
+              .setMessage(StringUtils.getEllipsizedMidString(content, 240))
+              .setCancelable(false)
+              .setPositiveButton("恢复内容", (dialog, id) -> {
+                // if this button is clicked, close current activity
+                mContent.setText(content);
+              })
+              .setNegativeButton("放弃内容", (dialog, id) -> {
+                // if this button is clicked, just close the dialog box and do nothing
+                dialog.cancel();
+              })
+              .create()
+              .show();
     }
   }
 
@@ -195,7 +218,10 @@ public class ComposePostActivity extends SMTHBaseActivity {
     // get ComposePostContext from caller
     Intent intent = getIntent();
     mPostContext = intent.getParcelableExtra(SMTHApplication.COMPOSE_POST_CONTEXT);
-    assert mPostContext != null;
+    if (mPostContext == null) {
+      Log.e(TAG, "mPostContext is null.");
+      return;
+    }
     //        Log.d(TAG, "initFromIntent: " + mPostContext.toString());
 
     // there are totally 5 different cases: ( 3 & 4 can be handled in the same way)
@@ -331,10 +357,12 @@ public class ComposePostActivity extends SMTHBaseActivity {
       byte[] bytes = SMTHHelper.getBitmapBytesWithResize(filename, bCompress);
       return new BytesContainer(filename, bytes);
     }).map(container -> {
-      RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), container.bytes);
+      //RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), container.bytes);
+      MediaType mediaType = MediaType.get("image/jpeg");
+      RequestBody requestBody = RequestBody.create(container.bytes, mediaType);
       AjaxResponse resp =
-          helper.wService.uploadAttachment(mPostContext.getBoardEngName(), StringUtils.getLastStringSegment(container.filename),
-              requestBody).blockingFirst();
+              helper.wService.uploadAttachment(mPostContext.getBoardEngName(), StringUtils.getLastStringSegment(container.filename),
+                      requestBody).blockingFirst();
       if (resp != null) {
         return resp;
       } else {
@@ -351,114 +379,126 @@ public class ComposePostActivity extends SMTHBaseActivity {
     }
     Observable<AjaxResponse> resp2 = null;
     if (mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_MAIL
-        || mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_MAIL_TO_USER
-        || mPostContext.getComposingMode() == ComposePostContext.MODE_REPLY_MAIL) {
+            || mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_MAIL_TO_USER
+            || mPostContext.getComposingMode() == ComposePostContext.MODE_REPLY_MAIL) {
       String userid = mUserID.getText().toString().trim();
       resp2 = SMTHHelper.sendMail(userid, mTitle.getText().toString(), postContent);
+      SMTHApplication.bNewMailSent = true;
     } else if (mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_POST
-        || mPostContext.getComposingMode() == ComposePostContext.MODE_REPLY_POST) {
+            || mPostContext.getComposingMode() == ComposePostContext.MODE_REPLY_POST) {
       resp2 =
-          SMTHHelper.publishPost(mPostContext.getBoardEngName(), mTitle.getText().toString(), postContent, "0", mPostContext.getPostId());
+              SMTHHelper.publishPost(mPostContext.getBoardEngName(), mTitle.getText().toString(), postContent, "0", mPostContext.getPostId());
+      SMTHApplication.bNewMailSent = true;
     } else if (mPostContext.getComposingMode() == ComposePostContext.MODE_EDIT_POST) {
       postContent = mContent.getText().toString();
       if (Settings.getInstance().bUseSignature()) {
         postContent += "\n" + String.format(Locale.CHINA,"#修改自zSMTH-v-@%s", Settings.getInstance().getSignature());
       }
+      SMTHApplication.bNewMailSent = true;
       resp2 = SMTHHelper.editPost(mPostContext.getBoardEngName(), mPostContext.getPostId(), mTitle.getText().toString(), postContent);
     }
 
     // process all these tasks one by one
-    assert resp2 != null;
+    if (resp2 == null) {
+      Log.e(TAG, "resp2 is null.");
+      return;
+    }
     Observable.concat(resp1, resp2)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(
-            new Observer<AjaxResponse>() {
-              @Override
-              public void onSubscribe(@NonNull Disposable disposable) {}
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                    new Observer<AjaxResponse>() {
+                      @Override
+                      public void onSubscribe(@NonNull Disposable disposable) {}
 
-              @Override
-              public void onNext(@NonNull AjaxResponse ajaxResponse) {
-                Log.d(TAG, "onNext: " + ajaxResponse.toString());
-                if (ajaxResponse.getAjax_st() != AjaxResponse.AJAX_RESULT_OK) {
-                  postPublishResult = AjaxResponse.AJAX_RESULT_FAILED;
-                  postPublishMessage += ajaxResponse.getAjax_msg() + "\n";
-                }
-                lastResponse = ajaxResponse;
-                ComposePostActivity.currentStep++;
-                showProgress(
-                    String.format(
-                        Locale.CHINA,
-                        progressHint,
-                        ComposePostActivity.currentStep,
-                        ComposePostActivity.totalSteps));
-              }
+                      @Override
+                      public void onNext(@NonNull AjaxResponse ajaxResponse) {
+                        Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                        if (ajaxResponse.getAjax_st() != AjaxResponse.AJAX_RESULT_OK) {
+                          postPublishResult = AjaxResponse.AJAX_RESULT_FAILED;
+                          postPublishMessage += ajaxResponse.getAjax_msg() + "\n";
+                        }
+                        lastResponse = ajaxResponse;
+                        ComposePostActivity.currentStep++;
+                        showProgress(
+                                String.format(
+                                        Locale.CHINA,
+                                        progressHint,
+                                        ComposePostActivity.currentStep,
+                                        ComposePostActivity.totalSteps));
+                      }
 
-              @Override
-              public void onError(@NonNull Throwable e) {
-                dismissProgress();
-                Toast.makeText(
-                        SMTHApplication.getAppContext(),
-                        "发生错误:\n" + e.toString(),
-                        Toast.LENGTH_SHORT)
-                    .show();
-              }
+                      @Override
+                      public void onError(@NonNull Throwable e) {
+                        dismissProgress();
+                        Toast.makeText(
+                                        SMTHApplication.getAppContext(),
+                                        "发生错误:\n" + e.toString(),
+                                        Toast.LENGTH_SHORT)
+                                .show();
+                      }
 
-              @Override
-              public void onComplete() {
-                dismissProgress();
+                      @Override
+                      public void onComplete() {
+                        dismissProgress();
 
-                String message;
-                if (postPublishResult != AjaxResponse.AJAX_RESULT_OK) {
-                  message = "操作失败! \n错误信息:\n" + postPublishMessage;
-                  Toast.makeText(ComposePostActivity.this, message, Toast.LENGTH_SHORT).show();
-                  if(!SMTHApplication.isValidUser()){
-                    Intent intent = new Intent(ComposePostActivity.this, LoginActivity.class);
-                    startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
-                  }
-                } else {
-                  if (lastResponse != null) {
-                    // if we have valid last response, use the message.
-                    message = lastResponse.getAjax_msg();
-                  } else {
-                    // otherwise, compose the message by ourself
-                    message = "成功!";
-                  }
+                        String message;
+                        if (postPublishResult != AjaxResponse.AJAX_RESULT_OK) {
+                          message = "操作失败! \n错误信息:\n" + postPublishMessage;
+                          Toast.makeText(ComposePostActivity.this, message, Toast.LENGTH_SHORT).show();
+                          if(SMTHApplication.bNewMailSent)
+                            SMTHApplication.bNewMailSent = false;
+                          if(!SMTHApplication.isValidUser()){
+                            Intent intent = new Intent(ComposePostActivity.this, LoginActivity.class);
+                            //startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
+                            mActivityLoginResultLauncher.launch(intent);
+                          }
+                        } else {
+                          if (lastResponse != null) {
+                            // if we have valid last response, use the message.
+                            message = lastResponse.getAjax_msg();
+                          } else {
+                            // otherwise, compose the message by ourself
+                            message = "成功!";
+                          }
 
-                  KeyboardLess.$hide(ComposePostActivity.this, mContent);
+                          KeyboardLess.$hide(ComposePostActivity.this, mContent);
 
-                  if (message != null && !message.contains("本文可能含有不当内容")) {
-                    Toast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT)
-                            .show();
-                    mContent.setText("");
-                    clearPostContentCache();
-                    ComposePostActivity.this.finish();
-                  } else {
-                    Toast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT)
-                        .show();
-                  }
-                }
-              }
-            });
+                          if (message != null && !message.contains("本文可能含有不当内容")) {
+                            if(!message.contains("成功"))
+                              Toast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT).show();
+                            mContent.setText("");
+                            clearPostContentCache();
+                            ComposePostActivity.this.finish();
+                          } else {
+                            Toast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT)
+                                    .show();
+                            if(SMTHApplication.bNewMailSent)
+                              SMTHApplication.bNewMailSent = false;
+
+                          }
+                        }
+                      }
+                    });
   }
 
   public void onBackAction() {
     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ComposePostActivity.this);
     alertDialogBuilder.setTitle("退出确认")
-        .setMessage("结束编辑，或者停留在当前界面继续编辑？")
-        .setCancelable(false)
-        .setPositiveButton("结束编辑", (dialog, id) -> {
-          // if this button is clicked, close current activity
-          KeyboardLess.$hide(ComposePostActivity.this, mContent);
-          mContent.setText("");
-          clearPostContentCache();
-          ComposePostActivity.this.finish();
-        })
-        .setNegativeButton("继续编辑", (dialog, id) -> {
-          // if this button is clicked, just close the dialog box and do nothing
-          dialog.cancel();
-        })
-        .create()
-        .show();
+            .setMessage("结束编辑，或者停留在当前界面继续编辑？")
+            .setCancelable(false)
+            .setPositiveButton("结束编辑", (dialog, id) -> {
+              // if this button is clicked, close current activity
+              KeyboardLess.$hide(ComposePostActivity.this, mContent);
+              mContent.setText("");
+              clearPostContentCache();
+              ComposePostActivity.this.finish();
+            })
+            .setNegativeButton("继续编辑", (dialog, id) -> {
+              // if this button is clicked, just close the dialog box and do nothing
+              dialog.cancel();
+            })
+            .create()
+            .show();
   }
 }

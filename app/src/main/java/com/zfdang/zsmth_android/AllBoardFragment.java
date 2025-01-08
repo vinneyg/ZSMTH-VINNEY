@@ -40,7 +40,7 @@ import java.util.Objects;
  */
 public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener {
 
-    private RecyclerView mRecyclerView = null;
+  private RecyclerView mRecyclerView = null;
   private QueryTextListener mQueryListener = null;
 
   private OnBoardFragmentInteractionListener mListener = null;
@@ -204,8 +204,8 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     }
 
     @Override public boolean onQueryTextChange(String newText) {
-        String TAG = "AllBoardFragment";
-        Log.d(TAG, newText);
+      String TAG = "AllBoardFragment";
+      Log.d(TAG, newText);
       mAdapter.getFilter().filter(newText);
       return true;
     }
@@ -213,9 +213,9 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
 
   @Override public boolean onVolumeUpDown(int keyCode) {
     if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-     requireActivity().findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
+      requireActivity().findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
     } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-     requireActivity().findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
+      requireActivity().findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
     }
     return true;
   }

@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: io.github.scwang90:refresh-footer-classics:2.0.5@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/21eae459092bb1af8626f2b26ccb67db/transformed/jetified-refresh-footer-classics-2.0.5/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/21eae459092bb1af8626f2b26ccb67db/transformed/jetified-refresh-footer-classics-2.0.5/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/21eae459092bb1af8626f2b26ccb67db/transformed/jetified-refresh-footer-classics-2.0.5/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/26fd6184b1b1d4f5592c713fed0d68f4/transformed/jetified-refresh-footer-classics-2.0.5/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/26fd6184b1b1d4f5592c713fed0d68f4/transformed/jetified-refresh-footer-classics-2.0.5/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/26fd6184b1b1d4f5592c713fed0d68f4/transformed/jetified-refresh-footer-classics-2.0.5/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

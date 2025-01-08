@@ -71,6 +71,7 @@
             android:textColorHint="@color/status_text_night"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
+            android:minWidth="44dp"
             />
       </LinearLayout>
 
@@ -97,6 +98,7 @@
             android:textColor="@color/status_text_night"
             android:textColorHint="@color/status_text_night"
             android:layout_marginRight="8dp"
+            android:minWidth="44dp"
             />
       </LinearLayout>
 
@@ -159,7 +161,8 @@
             android:textColor="@color/status_text_night"
             android:id="@+id/compose_post_attach_switch"
             android:checked="true"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
+            tools:ignore="UseSwitchCompatOrMaterialXml"
+            android:minWidth="44dp" />
       </LinearLayout>
 
 

@@ -4,7 +4,8 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.ExifInterface;
+//import android.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,10 +38,12 @@ import com.zfdang.zsmth_android.helpers.FileSizeUtil;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+//import java.io.FileInputStream;
+//import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import me.relex.circleindicator.CircleIndicator;
 
@@ -74,7 +77,11 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
 
     // find parameters from parent
     mURLs = getIntent().getStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS);
-    assert mURLs != null;
+
+    if (mURLs == null) {
+      Log.e(TAG, "mURLs is null.");
+      return;
+    }
     int pos = getIntent().getIntExtra(SMTHApplication.ATTACHMENT_CURRENT_POS, 0);
     if (pos < 0 || pos >= mURLs.size()) {
       pos = 0;
@@ -277,8 +284,9 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
         }
         File outFile = new File(dir, IMAGE_FILE_PREFIX + getURLHashCode(imagePath) + IMAGE_FILE_SUFFIX);
 
-        BufferedInputStream bufr = new BufferedInputStream(new FileInputStream(imageFile));
-        BufferedOutputStream bufw = new BufferedOutputStream(new FileOutputStream(outFile));
+        BufferedInputStream bufr = new BufferedInputStream(Files.newInputStream(imageFile.toPath()));
+        BufferedOutputStream bufw = new BufferedOutputStream(Files.newOutputStream(outFile.toPath()));
+
 
         int len;
         byte[] buf = new byte[1024];
@@ -324,11 +332,11 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
               attribute = attribute + " s";
             } else if (f >= 0.1) {
               f = 1 / f;
-              BigDecimal exposure = new BigDecimal(f).setScale(0, BigDecimal.ROUND_HALF_UP);
+              BigDecimal exposure = new BigDecimal(f).setScale(0, RoundingMode.HALF_UP);
               attribute = "1/" + exposure.toString() + " s";
             } else {
               f = 1 / f / 10;
-              BigDecimal exposure = new BigDecimal(f).setScale(0, BigDecimal.ROUND_HALF_UP);
+              BigDecimal exposure = new BigDecimal(f).setScale(0, RoundingMode.HALF_UP);
               exposure = exposure.multiply(new BigDecimal(10));
               attribute = "1/" + exposure.toString() + " s";
             }
@@ -479,7 +487,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
       setImageAttributeFromExif(layout, R.id.ii_aperture, exif, ExifInterface.TAG_F_NUMBER);
       setImageAttributeFromExif(layout, R.id.ii_exposure_time, exif, ExifInterface.TAG_EXPOSURE_TIME);
       setImageAttributeFromExif(layout, R.id.ii_flash, exif, ExifInterface.TAG_FLASH);
-      setImageAttributeFromExif(layout, R.id.ii_iso, exif, ExifInterface.TAG_ISO_SPEED_RATINGS);
+      setImageAttributeFromExif(layout, R.id.ii_iso, exif, ExifInterface.TAG_PHOTOGRAPHIC_SENSITIVITY);
       setImageAttributeFromExif(layout, R.id.ii_white_balance, exif, ExifInterface.TAG_WHITE_BALANCE);
     } catch (IOException e) {
       Log.d("read ExifInfo", "can't read Exif information");

@@ -13,7 +13,7 @@ import android.util.Log;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-//import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
+
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.Settings;
 import com.zfdang.zsmth_android.WebviewCookieHandler;
@@ -33,7 +33,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.File;
-//import java.io.FileInputStream;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,8 +42,11 @@ import java.nio.file.Files;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+//import java.security.cert.CertificateException;
+//import java.security.cert.CertificateExpiredException;
+//import java.security.cert.CertificateNotYetValidException;
 import java.util.ArrayList;
-//import java.util.Collections;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -52,6 +55,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.net.ssl.HostnameVerifier;
+//import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
@@ -80,11 +84,11 @@ public class SMTHHelper {
 
   static final private String TAG = "SMTHHelper";
   public static final String USER_AGENT =
-      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.101 Safari/537.36";
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.101 Safari/537.36";
 
   public OkHttpClient mHttpClient;
 
-    //https://att.mysmth.net OR https://static.mysmth.net"
+  //https://att.mysmth.net OR https://static.mysmth.net"
   static private final String SMTH_IMAGE_PREFIX_CDN = "https://att.newsmth.net";
   //static private final String SMTH_IMAGE_PREFIX_CDN = "https://static.newsmth.net";
   static private final String SMTH_IMAGE_PREFIX_DIRECT = "https://www.newsmth.net";
@@ -105,11 +109,11 @@ public class SMTHHelper {
 
   public static synchronized SMTHHelper getInstance() {
     if (instance == null) {
-        try {
-            instance = new SMTHHelper();
-        } catch (NoSuchAlgorithmException | KeyManagementException e) {
-            throw new RuntimeException(e);
-        }
+      try {
+        instance = new SMTHHelper();
+      } catch (NoSuchAlgorithmException | KeyManagementException e) {
+        throw new RuntimeException(e);
+      }
     }
     return instance;
   }
@@ -139,29 +143,29 @@ public class SMTHHelper {
     Cache cache = new Cache(httpCacheDirectory, cacheSize);
 
     mHttpClient = new OkHttpClient().newBuilder().addInterceptor(logging).addInterceptor(new Interceptor() {
-      @androidx.annotation.NonNull
-      @Override public Response intercept(@androidx.annotation.NonNull Chain chain) throws IOException {
-        Request request = chain.request().newBuilder().header("User-Agent", USER_AGENT).build();
-        return chain.proceed(request);
-      }
-    }).addNetworkInterceptor(new Interceptor() {
-      // for error response, do not cache its content
-      @androidx.annotation.NonNull
-      @Override public Response intercept(@androidx.annotation.NonNull Chain chain) throws IOException {
-        Response originalResponse = chain.proceed(chain.request());
+              @androidx.annotation.NonNull
+              @Override public Response intercept(@androidx.annotation.NonNull Chain chain) throws IOException {
+                Request request = chain.request().newBuilder().header("User-Agent", USER_AGENT).build();
+                return chain.proceed(request);
+              }
+            }).addNetworkInterceptor(new Interceptor() {
+              // for error response, do not cache its content
+              @androidx.annotation.NonNull
+              @Override public Response intercept(@androidx.annotation.NonNull Chain chain) throws IOException {
+                Response originalResponse = chain.proceed(chain.request());
 //        if (originalResponse.isSuccessful() && originalResponse.body().toString().contains("您未登录,请登录后继续操作")) {
-        if (originalResponse.isSuccessful() && Objects.requireNonNull(originalResponse.body()).contentLength() > 4096) {
-          // only cache large response
-          // the size of response with "您未登录,请登录后继续操作" is 2033
-          return originalResponse;
-        } else {
-          return originalResponse.newBuilder().header("Cache-Control", "no-cache").build();
-        }
-      }
-    }).cookieJar(new WebviewCookieHandler())  // https://gist.github.com/scitbiz/8cb6d8484bb20e47d241cc8e117fa705
+                if (originalResponse.isSuccessful() && Objects.requireNonNull(originalResponse.body()).contentLength() > 4096) {
+                  // only cache large response
+                  // the size of response with "您未登录,请登录后继续操作" is 2033
+                  return originalResponse;
+                } else {
+                  return originalResponse.newBuilder().header("Cache-Control", "no-cache").build();
+                }
+              }
+            }).cookieJar(new WebviewCookieHandler())  // https://gist.github.com/scitbiz/8cb6d8484bb20e47d241cc8e117fa705
             .sslSocketFactory(OkHttpUtil.getIgnoreInitedSslContext().getSocketFactory(), OkHttpUtil.IGNORE_SSL_TRUST_MANAGER_X509)
-      .hostnameVerifier(OkHttpUtil.getIgnoreSslHostnameVerifier())
-      .cache(cache).readTimeout(15, TimeUnit.SECONDS).connectTimeout(10, TimeUnit.SECONDS).build();
+            .hostnameVerifier(OkHttpUtil.getIgnoreSslHostnameVerifier())
+            .cache(cache).readTimeout(15, TimeUnit.SECONDS).connectTimeout(10, TimeUnit.SECONDS).build();
 
     //        mRetrofit = new Retrofit.Builder()
     //                .baseUrl(SMTH_MOBILE_URL)
@@ -170,16 +174,16 @@ public class SMTHHelper {
     //                .client(mHttpClient)
     //                .build();
 
-      // WWW service of SMTH, but actually most of services are actually from nForum
-      //private final String SMTH_WWW_URL = "https://www.newsmth.net";
-      //private final String SMTH_WWW_URL = "https://www.mysmth.net";
-      String SMTH_WWW_URL = SMTHApplication.getWebAddress();
-      Retrofit wRetrofit = new Retrofit.Builder().baseUrl(SMTH_WWW_URL)
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-        .addConverterFactory(ScalarsConverterFactory.create())
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(mHttpClient)
-        .build();
+    // WWW service of SMTH, but actually most of services are actually from nForum
+    //private final String SMTH_WWW_URL = "https://www.newsmth.net";
+    //private final String SMTH_WWW_URL = "https://www.mysmth.net";
+    String SMTH_WWW_URL = SMTHApplication.getWebAddress();
+    Retrofit wRetrofit = new Retrofit.Builder().baseUrl(SMTH_WWW_URL)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(mHttpClient)
+            .build();
     wService = wRetrofit.create(SMTHWWWService.class);
   }
 
@@ -188,19 +192,19 @@ public class SMTHHelper {
   public static Observable<UserStatus> queryActiveUserStatus() {
     final SMTHHelper helper = SMTHHelper.getInstance();
     return helper.wService.queryActiveUserStatus()
-        .subscribeOn(Schedulers.io())
-        .observeOn(Schedulers.io())
-        .map(userStatus -> {
-          String userid = userStatus.getId();
-          if (userid != null && !userid.equals("guest")) {
-            // get correct faceURL
-            UserInfo user = helper.wService.queryUserInformation(userid).blockingFirst();
-            if (user != null) {
-              userStatus.setFace_url(user.getFace_url());
-            }
-          }
-          return userStatus;
-        });
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.io())
+            .map(userStatus -> {
+              String userid = userStatus.getId();
+              if (userid != null && !userid.equals("guest")) {
+                // get correct faceURL
+                UserInfo user = helper.wService.queryUserInformation(userid).blockingFirst();
+                if (user != null) {
+                  userStatus.setFace_url(user.getFace_url());
+                }
+              }
+              return userStatus;
+            });
   }
 
   private static Bitmap loadResizedBitmapFromFile(final String filename, final int targetWidth, final int targetHeight, boolean bCompress) {
@@ -305,13 +309,13 @@ public class SMTHHelper {
     try {
       ExifInterface oldExif = new ExifInterface(oldPath);
       String[] attributes = new String[] {
-          ExifInterface.TAG_F_NUMBER, ExifInterface.TAG_DATETIME, ExifInterface.TAG_DATETIME_DIGITIZED, ExifInterface.TAG_EXPOSURE_TIME,
-          ExifInterface.TAG_FLASH, ExifInterface.TAG_FOCAL_LENGTH, ExifInterface.TAG_GPS_ALTITUDE, ExifInterface.TAG_GPS_ALTITUDE_REF,
-          ExifInterface.TAG_GPS_DATESTAMP, ExifInterface.TAG_GPS_LATITUDE, ExifInterface.TAG_GPS_LATITUDE_REF,
-          ExifInterface.TAG_GPS_LONGITUDE, ExifInterface.TAG_GPS_LONGITUDE_REF, ExifInterface.TAG_GPS_PROCESSING_METHOD,
-          ExifInterface.TAG_GPS_TIMESTAMP, ExifInterface.TAG_IMAGE_LENGTH, ExifInterface.TAG_IMAGE_WIDTH, ExifInterface.TAG_PHOTOGRAPHIC_SENSITIVITY,
-          ExifInterface.TAG_MAKE, ExifInterface.TAG_MODEL, ExifInterface.TAG_ORIENTATION, ExifInterface.TAG_SUBSEC_TIME,
-          ExifInterface.TAG_SUBSEC_TIME_DIGITIZED, ExifInterface.TAG_SUBSEC_TIME_ORIGINAL, ExifInterface.TAG_WHITE_BALANCE
+              ExifInterface.TAG_F_NUMBER, ExifInterface.TAG_DATETIME, ExifInterface.TAG_DATETIME_DIGITIZED, ExifInterface.TAG_EXPOSURE_TIME,
+              ExifInterface.TAG_FLASH, ExifInterface.TAG_FOCAL_LENGTH, ExifInterface.TAG_GPS_ALTITUDE, ExifInterface.TAG_GPS_ALTITUDE_REF,
+              ExifInterface.TAG_GPS_DATESTAMP, ExifInterface.TAG_GPS_LATITUDE, ExifInterface.TAG_GPS_LATITUDE_REF,
+              ExifInterface.TAG_GPS_LONGITUDE, ExifInterface.TAG_GPS_LONGITUDE_REF, ExifInterface.TAG_GPS_PROCESSING_METHOD,
+              ExifInterface.TAG_GPS_TIMESTAMP, ExifInterface.TAG_IMAGE_LENGTH, ExifInterface.TAG_IMAGE_WIDTH, ExifInterface.TAG_PHOTOGRAPHIC_SENSITIVITY,
+              ExifInterface.TAG_MAKE, ExifInterface.TAG_MODEL, ExifInterface.TAG_ORIENTATION, ExifInterface.TAG_SUBSEC_TIME,
+              ExifInterface.TAG_SUBSEC_TIME_DIGITIZED, ExifInterface.TAG_SUBSEC_TIME_ORIGINAL, ExifInterface.TAG_WHITE_BALANCE
       };
 
       ExifInterface newExif = new ExifInterface(newPath);
@@ -351,11 +355,11 @@ public class SMTHHelper {
   }
 
   public static Observable<AjaxResponse> publishPost(String boardEngName, String subject, String content, String signature,
-      String replyPostID) {
+                                                     String replyPostID) {
     SMTHHelper helper = SMTHHelper.getInstance();
     return helper.wService.publishPost(boardEngName, subject, content, signature, replyPostID)
-        .subscribeOn(Schedulers.io())
-        .observeOn(Schedulers.io());
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.io());
   }
 
   public static Observable<AjaxResponse> editPost(String boardEngName, String postID, String subject, String content) {
@@ -715,8 +719,8 @@ public class SMTHHelper {
           Elements as = td.getElementsByTag("a");
           if (!as.isEmpty()) {
             Element a = as.first();
-              assert a != null;
-              topic.setTitle(a.text());
+            assert a != null;
+            topic.setTitle(a.text());
 
             String topicURL = a.attr("href");
             topic.setTopicID(StringUtils.getLastStringSegment(topicURL));
@@ -1070,8 +1074,8 @@ public class SMTHHelper {
   }
 
   /*
-  * All Boards related methods
-  * Starts here
+   * All Boards related methods
+   * Starts here
    */
   public static String getCacheFile(int type, String folder) {
     if (type == BOARD_TYPE_ALL) {
@@ -1151,17 +1155,17 @@ public class SMTHHelper {
 
   public static List<Board> LoadFavoriteBoardsInSection(final String path) {
     Iterable<Board> its = SMTHHelper.getInstance().wService.getFavoriteBoardsInSection(path).flatMap((Function<ResponseBody, Observable<Board>>) responseBody -> {
-       try {
-         String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
-         // Log.d(TAG, response);
-         List<Board> boards = SMTHHelper.ParseFavoriteBoardsFromWWW(response);
-         return Observable.fromIterable(boards);
-       } catch (Exception e) {
-         Log.e(TAG, "Failed to load favorite {" + path + "}");
-         Log.e(TAG, Log.getStackTraceString(e));
-         return null;
-       }
-     }).blockingIterable();
+      try {
+        String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
+        // Log.d(TAG, response);
+        List<Board> boards = SMTHHelper.ParseFavoriteBoardsFromWWW(response);
+        return Observable.fromIterable(boards);
+      } catch (Exception e) {
+        Log.e(TAG, "Failed to load favorite {" + path + "}");
+        Log.e(TAG, Log.getStackTraceString(e));
+        return null;
+      }
+    }).blockingIterable();
 
     List<Board> results = MakeList.makeList(its);
 
@@ -1184,7 +1188,7 @@ public class SMTHHelper {
     }
 
     Iterable<Board> its =
-        Observable.fromIterable(sections).flatMap((Function<BoardSection, Observable<Board>>) SMTHHelper::loadBoardsInSectionFromWWW).flatMap((Function<Board, Observable<Board>>) SMTHHelper::loadChildBoardsRecursivelyFromWWW).filter(Board::isBoard).blockingIterable();
+            Observable.fromIterable(sections).flatMap((Function<BoardSection, Observable<Board>>) SMTHHelper::loadBoardsInSectionFromWWW).flatMap((Function<Board, Observable<Board>>) SMTHHelper::loadChildBoardsRecursivelyFromWWW).filter(Board::isBoard).blockingIterable();
 
 
     List<Board> boards = MakeList.makeList(its);
@@ -1212,9 +1216,9 @@ public class SMTHHelper {
 
       // load recruisively
       return SMTHHelper.loadBoardsInSectionFromWWW(section)
-          .subscribeOn(Schedulers.io())
-          .observeOn(Schedulers.io())
-          .flatMap((Function<Board, Observable<Board>>) SMTHHelper::loadChildBoardsRecursivelyFromWWW);
+              .subscribeOn(Schedulers.io())
+              .observeOn(Schedulers.io())
+              .flatMap((Function<Board, Observable<Board>>) SMTHHelper::loadChildBoardsRecursivelyFromWWW);
     } else {
       return Observable.just(board);
     }
@@ -1301,32 +1305,32 @@ public class SMTHHelper {
 
     return boards;
   }
-    /*
-    * All Boards related methods
-    * Ends here
-     */
+  /*
+   * All Boards related methods
+   * Ends here
+   */
 
-    // smth images might be relative URLs
-    // <a target="_blank" href="//static.mysmth.net/nForum/att/FamilyLife/1763462541/17096">
-    // <img border="0" title="单击此查看原图" src="//static.mysmth.net/nForum/att/FamilyLife/1763462541/17096/large" class="resizeable" /></a>
+  // smth images might be relative URLs
+  // <a target="_blank" href="//static.mysmth.net/nForum/att/FamilyLife/1763462541/17096">
+  // <img border="0" title="单击此查看原图" src="//static.mysmth.net/nForum/att/FamilyLife/1763462541/17096/large" class="resizeable" /></a>
 
-    public static String preprocessSMTHImageURL(String original) {
-      String url = original;
-      if(null != original) {
-        if (original.startsWith("//")) {
-          // images in post or avatar
-          return "https:" + original;
-        } else if (original.startsWith("/nForum")) {
-          url = Settings.getInstance().getWebAddr() + original;
-        }
-        if(Settings.getInstance().isImageSourceCDN()) {
-          url = url.replace(SMTH_IMAGE_PREFIX_DIRECT, SMTH_IMAGE_PREFIX_CDN);
-        } else {
-          url = url.replace(SMTH_IMAGE_PREFIX_CDN, SMTH_IMAGE_PREFIX_DIRECT);
-        }
+  public static String preprocessSMTHImageURL(String original) {
+    String url = original;
+    if(null != original) {
+      if (original.startsWith("//")) {
+        // images in post or avatar
+        return "https:" + original;
+      } else if (original.startsWith("/nForum")) {
+        url = Settings.getInstance().getWebAddr() + original;
       }
-      return url;
+      if(Settings.getInstance().isImageSourceCDN()) {
+        url = url.replace(SMTH_IMAGE_PREFIX_DIRECT, SMTH_IMAGE_PREFIX_CDN);
+      } else {
+        url = url.replace(SMTH_IMAGE_PREFIX_CDN, SMTH_IMAGE_PREFIX_DIRECT);
+      }
     }
+    return url;
+  }
 
 }
 
@@ -1341,6 +1345,13 @@ class OkHttpUtil {
 
     @Override
     public void checkServerTrusted(X509Certificate[] chain, String authType) {
+      /*
+      try {
+        chain[0].checkValidity();
+      } catch (CertificateExpiredException|CertificateNotYetValidException e ) {
+        Log.d("zSMTH-v",e.toString());
+      }
+       */
     }
 
     @Override
@@ -1372,6 +1383,7 @@ class OkHttpUtil {
       @Override
       public boolean verify(String arg0, SSLSession arg1) {
         return true;
+        //return HttpsURLConnection.getDefaultHostnameVerifier().verify(arg0,arg1);
       }
     };
   }

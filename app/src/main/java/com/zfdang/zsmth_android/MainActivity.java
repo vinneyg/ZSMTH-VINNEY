@@ -34,6 +34,8 @@ import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -45,7 +47,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.customview.widget.ViewDragHelper;
 
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -54,6 +55,7 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
@@ -63,9 +65,11 @@ import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mob.MobSDK;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
+//import com.scwang.smart.refresh.layout.api.RefreshComponent;
 import com.umeng.analytics.MobclickAgent;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
+
 import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnMailInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
@@ -116,13 +120,15 @@ public class MainActivity extends SMTHBaseActivity
   private DrawerLayout mDrawer = null;
   private ActionBarDrawerToggle mToggle = null;
 
-    // press BACK in 2 seconds, app will quit
+  // press BACK in 2 seconds, app will quit
   private boolean mDoubleBackToExit = false;
   private Handler mHandler = null;
   private FloatingActionMenu mActionMenu;
   private NavigationView mNavigationView;
 
   private static final int notificationID = 273;
+
+  private ActivityResultLauncher<Intent> mActivityLoginResultLauncher;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -139,6 +145,16 @@ public class MainActivity extends SMTHBaseActivity
         onHandleBackPressed();
       }
     });
+
+    // Initialize the ActivityResultLauncher object.
+    mActivityLoginResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+              if(result.getResultCode() == Activity.RESULT_OK)
+              {
+                updateUserStatusNow();
+              }
+            });
 
     // how to adjust the height of toolbar
     // http://stackoverflow.com/questions/17439683/how-to-change-action-bar-size
@@ -216,12 +232,15 @@ public class MainActivity extends SMTHBaseActivity
       Field f = toolbar.getClass().getDeclaredField("mTitleTextView");
       f.setAccessible(true);
       titleTextView = (TextView) f.get(toolbar);
-      assert titleTextView != null;
+      if (titleTextView == null) {
+        Log.e(TAG, "titleTextView is null.");
+        return;
+      }
       titleTextView.setEllipsize(TextUtils.TruncateAt.START);
     } catch (NoSuchFieldException | IllegalAccessException ignored) {
     }
 
-      // init all fragments
+    // init all fragments
     initFragments();
 
     FragmentManager fm = getSupportFragmentManager();
@@ -407,20 +426,20 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   private void setupUserStatusReceiver() {
-      UserStatusReceiver mReceiver = new UserStatusReceiver(new Handler());
-      mReceiver.setReceiver(new UserStatusReceiver.Receiver() {
+    UserStatusReceiver mReceiver = new UserStatusReceiver(new Handler());
+    mReceiver.setReceiver(new UserStatusReceiver.Receiver() {
       @Override public void onReceiveResult(int resultCode, Bundle resultData) {
-      if (resultCode == RESULT_OK) {
-        //Log.d(TAG,"onReceiveResult: " + "to update navigationview " + SMTHApplication.activeUser.toString());
-        UpdateNavigationViewHeader();
+        if (resultCode == RESULT_OK) {
+          //Log.d(TAG,"onReceiveResult: " + "to update navigationview " + SMTHApplication.activeUser.toString());
+          UpdateNavigationViewHeader();
 
-        // show notification if necessary
-        String message = resultData.getString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE);
-        //Log.d(TAG, "OnReceiveResult: " + message);
-        if (message != null) {
-          showNotification(message);
+          // show notification if necessary
+          String message = resultData.getString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE);
+          //Log.d(TAG, "OnReceiveResult: " + message);
+          if (message != null) {
+            showNotification(message);
+          }
         }
-      }
       }
 
       @Override
@@ -441,7 +460,7 @@ public class MainActivity extends SMTHBaseActivity
     if (keepAliveService == null)
       keepAliveService = new Intent(this, KeepAliveService.class);
     if (!isKeepAliveServiceRunning()) {
-        startForegroundService(keepAliveService);
+      startForegroundService(keepAliveService);
     }
   }
   public Boolean isKeepAliveServiceRunning() {
@@ -473,7 +492,7 @@ public class MainActivity extends SMTHBaseActivity
 
 
       NotificationChannel notificationChannel = new NotificationChannel("newChan","zSMTH-v通知消息",
-                NotificationManager.IMPORTANCE_DEFAULT);
+              NotificationManager.IMPORTANCE_DEFAULT);
       mNotifyMgr.createNotificationChannel(notificationChannel);
 
       Notification notification = new NotificationCompat.Builder(this,"newChan")
@@ -486,12 +505,12 @@ public class MainActivity extends SMTHBaseActivity
               .setContentText(text)
               .setContentIntent(resultPendingIntent)
               .build();
-        if(mNotifyMgr.areNotificationsEnabled()){
-          mNotifyMgr.notify(notificationID, notification);
-        } else{
-          Intent intent = new Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-          startActivity(intent);
-        }
+      if(mNotifyMgr.areNotificationsEnabled()){
+        mNotifyMgr.notify(notificationID, notification);
+      } else{
+        Intent intent = new Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+        startActivity(intent);
+      }
 
     } catch (Exception se) {
       Log.e(TAG, "showNotification: " + se);
@@ -587,16 +606,6 @@ public class MainActivity extends SMTHBaseActivity
 
   }
 
-  @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-//    Log.d(TAG, "receive login result, requestCode = " + requestCode);
-    if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
-//      Log.d(TAG, "receive login result, resultCode = " + resultCode);
-      updateUserStatusNow();
-    }
-  }
-
   @Override public boolean onPrepareOptionsMenu(Menu menu) {
     MenuItem login = menu.findItem(R.id.main_action_login);
     MenuItem logout = menu.findItem(R.id.main_action_logout);
@@ -642,7 +651,7 @@ public class MainActivity extends SMTHBaseActivity
 
     // handle back button for all fragment
     Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-    if (fragment instanceof FavoriteBoardFragment) {
+    if (fragment != null && fragment instanceof FavoriteBoardFragment) {
       if (!favoriteBoardFragment.isAtRoot()) {
         favoriteBoardFragment.popPath();
         favoriteBoardFragment.RefreshFavoriteBoards();
@@ -681,11 +690,7 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   private void quitNow() {
-    //user logout
-    //onLogout();
-    // quit
-	
-	// stop keep alive service
+    // stop keep alive service
     if (keepAliveService != null)
       stopService(keepAliveService);
 
@@ -746,17 +751,17 @@ public class MainActivity extends SMTHBaseActivity
       onLogout();
       return true;
     } else if (id == android.R.id.home) {
-      this.onBackPressed();
+      onBackPressed();
       return true;
     }
-
     return super.onOptionsItemSelected(item);
   }
 
   public void onLogin() {
     // still use the previous login method
     Intent intent = new Intent(this, LoginActivity.class);
-    startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
+    //startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
+    mActivityLoginResultLauncher.launch(intent);
   }
 
   public void onLogout() {
@@ -778,7 +783,7 @@ public class MainActivity extends SMTHBaseActivity
 
               @Override
               public void onNext(@NonNull AjaxResponse ajaxResponse) {
-                Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
               }
 
               @Override
@@ -792,7 +797,16 @@ public class MainActivity extends SMTHBaseActivity
               }
             });
     Settings.getInstance().setAutoLogin(false);
+    Intent intent = new Intent("com.zfdang.zsmth_android.PREFERENCE_CLICKED");
+    intent.putExtra("preference_key", "setting_fresco_cache");
+    sendBroadcast(intent);
+
+    intent = new Intent("com.zfdang.zsmth_android.PREFERENCE_CLICKED");
+    intent.putExtra("preference_key", "setting_okhttp3_cache");
+    sendBroadcast(intent);
+
   }
+
 
   //@SuppressWarnings("StatementWithEmptyBody")
   @Override
@@ -924,7 +938,7 @@ public class MainActivity extends SMTHBaseActivity
     if (item.isCategory) return;
 
     // mark item as read
-    mailListFragment.markMailAsReaded(position);
+    mailListFragment.markMailAsRead(position);
     // MailListFragment
     Intent intent = new Intent(this, MailContentActivity.class);
     intent.putExtra(SMTHApplication.MAIL_OBJECT, item);
@@ -981,7 +995,8 @@ public class MainActivity extends SMTHBaseActivity
                     public void onNext(@NonNull AjaxResponse ajaxResponse) {
                       //Log.d(TAG, "onNext: " + ajaxResponse.toString());
                       if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-                        Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg() + "\n" + "请刷新收藏！", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg() + "\n" + "请刷新收藏！", Toast.LENGTH_SHORT).show();
+                        refreshCurrentFragment();
                       } else {
                         Toast.makeText(MainActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
                       }
@@ -1027,7 +1042,8 @@ public class MainActivity extends SMTHBaseActivity
                     public void onNext(@NonNull AjaxResponse ajaxResponse) {
                       //(TAG, "onNext: " + ajaxResponse.toString());
                       if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-                        Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg() + "\n" + "请刷新收藏！", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg() + "\n" + "请刷新收藏！", Toast.LENGTH_SHORT).show();
+                        refreshCurrentFragment();
                       } else {
                         Toast.makeText(MainActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
                       }
@@ -1074,7 +1090,8 @@ public class MainActivity extends SMTHBaseActivity
                     public void onNext(@NonNull AjaxResponse ajaxResponse) {
                       //Log.d(TAG, "onNext: " + ajaxResponse.toString());
                       if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-                        Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg() + "\n" + "请刷新收藏！", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg() + "\n" + "请刷新收藏！", Toast.LENGTH_SHORT).show();
+                        refreshCurrentFragment();
                       } else {
                         Toast.makeText(MainActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
                       }
@@ -1123,7 +1140,11 @@ public class MainActivity extends SMTHBaseActivity
       leftDraggerField.setAccessible(true);
       ViewDragHelper leftDragger = (ViewDragHelper) leftDraggerField.get(drawerLayout);
 
-      assert leftDragger != null;
+      if (leftDragger == null) {
+        Log.e(TAG, "leftDragger is null.");
+        return;
+      }
+
       Field edgeSizeField = leftDragger.getClass().getDeclaredField("mEdgeSize");
       edgeSizeField.setAccessible(true);
       int edgeSize = edgeSizeField.getInt(leftDragger);
@@ -1173,5 +1194,12 @@ public class MainActivity extends SMTHBaseActivity
             });
   }
 
+  public void refreshCurrentFragment() {
+    Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+    if (currentFragment != null && currentFragment instanceof FavoriteBoardFragment) {
+      FavoriteBoardFragment favoriteBoardFragment = (FavoriteBoardFragment) currentFragment;
+      favoriteBoardFragment.RefreshFavoriteBoardsWithCache();
+    }
+  }
 
 }

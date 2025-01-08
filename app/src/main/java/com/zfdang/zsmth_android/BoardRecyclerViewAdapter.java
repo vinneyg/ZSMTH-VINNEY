@@ -57,7 +57,7 @@ public class BoardRecyclerViewAdapter extends RecyclerView.Adapter<BoardRecycler
     } else if(board.isBoard()){
       holder.mCategoryView.setText("[" + board.getCategoryName() + "]");
       //holder.mModeratorView.setVisibility(View.VISIBLE);
-	  holder.mModeratorView.setVisibility(View.GONE);
+      holder.mModeratorView.setVisibility(View.GONE);
       holder.mModeratorView.setText(board.getModerator());
       //holder.mNameView.setText(board.getBoardName());
       holder.mNameView.setText(board.getBoardChsName());
@@ -137,7 +137,10 @@ public class BoardRecyclerViewAdapter extends RecyclerView.Adapter<BoardRecycler
     @SuppressLint("NotifyDataSetChanged")
     @Override protected void publishResults(CharSequence constraint, FilterResults results) {
       adapter.mBoards.clear();
-      adapter.mBoards.addAll((ArrayList<Board>) results.values);
+      @SuppressWarnings("unchecked")
+      List<Board> filteredList = (List<Board>) results.values;
+      adapter.mBoards.addAll(filteredList);
+      //adapter.mBoards.addAll((ArrayList<Board>) results.values);
       adapter.notifyDataSetChanged();
     }
   }

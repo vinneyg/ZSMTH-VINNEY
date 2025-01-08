@@ -1,16 +1,23 @@
 package com.zfdang.zsmth_android;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.ActionBar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -35,6 +42,7 @@ import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.models.TopicListContent;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
@@ -63,7 +71,7 @@ import io.reactivex.schedulers.Schedulers;
  * item details side-by-side using two vertical panes.
  */
 public class BoardTopicActivity extends SMTHBaseActivity
-    implements OnTopicFragmentInteractionListener, SwipeRefreshLayout.OnRefreshListener, PopupSearchWindow.SearchInterface {
+        implements OnTopicFragmentInteractionListener, SwipeRefreshLayout.OnRefreshListener, PopupSearchWindow.SearchInterface {
 
   /**
    * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -86,7 +94,10 @@ public class BoardTopicActivity extends SMTHBaseActivity
   private boolean isSearchMode = false;
 
   private static final int MAXSIZE = 100;
-  private static final Hashtable MapHash = new Hashtable(MAXSIZE);
+  private static final Hashtable<String,String> MapHash = new Hashtable<>(MAXSIZE);
+
+  private ActivityResultLauncher<Intent> mActivityLoginResultLauncher;
+  private ActivityResultLauncher<Intent> mActivityPostResultLauncher;
 
   @Override protected void onDestroy() {
     super.onDestroy();
@@ -98,24 +109,16 @@ public class BoardTopicActivity extends SMTHBaseActivity
     SwipeBackHelper.onPostCreate(this);
   }
 
+  /*
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if(requestCode == ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE) {
       // returned from compose activity
       // ideally, we should also check the resultCode
       RefreshBoardTopicFromPageOne();
     }
-    /*
-    else if (requestCode == MainActivity.LOGIN_ACTIVITY_REQUEST_CODE) {
-      if (resultCode == RESULT_OK) {
-
-        SMTHApplication.activeUser.setId(Settings.getInstance().getUsername());
-        Settings.getInstance().setUserOnline(true);
-        UpdateNavigationViewHeaderNew();
-      }
-    }
-    */
     super.onActivityResult(requestCode, resultCode, data);
   }
+  */
 
   @Override public void onBackPressed() {
     if (isSearchMode) {
@@ -137,18 +140,49 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
     Toolbar toolbar = findViewById(R.id.board_topic_toolbar);
     setSupportActionBar(toolbar);
-    assert toolbar != null;
+    if (toolbar == null) {
+      Log.e(TAG, "toolbar is null");
+      return;
+    }
     toolbar.setTitle(getTitle());
 
     mSetting = Settings.getInstance();
 
+    // Initialize the ActivityResultLauncher object.
+    mActivityLoginResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+              if(result.getResultCode() == Activity.RESULT_OK)
+              {
+                WorkRequest userStatusWorkRequest =
+                        new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
+                WorkManager.getInstance(this).enqueue(userStatusWorkRequest);
+
+              }
+            });
+
+    // Initialize the ActivityResultLauncher object.
+    mActivityPostResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+              if (result.getResultCode() == Activity.RESULT_OK) {
+                RefreshBoardTopicFromPageOne();
+              }
+            });
+
     // enable pull down to refresh
     mSwipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-    if (mSwipeRefreshLayout == null) throw new AssertionError();
+    if (mSwipeRefreshLayout == null) {
+      Log.e(TAG, "mSwipeRefreshLayout is null");
+      return;
+    }
     mSwipeRefreshLayout.setOnRefreshListener(this);
 
     mRecyclerView = findViewById(R.id.board_topic_list);
-    assert mRecyclerView != null;
+    if (mRecyclerView == null) {
+      Log.e(TAG, "mRecyclerView is null");
+      return;
+    }
     mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL, 0));
     LinearLayoutManager linearLayoutManager = new WrapContentLinearLayoutManager(this);
@@ -182,7 +216,11 @@ public class BoardTopicActivity extends SMTHBaseActivity
     // get Board information from launcher
     Intent intent = getIntent();
     Board board = intent.getParcelableExtra(SMTHApplication.BOARD_OBJECT);
-    assert board != null;
+    if (board == null) {
+      Log.e(TAG, "board is null.");
+      return;
+    }
+
     if (mBoard == null || !mBoard.getBoardEngName().equals(board.getBoardEngName())) {
       mBoard = board;
       TopicListContent.clearBoardTopics();
@@ -246,7 +284,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
       Intent intent = new Intent(this, ComposePostActivity.class);
       intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-      startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
+      //startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
+      mActivityPostResultLauncher.launch(intent);
     } else if (id == R.id.board_topic_action_search) {
       PopupSearchWindow popup = new PopupSearchWindow();
       popup.initPopupWindow(this);
@@ -254,33 +293,34 @@ public class BoardTopicActivity extends SMTHBaseActivity
     } else if (id == R.id.board_topic_action_favorite) {
       SMTHHelper helper = SMTHHelper.getInstance();
       helper.wService.manageFavoriteBoard("0", "ab", this.mBoard.getBoardEngName())
-          .subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(new Observer<AjaxResponse>() {
-            @Override public void onSubscribe(@NonNull Disposable disposable) {
+              .subscribeOn(Schedulers.io())
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribe(new Observer<AjaxResponse>() {
+                @Override public void onSubscribe(@NonNull Disposable disposable) {
 
-            }
+                }
 
-            @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
-              Log.d(TAG, "onNext: " + ajaxResponse.toString());
-              if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-                Toast.makeText(BoardTopicActivity.this, ajaxResponse.getAjax_msg() + "\n请手动刷新收藏夹！", Toast.LENGTH_SHORT).show();
-              } else {
-                //Toast.makeText(BoardTopicActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(BoardTopicActivity.this, "该版面已经收藏", Toast.LENGTH_SHORT).show();
-              }
+                @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
+                  Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                  if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+                    //Toast.makeText(BoardTopicActivity.this, ajaxResponse.getAjax_msg() + "\n请手动刷新收藏夹！", Toast.LENGTH_SHORT).show();
+                    SMTHApplication.bNewFavoriteBoard = true;
+                  } else {
+                    //Toast.makeText(BoardTopicActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BoardTopicActivity.this, "该版面已经收藏！", Toast.LENGTH_SHORT).show();
+                  }
 
-            }
+                }
 
-            @Override public void onError(@NonNull Throwable e) {
-              Toast.makeText(BoardTopicActivity.this, "收藏版面失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                @Override public void onError(@NonNull Throwable e) {
+                  Toast.makeText(BoardTopicActivity.this, "收藏版面失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
 
-            }
+                }
 
-            @Override public void onComplete() {
+                @Override public void onComplete() {
 
-            }
-          });
+                }
+              });
     }
     return super.onOptionsItemSelected(item);
   }
@@ -347,91 +387,92 @@ public class BoardTopicActivity extends SMTHBaseActivity
     final SMTHHelper helper = SMTHHelper.getInstance();
 
     helper
-        .wService
-        .getBoardTopicsByPage(mBoard.getBoardEngName(), Integer.toString(mCurrentPageNo))
-        .flatMap(
-                (Function<ResponseBody, ObservableSource<Topic>>) responseBody -> {
-                  try {
-                    String response = responseBody.string();
-                    List<Topic> topics = SMTHHelper.ParseBoardTopicsFromWWW(response);
-                    if (topics.isEmpty())
-                      return null;
-                    return Observable.fromIterable(topics);
-                  } catch (Exception e) {
-                    Log.e(TAG, "call: " + Log.getStackTraceString(e));
-                    return null;
-                  }
-                })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(
-            new Observer<Topic>() {
-              @Override
-              public void onSubscribe(@NonNull Disposable disposable) {
-                Topic topic = new Topic(String.format(Locale.CHINA, "第%d页:", mCurrentPageNo));
-                topic.isCategory = true;
-                TopicListContent.addBoardTopic(topic);
-                // mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
-                mRecyclerView.post(
-                        () -> {
-                          // Notify adapter with appropriate notify methods
-                          Objects.requireNonNull(mRecyclerView.getAdapter())
-                              .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
-                        });
-              }
-
-              @Override
-              public void onNext(@NonNull Topic topic) {
-                // Log.d(TAG, topic.toString());
-                if (!topic.isSticky || mSetting.isShowSticky()) {
-                  if (!MapHash.contains(topic.getTitle())) {
-                      if (MapHash.size() >= MAXSIZE) {
-                          MapHash.clear();
+            .wService
+            .getBoardTopicsByPage(mBoard.getBoardEngName(), Integer.toString(mCurrentPageNo))
+            .flatMap(
+                    (Function<ResponseBody, ObservableSource<Topic>>) responseBody -> {
+                      try {
+                        String response = responseBody.string();
+                        List<Topic> topics = SMTHHelper.ParseBoardTopicsFromWWW(response);
+                        if (topics.isEmpty())
+                          return null;
+                        return Observable.fromIterable(topics);
+                      } catch (Exception e) {
+                        Log.e(TAG, "call: " + Log.getStackTraceString(e));
+                        return null;
                       }
-                      TopicListContent.addBoardTopic(topic);
-                      MapHash.put(topic.getTitle(), topic.getTopicID());
-                      Objects.requireNonNull(mRecyclerView.getAdapter())
-                          .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
-                  } else {
-                    Log.d(TAG, "sticky " + topic.getTitle());
-                  }
-                }
-              }
+                    })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                    new Observer<Topic>() {
+                      @Override
+                      public void onSubscribe(@NonNull Disposable disposable) {
+                        Topic topic = new Topic(String.format(Locale.CHINA, "第%d页:", mCurrentPageNo));
+                        topic.isCategory = true;
+                        TopicListContent.addBoardTopic(topic);
+                        // mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                        mRecyclerView.post(
+                                () -> {
+                                  // Notify adapter with appropriate notify methods
+                                  Objects.requireNonNull(mRecyclerView.getAdapter())
+                                          .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                                });
+                      }
 
-              @Override
-              public void onError(@NonNull Throwable e) {
-                clearLoadingHints();
-                if(mCurrentPageNo != 1)
-                Toast.makeText(
-                        SMTHApplication.getAppContext(),
-                        String.format(Locale.CHINA, "错误:获取第%d页的帖子失败!\n"+e.toString(), mCurrentPageNo),
-                        Toast.LENGTH_SHORT)
-                    .show();
-                else{
-                  mCurrentPageNo -= 1;
+                      @Override
+                      public void onNext(@NonNull Topic topic) {
+                        // Log.d(TAG, topic.toString());
+                        if (!topic.isSticky || mSetting.isShowSticky()) {
+                          if (!MapHash.contains(topic.getTitle())) {
+                            if (MapHash.size() >= MAXSIZE) {
+                              MapHash.clear();
+                            }
+                            TopicListContent.addBoardTopic(topic);
+                            MapHash.put(topic.getTitle(), topic.getTopicID());
+                            Objects.requireNonNull(mRecyclerView.getAdapter())
+                                    .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                          } else {
+                            Log.d(TAG, "sticky " + topic.getTitle());
+                          }
+                        }
+                      }
 
-                  try {
-                    Thread.sleep(500);
-                    onBackPressed();
-                  } catch (InterruptedException ex) {
-                    //ex.printStackTrace();
-                    Log.d(TAG, ex.toString());
-                  }
-                  if (!SMTHApplication.isValidUser()) {
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
-                  }
-                  else
-                    Toast.makeText(SMTHApplication.getAppContext(),"版面不存在，请刷新页面！",Toast.LENGTH_SHORT).show();
-                }
+                      @Override
+                      public void onError(@NonNull Throwable e) {
+                        clearLoadingHints();
+                        if(mCurrentPageNo != 1)
+                          Toast.makeText(
+                                          SMTHApplication.getAppContext(),
+                                          String.format(Locale.CHINA, "错误:获取第%d页的帖子失败!\n"+e.toString(), mCurrentPageNo),
+                                          Toast.LENGTH_SHORT)
+                                  .show();
+                        else{
+                          mCurrentPageNo -= 1;
 
-                }
+                          try {
+                            Thread.sleep(500);
+                            onBackPressed();
+                          } catch (InterruptedException ex) {
+                            //ex.printStackTrace();
+                            Log.d(TAG, ex.toString());
+                          }
+                          if (!SMTHApplication.isValidUser()) {
+                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                            //startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
+                            mActivityLoginResultLauncher.launch(intent);
+                          }
+                          else
+                            Toast.makeText(SMTHApplication.getAppContext(),"版面不存在！",Toast.LENGTH_SHORT).show();
+                        }
 
-              @Override
-              public void onComplete() {
-                clearLoadingHints();
-                }
-            });
+                      }
+
+                      @Override
+                      public void onComplete() {
+                        clearLoadingHints();
+                      }
+                    });
   }
 
 
@@ -502,40 +543,50 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
     SMTHHelper helper = SMTHHelper.getInstance();
     helper.wService.searchTopicInBoard(keyword, author, eliteStr, attachmentStr, this.mBoard.getBoardEngName())
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .flatMap((Function<ResponseBody, ObservableSource<Topic>>) responseBody -> {
-          try {
-            String response = responseBody.string();
-            List<Topic> topics = SMTHHelper.ParseSearchResultFromWWW(response);
-            Topic topic = new Topic("搜索模式 - 下拉或按返回键退出搜索模式");
-            topics.add(0, topic);
-            return Observable.fromIterable(topics);
-          } catch (Exception e) {
-            Log.d(TAG, Log.getStackTraceString(e));
-            return null;
-          }
-        })
-        .subscribe(new Observer<Topic>() {
-          @Override public void onSubscribe(@NonNull Disposable disposable) {
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .flatMap((Function<ResponseBody, ObservableSource<Topic>>) responseBody -> {
+              try {
+                String response = responseBody.string();
+                List<Topic> topics = SMTHHelper.ParseSearchResultFromWWW(response);
+                Topic topic = new Topic("搜索模式 - 下拉或按返回键退出搜索模式");
+                topics.add(0, topic);
+                return Observable.fromIterable(topics);
+              } catch (Exception e) {
+                Log.d(TAG, Log.getStackTraceString(e));
+                return null;
+              }
+            })
+            .subscribe(new Observer<Topic>() {
+              @Override public void onSubscribe(@NonNull Disposable disposable) {
 
-          }
+              }
 
-          @Override public void onNext(@NonNull Topic topic) {
-            TopicListContent.addBoardTopic(topic);
-            mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+              @Override public void onNext(@NonNull Topic topic) {
+                TopicListContent.addBoardTopic(topic);
+                mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
 
-          }
+              }
 
-          @Override public void onError(@NonNull Throwable e) {
-            Toast.makeText(SMTHApplication.getAppContext(), "加载搜索结果失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+              @Override public void onError(@NonNull Throwable e) {
+                Toast.makeText(SMTHApplication.getAppContext(), "加载搜索结果失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
 
-          }
+              }
 
-          @Override public void onComplete() {
-            dismissProgress();
-          }
-        });
+              @Override public void onComplete() {
+                dismissProgress();
+              }
+            });
+  }
+
+  @Override
+  public void onResume(){
+    super.onResume();
+    if(SMTHApplication.bNewPost|| SMTHApplication.bNewMailSent){
+      SMTHApplication.bNewPost = false;
+      SMTHApplication.bNewMailSent = false;
+      RefreshBoardTopicFromPageOne();
+    }
   }
 
 }

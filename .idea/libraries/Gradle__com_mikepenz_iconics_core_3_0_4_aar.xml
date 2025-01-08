@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.mikepenz:iconics-core:3.0.4@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/4e4c4c4f302a7e043bf2128393e045ff/transformed/jetified-iconics-core-3.0.4/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/4e4c4c4f302a7e043bf2128393e045ff/transformed/jetified-iconics-core-3.0.4/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/4e4c4c4f302a7e043bf2128393e045ff/transformed/jetified-iconics-core-3.0.4/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/b6d5075650db10de963426c85398197f/transformed/jetified-iconics-core-3.0.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/b6d5075650db10de963426c85398197f/transformed/jetified-iconics-core-3.0.4/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/b6d5075650db10de963426c85398197f/transformed/jetified-iconics-core-3.0.4/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mikepenz/iconics-core/3.0.4/d7429fd3ab48e87b82c2c4de6c44b32dd29ebc6d/iconics-core-3.0.4-javadoc.jar!/" />

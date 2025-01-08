@@ -132,5 +132,5 @@
     <item name="android:textColor">@color/colorPrimary</item>
     <item name="android:textSize">14sp</item>
   </style>
-
+  <style name="MyDialogStyle" parent="Theme.AppCompat.DayNight.Dialog.Alert"/>
 </resources>

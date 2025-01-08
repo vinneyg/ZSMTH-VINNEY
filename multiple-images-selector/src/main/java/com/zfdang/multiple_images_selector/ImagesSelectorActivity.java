@@ -177,17 +177,7 @@ public class ImagesSelectorActivity extends AppCompatActivity
             ActivityCompat.requestPermissions(ImagesSelectorActivity.this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
                     MY_PERMISSIONS_REQUEST_CAMERA_CODE);
-            }
-        /*
-            else
-            {
-                //Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                ActivityCompat.requestPermissions(ImagesSelectorActivity.this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
-                        MY_PERMISSIONS_REQUEST_CAMERA_CODE);
-                //startActivityForResult(intent,MY_PERMISSIONS_REQUEST_CAMERA_CODE);
-            }
-            */
+        }
         else {
             launchCamera();
         }
@@ -198,73 +188,32 @@ public class ImagesSelectorActivity extends AppCompatActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_STORAGE_CODE: {
-                // If request is cancelled, the result arrays are empty.
-                //if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q ){
-                //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 if(Build.VERSION.SDK_INT<Build.VERSION_CODES.R|| Environment.isExternalStorageManager()){
                     // contacts-related task you need to do.
-                         LoadFolderAndImages();
-
-            }
-                else{
-                        //在版本低于此的时候，做一些处理
-
-                        // permission denied, boo! Disable the
-                        // functionality that depends on this permission.
-                        Toast.makeText(ImagesSelectorActivity.this, getString(R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
-                    }
-                    /*
-                else //Build >= 29.Android Q
-                {
-                    if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                            && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                        // permission was granted, yay! Do the
-                        // contacts-related task you need to do.
-                        LoadFolderAndImages();
-                    } else {
-                        // permission denied, boo! Disable the
-                        // functionality that depends on this permission.
-                        Toast.makeText(ImagesSelectorActivity.this, getString(R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
-                    }
-                    return;
+                    LoadFolderAndImages();
                 }
-                                */
-           return;
-            }
-            case MY_PERMISSIONS_REQUEST_CAMERA_CODE: {
-                // If request is cancelled, the result arrays are empty.
-                //if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q ){
-            if (ContextCompat.checkSelfPermission(
-                        ImagesSelectorActivity.this, Manifest.permission.CAMERA)
-                    == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(
-                        ImagesSelectorActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-              // contacts-related task you need to do.
-              launchCamera();
-                } else{
-                    //在版本低于此的时候，做一些处理
-
+                else{
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     Toast.makeText(ImagesSelectorActivity.this, getString(R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
                 }
-                    /*
-                else //Build >= 29.Android Q
-                {
-                    if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                            && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                        // permission was granted, yay! Do the
-                        // contacts-related task you need to do.
-                         launchCamera();
-                    } else {
-                        // permission denied, boo! Disable the
-                        // functionality that depends on this permission.
-                        Toast.makeText(ImagesSelectorActivity.this, getString(R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
-                    }
-                    return;
+                return;
+            }
+            case MY_PERMISSIONS_REQUEST_CAMERA_CODE: {
+
+                if (ContextCompat.checkSelfPermission(
+                        ImagesSelectorActivity.this, Manifest.permission.CAMERA)
+                        == PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(
+                        ImagesSelectorActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    // contacts-related task you need to do.
+                    launchCamera();
+                } else{
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(ImagesSelectorActivity.this, getString(R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
                 }
-                                */
             }
         }
     }

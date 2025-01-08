@@ -100,27 +100,27 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
       }
     }
 
-      holder.mView.setOnClickListener(new View.OnClickListener() {
-        @SuppressLint("ResourceAsColor")
-        @Override
-        public void onClick(View v) {
-          if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
+    holder.mView.setOnClickListener(new View.OnClickListener() {
+      @SuppressLint("ResourceAsColor")
+      @Override
+      public void onClick(View v) {
+        if (null != mListener) {
+          // Notify the active callbacks interface (the activity, if the
+          // fragment is attached to one) that an item has been selected.
           mListener.onTopicFragmentInteraction(holder.mTopic);
-            if (Settings.getInstance().isDiffReadTopic()) {
-              SMTHApplication.ReadTopicLists.add(holder.mTopic.getTitle());
-              holder.mTitle.setTextColor(Color.parseColor("#607D8B"));//R.color.status_text_night
-              holder.mAuthor.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
-              holder.mReplier.setTextColor(Color.parseColor("#607D8B"));
-              holder.mReplyDate.setTextColor(Color.parseColor("#607D8B"));
-              holder.mPublishDate.setTextColor(Color.parseColor("#607D8B"));
-              holder.mStatusSummary.setTextColor(Color.parseColor("#607D8B"));
-            }
+          if (Settings.getInstance().isDiffReadTopic()) {
+            SMTHApplication.ReadTopicLists.add(holder.mTopic.getTitle());
+            holder.mTitle.setTextColor(Color.parseColor("#607D8B"));//R.color.status_text_night
+            holder.mAuthor.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
+            holder.mReplier.setTextColor(Color.parseColor("#607D8B"));
+            holder.mReplyDate.setTextColor(Color.parseColor("#607D8B"));
+            holder.mPublishDate.setTextColor(Color.parseColor("#607D8B"));
+            holder.mStatusSummary.setTextColor(Color.parseColor("#607D8B"));
           }
         }
-      });
-    }
+      }
+    });
+  }
 
   @Override public int getItemCount() {
     return mTopics.size();

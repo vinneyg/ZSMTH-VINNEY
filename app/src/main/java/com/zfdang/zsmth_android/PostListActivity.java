@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 */
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -23,6 +24,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 
@@ -105,8 +108,8 @@ import okhttp3.ResponseBody;
  * in a {@link BoardTopicActivity}.
  */
 public class PostListActivity extends SMTHBaseActivity
-    implements View.OnClickListener, OnTouchListener, RecyclerViewGestureListener.OnItemLongClickListener, PopupLikeWindow.OnLikeInterface,
-    PopupForwardWindow.OnForwardInterface {
+        implements View.OnClickListener, OnTouchListener, RecyclerViewGestureListener.OnItemLongClickListener, PopupLikeWindow.OnLikeInterface,
+        PopupForwardWindow.OnForwardInterface {
 
   private static final String TAG = "PostListActivity";
   public RecyclerView mRecyclerView = null;
@@ -149,6 +152,9 @@ public class PostListActivity extends SMTHBaseActivity
   private GestureDetector mGestureDetector;
   private LinearLayoutManager linearLayoutManager;
 
+  private ActivityResultLauncher<Intent> mActivityLoginResultLauncher;
+  private ActivityResultLauncher<Intent> mActivityPostResultLauncher;
+
   @Override protected void onDestroy() {
     super.onDestroy();
     SwipeBackHelper.onDestroy(this);
@@ -160,6 +166,7 @@ public class PostListActivity extends SMTHBaseActivity
     SwipeBackHelper.onPostCreate(this);
   }
 
+  /*
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
     if(requestCode == ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE) {
@@ -173,6 +180,8 @@ public class PostListActivity extends SMTHBaseActivity
 
     super.onActivityResult(requestCode, resultCode, data);
   }
+
+  */
 
 
   /**
@@ -210,6 +219,29 @@ public class PostListActivity extends SMTHBaseActivity
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
+
+    // Initialize the ActivityResultLauncher object.
+    mActivityLoginResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+              if(result.getResultCode() == Activity.RESULT_OK)
+              {
+                WorkRequest userStatusWorkRequest =
+                        new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
+                WorkManager.getInstance(this).enqueue(userStatusWorkRequest);
+
+              }
+            });
+
+    // Initialize the ActivityResultLauncher object.
+    mActivityPostResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+              if (result.getResultCode() == Activity.RESULT_OK) {
+                reloadPostList();
+              }
+            });
+
     mTitle = findViewById(R.id.post_list_title);
     assert mTitle != null;
     mPageNo = findViewById(R.id.post_list_page_no);
@@ -244,7 +276,7 @@ public class PostListActivity extends SMTHBaseActivity
     mRecyclerView = findViewById(R.id.post_list);
     assert mRecyclerView != null;
     mRecyclerView.addItemDecoration(
-        new DividerItemDecoration(this, LinearLayoutManager.VERTICAL, R.drawable.recyclerview_divider));
+            new DividerItemDecoration(this, LinearLayoutManager.VERTICAL, R.drawable.recyclerview_divider));
     linearLayoutManager = new WrapContentLinearLayoutManager(this);
     mRecyclerView.setLayoutManager(linearLayoutManager);
     mRecyclerView.setAdapter(new PostRecyclerViewAdapter(PostListContent.POSTS, this));
@@ -263,11 +295,11 @@ public class PostListActivity extends SMTHBaseActivity
 
     // set onClick Lisetner for page navigator buttons
 
-      findViewById(R.id.post_list_first_page).setOnClickListener(this);
-      findViewById(R.id.post_list_pre_page).setOnClickListener(this);
-      findViewById(R.id.post_list_next_page).setOnClickListener(this);
-      findViewById(R.id.post_list_last_page).setOnClickListener(this);
-      findViewById(R.id.post_list_go_page).setOnClickListener(this);
+    findViewById(R.id.post_list_first_page).setOnClickListener(this);
+    findViewById(R.id.post_list_pre_page).setOnClickListener(this);
+    findViewById(R.id.post_list_next_page).setOnClickListener(this);
+    findViewById(R.id.post_list_last_page).setOnClickListener(this);
+    findViewById(R.id.post_list_go_page).setOnClickListener(this);
 
 
     LinearLayout navLayout = findViewById(R.id.post_list_action_layout);
@@ -300,7 +332,7 @@ public class PostListActivity extends SMTHBaseActivity
 
             //int firstVisibleItem = manager.findFirstVisibleItemPosition();
             // reach bottom
-            if (lastVisiblePos == (totalItemCount - 1) && isSlidingToLast && (mCurrentPageNo < mTopic.getTotalPageNo())) {
+            if (lastVisiblePos== (totalItemCount - 1) && isSlidingToLast && (mCurrentPageNo < mTopic.getTotalPageNo())) {
               LoadMoreItems();
             }
             else if(lastVisiblePos == (totalItemCount - 1) && isSlidingToLast && (mCurrentPageNo ==mTopic.getTotalPageNo())) {
@@ -309,7 +341,7 @@ public class PostListActivity extends SMTHBaseActivity
             else if((!isSlidingToLast)||  (lastVisiblePos < (totalItemCount - 1))) {
               TextView mIndexView = (Objects.requireNonNull(manager.findViewByPosition(lastVisiblePos))).findViewById(R.id.post_index);
               String temp = mIndexView.getText().toString();
-             //  int index =0;
+              //  int index =0;
               if (temp.equals("楼主")) {
                 mIndex = 0;
               } else {
@@ -318,7 +350,7 @@ public class PostListActivity extends SMTHBaseActivity
                 mIndex = Integer.parseInt(temp);
               }
               mCurrentPageNo = mIndex / POST_PER_PAGE + 1;
-             //mTotalPageNo = mTopic.getTotalPageNo();
+              //mTotalPageNo = mTopic.getTotalPageNo();
               String title = String.format(Locale.CHINA,"[%d/%d] %s", mCurrentPageNo, mTotalPageNo, mTopic.getTitle());
               mTitle.setText(title);
               mPageNo.setText(String.format(Locale.CHINA,"%d", mCurrentPageNo));
@@ -328,12 +360,12 @@ public class PostListActivity extends SMTHBaseActivity
           }
         }
       }
-        @Override
-        public void onScrolled(@androidx.annotation.NonNull RecyclerView recyclerView, int dx, int dy) {
-          super.onScrolled(recyclerView, dx, dy);
-          if(dy > 0){
-            isSlidingToLast = true;
-          }
+      @Override
+      public void onScrolled(@androidx.annotation.NonNull RecyclerView recyclerView, int dx, int dy) {
+        super.onScrolled(recyclerView, dx, dy);
+        if(dy > 0){
+          isSlidingToLast = true;
+        }
       }
     });
 
@@ -425,9 +457,9 @@ public class PostListActivity extends SMTHBaseActivity
     }
     int tmpIndex = Index % POST_PER_PAGE;
 
-    if (mCurrentPageNo == mTopic.getTotalPageNo() && tmpIndex<9 ) {
+    if (mCurrentPageNo == mTopic.getTotalPageNo() && tmpIndex<5 ) {
       loadnextpost();
-    } else if( mCurrentPageNo == mTopic.getTotalPageNo() && tmpIndex==9)  {
+    } else if( mCurrentPageNo == mTopic.getTotalPageNo() && tmpIndex==5)  {
       mCurrentPageNo += 1;
       loadnextpost();
     }
@@ -439,9 +471,9 @@ public class PostListActivity extends SMTHBaseActivity
 
   @SuppressLint("NotifyDataSetChanged")
   public void reloadPostListWithoutAlert() {
-      PostListContent.clear();
-      Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
-      loadPostListByPages();
+    PostListContent.clear();
+    Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
+    loadPostListByPages();
   }
 
   public void reloadPostList() {
@@ -494,7 +526,7 @@ public class PostListActivity extends SMTHBaseActivity
                 }
 
                 // Log.d(TAG, post.toString());
-                 temp = post.getPosition();
+                temp = post.getPosition();
                 int mIndex ;
                 if (temp.equals("楼主")) {
                   mIndex = 0;
@@ -505,10 +537,10 @@ public class PostListActivity extends SMTHBaseActivity
                 }
                 if(mIndex > Index)
                 {
-                PostListContent.addItem(post);
-               // mRecyclerView.getAdapter().notifyItemInserted(PostListContent.POSTS.size()-1);
+                  PostListContent.addItem(post);
+                  // mRecyclerView.getAdapter().notifyItemInserted(PostListContent.POSTS.size()-1);
                   Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(mIndex);
-              }
+                }
               }
 
               @Override public void onError(@NonNull Throwable e) {
@@ -535,25 +567,25 @@ public class PostListActivity extends SMTHBaseActivity
                   mTopic.setTotalPageNo(mTotalPageNo);
                   Toast.makeText(SMTHApplication.getAppContext(),"没有新数据",Toast.LENGTH_SHORT).show();
                 }
-                  String title = String.format(Locale.CHINA,"[%d/%d] %s", mCurrentPageNo, mTotalPageNo, mTopic.getTitle());
-                  mTitle.setText(title);
-                  mPageNo.setText(String.format(Locale.CHINA,"%d", mCurrentPageNo));
-                  mCurrentReadPageNo = mCurrentPageNo;
-                 //mRecyclerView.getAdapter().notifyItemInserted(PostListContent.POSTS.size()-1);
+                String title = String.format(Locale.CHINA,"[%d/%d] %s", mCurrentPageNo, mTotalPageNo, mTopic.getTitle());
+                mTitle.setText(title);
+                mPageNo.setText(String.format(Locale.CHINA,"%d", mCurrentPageNo));
+                mCurrentReadPageNo = mCurrentPageNo;
+                //mRecyclerView.getAdapter().notifyItemInserted(PostListContent.POSTS.size()-1);
                 clearLoadingHints();
 
-                  //Special User OFFLINE case: [] or [Category 第一页:]
-                  if (PostListContent.POSTS.isEmpty()) {
-                    //Toast.makeText(SMTHApplication.getAppContext(),"请重新登录-"+ PostListContent.POSTS.size()+"-!",Toast.LENGTH_SHORT).show();
-                    PostListContent.clear();
-                    try {
-                      Thread.sleep(1000);
-                      Settings.getInstance().setUserOnline(false); //User Offline
-                      onBackPressed();
-                    } catch (InterruptedException e) {
-                      Log.e(TAG,"Error occurred: ", e);
-                    }
+                //Special User OFFLINE case: [] or [Category 第一页:]
+                if (PostListContent.POSTS.isEmpty()) {
+                  //Toast.makeText(SMTHApplication.getAppContext(),"请重新登录-"+ PostListContent.POSTS.size()+"-!",Toast.LENGTH_SHORT).show();
+                  PostListContent.clear();
+                  try {
+                    Thread.sleep(1000);
+                    Settings.getInstance().setUserOnline(false); //User Offline
+                    onBackPressed();
+                  } catch (InterruptedException e) {
+                    Log.e(TAG,"Error occurred: ", e);
                   }
+                }
               }
             });
   }
@@ -563,201 +595,203 @@ public class PostListActivity extends SMTHBaseActivity
     final SMTHHelper helper = SMTHHelper.getInstance();
 
     helper
-        .wService
-        .getPostListByPage(mTopic.getTopicURL(), mTopic.getTopicID(), mCurrentPageNo, mFilterUser)
-        .flatMap(
-                (Function<ResponseBody, Observable<Post>>) responseBody -> {
-                  try {
-                    String response = responseBody.string();
-                    List<Post> posts = SMTHHelper.ParsePostListFromWWW(response, mTopic);
-                    if (posts.isEmpty()) {
-                      return Observable.empty(); // handle error case
-                    }
-                    if (!SMTHApplication.ReadRec) {
-                      SMTHApplication.ReadPostFirst = posts.get(0);
-                      SMTHApplication.ReadRec = true;
-                    }
-                    return Observable.fromIterable(posts);
-                  } catch (Exception e) {
-                    SMTHApplication.ReadRec = false;
-                    SMTHApplication.ReadPostFirst = null;
-                    Log.e(TAG, Log.getStackTraceString(e));
-                  }
-                  return null;
-                })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(
-            new Observer<Post>() {
-              @Override
-              public void onSubscribe(@NonNull Disposable disposable) {}
+            .wService
+            .getPostListByPage(mTopic.getTopicURL(), mTopic.getTopicID(), mCurrentPageNo, mFilterUser)
+            .flatMap(
+                    (Function<ResponseBody, Observable<Post>>) responseBody -> {
+                      try {
+                        String response = responseBody.string();
+                        List<Post> posts = SMTHHelper.ParsePostListFromWWW(response, mTopic);
+                        if (posts.isEmpty()) {
+                          return Observable.empty(); // handle error case
+                        }
+                        if (!SMTHApplication.ReadRec) {
+                          SMTHApplication.ReadPostFirst = posts.get(0);
+                          SMTHApplication.ReadRec = true;
+                        }
+                        return Observable.fromIterable(posts);
+                      } catch (Exception e) {
+                        SMTHApplication.ReadRec = false;
+                        SMTHApplication.ReadPostFirst = null;
+                        Log.e(TAG, Log.getStackTraceString(e));
+                      }
+                      return null;
+                    })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                    new Observer<Post>() {
+                      @Override
+                      public void onSubscribe(@NonNull Disposable disposable) {}
 
-              @Override
-              public void onNext(@NonNull Post post) {
-                // Log.d(TAG, post.toString());
-                if (!post.getContentSegments().isEmpty()) {
-                  PostListContent.addItem(post);
-                  Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(PostListContent.POSTS.size() - 1);
-                }
-              }
+                      @Override
+                      public void onNext(@NonNull Post post) {
+                        // Log.d(TAG, post.toString());
+                        if (!post.getContentSegments().isEmpty()) {
+                          PostListContent.addItem(post);
+                          Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(PostListContent.POSTS.size() - 1);
+                        }
+                      }
 
-              @Override
-              public void onError(@NonNull Throwable e) {
-                clearLoadingHints();
-                Toast.makeText(
-                        SMTHApplication.getAppContext(),
-                        "加载失败！\n" + e.toString(),
-                        Toast.LENGTH_SHORT)
-                    .show();
-              }
+                      @Override
+                      public void onError(@NonNull Throwable e) {
+                        clearLoadingHints();
+                        Toast.makeText(
+                                        SMTHApplication.getAppContext(),
+                                        "加载失败！\n" + e.toString(),
+                                        Toast.LENGTH_SHORT)
+                                .show();
+                      }
 
-              @Override
-              public void onComplete() {
-                mTotalPageNo = mTopic.getTotalPageNo();
-                String title =
-                    String.format(
-                        Locale.CHINA,
-                        "[%d/%d] %s",
-                        mCurrentPageNo,
-                        mTopic.getTotalPageNo(),
-                        mTopic.getTitle());
-                mTitle.setText(title);
-                mPageNo.setText(String.format(Locale.CHINA, "%d", mCurrentPageNo));
-                mCurrentReadPageNo = mCurrentPageNo;
-                clearLoadingHints();
-                SMTHApplication.deletionCount++;
+                      @Override
+                      public void onComplete() {
+                        mTotalPageNo = mTopic.getTotalPageNo();
+                        String title =
+                                String.format(
+                                        Locale.CHINA,
+                                        "[%d/%d] %s",
+                                        mCurrentPageNo,
+                                        mTopic.getTotalPageNo(),
+                                        mTopic.getTitle());
+                        mTitle.setText(title);
+                        mPageNo.setText(String.format(Locale.CHINA, "%d", mCurrentPageNo));
+                        mCurrentReadPageNo = mCurrentPageNo;
+                        clearLoadingHints();
+                        SMTHApplication.deletionCount++;
 
 
-                  // Special User OFFLINE case: [] or [Category 第一页:]
-                  if (PostListContent.POSTS.isEmpty()) {
-                    // Toast.makeText(SMTHApplication.getAppContext(),"请重新登录-"+
-                    // PostListContent.POSTS.size()+"-!",Toast.LENGTH_SHORT).show();
-                    PostListContent.clear();
-                    try {
-                      Thread.sleep(500);
-                      onBackPressed();
-                    } catch (InterruptedException e) {
-                      Log.e(TAG,"Error occurred: ", e);
-                    }
+                        // Special User OFFLINE case: [] or [Category 第一页:]
+                        if (PostListContent.POSTS.isEmpty()) {
+                          // Toast.makeText(SMTHApplication.getAppContext(),"请重新登录-"+
+                          // PostListContent.POSTS.size()+"-!",Toast.LENGTH_SHORT).show();
+                          PostListContent.clear();
+                          try {
+                            Thread.sleep(500);
+                            onBackPressed();
+                          } catch (InterruptedException e) {
+                            Log.e(TAG,"Error occurred: ", e);
+                          }
 
-                    Bundle req = getIntent().getExtras();
-                    String str = null;
-                    if(req != null) {
-                       str = req.getString(SMTHApplication.FROM_BOARD);
-                    }
+                          Bundle req = getIntent().getExtras();
+                          String str = null;
+                          if(req != null) {
+                            str = req.getString(SMTHApplication.FROM_BOARD);
+                          }
 
-                    if (!SMTHApplication.isValidUser() && !Objects.equals(str, SMTHApplication.FROM_BOARD_HOT)) {
-                      Intent intent = new Intent(PostListActivity.this, LoginActivity.class);
-                      startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
-                    }
-                    else{
-                      if(Objects.equals(str, SMTHApplication.FROM_BOARD_HOT))
-                        Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请登录！",Toast.LENGTH_SHORT).show();
-                      else
-                        Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请刷新页面！",Toast.LENGTH_SHORT).show();
-}
-                  }
-                }
-            });
+                          if (!SMTHApplication.isValidUser() && !Objects.equals(str, SMTHApplication.FROM_BOARD_HOT)) {
+                            Intent intent = new Intent(PostListActivity.this, LoginActivity.class);
+                            //startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
+                            mActivityLoginResultLauncher.launch(intent);
+                          }
+                          else{
+                            if(Objects.equals(str, SMTHApplication.FROM_BOARD_HOT))
+                              Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请登录！",Toast.LENGTH_SHORT).show();
+                            else
+                              Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请刷新页面！",Toast.LENGTH_SHORT).show();
+                          }
+                        }
+                      }
+                    });
   }
 
   public void loadPostListByPagesNew() {
     final SMTHHelper helper = SMTHHelper.getInstance();
 
     helper
-        .wService
-        .getPostListByPage(mTopic.getTopicURL(), mTopic.getTopicID(), mCurrentPageNo, mFilterUser)
-        .flatMap(
-                (Function<ResponseBody, Observable<Post>>) responseBody -> {
-                  try {
-                    String response = responseBody.string();
-                    List<Post> posts = SMTHHelper.ParsePostListFromWWW(response, mTopic);
-                    if (posts.isEmpty()) {
-                      return Observable.empty(); // handle error case
-                    }
-                    if (!SMTHApplication.ReadRec) {
-                      SMTHApplication.ReadPostFirst = posts.get(0);
-                      SMTHApplication.ReadRec = true;
-                    }
-                    return Observable.fromIterable(posts);
-                  } catch (Exception e) {
-                    SMTHApplication.ReadRec = false;
-                    SMTHApplication.ReadPostFirst = null;
-                    Log.e(TAG, Log.getStackTraceString(e));
-                  }
-                  return null;
-                })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(
-            new Observer<Post>() {
-              @Override
-              public void onSubscribe(@NonNull Disposable disposable) {}
+            .wService
+            .getPostListByPage(mTopic.getTopicURL(), mTopic.getTopicID(), mCurrentPageNo, mFilterUser)
+            .flatMap(
+                    (Function<ResponseBody, Observable<Post>>) responseBody -> {
+                      try {
+                        String response = responseBody.string();
+                        List<Post> posts = SMTHHelper.ParsePostListFromWWW(response, mTopic);
+                        if (posts.isEmpty()) {
+                          return Observable.empty(); // handle error case
+                        }
+                        if (!SMTHApplication.ReadRec) {
+                          SMTHApplication.ReadPostFirst = posts.get(0);
+                          SMTHApplication.ReadRec = true;
+                        }
+                        return Observable.fromIterable(posts);
+                      } catch (Exception e) {
+                        SMTHApplication.ReadRec = false;
+                        SMTHApplication.ReadPostFirst = null;
+                        Log.e(TAG, Log.getStackTraceString(e));
+                      }
+                      return null;
+                    })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                    new Observer<Post>() {
+                      @Override
+                      public void onSubscribe(@NonNull Disposable disposable) {}
 
-              @Override
-              public void onNext(@NonNull Post post) {
-                String temp = post.getPosition();
-                int Index;
-                if (temp.equals("楼主")) {
-                  Index = 0;
-                } else {
-                  String newTemp = temp.replaceAll("第", "");
-                  temp = newTemp.replaceAll("楼", "");
-                  Index = Integer.parseInt(temp);
-                }
-                Index = Index % POST_PER_PAGE;
-                // PostListContent.addItem(Index,post);
-                PostListContent.InsertItem(Index, post);
-                Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(Index);
-              }
+                      @Override
+                      public void onNext(@NonNull Post post) {
+                        String temp = post.getPosition();
+                        int Index;
+                        if (temp.equals("楼主")) {
+                          Index = 0;
+                        } else {
+                          String newTemp = temp.replaceAll("第", "");
+                          temp = newTemp.replaceAll("楼", "");
+                          Index = Integer.parseInt(temp);
+                        }
+                        Index = Index % POST_PER_PAGE;
+                        // PostListContent.addItem(Index,post);
+                        PostListContent.InsertItem(Index, post);
+                        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(Index);
+                      }
 
-              @Override
-              public void onError(@NonNull Throwable e) {
-                clearLoadingHints();
-                Toast.makeText(
-                        SMTHApplication.getAppContext(),
-                        "加载失败！\n" + e.toString(),
-                        Toast.LENGTH_SHORT)
-                    .show();
-              }
+                      @Override
+                      public void onError(@NonNull Throwable e) {
+                        clearLoadingHints();
+                        Toast.makeText(
+                                        SMTHApplication.getAppContext(),
+                                        "加载失败！\n" + e.toString(),
+                                        Toast.LENGTH_SHORT)
+                                .show();
+                      }
 
-              @Override
-              public void onComplete() {
-                mTotalPageNo = mTopic.getTotalPageNo();
-                String title =
-                    String.format(
-                        Locale.CHINA,
-                        "[%d/%d] %s",
-                        mCurrentPageNo,
-                        mTopic.getTotalPageNo(),
-                        mTopic.getTitle());
-                mTitle.setText(title);
-                mPageNo.setText(String.format(Locale.CHINA, "%d", mCurrentPageNo));
-                mCurrentReadPageNo = mCurrentPageNo;
-                clearLoadingHints();
+                      @Override
+                      public void onComplete() {
+                        mTotalPageNo = mTopic.getTotalPageNo();
+                        String title =
+                                String.format(
+                                        Locale.CHINA,
+                                        "[%d/%d] %s",
+                                        mCurrentPageNo,
+                                        mTopic.getTotalPageNo(),
+                                        mTopic.getTitle());
+                        mTitle.setText(title);
+                        mPageNo.setText(String.format(Locale.CHINA, "%d", mCurrentPageNo));
+                        mCurrentReadPageNo = mCurrentPageNo;
+                        clearLoadingHints();
 
-                // Special User OFFLINE case: [] or [Category 第一页:]
+                        // Special User OFFLINE case: [] or [Category 第一页:]
 
-                  if (PostListContent.POSTS.isEmpty()) {
-                    // Toast.makeText(SMTHApplication.getAppContext(),"请重新登录-"+
-                    // PostListContent.POSTS.size()+"-!",Toast.LENGTH_SHORT).show();
-                    PostListContent.clear();
-                    try {
-                      Thread.sleep(500);
-                      onBackPressed();
-                    } catch (InterruptedException e) {
-                      Log.e(TAG,"Error occurred: ", e);
-                    }
+                        if (PostListContent.POSTS.isEmpty()) {
+                          // Toast.makeText(SMTHApplication.getAppContext(),"请重新登录-"+
+                          // PostListContent.POSTS.size()+"-!",Toast.LENGTH_SHORT).show();
+                          PostListContent.clear();
+                          try {
+                            Thread.sleep(500);
+                            onBackPressed();
+                          } catch (InterruptedException e) {
+                            Log.e(TAG,"Error occurred: ", e);
+                          }
 
-                    if (!SMTHApplication.isValidUser()) {
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
-                  }
-                    else
-                      Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请刷新页面！",Toast.LENGTH_SHORT).show();
-                  }
-              }
-            });
+                          if (!SMTHApplication.isValidUser()) {
+                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                            //startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
+                            mActivityPostResultLauncher.launch(intent);
+                          }
+                          else
+                            Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请刷新页面！",Toast.LENGTH_SHORT).show();
+                        }
+                      }
+                    });
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -799,9 +833,7 @@ public class PostListActivity extends SMTHBaseActivity
     return super.onOptionsItemSelected(item);
   }
   @Override public void onBackPressed() {
-
     super.onBackPressed();
-
   }
 
   @SuppressLint("NonConstantResourceId")
@@ -937,7 +969,7 @@ public class PostListActivity extends SMTHBaseActivity
     } else {
       synchronized (this) {
         mCurrentPageNo += 1;
-       // showProgress("加载文章中, 请稍候...");
+        // showProgress("加载文章中, 请稍候...");
         loadPostListByPages();
       }
     }
@@ -967,20 +999,20 @@ public class PostListActivity extends SMTHBaseActivity
     //Log.d(TAG, String.format(Locale.CHINA,"Post by %s is long clicked", PostListContent.POSTS.get(position).getAuthor()));
 
     final PostActionAlertDialogItem[] menuItems = {
-        new PostActionAlertDialogItem(getString(R.string.post_reply_post), R.drawable.ic_reply_black_48dp),       // 0
-        new PostActionAlertDialogItem(getString(R.string.post_like_post), R.drawable.like_black),       // 1
-        new PostActionAlertDialogItem(getString(R.string.post_reply_mail), R.drawable.ic_email_black_48dp),    // 2
-        new PostActionAlertDialogItem(getString(R.string.post_query_author), R.drawable.ic_person_black_48dp),    // 3
-        new PostActionAlertDialogItem(getString(R.string.post_filter_author), R.drawable.ic_find_in_page_black_48dp),    // 4
-        new PostActionAlertDialogItem(getString(R.string.post_copy_content), R.drawable.ic_content_copy_black_48dp),    // 5
-        new PostActionAlertDialogItem(getString(R.string.post_foward), R.drawable.ic_send_black_48dp),     // 6
-        new PostActionAlertDialogItem(getString(R.string.post_view_in_browser), R.drawable.ic_open_in_browser_black_48dp), // 7
-        new PostActionAlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp), // 8
-        new PostActionAlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp), // 9
-        new PostActionAlertDialogItem(getString(R.string.post_edit_post), R.drawable.ic_edit_black_48dp), // 10
-        new PostActionAlertDialogItem(getString(R.string.post_convert_image), R.drawable.ic_photo_black_48dp), // 11
-        //new PostActionAlertDialogItem(getString(R.string.post_reply_author),R.drawable.ic_expand_less_36dp) // 11
-        new PostActionAlertDialogItem(getString(R.string.post_reply_author),R.drawable.ic_reply_black_48dp) // 11
+            new PostActionAlertDialogItem(getString(R.string.post_reply_post), R.drawable.ic_reply_black_48dp),       // 0
+            new PostActionAlertDialogItem(getString(R.string.post_like_post), R.drawable.like_black),       // 1
+            new PostActionAlertDialogItem(getString(R.string.post_reply_mail), R.drawable.ic_email_black_48dp),    // 2
+            new PostActionAlertDialogItem(getString(R.string.post_query_author), R.drawable.ic_person_black_48dp),    // 3
+            new PostActionAlertDialogItem(getString(R.string.post_filter_author), R.drawable.ic_find_in_page_black_48dp),    // 4
+            new PostActionAlertDialogItem(getString(R.string.post_copy_content), R.drawable.ic_content_copy_black_48dp),    // 5
+            new PostActionAlertDialogItem(getString(R.string.post_foward), R.drawable.ic_send_black_48dp),     // 6
+            new PostActionAlertDialogItem(getString(R.string.post_view_in_browser), R.drawable.ic_open_in_browser_black_48dp), // 7
+            new PostActionAlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp), // 8
+            new PostActionAlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp), // 9
+            new PostActionAlertDialogItem(getString(R.string.post_edit_post), R.drawable.ic_edit_black_48dp), // 10
+            new PostActionAlertDialogItem(getString(R.string.post_convert_image), R.drawable.ic_photo_black_48dp), // 11
+            //new PostActionAlertDialogItem(getString(R.string.post_reply_author),R.drawable.ic_expand_less_36dp) // 11
+            new PostActionAlertDialogItem(getString(R.string.post_reply_author),R.drawable.ic_reply_black_48dp) // 11
     };
 
     ListAdapter adapter = new ArrayAdapter<PostActionAlertDialogItem>(getApplicationContext(), R.layout.post_popup_menu_item, menuItems) {
@@ -1014,16 +1046,16 @@ public class PostListActivity extends SMTHBaseActivity
       }
     };
 
-    AlertDialog dialog = new AlertDialog.Builder(this).setTitle(getString(R.string.post_alert_title))
-        .setAdapter(adapter, (dialog1, which) -> onPostPopupMenuItem(position, which))
-        .create();
+    AlertDialog dialog = new AlertDialog.Builder(this,R.style.MyDialogStyle).setTitle(getString(R.string.post_alert_title))
+            .setAdapter(adapter, (dialog1, which) -> onPostPopupMenuItem(position, which))
+            .create();
     dialog.setCanceledOnTouchOutside(true);
     dialog.setCancelable(true);
 
     dialog.show();
   }
 
-   public void onItemLeftClicked(final int position, View v) {
+  public void onItemLeftClicked(final int position, View v) {
     if(Settings.getInstance().isQuickReply()) {
       // post_reply_mail
       // Toast.makeText(PostListActivity.this, "回复到作者信箱:TBD", Toast.LENGTH_SHORT).show();
@@ -1046,36 +1078,37 @@ public class PostListActivity extends SMTHBaseActivity
       intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
       startActivity(intent);
     }
-   }
-   public void onItemRightClicked(final int position, View v) {
-     if (Settings.getInstance().isQuickReply()) {
-       // post_reply_post
-       if (position >= PostListContent.POSTS.size()) {
-         Log.e(TAG, "onItemRightClicked: " + "Invalid Post index" + position);
-         return;
-       }
+  }
+  public void onItemRightClicked(final int position, View v) {
+    if (Settings.getInstance().isQuickReply()) {
+      // post_reply_post
+      if (position >= PostListContent.POSTS.size()) {
+        Log.e(TAG, "onItemRightClicked: " + "Invalid Post index" + position);
+        return;
+      }
 
-       Post post = PostListContent.POSTS.get(position);
-       ComposePostContext postContext = new ComposePostContext();
-       postContext.setBoardEngName(mTopic.getBoardEngName());
-       postContext.setPostId(post.getPostID());
-       postContext.setPostTitle(mTopic.getTitle());
-       postContext.setPostAuthor(post.getRawAuthor());
-       //postContext.setPostContent(post.getRawContent());
-       postContext.setPostContent("");
-       postContext.setComposingMode(ComposePostContext.MODE_REPLY_POST);
+      Post post = PostListContent.POSTS.get(position);
+      ComposePostContext postContext = new ComposePostContext();
+      postContext.setBoardEngName(mTopic.getBoardEngName());
+      postContext.setPostId(post.getPostID());
+      postContext.setPostTitle(mTopic.getTitle());
+      postContext.setPostAuthor(post.getRawAuthor());
+      //postContext.setPostContent(post.getRawContent());
+      postContext.setPostContent("");
+      postContext.setComposingMode(ComposePostContext.MODE_REPLY_POST);
 
-       Intent intent = new Intent(this, ComposePostActivity.class);
-       intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-       startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
-     }
-   }
+      Intent intent = new Intent(this, ComposePostActivity.class);
+      intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+      //startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
+      mActivityPostResultLauncher.launch(intent);
+    }
+  }
 
   public void onItemBottomClicked(final int position, View v) {
     //goToNextPage();
     LinearLayoutManager manager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
 
-        //LastItemPosition
+    //LastItemPosition
     assert manager != null;
     int lastVisiblePos = manager.findLastVisibleItemPosition();
     int totalItemCount = manager.getItemCount();
@@ -1114,7 +1147,8 @@ public class PostListActivity extends SMTHBaseActivity
 
       Intent intent = new Intent(this, ComposePostActivity.class);
       intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-      startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
+      //startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
+      mActivityPostResultLauncher.launch(intent);
     } else if (which == 1) {
       // like
       // Toast.makeText(PostListActivity.this, "Like:TBD", Toast.LENGTH_SHORT).show();
@@ -1214,7 +1248,7 @@ public class PostListActivity extends SMTHBaseActivity
           startActivity(intent);
         }
       } else{
-          captureView(mTitle, v, post.getPostID());
+        captureView(mTitle, v, post.getPostID());
       }
 
 
@@ -1233,7 +1267,8 @@ public class PostListActivity extends SMTHBaseActivity
 
       Intent intent = new Intent(this, ComposePostActivity.class);
       intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-      startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
+      //startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
+      mActivityPostResultLauncher.launch(intent);
     }
 
   }
@@ -1275,8 +1310,8 @@ public class PostListActivity extends SMTHBaseActivity
         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(outFile)));
       }
     } catch (Exception e) {
-        Log.e(TAG, "saveImageToFile: " + Log.getStackTraceString(e));
-        Toast.makeText(PostListActivity.this, "保存截图失败:\n请授予应用存储权限！\n" + e, Toast.LENGTH_LONG).show();
+      Log.e(TAG, "saveImageToFile: " + Log.getStackTraceString(e));
+      Toast.makeText(PostListActivity.this, "保存截图失败:\n请授予应用存储权限！\n" + e, Toast.LENGTH_LONG).show();
     }
   }
 
@@ -1297,7 +1332,7 @@ public class PostListActivity extends SMTHBaseActivity
       }
 
       @Override public void onNext(@NonNull String s) {
-      //    Toast.makeText(PostListActivity.this, s, Toast.LENGTH_SHORT).show();
+        //    Toast.makeText(PostListActivity.this, s, Toast.LENGTH_SHORT).show();
       }
 
       @Override public void onError(@NonNull Throwable e) {
@@ -1307,12 +1342,14 @@ public class PostListActivity extends SMTHBaseActivity
 
       @SuppressLint("NotifyDataSetChanged")
       @Override public void onComplete() {
-          mCurrentPageNo = 1;
-          mCurrentReadPageNo = 1;
-          Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
-          //onBackPressed();
-          PostListActivity.this.finish();
-          Toast.makeText(PostListActivity.this, "请刷新版面!", Toast.LENGTH_SHORT).show();
+        SMTHApplication.bNewPost = true;
+        mCurrentPageNo = 1;
+        mCurrentReadPageNo = 1;
+        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
+        //onBackPressed();
+        PostListActivity.this.finish();
+
+        //Toast.makeText(PostListActivity.this, "请刷新版面!", Toast.LENGTH_SHORT).show();
         //reloadPostListWithoutAlert();
       }
     });
@@ -1326,7 +1363,7 @@ public class PostListActivity extends SMTHBaseActivity
     // prepare information from the post
     String title = String.format(Locale.CHINA,"[%s] %s @ 水木社区", mTopic.getBoardChsName(), mTopic.getTitle());
     String postURL =
-        String.format(Locale.CHINA,SMTHHelper.SMTH_MOBILE_URL + "/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
+            String.format(Locale.CHINA,SMTHHelper.SMTH_MOBILE_URL + "/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
     String content = String.format(Locale.CHINA,"[%s]在大作中写到: %s", post.getAuthor(), post.getRawContent());
     // the max length of webo is 140
     if (content.length() > 110) {
@@ -1400,31 +1437,31 @@ public class PostListActivity extends SMTHBaseActivity
 
     SMTHHelper helper = SMTHHelper.getInstance();
     helper.wService.addLike(mTopic.getBoardEngName(), mTopic.getTopicID(), score, msg, "")
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Observer<AjaxResponse>() {
-          @Override public void onSubscribe(@NonNull Disposable disposable) {
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Observer<AjaxResponse>() {
+              @Override public void onSubscribe(@NonNull Disposable disposable) {
 
-          }
+              }
 
-          @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
-            // Log.d(TAG, "onNext: " + ajaxResponse.toString());
-            if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-              //Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
-              reloadPostList();
-            } else {
-              Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
-            }
-          }
+              @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
+                // Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+                  //Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                  reloadPostList();
+                } else {
+                  Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
+                }
+              }
 
-          @Override public void onError(@NonNull Throwable e) {
-            Toast.makeText(PostListActivity.this, "增加Like失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
-          }
+              @Override public void onError(@NonNull Throwable e) {
+                Toast.makeText(PostListActivity.this, "增加Like失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+              }
 
-          @Override public void onComplete() {
+              @Override public void onComplete() {
 
-          }
-        });
+              }
+            });
   }
 
   @Override public void OnForwardAction(Post post, String target, boolean threads, boolean noref, boolean noatt) {
@@ -1441,30 +1478,30 @@ public class PostListActivity extends SMTHBaseActivity
 
     SMTHHelper helper = SMTHHelper.getInstance();
     helper.wService.forwardPost(mTopic.getBoardEngName(), post.getPostID(), target, strThreads, strNoref, strNoatt, strNoansi)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Observer<AjaxResponse>() {
-          @Override public void onSubscribe(@NonNull Disposable disposable) {
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Observer<AjaxResponse>() {
+              @Override public void onSubscribe(@NonNull Disposable disposable) {
 
-          }
+              }
 
-          @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
-            // Log.d(TAG, "onNext: " + ajaxResponse.toString());
-            if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-              Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
-            } else {
-              Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
-            }
-          }
+              @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
+                // Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+                  Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                } else {
+                  Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
+                }
+              }
 
-          @Override public void onError(@NonNull Throwable e) {
-            Toast.makeText(PostListActivity.this, "转寄失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
-          }
+              @Override public void onError(@NonNull Throwable e) {
+                Toast.makeText(PostListActivity.this, "转寄失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+              }
 
-          @Override public void onComplete() {
+              @Override public void onComplete() {
 
-          }
-        });
+              }
+            });
   }
 
   @Override public void OnRePostAction(Post post, String target, String outgo) {

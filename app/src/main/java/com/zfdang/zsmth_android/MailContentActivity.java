@@ -1,6 +1,7 @@
 package com.zfdang.zsmth_android;
 
 import android.annotation.SuppressLint;
+//import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -197,75 +198,19 @@ public class MailContentActivity extends AppCompatActivity {
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int id = item.getItemId();
     if (id == android.R.id.home) {
-      if (mMail.isRefferedPost() ) {
-          //Toast.makeText(MailContentActivity.this, "回复POST提醒", Toast.LENGTH_SHORT).show();
-          Board board = new Board();
-          board.initAsBoard(mMail.fromBoard, mMail.fromBoard, "", "");
-
-          Intent intent = new Intent(this, BoardTopicActivity.class);
-          intent.putExtra(SMTHApplication.BOARD_OBJECT, (Parcelable)board);
-          startActivity(intent);
-          finish();
-      }
-      else{
-        onBackPressed();
-      }
+      handleHomeMenuItem();
       return true;
     } else if (id == R.id.mail_content_reply) {
-      if (mPost == null) {
-        Toast.makeText(MailContentActivity.this, "帖子内容错误，无法回复！", Toast.LENGTH_SHORT).show();
-        return true;
-      } else {
-        ComposePostContext postContext = new ComposePostContext();
-        postContext.setPostId(mPost.getPostID());
-        postContext.setPostTitle(mPost.getTitle());
-        postContext.setPostAuthor(mPost.getRawAuthor());
-        postContext.setPostContent(mPost.getRawContent());
-
-        if (mMail.isRefferedPost()) {
-          postContext.setBoardEngName(mMail.fromBoard);
-          postContext.setComposingMode(ComposePostContext.MODE_REPLY_POST);
-        } else {
-          postContext.setComposingMode(ComposePostContext.MODE_REPLY_MAIL);
-        }
-
-        Intent intent = new Intent(this, ComposePostActivity.class);
-        intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-        startActivity(intent);
-      }
+      handleReplyMenuItem();
+      return true;
     } else if (id == R.id.mail_content_open_post) {
-      if (mPost != null && mMail.isRefferedPost()) {
-        Topic topic = new Topic();
-        topic.setTopicID(Integer.toString(mPostGroupId));
-        topic.setAuthor(mPost.getRawAuthor());
-        topic.setTitle(mPost.getTitle());
-
-        Intent intent = new Intent(this, PostListActivity.class);
-        topic.setBoardEngName(mMail.fromBoard);
-        topic.setBoardChsName(mMail.fromBoard);
-        intent.putExtra(SMTHApplication.TOPIC_OBJECT, topic);
-        intent.putExtra(SMTHApplication.FROM_BOARD, SMTHApplication.FROM_BOARD_BOARD);
-        startActivity(intent);
-      } else {
-        Toast.makeText(MailContentActivity.this, "普通邮件，无法打开原贴!", Toast.LENGTH_SHORT).show();
-      }
+      handleOpenPostMenuItem();
+      return true;
     }else if(id == R.id.mail_content_copy)
-      {
-        String content;
-
-        if (mPost != null) {
-            content = mPost.getRawContent();
-
-            final android.content.ClipboardManager clipboardManager =
-                    (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            final android.content.ClipData clipData = android.content.ClipData.newPlainText("PostContent", content);
-            clipboardManager.setPrimaryClip(clipData);
-
-          Toast.makeText(MailContentActivity.this, "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT).show();
-        } else {
-          Toast.makeText(MailContentActivity.this, "复制失败！", Toast.LENGTH_SHORT).show();
-        }
-      }
+    {
+      handleCopyMenuItem();
+      return true;
+    }
     return super.onOptionsItemSelected(item);
   }
 
@@ -274,4 +219,90 @@ public class MailContentActivity extends AppCompatActivity {
     getMenuInflater().inflate(R.menu.mail_content_menu, menu);
     return true;
   }
+
+  private void handleHomeMenuItem() {
+    if (mMail.isRefferedPost()) {
+      Board board = new Board();
+      board.initAsBoard(mMail.fromBoard, mMail.fromBoard, "", "");
+
+      Intent intent = createBoardTopicIntent(board);
+      startActivity(intent);
+      finish();
+    } else {
+      //onBackPressed();
+      finish();
+    }
+  }
+
+  private void handleReplyMenuItem() {
+    if (mPost == null) {
+      Toast.makeText(MailContentActivity.this, "帖子内容错误，无法回复！", Toast.LENGTH_SHORT).show();
+    } else {
+      ComposePostContext postContext = createComposePostContext();
+      Intent intent = new Intent(this, ComposePostActivity.class);
+      intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+      startActivity(intent);
+    }
+  }
+
+  private void handleOpenPostMenuItem() {
+    if (mPost != null && mMail.isRefferedPost()) {
+      Topic topic = createTopic();
+      Intent intent = new Intent(this, PostListActivity.class);
+      intent.putExtra(SMTHApplication.TOPIC_OBJECT, topic);
+      intent.putExtra(SMTHApplication.FROM_BOARD, SMTHApplication.FROM_BOARD_BOARD);
+      startActivity(intent);
+    } else {
+      Toast.makeText(MailContentActivity.this, "普通邮件，无法打开原贴!", Toast.LENGTH_SHORT).show();
+    }
+  }
+
+  private void handleCopyMenuItem() {
+    String content;
+    if (mPost != null) {
+      content = mPost.getRawContent();
+
+      final android.content.ClipboardManager clipboardManager =
+              (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+      final android.content.ClipData clipData = android.content.ClipData.newPlainText("PostContent", content);
+      clipboardManager.setPrimaryClip(clipData);
+
+      Toast.makeText(MailContentActivity.this, "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT).show();
+    } else {
+      Toast.makeText(MailContentActivity.this, "复制失败！", Toast.LENGTH_SHORT).show();
+    }
+  }
+
+  private Intent createBoardTopicIntent(Board board) {
+    Intent intent = new Intent(this, BoardTopicActivity.class);
+    intent.putExtra(SMTHApplication.BOARD_OBJECT, (Parcelable) board);
+    return intent;
+  }
+
+  private ComposePostContext createComposePostContext() {
+    ComposePostContext postContext = new ComposePostContext();
+    postContext.setPostId(mPost.getPostID());
+    postContext.setPostTitle(mPost.getTitle());
+    postContext.setPostAuthor(mPost.getRawAuthor());
+    postContext.setPostContent(mPost.getRawContent());
+
+    if (mMail.isRefferedPost()) {
+      postContext.setBoardEngName(mMail.fromBoard);
+      postContext.setComposingMode(ComposePostContext.MODE_REPLY_POST);
+    } else {
+      postContext.setComposingMode(ComposePostContext.MODE_REPLY_MAIL);
+    }
+    return postContext;
+  }
+
+  private Topic createTopic() {
+    Topic topic = new Topic();
+    topic.setTopicID(Integer.toString(mPostGroupId));
+    topic.setAuthor(mPost.getRawAuthor());
+    topic.setTitle(mPost.getTitle());
+    topic.setBoardEngName(mMail.fromBoard);
+    topic.setBoardChsName(mMail.fromBoard);
+    return topic;
+  }
+
 }

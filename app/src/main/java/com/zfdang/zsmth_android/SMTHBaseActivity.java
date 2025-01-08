@@ -1,6 +1,7 @@
 package com.zfdang.zsmth_android;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.util.Log;
@@ -42,7 +43,9 @@ public class SMTHBaseActivity extends AppCompatActivity {
     newConfig.fontScale = Settings.getInstance().getFontSizeFloatValue();
 
     try {
-      res.updateConfiguration(newConfig, res.getDisplayMetrics());
+      //res.updateConfiguration(newConfig, res.getDisplayMetrics());
+      Context context = createConfigurationContext(newConfig);
+      res = context.getResources();
     } catch (Exception e) {
       Log.e("SMTHBaseActivity", "Error updating configuration: " + e.getMessage());
     }

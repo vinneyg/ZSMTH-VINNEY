@@ -1,11 +1,15 @@
 package com.zfdang.zsmth_android;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 //import android.os.Build;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.CheckBoxPreference;
@@ -17,6 +21,9 @@ import androidx.preference.PreferenceFragmentCompat;
 
 
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
@@ -78,16 +85,41 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
   Preference app_sponsor;
 
+  private BroadcastReceiver receiver;
 
+
+  @SuppressLint("UnspecifiedRegisterReceiverFlag")
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     addPreferencesFromResource(R.xml.preferences);
+    setHasOptionsMenu(true );
+
+    receiver = new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+        if (intent.hasExtra("preference_key")) {
+          String key = intent.getStringExtra("preference_key");
+          assert key != null;
+          Preference preference = findPreference(key);
+          if (preference != null) {
+            CleanCache(preference);
+          }
+        }
+      }
+    };
+
+    IntentFilter filter = new IntentFilter("com.zfdang.zsmth_android.PREFERENCE_CLICKED");
+    if (Build.VERSION.SDK_INT< Build.VERSION_CODES.TIRAMISU) {
+      requireContext().registerReceiver(receiver, filter);
+    } else {
+      requireContext().registerReceiver(receiver, filter,Context.RECEIVER_NOT_EXPORTED);
+    }
 
     fresco_cache = findPreference("setting_fresco_cache");
 
-      assert fresco_cache != null;
-      fresco_cache.setOnPreferenceClickListener(preference -> {
+    assert fresco_cache != null;
+    fresco_cache.setOnPreferenceClickListener(preference -> {
       // clear cache, then update cache size
       ImagePipeline imagePipeline = Fresco.getImagePipeline();
       imagePipeline.clearDiskCaches();
@@ -97,27 +129,26 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     okhttp3_cache = findPreference("setting_okhttp3_cache");
-      assert okhttp3_cache != null;
-      okhttp3_cache.setOnPreferenceClickListener(preference -> {
+    assert okhttp3_cache != null;
+    okhttp3_cache.setOnPreferenceClickListener(preference -> {
       // clear cache, then update cache size
       File cache = new File(SMTHApplication.getAppContext().getCacheDir(), "Responses");
       FileLess.$del(cache);
       if (!cache.exists()) {
         cache.mkdir();
       }
-
       updateOkHttp3Cache();
       return true;
     });
 
 
 
-      launch_bottom_navi = (CheckBoxPreference) findPreference("launch_bottom_navi");
-      launch_bottom_navi.setChecked(Settings.getInstance().isLaunchBottomNavi());
-      launch_bottom_navi.setOnPreferenceChangeListener((preference, newValue) -> {
+    launch_bottom_navi = (CheckBoxPreference) findPreference("launch_bottom_navi");
+    launch_bottom_navi.setChecked(Settings.getInstance().isLaunchBottomNavi());
+    launch_bottom_navi.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean bValue = Settings.getInstance().isLaunchBottomNavi();
       if (newValue instanceof Boolean) {
-          bValue = (Boolean) newValue;
+        bValue = (Boolean) newValue;
       }
       Settings.getInstance().setLaunchBottomNavi(bValue);
 
@@ -135,21 +166,21 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
 
 
-      launch_hottopic_as_entry = (CheckBoxPreference) findPreference("launch_hottopic_as_entry");
-      assert launch_hottopic_as_entry != null;
-      launch_hottopic_as_entry.setChecked(Settings.getInstance().isLaunchHotTopic());
-      launch_hottopic_as_entry.setOnPreferenceChangeListener((preference, newValue) -> {
+    launch_hottopic_as_entry = (CheckBoxPreference) findPreference("launch_hottopic_as_entry");
+    assert launch_hottopic_as_entry != null;
+    launch_hottopic_as_entry.setChecked(Settings.getInstance().isLaunchHotTopic());
+    launch_hottopic_as_entry.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean bValue = Settings.getInstance().isLaunchHotTopic();
       if (newValue instanceof Boolean) {
-          bValue = (Boolean) newValue;
+        bValue = (Boolean) newValue;
       }
       Settings.getInstance().setLaunchHotTopic(bValue);
       return true;
     });
 
     open_topic_add = (CheckBoxPreference) findPreference("open_topic_add");
-      assert open_topic_add != null;
-      open_topic_add.setChecked(Settings.getInstance().isOpenTopicAdd());
+    assert open_topic_add != null;
+    open_topic_add.setChecked(Settings.getInstance().isOpenTopicAdd());
     open_topic_add.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean bValue = Settings.getInstance().isOpenTopicAdd();
       if (newValue instanceof Boolean) {
@@ -160,8 +191,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     diff_read_topic = (CheckBoxPreference) findPreference("diff_read_topic");
-      assert diff_read_topic != null;
-      diff_read_topic.setChecked(Settings.getInstance().isDiffReadTopic());
+    assert diff_read_topic != null;
+    diff_read_topic.setChecked(Settings.getInstance().isDiffReadTopic());
     diff_read_topic.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean bDiffRead = Settings.getInstance().isDiffReadTopic();
       if (newValue instanceof Boolean) {
@@ -173,8 +204,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     setting_post_navigation_control =(CheckBoxPreference) findPreference("setting_post_navigation_control");
-      assert setting_post_navigation_control != null;
-      setting_post_navigation_control.setChecked(Settings.getInstance().hasPostNavBar());
+    assert setting_post_navigation_control != null;
+    setting_post_navigation_control.setChecked(Settings.getInstance().hasPostNavBar());
     setting_post_navigation_control.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean bValue = Settings.getInstance().hasPostNavBar();
       if (newValue instanceof Boolean) {
@@ -185,8 +216,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     login_with_verification =(CheckBoxPreference) findPreference("setting_login_with_verification");
-      assert login_with_verification != null;
-      login_with_verification.setChecked(Settings.getInstance().isLoginWithVerification());
+    assert login_with_verification != null;
+    login_with_verification.setChecked(Settings.getInstance().isLoginWithVerification());
     login_with_verification.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean value = Settings.getInstance().isLoginWithVerification();
       if (newValue instanceof Boolean) {
@@ -199,8 +230,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
 
     auto_load_more =(CheckBoxPreference) findPreference("auto_load_more");
-      assert auto_load_more != null;
-      auto_load_more.setChecked(Settings.getInstance().isautoloadmore());
+    assert auto_load_more != null;
+    auto_load_more.setChecked(Settings.getInstance().isautoloadmore());
     auto_load_more.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean bValue = Settings.getInstance().isautoloadmore();
       if (newValue instanceof Boolean) {
@@ -211,8 +242,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     quick_reply =(CheckBoxPreference) findPreference("quick_reply");
-      assert quick_reply != null;
-      quick_reply.setChecked(Settings.getInstance().isQuickReply());
+    assert quick_reply != null;
+    quick_reply.setChecked(Settings.getInstance().isQuickReply());
     quick_reply.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean bValue = Settings.getInstance().isQuickReply();
       if (newValue instanceof Boolean) {
@@ -223,8 +254,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     menu_text =(CheckBoxPreference) findPreference("menu_text");
-      assert menu_text != null;
-      menu_text.setChecked(Settings.getInstance().isMenuTextOn());
+    assert menu_text != null;
+    menu_text.setChecked(Settings.getInstance().isMenuTextOn());
     menu_text.setOnPreferenceChangeListener((preference, newValue) -> {
 
       if (!Settings.getInstance().isLaunchBottomNavi()) {
@@ -250,8 +281,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
 
     setting_volume_key_scroll =(CheckBoxPreference) findPreference("setting_volume_key_scroll");
-      assert setting_volume_key_scroll != null;
-      setting_volume_key_scroll.setChecked(Settings.getInstance().isVolumeKeyScroll());
+    assert setting_volume_key_scroll != null;
+    setting_volume_key_scroll.setChecked(Settings.getInstance().isVolumeKeyScroll());
     setting_volume_key_scroll.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean bValue = Settings.getInstance().isVolumeKeyScroll();
       if (newValue instanceof Boolean) {
@@ -261,10 +292,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       return true;
     });
 
-      setting_fontsize_control =(ListPreference) findPreference("setting_fontsize_control");
-      assert setting_fontsize_control != null;
-      setting_fontsize_control.setValueIndex(Settings.getInstance().getFontIndex());
-      setting_fontsize_control.setOnPreferenceChangeListener((preference, newValue) -> {
+    setting_fontsize_control =(ListPreference) findPreference("setting_fontsize_control");
+    assert setting_fontsize_control != null;
+    setting_fontsize_control.setValueIndex(Settings.getInstance().getFontIndex());
+    setting_fontsize_control.setOnPreferenceChangeListener((preference, newValue) -> {
       int fontIndex = Settings.getInstance().getFontIndex();
       if (newValue instanceof String) {
         fontIndex = Integer.parseInt((String) newValue);
@@ -280,8 +311,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     image_quality_control =(CheckBoxPreference) findPreference("setting_image_quality_control");
-      assert image_quality_control != null;
-      image_quality_control.setChecked(Settings.getInstance().isLoadOriginalImage());
+    assert image_quality_control != null;
+    image_quality_control.setChecked(Settings.getInstance().isLoadOriginalImage());
     image_quality_control.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean bLoadOriginalImage = Settings.getInstance().isLoadOriginalImage();
       if (newValue instanceof Boolean) {
@@ -292,8 +323,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     image_source_cdn =(CheckBoxPreference) findPreference("setting_image_source_cdn");
-      assert image_source_cdn != null;
-      image_source_cdn.setChecked(Settings.getInstance().isImageSourceCDN());
+    assert image_source_cdn != null;
+    image_source_cdn.setChecked(Settings.getInstance().isImageSourceCDN());
     image_source_cdn.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean bImageSourceCDN = Settings.getInstance().isImageSourceCDN();
       if (newValue instanceof Boolean) {
@@ -304,8 +335,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     daynight_control =(CheckBoxPreference) findPreference("setting_daynight_control");
-      assert daynight_control != null;
-      daynight_control.setChecked(Settings.getInstance().isNightMode());
+    assert daynight_control != null;
+    daynight_control.setChecked(Settings.getInstance().isNightMode());
     daynight_control.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean bNightMode = Settings.getInstance().isNightMode();
       if (newValue instanceof Boolean) {
@@ -318,8 +349,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     notification_control_mail = (CheckBoxPreference) findPreference("setting_notification_control_mail");
-      assert notification_control_mail != null;
-      notification_control_mail.setChecked(Settings.getInstance().isNotificationMail());
+    assert notification_control_mail != null;
+    notification_control_mail.setChecked(Settings.getInstance().isNotificationMail());
     notification_control_mail.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean bValue = Settings.getInstance().isNotificationMail();
       if (newValue instanceof Boolean) {
@@ -330,8 +361,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     notification_control_at = (CheckBoxPreference) findPreference("setting_notification_control_at");
-      assert notification_control_at != null;
-      notification_control_at.setChecked(Settings.getInstance().isNotificationAt());
+    assert notification_control_at != null;
+    notification_control_at.setChecked(Settings.getInstance().isNotificationAt());
     notification_control_at.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean bValue = Settings.getInstance().isNotificationAt();
       if (newValue instanceof Boolean) {
@@ -342,8 +373,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     notification_control_like = (CheckBoxPreference) findPreference("setting_notification_control_like");
-      assert notification_control_like != null;
-      notification_control_like.setChecked(Settings.getInstance().isNotificationLike());
+    assert notification_control_like != null;
+    notification_control_like.setChecked(Settings.getInstance().isNotificationLike());
     notification_control_like.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean bValue = Settings.getInstance().isNotificationLike();
       if (newValue instanceof Boolean) {
@@ -354,8 +385,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     notification_control_reply = (CheckBoxPreference) findPreference("setting_notification_control_reply");
-      assert notification_control_reply != null;
-      notification_control_reply.setChecked(Settings.getInstance().isNotificationReply());
+    assert notification_control_reply != null;
+    notification_control_reply.setChecked(Settings.getInstance().isNotificationReply());
     notification_control_reply.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean bValue = Settings.getInstance().isNotificationReply();
       if (newValue instanceof Boolean) {
@@ -366,8 +397,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     signature_control = (CheckBoxPreference) findPreference("setting_signature_control");
-      assert signature_control != null;
-      signature_control.setChecked(Settings.getInstance().bUseSignature());
+    assert signature_control != null;
+    signature_control.setChecked(Settings.getInstance().bUseSignature());
     signature_control.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean bValue = Settings.getInstance().bUseSignature();
       if (newValue instanceof Boolean) {
@@ -378,8 +409,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     signature_content = findPreference("setting_signature_content");
-      assert signature_content != null;
-      signature_content.setSummary(Settings.getInstance().getSignature());
+    assert signature_content != null;
+    signature_content.setSummary(Settings.getInstance().getSignature());
     if (signature_content instanceof EditTextPreference) {
       // set default value in editing dialog
       EditTextPreference et = (EditTextPreference) signature_content;
@@ -393,8 +424,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     web_content = findPreference("WebAddr");
-      assert web_content != null;
-      web_content.setSummary(Settings.getInstance().getWebAddr());
+    assert web_content != null;
+    web_content.setSummary(Settings.getInstance().getWebAddr());
     if (web_content instanceof EditTextPreference) {
       // set default value in editing dialog
       EditTextPreference et = (EditTextPreference) web_content;
@@ -416,8 +447,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     topic_fwd_self = (CheckBoxPreference) findPreference("setting_topic_fwd");
-      assert topic_fwd_self != null;
-      topic_fwd_self.setChecked(Settings.getInstance().isTopicFwdSelf());
+    assert topic_fwd_self != null;
+    topic_fwd_self.setChecked(Settings.getInstance().isTopicFwdSelf());
     topic_fwd_self.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean bValue = Settings.getInstance().isTopicFwdSelf();
       if (newValue instanceof Boolean) {
@@ -428,8 +459,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     set_id_check = (CheckBoxPreference) findPreference("set_id_check");
-      assert set_id_check != null;
-      set_id_check.setChecked(Settings.getInstance().isSetIdCheck());
+    assert set_id_check != null;
+    set_id_check.setChecked(Settings.getInstance().isSetIdCheck());
     set_id_check.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean bValue = Settings.getInstance().isSetIdCheck();
       if (newValue instanceof Boolean) {
@@ -458,8 +489,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     app_feedback = findPreference("app_feedback");
-      assert app_feedback != null;
-      app_feedback.setOnPreferenceClickListener(preference -> {
+    assert app_feedback != null;
+    app_feedback.setOnPreferenceClickListener(preference -> {
       ComposePostContext postContext = new ComposePostContext();
       postContext.setComposingMode(ComposePostContext.MODE_NEW_MAIL_TO_USER);
       postContext.setPostAuthor("Vinney");
@@ -470,8 +501,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     app_version = findPreference("setting_app_version");
-      assert app_version != null;
-      app_version.setOnPreferenceClickListener(preference -> {
+    assert app_version != null;
+    app_version.setOnPreferenceClickListener(preference -> {
 
       // ActivityUtils.openLink("http://zsmth-android.zfdang.com/release.html", getActivity());
       Toast.makeText(SMTHApplication.getAppContext(),"这是Vinney的zSMTH改进版本!",Toast.LENGTH_SHORT).show();
@@ -480,8 +511,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     });
 
     app_sponsor = findPreference("sponsor");
-      assert app_sponsor != null;
-      app_sponsor.setOnPreferenceClickListener(preference -> {
+    assert app_sponsor != null;
+    app_sponsor.setOnPreferenceClickListener(preference -> {
 
       String alipay = "vinneyguo@outlook.com";
       final android.content.ClipboardManager clipboardManager =
@@ -502,6 +533,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
   }
+
 
   public void setApplicationNightMode() {
     boolean bNightMode = Settings.getInstance().isNightMode();
@@ -562,5 +594,31 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       @Override public void onComplete() {
       }
     });
+  }
+
+  private void CleanCache(Preference preference) {
+
+    ImagePipeline imagePipeline = Fresco.getImagePipeline();
+    imagePipeline.clearDiskCaches();
+    updateFrescoCache();
+
+    File cache = new File(SMTHApplication.getAppContext().getCacheDir(), "Responses");
+    FileLess.$del(cache);
+    if (!cache.exists()) {
+      cache.mkdir();
+
+      updateOkHttp3Cache();
+    }
+  }
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    requireContext().unregisterReceiver(receiver);
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, @androidx.annotation.NonNull MenuInflater inflater) {
+    MenuItem item = menu.findItem(R.id.main_action_refresh);
+    item.setVisible(false);
+    super.onCreateOptionsMenu(menu, inflater);
   }
 }

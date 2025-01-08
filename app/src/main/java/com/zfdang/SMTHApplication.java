@@ -74,6 +74,9 @@ public class SMTHApplication extends Application {
 
   public static  int deletionCount = 0;
 
+  public static boolean bNewFavoriteBoard = false;
+  public static boolean bNewMailSent= false;
+  public static boolean bNewPost= false;
   public static String getWebAddress()
   {
     return Settings.getInstance().getWebAddr();

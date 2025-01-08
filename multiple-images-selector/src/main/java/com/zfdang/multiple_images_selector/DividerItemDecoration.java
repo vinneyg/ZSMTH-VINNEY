@@ -40,7 +40,6 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
             mHeight = Objects.requireNonNull(mDivider).getIntrinsicHeight();
             mWidth = mDivider.getIntrinsicWidth();
         } else {
-            //mDivider = context.getResources().getDrawable(dividerDrawableRes);
             mDivider = ContextCompat.getDrawable(context,dividerDrawableRes);
             mHeight = DIVIDER_HEIGHT;
             mWidth = DIVIDER_WIDTH;

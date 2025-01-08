@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,8 +16,7 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
-//import android.util.Log;
-//import android.util.Log;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 //import android.view.Menu;
@@ -60,6 +61,10 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
 
   // list of favorite paths
   private List<Board> mFavoritePaths = null;
+
+  //private MenuItem refreshMenuItem;
+
+  private ActivityResultLauncher<Intent> mActivityLoginResultLauncher;
 
   public void pushPath(Board board) {
     mFavoritePaths.add(board);
@@ -108,6 +113,19 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
 
+    // Initialize the ActivityResultLauncher object.
+    mActivityLoginResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+              if(result.getResultCode() == Activity.RESULT_OK)
+              {
+                WorkRequest userStatusWorkRequest =
+                        new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
+                WorkManager.getInstance().enqueue(userStatusWorkRequest);
+                RefreshFavoriteBoardsWithCache();
+              }
+            });
+
     if (mFavoritePaths == null) {
       mFavoritePaths = new ArrayList<>();
     }
@@ -126,9 +144,12 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
       mRecyclerView.setAdapter(new BoardRecyclerViewAdapter(BoardListContent.FAVORITE_BOARDS, mListener));
     }
 
-    if (BoardListContent.FAVORITE_BOARDS.isEmpty()) {
+    if (BoardListContent.FAVORITE_BOARDS.isEmpty() || SMTHApplication.bNewFavoriteBoard) {
       // only load boards on the first time
-      RefreshFavoriteBoards();
+      //RefreshFavoriteBoards();
+      RefreshFavoriteBoardsWithCache();
+      if(SMTHApplication.bNewFavoriteBoard)
+        SMTHApplication.bNewFavoriteBoard = false;
     }
 
     return mRecyclerView;
@@ -159,7 +180,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
   }
 
   protected void LoadFavoriteBoardsByPath() {
-   // SMTHHelper helper = SMTHHelper.getInstance();
+    // SMTHHelper helper = SMTHHelper.getInstance();
     Board board = getCurrentPath();
     final String finalCurrentPath = getCurrentPathInString();
 
@@ -172,7 +193,6 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
         observableEmitter.onComplete();
       }
     });
-
     // all boards loaded from network
     Observable<List<Board>> network = null;
     if (board == null || board.isFolder()) {
@@ -198,7 +218,10 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
     }
 
     List<Board> boards = new ArrayList<>();
-    assert network != null;
+    if (network == null) {
+      Log.e("FavoriteBoard", "network is null.");
+      return;
+    }
     Observable.concat(cache, network).first(boards).toObservable().flatMap((Function<List<Board>, ObservableSource<Board>>) Observable::fromIterable).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Board>() {
       @SuppressLint("NotifyDataSetChanged")
       @Override public void onSubscribe(@NonNull Disposable disposable) {
@@ -211,9 +234,10 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
         Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(BoardListContent.FAVORITE_BOARDS.size());
         // Log.d(TAG, board.toString());
         if(BoardListContent.FAVORITE_BOARDS.get(0).isInvalid()) {
-          Toast.makeText(getContext(),"请先登录！",Toast.LENGTH_SHORT).show();
+          //Toast.makeText(getContext(),"请先登录！",Toast.LENGTH_SHORT).show();
           Intent intent = new Intent(requireActivity(), LoginActivity.class);
-          startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
+          //startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
+          mActivityLoginResultLauncher.launch(intent);
         }
       }
 
@@ -228,17 +252,17 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
       }
     });
   }
-
-  @Override
-  public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode == MainActivity.LOGIN_ACTIVITY_REQUEST_CODE) {
-      WorkRequest userStatusWorkRequest =
-              new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
-      WorkManager.getInstance(requireActivity()).enqueue(userStatusWorkRequest);
+  /*
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+      super.onActivityResult(requestCode, resultCode, data);
+      if (requestCode == MainActivity.LOGIN_ACTIVITY_REQUEST_CODE) {
+        WorkRequest userStatusWorkRequest =
+                new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
+        WorkManager.getInstance(requireActivity()).enqueue(userStatusWorkRequest);
+      }
     }
-  }
-
+  */
   private void updateFavoriteTitle() {
     Activity activity = getActivity();
 
@@ -295,6 +319,14 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
       requireActivity().findViewById(R.id.bv_bottomNavigation).setVisibility(View.GONE);
     }
     return true;
+  }
+  @Override
+  public void onResume(){
+    super.onResume();
+    /*
+    if(refreshMenuItem != null)
+      onOptionsItemSelected(refreshMenuItem);
+    */
   }
 
 }

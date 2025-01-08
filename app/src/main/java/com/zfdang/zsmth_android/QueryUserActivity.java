@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -74,7 +76,10 @@ public class QueryUserActivity extends SMTHBaseActivity {
     // get Board information from launcher
     Intent intent = getIntent();
     String username = intent.getStringExtra(SMTHApplication.QUERY_USER_INFO);
-    assert username != null;
+    if (username == null) {
+      Log.e("QueryUser", "username is null.");
+      return;
+    }
     mUsername = username;
     LoadUserInfo();
   }

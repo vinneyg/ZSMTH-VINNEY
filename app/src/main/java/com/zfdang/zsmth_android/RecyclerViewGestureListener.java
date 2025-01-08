@@ -4,6 +4,7 @@ import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,7 +50,11 @@ public class RecyclerViewGestureListener extends GestureDetector.SimpleOnGesture
     recyclerView.getLocationOnScreen(location);
 
     View targetView = recyclerView.findChildViewUnder(x - location[0], y - location[1]);
-    assert targetView != null;
+    if (targetView == null) {
+      Log.e("RecyclerViewGes", "targetView is null.");
+      return;
+    }
+
     int position = recyclerView.getChildAdapterPosition(targetView);
     // Log.d("Gesture", "onLongPress: " + String.format("position = %d", position));
     if (mListener != null) {
@@ -68,7 +73,11 @@ public class RecyclerViewGestureListener extends GestureDetector.SimpleOnGesture
     recyclerView.getLocationOnScreen(location);
 
     View targetView = recyclerView.findChildViewUnder(x - location[0], y - location[1]);
-    assert targetView != null;
+
+    if (targetView == null) {
+      Log.e("RecyclerViewGes", "targetView is null.");
+      return false;
+    }
     int position = recyclerView.getChildAdapterPosition(targetView);
 
     //        Log.d("Gesture", "onLongPress: " + String.format("position = %d", position));
