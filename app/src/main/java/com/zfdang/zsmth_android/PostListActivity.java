@@ -166,24 +166,6 @@ public class PostListActivity extends SMTHBaseActivity
     SwipeBackHelper.onPostCreate(this);
   }
 
-  /*
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-    if(requestCode == ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE) {
-      // returned from Compose activity, refresh current post
-      reloadPostList();
-    } else if (requestCode == MainActivity.LOGIN_ACTIVITY_REQUEST_CODE) {
-      WorkRequest userStatusWorkRequest =
-              new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
-      WorkManager.getInstance(this).enqueue(userStatusWorkRequest);
-    }
-
-    super.onActivityResult(requestCode, resultCode, data);
-  }
-
-  */
-
-
   /**
    * Record current View
    */

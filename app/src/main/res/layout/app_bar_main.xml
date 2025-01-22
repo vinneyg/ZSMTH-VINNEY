@@ -22,7 +22,7 @@
         android:longClickable="false"
         android:padding="0dp"
         android:theme="@style/ThemeOverlay.ToolBar"
-        app:layout_scrollFlags="scroll|enterAlways"
+        app:layout_scrollFlags="enterAlways"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:titleTextAppearance="@style/Toolbar.TitleText" />
 

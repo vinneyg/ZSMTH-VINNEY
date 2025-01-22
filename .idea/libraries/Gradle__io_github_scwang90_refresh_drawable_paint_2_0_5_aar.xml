@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: io.github.scwang90:refresh-drawable-paint:2.0.5@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/5729468eae0851531fc4836ccdae2f0f/transformed/jetified-refresh-drawable-paint-2.0.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/5729468eae0851531fc4836ccdae2f0f/transformed/jetified-refresh-drawable-paint-2.0.5/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/a0cbe5608d4da792d05014ea50267c39/transformed/jetified-refresh-drawable-paint-2.0.5/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/a0cbe5608d4da792d05014ea50267c39/transformed/jetified-refresh-drawable-paint-2.0.5/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

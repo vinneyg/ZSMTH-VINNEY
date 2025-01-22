@@ -160,7 +160,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
     //colorBlue = getResources().getColor(R.color.blue_text_night);
     colorBlue = getResources().getColor(R.color.colorPrimary,null);
 
-    if (MailListContent.MAILS.isEmpty()||SMTHApplication.bNewMailSent) {
+    //if (MailListContent.MAILS.isEmpty()||SMTHApplication.bNewMailSent) {
       LoadMailsFromBeginning();
 
       if(SMTHApplication.bNewMailSent)
@@ -168,7 +168,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
 
       if(SMTHApplication.isValidUser())
         ( (MainActivity) requireActivity()).onRelogin();
-    }
+    //}
 
     // highlight the current folder
     highlightCurrentFolder();

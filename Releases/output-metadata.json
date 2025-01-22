@@ -11,9 +11,9 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 2092,
-      "versionName": "25.01.05",
-      "outputFile": "zSMTH-v-25.01.05-2092.apk"
+      "versionCode": 2093,
+      "versionName": "25.01.22",
+      "outputFile": "zSMTH-v-25.01.22-2093.apk"
     }
   ],
   "elementType": "File",
@@ -22,14 +22,14 @@
       "minApi": 28,
       "maxApi": 30,
       "baselineProfiles": [
-        "baselineProfiles/1/zSMTH-v-25.01.05-2092.dm"
+        "baselineProfiles/1/zSMTH-v-25.01.22-2093.dm"
       ]
     },
     {
       "minApi": 31,
       "maxApi": 2147483647,
       "baselineProfiles": [
-        "baselineProfiles/0/zSMTH-v-25.01.05-2092.dm"
+        "baselineProfiles/0/zSMTH-v-25.01.22-2093.dm"
       ]
     }
   ],

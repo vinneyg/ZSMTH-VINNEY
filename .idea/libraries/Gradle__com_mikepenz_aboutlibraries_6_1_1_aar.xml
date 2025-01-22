@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.mikepenz:aboutlibraries:6.1.1@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/275a19d758dbb56c72476805a5924869/transformed/jetified-aboutlibraries-6.1.1/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/275a19d758dbb56c72476805a5924869/transformed/jetified-aboutlibraries-6.1.1/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/275a19d758dbb56c72476805a5924869/transformed/jetified-aboutlibraries-6.1.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/56952c284448cc1cacffc01b934fba10/transformed/jetified-aboutlibraries-6.1.1/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/56952c284448cc1cacffc01b934fba10/transformed/jetified-aboutlibraries-6.1.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/56952c284448cc1cacffc01b934fba10/transformed/jetified-aboutlibraries-6.1.1/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mikepenz/aboutlibraries/6.1.1/53f906b5adac59a92f06dcf373e47e3284367b2/aboutlibraries-6.1.1-javadoc.jar!/" />

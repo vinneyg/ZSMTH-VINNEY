@@ -22,7 +22,7 @@
         android:layout_height="@dimen/zsmth_actionbar_size"
         android:theme="@style/ThemeOverlay.ToolBar"
         app:popupTheme="@style/AppTheme.PopupOverlay"
-        app:layout_scrollFlags="scroll|enterAlways"
+        app:layout_scrollFlags="enterAlways"
         app:titleTextAppearance="@style/Toolbar.TitleText"
         />
 
