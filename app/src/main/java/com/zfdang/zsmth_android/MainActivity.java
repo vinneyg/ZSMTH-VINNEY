@@ -13,6 +13,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -28,6 +30,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +46,8 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 //import androidx.core.content.res.ResourcesCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.customview.widget.ViewDragHelper;
@@ -53,6 +58,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.work.Data;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
@@ -128,13 +134,18 @@ public class MainActivity extends SMTHBaseActivity
 
   private static final int notificationID = 273;
 
-  private ActivityResultLauncher<Intent> mActivityLoginResultLauncher;
+  private BottomNavigationView mBottomNavigationView;
 
+  private ActivityResultLauncher<Intent> mActivityLoginResultLauncher;
+  private Button mailButtonInbox;
+  private Drawable default_icon;
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     Toolbar toolbar =  findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
+
+    mBottomNavigationView = findViewById(R.id.bv_bottomNavigation);
 
     OnBackPressedDispatcher dispatcher = getOnBackPressedDispatcher();
 
@@ -284,7 +295,7 @@ public class MainActivity extends SMTHBaseActivity
                     .setInputData(inputData.build())
                     .build();
     WorkManager.getInstance(getApplicationContext())
-            .enqueueUniqueWork(MaintainUserStatusWorker.WORKER_ID, ExistingWorkPolicy.KEEP,userStatusWorkRequest);
+            .enqueueUniqueWork(MaintainUserStatusWorker.WORKER_ID, ExistingWorkPolicy.REPLACE,userStatusWorkRequest);
 
     // run the background service now
     updateUserStatusNow();
@@ -307,12 +318,15 @@ public class MainActivity extends SMTHBaseActivity
     } else {
       AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
-
+    SMTHApplication.bNightModeChange = true;
+    if(SMTHApplication.bNewMailInNotification)
+       setBadgeCount(R.id.menu_message, "信");
+    SMTHApplication.bNightModeChange = false;
   }
 
 
   private void initBottomNavigation() {
-    BottomNavigationView mBottomNavigationView = findViewById(R.id.bv_bottomNavigation);
+    //BottomNavigationView mBottomNavigationView = findViewById(R.id.bv_bottomNavigation);
 
     mBottomNavigationView.setItemIconTintList(null);
     mBottomNavigationView.setItemTextAppearanceActive(R.style.bottom_selected_text);
@@ -431,13 +445,34 @@ public class MainActivity extends SMTHBaseActivity
       @Override public void onReceiveResult(int resultCode, Bundle resultData) {
         if (resultCode == RESULT_OK) {
           //Log.d(TAG,"onReceiveResult: " + "to update navigationview " + SMTHApplication.activeUser.toString());
-          UpdateNavigationViewHeader();
+          runOnUiThread(() -> UpdateNavigationViewHeader());
 
           // show notification if necessary
           String message = resultData.getString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE);
-          //Log.d(TAG, "OnReceiveResult: " + message);
+          Log.d(TAG, "OnReceiveResult: " + message);
           if (message != null) {
             showNotification(message);
+            if(!message.contains(SMTHApplication.NOTIFICATION_LOGIN_LOST)){
+              String msg;
+              if(message.contains(SMTHApplication.NOTIFICATION_NEW_MAIL)){
+                msg = "信";
+              }
+              else if(message.contains(SMTHApplication.NOTIFICATION_NEW_AT)){
+                msg = "@";
+              }
+              else if(message.contains(SMTHApplication.NOTIFICATION_NEW_REPLY)){
+                msg = "R";
+              }
+              else if(message.contains(SMTHApplication.NOTIFICATION_NEW_LIKE)){
+                msg = "L";
+              } else {
+                  msg = "";
+              }
+                runOnUiThread(() -> setBadgeCount(R.id.menu_message, msg));
+            }
+          }
+          else{
+              runOnUiThread(() -> clearBadgeCount(R.id.menu_message));
           }
         }
       }
@@ -507,10 +542,14 @@ public class MainActivity extends SMTHBaseActivity
               .build();
       if(mNotifyMgr.areNotificationsEnabled()){
         mNotifyMgr.notify(notificationID, notification);
-      } else{
+      }
+      /*
+      else{
         Intent intent = new Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+        intent.putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, getPackageName());
         startActivity(intent);
       }
+     */
 
     } catch (Exception se) {
       Log.e(TAG, "showNotification: " + se);
@@ -651,7 +690,7 @@ public class MainActivity extends SMTHBaseActivity
 
     // handle back button for all fragment
     Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-    if (fragment != null && fragment instanceof FavoriteBoardFragment) {
+    if (fragment instanceof FavoriteBoardFragment) {
       if (!favoriteBoardFragment.isAtRoot()) {
         favoriteBoardFragment.popPath();
         favoriteBoardFragment.RefreshFavoriteBoards();
@@ -1196,10 +1235,79 @@ public class MainActivity extends SMTHBaseActivity
 
   public void refreshCurrentFragment() {
     Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-    if (currentFragment != null && currentFragment instanceof FavoriteBoardFragment) {
+    if (currentFragment instanceof FavoriteBoardFragment) {
       FavoriteBoardFragment favoriteBoardFragment = (FavoriteBoardFragment) currentFragment;
       favoriteBoardFragment.RefreshFavoriteBoardsWithCache();
     }
   }
 
+  public void setBadgeCount(int itemId, String count) {
+    MenuItem menuItem = mBottomNavigationView.getMenu().findItem(itemId);
+
+    if (menuItem != null) {
+      Drawable icon = menuItem.getIcon();
+      if (icon != null) {
+        if(SMTHApplication.bNewMailInNotification && SMTHApplication.bNightModeChange)
+          return;
+        LayerDrawable layerDrawable = createLayerDrawable(icon, count);
+        menuItem.setIcon(layerDrawable);
+        SMTHApplication.bNewMailInNotification = true;
+      }
+
+    }
+  }
+
+  public void clearBadgeCount(int itemId) {
+    MenuItem menuItem = mBottomNavigationView.getMenu().findItem(itemId);
+    if (menuItem != null) {
+      menuItem.setIcon(R.drawable.ic_email_white_48dp); // 恢复原始图标
+      SMTHApplication.bNewMailInNotification = false;
+    }
+  }
+
+
+
+
+  private LayerDrawable createLayerDrawable(Drawable icon, String count) {
+    int badgeSize = 72; // 调整角标的大小
+    float textSize = getResources().getDimension(R.dimen.badge_text_size);
+    int badgeColor = ContextCompat.getColor(this, R.color.badge_background);
+    int textColor = ContextCompat.getColor(this, R.color.avatar_border_color);
+
+    // 创建角标 Drawable 的可变副本
+    BadgeDrawable badgeDrawable = new BadgeDrawable(textSize, badgeColor, textColor, badgeSize);
+    badgeDrawable.setBadgeText(String.valueOf(count));
+
+    // 创建一个 LayerDrawable 来叠加图标和角标
+    if (icon != null) {
+      Drawable.ConstantState constantState = icon.getConstantState();
+      if (constantState != null) {
+        Drawable iconCopy = constantState.newDrawable().mutate();
+        badgeDrawable.mutate();
+
+        LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{iconCopy});
+        layerDrawable.addLayer(badgeDrawable);
+
+        // 设置角标的位置
+        int width = icon.getIntrinsicWidth();
+        int height = icon.getIntrinsicHeight();
+        int badgeWidth = badgeDrawable.getIntrinsicWidth();
+        int badgeHeight = badgeDrawable.getIntrinsicHeight();
+
+        // 设置角标的位置为右上角
+        layerDrawable.setLayerInset(1, width - badgeWidth, 0, 0, height - badgeHeight);
+
+        return layerDrawable;
+      } else {
+        // 处理 getConstantState() 返回 null 的情况
+        Log.e(TAG, "ConstantState is null for the icon.");
+        return null; // 或者返回一个默认的 Drawable
+      }
+    } else {
+      // 处理 icon 为 null 的情况
+      Log.e(TAG, "Icon is null.");
+      return null; // 或者返回一个默认的 Drawable
+    }
+
+  }
 }

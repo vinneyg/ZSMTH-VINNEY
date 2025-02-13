@@ -485,6 +485,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
               DELETED_LABEL)) {
         mail.isNew = false;
         Objects.requireNonNull(recyclerView.getAdapter()).notifyItemChanged(position);
+        ((MainActivity)requireActivity()).clearBadgeCount(R.id.menu_message);
         return;
       }
 
@@ -504,6 +505,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
                     // succeed to mark the post as read in remote
                     mail.isNew = false;
                     Objects.requireNonNull(recyclerView.getAdapter()).notifyItemChanged(position);
+                    ((MainActivity)requireActivity()).clearBadgeCount(R.id.menu_message);
                   } else {
                     // mark remote failed, show the response message
                     Toast.makeText(getActivity(), ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
@@ -569,6 +571,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
       {
         for(int pos =0;pos<MailListContent.MAILS.size();pos++)
           markMailAsRead(pos);
+        ((MainActivity) requireActivity()).clearBadgeCount(R.id.menu_message);
       }
     }
 

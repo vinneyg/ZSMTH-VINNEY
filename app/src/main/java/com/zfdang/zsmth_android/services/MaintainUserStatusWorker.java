@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.work.Data;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
@@ -41,13 +42,12 @@ public class MaintainUserStatusWorker extends Worker {
     @Override
     public Result doWork() {
 //        Log.d(TAG, "doWork");
-
         // do the job here
         doWorkInternal();
 
         Data myData = getInputData();
         // schedule the next worker
-        boolean repeat = myData.getBoolean(REPEAT, false);
+        boolean repeat = myData.getBoolean(this.REPEAT, true);
         if (repeat) {
             enqueueNextWorker();
         }
@@ -225,6 +225,5 @@ public class MaintainUserStatusWorker extends Worker {
                         .setInitialDelay(SMTHApplication.INTERVAL_TO_CHECK_MESSAGE, TimeUnit.MINUTES)
                         .setInputData(inputData.build())
                         .build();
-        WorkManager.getInstance(getApplicationContext()).enqueueUniqueWork(WORKER_ID, ExistingWorkPolicy.KEEP,userStatusWorkRequest);
     }
 }

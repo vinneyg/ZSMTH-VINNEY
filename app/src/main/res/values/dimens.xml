@@ -26,4 +26,5 @@
   <dimen name="zsmth_font_size_small">15sp</dimen>
   <dimen name="zsmth_font_size_extra_small">13sp</dimen>
   <dimen name="zsmth_font_size_extra_extra_small">12sp</dimen>
+  <dimen name="badge_text_size">20sp</dimen>
 </resources>

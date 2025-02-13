@@ -77,10 +77,14 @@ public class SMTHApplication extends Application {
   public static boolean bNewFavoriteBoard = false;
   public static boolean bNewMailSent= false;
   public static boolean bNewPost= false;
+
+  public static boolean bNightModeChange= false;
   public static String getWebAddress()
   {
     return Settings.getInstance().getWebAddr();
   }
+
+  public static boolean bNewMailInNotification = false;
 
 
   // IP database
