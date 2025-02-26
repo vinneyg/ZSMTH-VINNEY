@@ -1,12 +1,12 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.recyclerview:recyclerview:1.3.2@aar" external-system-id="GRADLE">
     <ANNOTATIONS>
-      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/836bc8ff36c09998d755cb0c706ddd6d/transformed/recyclerview-1.3.2/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/be3ade4aec20d92abf0db533e3a49f7f/transformed/recyclerview-1.3.2/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/836bc8ff36c09998d755cb0c706ddd6d/transformed/recyclerview-1.3.2/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/836bc8ff36c09998d755cb0c706ddd6d/transformed/recyclerview-1.3.2/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/836bc8ff36c09998d755cb0c706ddd6d/transformed/recyclerview-1.3.2/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/be3ade4aec20d92abf0db533e3a49f7f/transformed/recyclerview-1.3.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/be3ade4aec20d92abf0db533e3a49f7f/transformed/recyclerview-1.3.2/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/be3ade4aec20d92abf0db533e3a49f7f/transformed/recyclerview-1.3.2/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

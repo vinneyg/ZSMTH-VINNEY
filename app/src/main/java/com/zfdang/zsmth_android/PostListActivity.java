@@ -1,42 +1,29 @@
 package com.zfdang.zsmth_android;
 
-/*
-import android.Manifest;
-import android.content.pm.PackageManager;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-*/
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.net.Uri;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import androidx.appcompat.widget.Toolbar;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
-
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -59,14 +46,10 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.jude.swipbackhelper.SwipeBackHelper;
-
-
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.ClassicsHeader;
-
 import com.zfdang.SMTHApplication;
-
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.models.Attachment;
 import com.zfdang.zsmth_android.models.Board;
@@ -78,11 +61,9 @@ import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
-
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.onekeyshare.OnekeyShare;
-
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -90,15 +71,13 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-
-
 import okhttp3.ResponseBody;
 
 /**
@@ -297,6 +276,7 @@ public class PostListActivity extends SMTHBaseActivity
       boolean isSlidingToLast = false;
       int mIndex = 0;
 
+      private boolean isLoading = false;
       @Override
       public void onScrollStateChanged(@androidx.annotation.NonNull RecyclerView recyclerView, int newState) {
         LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
@@ -305,49 +285,78 @@ public class PostListActivity extends SMTHBaseActivity
         if (recyclerView.getLayoutManager() != null) {
           getPositionAndOffset();
         }
+        if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+          // 处理用户手动拖动列表的情况
+          // 例如，停止预加载
+          if (mRefreshLayout.isLoading()) {
+            mRefreshLayout.finishLoadMore();
+          }
+        }
         if(!Settings.getInstance().isautoloadmore()) {
           if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-            //LastItemPosition
-            assert manager != null;
-            int lastVisiblePos = manager.findLastVisibleItemPosition();
-            int totalItemCount = manager.getItemCount();
-
-            //int firstVisibleItem = manager.findFirstVisibleItemPosition();
-            // reach bottom
-            if (lastVisiblePos== (totalItemCount - 1) && isSlidingToLast && (mCurrentPageNo < mTopic.getTotalPageNo())) {
-              LoadMoreItems();
-            }
-            else if(lastVisiblePos == (totalItemCount - 1) && isSlidingToLast && (mCurrentPageNo ==mTopic.getTotalPageNo())) {
-              clearLoadingHints();
-            }
-            else if((!isSlidingToLast)||  (lastVisiblePos < (totalItemCount - 1))) {
-              TextView mIndexView = (Objects.requireNonNull(manager.findViewByPosition(lastVisiblePos))).findViewById(R.id.post_index);
-              String temp = mIndexView.getText().toString();
-              //  int index =0;
-              if (temp.equals("楼主")) {
-                mIndex = 0;
-              } else {
-                String newTemp = temp.replaceAll("第", "");
-                temp = newTemp.replaceAll("楼", "");
-                mIndex = Integer.parseInt(temp);
-              }
-              mCurrentPageNo = mIndex / POST_PER_PAGE + 1;
-              //mTotalPageNo = mTopic.getTotalPageNo();
-              String title = String.format(Locale.CHINA,"[%d/%d] %s", mCurrentPageNo, mTotalPageNo, mTopic.getTitle());
-              mTitle.setText(title);
-              mPageNo.setText(String.format(Locale.CHINA,"%d", mCurrentPageNo));
-              mCurrentReadPageNo = mCurrentPageNo;
-
-            }
+            loadMoreIfNeeded(recyclerView, manager);
+            updatePageInfo(recyclerView, Objects.requireNonNull(manager));
           }
         }
       }
+
       @Override
       public void onScrolled(@androidx.annotation.NonNull RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
         if(dy > 0){
           isSlidingToLast = true;
+          LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+          loadMoreIfNeeded(recyclerView, manager);
         }
+      }
+
+      private void loadMoreIfNeeded(RecyclerView recyclerView, LinearLayoutManager manager) {
+        if (isLoading) {
+          return;
+        }
+        assert manager != null;
+        int lastVisiblePos = manager.findLastVisibleItemPosition();
+        int totalItemCount = manager.getItemCount();
+        int threshold = 3; // 预加载阈值，可根据实际情况调整
+
+        // 当接近列表底部时，预加载下一页数据
+        if (lastVisiblePos >= totalItemCount - threshold && mCurrentPageNo < mTopic.getTotalPageNo()) {
+          isLoading = true;
+          mCurrentPageNo++;
+          loadPostListByPages();
+        }
+      }
+
+      private void updatePageInfo(RecyclerView recyclerView, LinearLayoutManager manager) {
+        assert manager != null;
+        int lastVisiblePos = manager.findLastVisibleItemPosition();
+        int totalItemCount = manager.getItemCount();
+
+        // reach bottom
+        if (lastVisiblePos == (totalItemCount - 1) && isSlidingToLast && (mCurrentPageNo < mTopic.getTotalPageNo())) {
+          //mCurrentPageNo++;
+          LoadMoreItems();
+        } else
+          if (lastVisiblePos == (totalItemCount - 1) && isSlidingToLast && (mCurrentPageNo == mTopic.getTotalPageNo())) {
+          clearLoadingHints();
+        } else if ((!isSlidingToLast) || (lastVisiblePos < (totalItemCount - 1))) {
+          TextView mIndexView = (Objects.requireNonNull(manager.findViewByPosition(lastVisiblePos))).findViewById(R.id.post_index);
+          String temp = mIndexView.getText().toString();
+          int mIndex;
+          if (temp.equals("楼主")) {
+            mIndex = 0;
+          } else {
+            String newTemp = temp.replaceAll("第", "");
+            temp = newTemp.replaceAll("楼", "");
+            mIndex = Integer.parseInt(temp);
+          }
+          mCurrentPageNo = mIndex / POST_PER_PAGE + 1;
+          String title = String.format(Locale.CHINA, "[%d/%d] %s", mCurrentPageNo, mTotalPageNo, mTopic.getTitle());
+          mTitle.setText(title);
+          mPageNo.setText(String.format(Locale.CHINA, "%d", mCurrentPageNo));
+          mCurrentReadPageNo = mCurrentPageNo;
+        }
+        isLoading = false;
       }
     });
 
@@ -438,7 +447,6 @@ public class PostListActivity extends SMTHBaseActivity
       Index = Integer.parseInt(temp);
     }
     int tmpIndex = Index % POST_PER_PAGE;
-
     if (mCurrentPageNo == mTopic.getTotalPageNo() && tmpIndex<5 ) {
       loadnextpost();
     } else if( mCurrentPageNo == mTopic.getTotalPageNo() && tmpIndex==5)  {
@@ -491,6 +499,8 @@ public class PostListActivity extends SMTHBaseActivity
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new Observer<Post>() {
+              private List<Post> newPosts = new ArrayList<>();
+
               @Override public void onSubscribe(@NonNull Disposable disposable) {
 
               }
@@ -523,6 +533,7 @@ public class PostListActivity extends SMTHBaseActivity
                   // mRecyclerView.getAdapter().notifyItemInserted(PostListContent.POSTS.size()-1);
                   Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(mIndex);
                 }
+
               }
 
               @Override public void onError(@NonNull Throwable e) {
@@ -569,7 +580,7 @@ public class PostListActivity extends SMTHBaseActivity
                   }
                 }
               }
-            });
+           });
   }
 
 
@@ -609,10 +620,26 @@ public class PostListActivity extends SMTHBaseActivity
                       @Override
                       public void onNext(@NonNull Post post) {
                         // Log.d(TAG, post.toString());
+                        /*
                         if (!post.getContentSegments().isEmpty()) {
                           PostListContent.addItem(post);
                           Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(PostListContent.POSTS.size() - 1);
                         }
+                        */
+
+                        String temp = post.getPosition();
+                        int Index;
+                        if (temp.equals("楼主")) {
+                          Index = 0;
+                        } else {
+                          String newTemp = temp.replaceAll("第", "");
+                          temp = newTemp.replaceAll("楼", "");
+                          Index = Integer.parseInt(temp);
+                        }
+                        Index = Index % POST_PER_PAGE;
+                         PostListContent.addItem(post);
+                       //PostListContent.InsertItem(Index, post);
+                        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(Index);
                       }
 
                       @Override
@@ -640,7 +667,8 @@ public class PostListActivity extends SMTHBaseActivity
                         mCurrentReadPageNo = mCurrentPageNo;
                         clearLoadingHints();
                         SMTHApplication.deletionCount++;
-
+                        // 确保 RecyclerView 刷新
+                        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
 
                         // Special User OFFLINE case: [] or [Category 第一页:]
                         if (PostListContent.POSTS.isEmpty()) {
@@ -720,10 +748,12 @@ public class PostListActivity extends SMTHBaseActivity
                           temp = newTemp.replaceAll("楼", "");
                           Index = Integer.parseInt(temp);
                         }
+
                         Index = Index % POST_PER_PAGE;
                         // PostListContent.addItem(Index,post);
                         PostListContent.InsertItem(Index, post);
                         Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(Index);
+
                       }
 
                       @Override
@@ -750,6 +780,10 @@ public class PostListActivity extends SMTHBaseActivity
                         mPageNo.setText(String.format(Locale.CHINA, "%d", mCurrentPageNo));
                         mCurrentReadPageNo = mCurrentPageNo;
                         clearLoadingHints();
+
+                        // 确保 RecyclerView 刷新
+                        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
+
 
                         // Special User OFFLINE case: [] or [Category 第一页:]
 

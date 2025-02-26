@@ -2,7 +2,6 @@ package com.zfdang.zsmth_android;
 
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;

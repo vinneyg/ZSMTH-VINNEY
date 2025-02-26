@@ -3,9 +3,7 @@ package com.zfdang.zsmth_android;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-
 import android.os.Bundle;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -17,22 +15,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
-
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
-//import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-//import android.view.View;
-//import android.view.Window;
-//import android.widget.TextView;
 import android.widget.Toast;
-
-
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.SMTHApplication;
-//import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.listeners.EndlessRecyclerOnScrollListener;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
@@ -43,24 +33,19 @@ import com.zfdang.zsmth_android.models.TopicListContent;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
-
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-
 import okhttp3.ResponseBody;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-
-//import static androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 /**
  * An activity representing a list of Topics. This activity
@@ -109,23 +94,11 @@ public class BoardTopicActivity extends SMTHBaseActivity
     SwipeBackHelper.onPostCreate(this);
   }
 
-  /*
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if(requestCode == ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE) {
-      // returned from compose activity
-      // ideally, we should also check the resultCode
-      RefreshBoardTopicFromPageOne();
-    }
-    super.onActivityResult(requestCode, resultCode, data);
-  }
-  */
-
   @Override public void onBackPressed() {
     if (isSearchMode) {
       onRefresh();
     }
     super.onBackPressed();
-    //mRecyclerView.getAdapter().notifyDataSetChanged();
   }
 
 

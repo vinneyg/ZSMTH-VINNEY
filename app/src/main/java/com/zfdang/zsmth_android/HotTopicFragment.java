@@ -3,8 +3,6 @@ package com.zfdang.zsmth_android;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-
-//import androidx.activity.OnBackPressedDispatcher;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,10 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
-
-
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
@@ -37,7 +32,6 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import java.util.List;
 import java.util.Objects;
-
 import okhttp3.ResponseBody;
 
 /**

@@ -18,12 +18,10 @@ import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
-
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
-
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -34,7 +32,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
 import androidx.activity.result.ActivityResultLauncher;
@@ -44,47 +41,36 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
-//import androidx.core.content.res.ResourcesCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.customview.widget.ViewDragHelper;
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-
 import androidx.work.Data;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
-import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.mikepenz.aboutlibraries.LibsBuilder;
-
 import com.mob.MobSDK;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
-//import com.scwang.smart.refresh.layout.api.RefreshComponent;
 import com.umeng.analytics.MobclickAgent;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
-
 import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnMailInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
-
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.MailListContent;
-
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
@@ -92,12 +78,10 @@ import com.zfdang.zsmth_android.newsmth.UserInfo;
 import com.zfdang.zsmth_android.services.KeepAliveService;
 import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
-
 import java.lang.reflect.Field;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
-
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -178,7 +162,6 @@ public class MainActivity extends SMTHBaseActivity
     initBottomNavigation();
 
     // fab.hide()
-    //BottomNavigationView mBottomNavigationView = findViewById(R.id.bv_bottomNavigation);
     if (Settings.getInstance().isLaunchBottomNavi()) {
       fab.hide();
       findViewById(R.id.bv_bottomNavigation).setVisibility(View.VISIBLE);
@@ -196,7 +179,6 @@ public class MainActivity extends SMTHBaseActivity
     mDrawer.addDrawerListener(new ActionBarDrawerToggle(this, mDrawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
       @Override
       public void onDrawerOpened(View drawerView) {
-        //mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu menu = ((NavigationView) findViewById(R.id.nav_view)).getMenu();
 
         menu.findItem(R.id.read_board1).setTitle(SMTHApplication.ReadBoard1);
@@ -320,14 +302,12 @@ public class MainActivity extends SMTHBaseActivity
     }
     SMTHApplication.bNightModeChange = true;
     if(SMTHApplication.bNewMailInNotification)
-       setBadgeCount(R.id.menu_message, "信");
+      setBadgeCount(R.id.menu_message, "信");
     SMTHApplication.bNightModeChange = false;
   }
 
 
   private void initBottomNavigation() {
-    //BottomNavigationView mBottomNavigationView = findViewById(R.id.bv_bottomNavigation);
-
     mBottomNavigationView.setItemIconTintList(null);
     mBottomNavigationView.setItemTextAppearanceActive(R.style.bottom_selected_text);
     mBottomNavigationView.setItemTextAppearanceInactive(R.style.bottom_normal_text);
@@ -347,9 +327,6 @@ public class MainActivity extends SMTHBaseActivity
     mBottomNavigationView.setItemTextColor(csl);
     mBottomNavigationView.setItemIconTintList(csl);
 
-    //disableShiftMode(mBottomNavigationView);
-
-    //mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
     mBottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
       @SuppressLint("NonConstantResourceId")
       @Override
@@ -466,13 +443,13 @@ public class MainActivity extends SMTHBaseActivity
               else if(message.contains(SMTHApplication.NOTIFICATION_NEW_LIKE)){
                 msg = "L";
               } else {
-                  msg = "";
+                msg = "";
               }
-                runOnUiThread(() -> setBadgeCount(R.id.menu_message, msg));
+              runOnUiThread(() -> setBadgeCount(R.id.menu_message, msg));
             }
           }
           else{
-              runOnUiThread(() -> clearBadgeCount(R.id.menu_message));
+            runOnUiThread(() -> clearBadgeCount(R.id.menu_message));
           }
         }
       }

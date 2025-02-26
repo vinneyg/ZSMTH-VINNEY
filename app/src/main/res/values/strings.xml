@@ -10,7 +10,7 @@
   <string name="hello_blank_fragment">This is the first fragment</string>
   <string name="setting_fragment">程序设置</string>
   <string name="button_load_version">检查更新</string>
-  <string name="title_activity_login">zSMTH-v - 登录水木社区</string>
+  <string name="title_activity_login">登录水木社区</string>
 
 
   <!--右上的action菜单-->

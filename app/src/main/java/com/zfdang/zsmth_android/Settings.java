@@ -6,8 +6,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
-//import android.widget.Toast;
-
 import com.zfdang.SMTHApplication;
 
 

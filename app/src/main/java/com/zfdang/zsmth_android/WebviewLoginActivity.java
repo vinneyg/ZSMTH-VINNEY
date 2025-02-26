@@ -2,11 +2,10 @@ package com.zfdang.zsmth_android;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-//import android.util.Log;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-
 import com.zfdang.SMTHApplication;
 
 public class WebviewLoginActivity extends SMTHBaseActivity {
@@ -23,6 +22,11 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview_login);
+
+        // 获取根布局
+        View rootView = findViewById(android.R.id.content);
+        // 请求根布局获取焦点
+        rootView.requestFocus();
 
         // get username & password
         Bundle extras = getIntent().getExtras();

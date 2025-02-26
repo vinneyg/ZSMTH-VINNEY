@@ -2,23 +2,19 @@ package com.zfdang.zsmth_android;
 
 import android.app.Activity;
 import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
 import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener;
 import com.github.chrisbanes.photoview.OnPhotoTapListener;
-//import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.MyPhotoView;
 import java.util.List;
-//import java.util.Map;
+
 
 /**
  * Created by zfdang on 2016-3-31.
@@ -49,7 +45,7 @@ public class FSImagePagerAdapter extends PagerAdapter {
 
     if (image == null) {
       Log.e("FSImagePageAdapter", "image is null, please check initialization.");
-      return null;
+        return new MyPhotoView(SMTHApplication.getAppContext());
     }
 
 

@@ -1,14 +1,12 @@
 package com.zfdang.zsmth_android;
 
 import android.content.Intent;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.listeners.OnMailInteractionListener;
 import com.zfdang.zsmth_android.models.Mail;

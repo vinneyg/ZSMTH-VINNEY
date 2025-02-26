@@ -2,7 +2,6 @@ package com.zfdang.zsmth_android;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;

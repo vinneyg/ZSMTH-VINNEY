@@ -5,10 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,9 +15,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
-
 import android.text.TextUtils;
-
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -31,7 +27,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 import com.zfdang.SMTHApplication;
-
 import com.zfdang.zsmth_android.listeners.EndlessRecyclerOnScrollListener;
 import com.zfdang.zsmth_android.listeners.OnMailInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
@@ -40,9 +35,7 @@ import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.MailListContent;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
-//import com.zfdang.zsmth_android.newsmth.UserInfo;
 import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
-
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -50,7 +43,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
 import okhttp3.ResponseBody;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -161,13 +153,13 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
     colorBlue = getResources().getColor(R.color.colorPrimary,null);
 
     //if (MailListContent.MAILS.isEmpty()||SMTHApplication.bNewMailSent) {
-      LoadMailsFromBeginning();
+    LoadMailsFromBeginning();
 
-      if(SMTHApplication.bNewMailSent)
-        SMTHApplication.bNewMailSent = false;
+    if(SMTHApplication.bNewMailSent)
+      SMTHApplication.bNewMailSent = false;
 
-      if(SMTHApplication.isValidUser())
-        ( (MainActivity) requireActivity()).onRelogin();
+    if(SMTHApplication.isValidUser())
+      ( (MainActivity) requireActivity()).onRelogin();
     //}
 
     // highlight the current folder

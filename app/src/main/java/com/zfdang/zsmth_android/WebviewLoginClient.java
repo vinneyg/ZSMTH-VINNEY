@@ -28,7 +28,6 @@ public class WebviewLoginClient extends WebViewClient {
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
 //        Log.d(TAG, "shouldOverrideUrlLoading" + request.getUrl().toString());
         if (request.getUrl().toString().startsWith("https://m.newsmth.net/index?m=")||request.getUrl().toString().startsWith("https://m.mysmth.net/index?m=")) {
-            //if (url.startsWith("https://www.mysmth.net/nforum")) {
             Intent resultIntent = new Intent();
             activity.setResult(Activity.RESULT_OK, resultIntent);
             activity.finish();

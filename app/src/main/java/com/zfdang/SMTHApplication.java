@@ -15,13 +15,10 @@ import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserStatus;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
-
 import okhttp3.OkHttpClient;
 import androidx.multidex.MultiDex;
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * Created by zfdang on 2016-3-18.
@@ -31,7 +28,8 @@ public class SMTHApplication extends Application {
   // Android Application的作用
   @SuppressLint("StaticFieldLeak")
   private static Context context;
-  public static String App_Title_Prefix = "zSMTH-v-";
+  //public static String App_Title_Prefix = "zSMTH-v-";
+  public static String App_Title_Prefix = "";
 
   public static final String FROM_BOARD = "From_Board";
   public static final String FROM_BOARD_HOT = "FROM_HOTTOPICS";
@@ -41,7 +39,6 @@ public class SMTHApplication extends Application {
   public static final String QUERY_USER_INFO = "QUERY_USER_ID";
   public static final String BOARD_OBJECT = "BOARD_OBJECT";
   public static final String TOPIC_OBJECT = "TOPIC_OBJECT";
-
   public static final String MAIL_OBJECT = "MAIL_OBJECT";
 
   // MaintainUserStatusService to UserStatusReceiver, to onNewIntent
@@ -101,7 +98,6 @@ public class SMTHApplication extends Application {
   public static UserStatus activeUser;
   public static String displayedUserId = "guest";
   public static boolean isValidUser() {
-    //return activeUser != null && !activeUser.getId().equals("guest");
     return activeUser != null && !activeUser.getId().equalsIgnoreCase("guest");
   }
 

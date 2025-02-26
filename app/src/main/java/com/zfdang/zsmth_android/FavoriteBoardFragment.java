@@ -5,21 +5,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
-
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-//import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,14 +28,12 @@ import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.BoardListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
-
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -121,7 +115,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
               {
                 WorkRequest userStatusWorkRequest =
                         new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
-                WorkManager.getInstance().enqueue(userStatusWorkRequest);
+                WorkManager.getInstance(requireActivity()).enqueue(userStatusWorkRequest);
                 RefreshFavoriteBoardsWithCache();
               }
             });

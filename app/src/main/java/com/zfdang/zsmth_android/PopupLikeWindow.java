@@ -11,9 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
-
-//import com.wx.wheelview.adapter.ArrayWheelAdapter;
-//import com.wx.wheelview.widget.WheelView;
 import com.github.gzuliyujiang.wheelview.widget.WheelView;
 import java.util.Arrays;
 
