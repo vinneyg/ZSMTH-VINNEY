@@ -15,7 +15,7 @@
         android:title="清除帖子缓存" />
   </PreferenceCategory>
 
-  <PreferenceCategory android:title="程序设置">
+  <PreferenceCategory android:title="应用设置">
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="setting_login_with_verification"
