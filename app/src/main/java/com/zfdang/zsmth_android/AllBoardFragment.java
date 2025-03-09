@@ -3,12 +3,18 @@ package com.zfdang.zsmth_android;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +61,6 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setHasOptionsMenu(true);
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,6 +82,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     mSearchView.setIconifiedByDefault(false);
 
     // http://stackoverflow.com/questions/11321129/is-it-possible-to-change-the-textcolor-on-an-android-searchview
+    @SuppressWarnings("ResourceType")
     int id = mSearchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
     TextView textView = mSearchView.findViewById(id);
     textView.setTextColor(getResources().getColor(R.color.status_text_night,null));
@@ -183,15 +189,6 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     mListener = null;
   }
 
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int id = item.getItemId();
-    if (id == R.id.main_action_refresh) {
-      LoadAllBoardsWithoutCache();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
-  }
-
   public static class QueryTextListener implements SearchView.OnQueryTextListener {
     private final BoardRecyclerViewAdapter mAdapter ;
 
@@ -209,6 +206,27 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
       mAdapter.getFilter().filter(newText);
       return true;
     }
+  }
+
+  @Override
+  public void onViewCreated(@androidx.annotation.NonNull @NonNull View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    requireActivity().addMenuProvider(new MenuProvider() {
+      @Override
+      public void onCreateMenu(@androidx.annotation.NonNull @NonNull Menu menu, @androidx.annotation.NonNull @NonNull MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.all_board_menu, menu);
+      }
+
+      @Override
+      public boolean onMenuItemSelected(@androidx.annotation.NonNull @NonNull MenuItem menuItem) {
+        int id = menuItem.getItemId();
+        if (id == R.id.main_action_refresh) {
+          LoadAllBoardsWithoutCache();
+          return true;
+        }
+        return false;
+      }
+    }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
   }
 
   @Override public boolean onVolumeUpDown(int keyCode) {

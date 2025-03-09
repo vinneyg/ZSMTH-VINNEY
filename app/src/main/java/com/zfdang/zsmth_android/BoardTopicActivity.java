@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -12,9 +15,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -32,7 +32,6 @@ import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.models.TopicListContent;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
-import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -94,12 +93,14 @@ public class BoardTopicActivity extends SMTHBaseActivity
     SwipeBackHelper.onPostCreate(this);
   }
 
+  /*
   @Override public void onBackPressed() {
     if (isSearchMode) {
       onRefresh();
     }
     super.onBackPressed();
   }
+  */
 
 
   private static BoardTopicActivity mActivity1 = null;
@@ -119,6 +120,18 @@ public class BoardTopicActivity extends SMTHBaseActivity
     }
     toolbar.setTitle(getTitle());
 
+    OnBackPressedDispatcher dispatcher = getOnBackPressedDispatcher();
+
+    dispatcher.addCallback(this, new OnBackPressedCallback(true) {
+      @Override
+      public void handleOnBackPressed() {
+        // Handle the back button press here
+        if (isSearchMode) {
+          onRefresh();
+        }
+      }
+    });
+
     mSetting = Settings.getInstance();
 
     // Initialize the ActivityResultLauncher object.
@@ -127,9 +140,13 @@ public class BoardTopicActivity extends SMTHBaseActivity
             result -> {
               if(result.getResultCode() == Activity.RESULT_OK)
               {
+                /*
                 WorkRequest userStatusWorkRequest =
                         new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
                 WorkManager.getInstance(this).enqueue(userStatusWorkRequest);
+                */
+                Intent intent = new Intent("com.zfdang.zsmth_android.UPDATE_USER_STATUS");
+                sendBroadcast(intent);
 
               }
             });
@@ -243,7 +260,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int id = item.getItemId();
     if (id == android.R.id.home) {
-      onBackPressed();
+      //onBackPressed();
+      finish();
       return true;
     } else if (id == R.id.board_topic_action_sticky) {
       mSetting.toggleShowSticky();
@@ -425,7 +443,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
                           try {
                             Thread.sleep(500);
-                            onBackPressed();
+                            //onBackPressed();
+                            finish();
                           } catch (InterruptedException ex) {
                             //ex.printStackTrace();
                             Log.d(TAG, ex.toString());

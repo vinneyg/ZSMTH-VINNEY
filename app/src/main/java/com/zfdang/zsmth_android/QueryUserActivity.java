@@ -110,7 +110,8 @@ public class QueryUserActivity extends SMTHBaseActivity {
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int code = item.getItemId();
     if (code == android.R.id.home) {
-      onBackPressed();
+      //onBackPressed();
+      finish();
     } else if (code == R.id.query_user_action_message) {
       // write mail to current user
       ComposePostContext postContext = new ComposePostContext();

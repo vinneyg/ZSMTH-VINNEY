@@ -14,6 +14,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
+
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
@@ -21,9 +23,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -60,7 +59,6 @@ import com.zfdang.zsmth_android.models.PostListContent;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
-import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.onekeyshare.OnekeyShare;
@@ -180,6 +178,14 @@ public class PostListActivity extends SMTHBaseActivity
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
+    OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+      @Override
+      public void handleOnBackPressed() {
+        // 替代 super.onBackPressed()
+        finish();
+      }
+    };
+    getOnBackPressedDispatcher().addCallback(this, callback);
 
     // Initialize the ActivityResultLauncher object.
     mActivityLoginResultLauncher = registerForActivityResult(
@@ -187,10 +193,8 @@ public class PostListActivity extends SMTHBaseActivity
             result -> {
               if(result.getResultCode() == Activity.RESULT_OK)
               {
-                WorkRequest userStatusWorkRequest =
-                        new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
-                WorkManager.getInstance(this).enqueue(userStatusWorkRequest);
-
+                Intent intent = new Intent("com.zfdang.zsmth_android.UPDATE_USER_STATUS");
+                sendBroadcast(intent);
               }
             });
 
@@ -274,7 +278,7 @@ public class PostListActivity extends SMTHBaseActivity
     mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
       boolean isSlidingToLast = false;
-      int mIndex = 0;
+      //int mIndex = 0;
 
       private boolean isLoading = false;
       @Override
@@ -337,7 +341,7 @@ public class PostListActivity extends SMTHBaseActivity
           //mCurrentPageNo++;
           LoadMoreItems();
         } else
-          if (lastVisiblePos == (totalItemCount - 1) && isSlidingToLast && (mCurrentPageNo == mTopic.getTotalPageNo())) {
+        if (lastVisiblePos == (totalItemCount - 1) && isSlidingToLast && (mCurrentPageNo == mTopic.getTotalPageNo())) {
           clearLoadingHints();
         } else if ((!isSlidingToLast) || (lastVisiblePos < (totalItemCount - 1))) {
           TextView mIndexView = (Objects.requireNonNull(manager.findViewByPosition(lastVisiblePos))).findViewById(R.id.post_index);
@@ -499,7 +503,7 @@ public class PostListActivity extends SMTHBaseActivity
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new Observer<Post>() {
-              private List<Post> newPosts = new ArrayList<>();
+              private final List<Post> newPosts = new ArrayList<>();
 
               @Override public void onSubscribe(@NonNull Disposable disposable) {
 
@@ -574,13 +578,14 @@ public class PostListActivity extends SMTHBaseActivity
                   try {
                     Thread.sleep(1000);
                     Settings.getInstance().setUserOnline(false); //User Offline
-                    onBackPressed();
+                    //onBackPressed();
+                    finish();
                   } catch (InterruptedException e) {
                     Log.e(TAG,"Error occurred: ", e);
                   }
                 }
               }
-           });
+            });
   }
 
 
@@ -637,8 +642,8 @@ public class PostListActivity extends SMTHBaseActivity
                           Index = Integer.parseInt(temp);
                         }
                         Index = Index % POST_PER_PAGE;
-                         PostListContent.addItem(post);
-                       //PostListContent.InsertItem(Index, post);
+                        PostListContent.addItem(post);
+                        //PostListContent.InsertItem(Index, post);
                         Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(Index);
                       }
 
@@ -677,7 +682,8 @@ public class PostListActivity extends SMTHBaseActivity
                           PostListContent.clear();
                           try {
                             Thread.sleep(500);
-                            onBackPressed();
+                            //onBackPressed();
+                            finish();
                           } catch (InterruptedException e) {
                             Log.e(TAG,"Error occurred: ", e);
                           }
@@ -793,7 +799,8 @@ public class PostListActivity extends SMTHBaseActivity
                           PostListContent.clear();
                           try {
                             Thread.sleep(500);
-                            onBackPressed();
+                            //onBackPressed();
+                            finish();
                           } catch (InterruptedException e) {
                             Log.e(TAG,"Error occurred: ", e);
                           }
@@ -835,7 +842,8 @@ public class PostListActivity extends SMTHBaseActivity
       //
       // http://developer.android.com/design/patterns/navigation.html#up-vs-back
       //
-      onBackPressed();
+      //onBackPressed();
+      finish();
       return true;
     } else if (id == R.id.post_list_action_refresh) {
       reloadPostList();
@@ -848,9 +856,12 @@ public class PostListActivity extends SMTHBaseActivity
     }
     return super.onOptionsItemSelected(item);
   }
+
+  /*
   @Override public void onBackPressed() {
     super.onBackPressed();
   }
+  */
 
   @SuppressLint("NonConstantResourceId")
   @Override public void onClick(View v) {

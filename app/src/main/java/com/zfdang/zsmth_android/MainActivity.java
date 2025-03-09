@@ -9,9 +9,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.content.BroadcastReceiver;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -79,9 +81,9 @@ import com.zfdang.zsmth_android.services.KeepAliveService;
 import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.ArrayList;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -123,6 +125,18 @@ public class MainActivity extends SMTHBaseActivity
   private ActivityResultLauncher<Intent> mActivityLoginResultLauncher;
   private Button mailButtonInbox;
   private Drawable default_icon;
+
+  private final BroadcastReceiver userStatusReceiver = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      if (Objects.equals(intent.getAction(), "com.zfdang.zsmth_android.UPDATE_USER_STATUS")) {
+        updateUserStatusNow();
+        UpdateNavigationViewHeader();
+      }
+    }
+  };
+
+  @SuppressLint("UnspecifiedRegisterReceiverFlag")
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -150,6 +164,16 @@ public class MainActivity extends SMTHBaseActivity
                 updateUserStatusNow();
               }
             });
+
+    // 注册广播接收器
+    IntentFilter filter = new IntentFilter();
+    filter.addAction("com.zfdang.zsmth_android.UPDATE_USER_STATUS");
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+      // For API level 33 and above, use RECEIVER_NOT_EXPORTED
+      registerReceiver(userStatusReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+    } else {
+      registerReceiver(userStatusReceiver, filter);
+    }
 
     // how to adjust the height of toolbar
     // http://stackoverflow.com/questions/17439683/how-to-change-action-bar-size
@@ -430,21 +454,7 @@ public class MainActivity extends SMTHBaseActivity
           if (message != null) {
             showNotification(message);
             if(!message.contains(SMTHApplication.NOTIFICATION_LOGIN_LOST)){
-              String msg;
-              if(message.contains(SMTHApplication.NOTIFICATION_NEW_MAIL)){
-                msg = "信";
-              }
-              else if(message.contains(SMTHApplication.NOTIFICATION_NEW_AT)){
-                msg = "@";
-              }
-              else if(message.contains(SMTHApplication.NOTIFICATION_NEW_REPLY)){
-                msg = "R";
-              }
-              else if(message.contains(SMTHApplication.NOTIFICATION_NEW_LIKE)){
-                msg = "L";
-              } else {
-                msg = "";
-              }
+              String msg = getMsg(message);
               runOnUiThread(() -> setBadgeCount(R.id.menu_message, msg));
             }
           }
@@ -468,6 +478,26 @@ public class MainActivity extends SMTHBaseActivity
     SMTHApplication.mUserStatusReceiver = mReceiver;
   }
 
+  @androidx.annotation.NonNull
+  private static String getMsg(String message) {
+    String msg;
+    if(message.contains(SMTHApplication.NOTIFICATION_NEW_MAIL)){
+      msg = "信";
+    }
+    else if(message.contains(SMTHApplication.NOTIFICATION_NEW_AT)){
+      msg = "@";
+    }
+    else if(message.contains(SMTHApplication.NOTIFICATION_NEW_REPLY)){
+      msg = "R";
+    }
+    else if(message.contains(SMTHApplication.NOTIFICATION_NEW_LIKE)){
+      msg = "L";
+    } else {
+      msg = "";
+    }
+    return msg;
+  }
+
   private void init_keep_alive_service() {
     if (keepAliveService == null)
       keepAliveService = new Intent(this, KeepAliveService.class);
@@ -476,16 +506,16 @@ public class MainActivity extends SMTHBaseActivity
     }
   }
   public Boolean isKeepAliveServiceRunning() {
-    String ServiceName = KeepAliveService.class.getName();
-    ActivityManager myManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-    ArrayList<ActivityManager.RunningServiceInfo> runningService =
-            (ArrayList<ActivityManager.RunningServiceInfo>)
-                    myManager.getRunningServices(Integer.MAX_VALUE);
-    for (int i = 0; i < runningService.size(); i++) {
-      if (runningService.get(i).service.getClassName().equals(ServiceName)) {
-        return true;
+    ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+    List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = activityManager.getRunningAppProcesses();
+    if (runningAppProcesses != null) {
+      for (ActivityManager.RunningAppProcessInfo processInfo : runningAppProcesses) {
+        if (processInfo.processName.equals(KeepAliveService.class.getName())) {
+          return true;
+        }
       }
     }
+
     return false;
   }
 
@@ -767,7 +797,8 @@ public class MainActivity extends SMTHBaseActivity
       onLogout();
       return true;
     } else if (id == android.R.id.home) {
-      onBackPressed();
+      //onBackPressed();
+      finish();
       return true;
     }
     return super.onOptionsItemSelected(item);
@@ -1218,6 +1249,12 @@ public class MainActivity extends SMTHBaseActivity
     }
   }
 
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    unregisterReceiver(userStatusReceiver);
+  }
+
   public void setBadgeCount(int itemId, String count) {
     MenuItem menuItem = mBottomNavigationView.getMenu().findItem(itemId);
 
@@ -1241,8 +1278,6 @@ public class MainActivity extends SMTHBaseActivity
       SMTHApplication.bNewMailInNotification = false;
     }
   }
-
-
 
 
   private LayerDrawable createLayerDrawable(Drawable icon, String count) {

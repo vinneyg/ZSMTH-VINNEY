@@ -7,14 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -35,7 +34,6 @@ import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.MailListContent;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
-import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -95,8 +93,6 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    // http://stackoverflow.com/questions/8308695/android-options-menu-in-fragment
-    setHasOptionsMenu(true);
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -128,9 +124,8 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
             result -> {
               if(result.getResultCode() == Activity.RESULT_OK)
               {
-                WorkRequest userStatusWorkRequest =
-                        new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
-                WorkManager.getInstance().enqueue(userStatusWorkRequest);
+                Intent intent = new Intent("com.zfdang.zsmth_android.UPDATE_USER_STATUS");
+                context.sendBroadcast(intent);
                 LoadMailsFromBeginning();
               }
             });
@@ -529,48 +524,54 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
     mListener = null;
   }
 
-  @Override public void onCreateOptionsMenu(Menu menu, @androidx.annotation.NonNull MenuInflater inflater) {
-    MenuItem item = menu.findItem(R.id.mail_list_fragment_newmail);
-    item.setVisible(true);
-    super.onCreateOptionsMenu(menu, inflater);
-  }
-
   @Override
-  public void onPrepareOptionsMenu(Menu menu) {
-    MenuItem item = menu.findItem(R.id.mail_list_read_all);
-    item.setVisible(!currentFolder.equals(INBOX_LABEL) && !currentFolder.equals(OUTBOX_LABEL) && !currentFolder.equals(DELETED_LABEL));
-    super.onPrepareOptionsMenu(menu);
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int id = item.getItemId();
-    if (id == R.id.mail_list_fragment_newmail) {
-      // write new mail
-      ComposePostContext postContext = new ComposePostContext();
-      postContext.setComposingMode(ComposePostContext.MODE_NEW_MAIL);
-      Intent intent = new Intent(getActivity(), ComposePostActivity.class);
-      intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-      startActivity(intent);
-      return true;
-    } else if (id == R.id.main_action_refresh) {
-      LoadMailsFromBeginning();
-    } else if (id == R.id.mail_list_read_all) {
-      if (TextUtils.equals(currentFolder, INBOX_LABEL)||TextUtils.equals(currentFolder, OUTBOX_LABEL)||TextUtils.equals(currentFolder, DELETED_LABEL))
-      {
-        Toast.makeText(SMTHApplication.getAppContext(),"站点不支持邮件已读！",Toast.LENGTH_SHORT).show();
+  public void onViewCreated(@androidx.annotation.NonNull @NonNull View view, Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    requireActivity().addMenuProvider(new MenuProvider() {
+      @Override
+      public void onCreateMenu(@androidx.annotation.NonNull @NonNull Menu menu, @androidx.annotation.NonNull @NonNull MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.mail_list_menu, menu); // Replace with your actual menu resource
+        // Dynamically modify menu items
+        MenuItem newMailItem = menu.findItem(R.id.mail_list_fragment_newmail);
+        newMailItem.setVisible(currentFolder.equals(INBOX_LABEL));
+        MenuItem readAllItem = menu.findItem(R.id.mail_list_read_all);
+        readAllItem.setVisible(!currentFolder.equals(INBOX_LABEL) && !currentFolder.equals(OUTBOX_LABEL) && !currentFolder.equals(DELETED_LABEL));
       }
-      else
-      {
-        for(int pos =0;pos<MailListContent.MAILS.size();pos++)
-          markMailAsRead(pos);
-        ((MainActivity) requireActivity()).clearBadgeCount(R.id.menu_message);
-      }
-    }
 
-    return super.onOptionsItemSelected(item);
+      @Override
+      public boolean onMenuItemSelected(@androidx.annotation.NonNull @NonNull MenuItem menuItem) {
+        int id = menuItem.getItemId();
+        if (id == R.id.mail_list_fragment_newmail) {
+          // write new mail
+          ComposePostContext postContext = new ComposePostContext();
+          postContext.setComposingMode(ComposePostContext.MODE_NEW_MAIL);
+          Intent intent = new Intent(getActivity(), ComposePostActivity.class);
+          intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+          startActivity(intent);
+          return true;
+        } else if (id == R.id.main_action_refresh) {
+          LoadMailsFromBeginning();
+          return true;
+        } else if (id == R.id.mail_list_read_all) {
+          if (TextUtils.equals(currentFolder, INBOX_LABEL)||TextUtils.equals(currentFolder, OUTBOX_LABEL)||TextUtils.equals(currentFolder, DELETED_LABEL))
+          {
+            Toast.makeText(SMTHApplication.getAppContext(),"站点不支持邮件已读！",Toast.LENGTH_SHORT).show();
+          }
+          else
+          {
+            for(int pos =0;pos<MailListContent.MAILS.size();pos++)
+              markMailAsRead(pos);
+            ((MainActivity) requireActivity()).clearBadgeCount(R.id.menu_message);
+          }
+          return true;
+        }
+        return false;
+      }
+    }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
   }
 
   @Override public void onClick(View v) {
+    requireActivity().invalidateOptionsMenu();
     if (v == btInbox) {
       if (TextUtils.equals(currentFolder, INBOX_LABEL)) return;
       currentFolder = INBOX_LABEL;
@@ -587,7 +588,6 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
       if (TextUtils.equals(currentFolder, REPLY_LABEL)) return;
       currentFolder = REPLY_LABEL;
     } else if (v == btLike) {
-      requireActivity().invalidateOptionsMenu();
       if (TextUtils.equals(currentFolder, LIKE_LABEL)) return;
       currentFolder = LIKE_LABEL;
     }

@@ -7,15 +7,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +29,6 @@ import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.BoardListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
-import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -105,7 +106,6 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setHasOptionsMenu(true);
 
     // Initialize the ActivityResultLauncher object.
     mActivityLoginResultLauncher = registerForActivityResult(
@@ -113,9 +113,8 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
             result -> {
               if(result.getResultCode() == Activity.RESULT_OK)
               {
-                WorkRequest userStatusWorkRequest =
-                        new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
-                WorkManager.getInstance(requireActivity()).enqueue(userStatusWorkRequest);
+                Intent intent = new Intent("com.zfdang.zsmth_android.UPDATE_USER_STATUS");
+                requireContext().sendBroadcast(intent);
                 RefreshFavoriteBoardsWithCache();
               }
             });
@@ -246,17 +245,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
       }
     });
   }
-  /*
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-      super.onActivityResult(requestCode, resultCode, data);
-      if (requestCode == MainActivity.LOGIN_ACTIVITY_REQUEST_CODE) {
-        WorkRequest userStatusWorkRequest =
-                new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
-        WorkManager.getInstance(requireActivity()).enqueue(userStatusWorkRequest);
-      }
-    }
-  */
+
   private void updateFavoriteTitle() {
     Activity activity = getActivity();
 
@@ -295,14 +284,28 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
     mListener = null;
   }
 
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int id = item.getItemId();
-    if (id == R.id.main_action_refresh) {
-      RefreshFavoriteBoardsWithCache();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
+  @Override
+  public void onViewCreated(@androidx.annotation.NonNull @NonNull View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    requireActivity().addMenuProvider(new MenuProvider() {
+      @Override
+      public void onCreateMenu(@androidx.annotation.NonNull @NonNull Menu menu, @androidx.annotation.NonNull @NonNull MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.favorite_board_menu, menu);
+      }
+
+      @Override
+      public boolean onMenuItemSelected(@androidx.annotation.NonNull @NonNull MenuItem menuItem) {
+        int id = menuItem.getItemId();
+        if (id == R.id.main_action_refresh) {
+          RefreshFavoriteBoardsWithCache();
+          return true;
+        }
+        return false;
+      }
+    }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
   }
+
+
   @Override
   public boolean onVolumeUpDown(int keyCode) {
     if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {

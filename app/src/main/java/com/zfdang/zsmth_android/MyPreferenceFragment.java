@@ -11,6 +11,8 @@ import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.view.MenuProvider;
+import androidx.lifecycle.Lifecycle;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
@@ -20,6 +22,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
@@ -88,7 +91,6 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     super.onCreate(savedInstanceState);
 
     addPreferencesFromResource(R.xml.preferences);
-    setHasOptionsMenu(true );
 
     receiver = new BroadcastReceiver() {
       @Override
@@ -611,9 +613,22 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     requireContext().unregisterReceiver(receiver);
   }
 
-  @Override public void onCreateOptionsMenu(Menu menu, @androidx.annotation.NonNull MenuInflater inflater) {
-    MenuItem item = menu.findItem(R.id.main_action_refresh);
-    item.setVisible(false);
-    super.onCreateOptionsMenu(menu, inflater);
+  @Override
+  public void onViewCreated(@androidx.annotation.NonNull @NonNull View view, Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    requireActivity().addMenuProvider(new MenuProvider() {
+      @Override
+      public void onCreateMenu(@androidx.annotation.NonNull @NonNull Menu menu, @androidx.annotation.NonNull @NonNull MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.preference_menu, menu); // Replace with your actual menu resource
+        // Dynamically modify menu items
+        MenuItem newItem = menu.findItem(R.id.main_action_refresh);
+        newItem.setVisible(false);
+      }
+
+      @Override
+      public boolean onMenuItemSelected(@androidx.annotation.NonNull @NonNull MenuItem menuItem) {
+        return false;
+      }
+    }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
   }
 }

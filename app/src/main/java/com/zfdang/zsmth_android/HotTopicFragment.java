@@ -3,13 +3,18 @@ package com.zfdang.zsmth_android;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import androidx.annotation.Nullable;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,8 +64,6 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    // http://stackoverflow.com/questions/8308695/android-options-menu-in-fragment
-    setHasOptionsMenu(true);
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -110,6 +113,27 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
       RefreshGuidance();
     }
     return rootView;
+  }
+
+  @Override
+  public void onViewCreated(@androidx.annotation.NonNull @NonNull View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    requireActivity().addMenuProvider(new MenuProvider() {
+      @Override
+      public void onCreateMenu(@androidx.annotation.NonNull @NonNull Menu menu, @androidx.annotation.NonNull @NonNull MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.hot_topic_menu, menu);
+      }
+
+      @Override
+      public boolean onMenuItemSelected(@androidx.annotation.NonNull @NonNull MenuItem menuItem) {
+        int id = menuItem.getItemId();
+        if (id == R.id.main_action_refresh) {
+          RefreshGuidance();
+          return true;
+        }
+        return false;
+      }
+    }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
   }
 
   public void showLoadingHints() {
@@ -191,15 +215,6 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
   @Override public void onDetach() {
     super.onDetach();
     mListener = null;
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int id = item.getItemId();
-    if (id == R.id.main_action_refresh) {
-      RefreshGuidance();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
   }
 
   @Override public boolean onVolumeUpDown(int keyCode) {

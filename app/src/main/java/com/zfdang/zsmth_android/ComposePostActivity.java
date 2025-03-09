@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
@@ -99,6 +102,16 @@ public class ComposePostActivity extends SMTHBaseActivity {
     if (bar != null) {
       bar.setDisplayHomeAsUpEnabled(true);
     }
+
+    OnBackPressedDispatcher dispatcher = getOnBackPressedDispatcher();
+
+    dispatcher.addCallback(this, new OnBackPressedCallback(true) {
+      @Override
+      public void handleOnBackPressed() {
+        // Handle the back button press here
+        onBackAction();
+      }
+    });
 
     // Initialize the ActivityResultLauncher object.
     mActivityLoginResultLauncher = registerForActivityResult(
@@ -302,11 +315,6 @@ public class ComposePostActivity extends SMTHBaseActivity {
   @Override public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.compose_post_menu, menu);
     return super.onCreateOptionsMenu(menu);
-  }
-
-  @Override public void onBackPressed() {
-    super.onBackPressed();
-    onBackAction();
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
