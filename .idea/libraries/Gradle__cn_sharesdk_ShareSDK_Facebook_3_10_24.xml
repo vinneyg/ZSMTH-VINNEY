@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: cn.sharesdk:ShareSDK-Facebook:3.10.24" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="cn.sharesdk" artifactId="ShareSDK-Facebook" version="3.10.24" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/cn.sharesdk/ShareSDK-Facebook/3.10.24/736867f831b5e9f10aa663a01203e161755ca466/ShareSDK-Facebook-3.10.24.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

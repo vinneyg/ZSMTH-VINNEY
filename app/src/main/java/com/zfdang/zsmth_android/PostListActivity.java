@@ -807,8 +807,7 @@ public class PostListActivity extends SMTHBaseActivity
 
                           if (!SMTHApplication.isValidUser()) {
                             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                            //startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
-                            mActivityPostResultLauncher.launch(intent);
+                            mActivityLoginResultLauncher.launch(intent);
                           }
                           else
                             Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请刷新页面！",Toast.LENGTH_SHORT).show();
