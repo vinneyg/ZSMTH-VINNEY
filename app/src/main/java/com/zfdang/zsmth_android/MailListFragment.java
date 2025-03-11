@@ -431,18 +431,6 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
     });
   }
 
-  /*
-  @Override
-  public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode == MainActivity.LOGIN_ACTIVITY_REQUEST_CODE) {
-      WorkRequest userStatusWorkRequest =
-              new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
-      WorkManager.getInstance(requireActivity()).enqueue(userStatusWorkRequest);
-      LoadMailsFromBeginning();
-    }
-  }
-  */
 
   public void showLoadingHints() {
     MainActivity activity = (MainActivity) getActivity();

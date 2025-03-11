@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: xyz.danoz:recyclerviewfastscroller:0.1.3@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/92213d4f9a90013458c71eb5300c8cef/transformed/jetified-recyclerviewfastscroller-0.1.3/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/92213d4f9a90013458c71eb5300c8cef/transformed/jetified-recyclerviewfastscroller-0.1.3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/92213d4f9a90013458c71eb5300c8cef/transformed/jetified-recyclerviewfastscroller-0.1.3/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/12fe24856d82eec32e7c79f4fef9012a/transformed/jetified-recyclerviewfastscroller-0.1.3/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/12fe24856d82eec32e7c79f4fef9012a/transformed/jetified-recyclerviewfastscroller-0.1.3/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/12fe24856d82eec32e7c79f4fef9012a/transformed/jetified-recyclerviewfastscroller-0.1.3/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/xyz.danoz/recyclerviewfastscroller/0.1.3/d4e4267cad50bf98bf6259218d9e7717f418d7c9/recyclerviewfastscroller-0.1.3-javadoc.jar!/" />
