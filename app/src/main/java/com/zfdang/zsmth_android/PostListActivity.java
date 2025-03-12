@@ -20,9 +20,14 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -59,6 +64,8 @@ import com.zfdang.zsmth_android.models.PostListContent;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
+
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.onekeyshare.OnekeyShare;
@@ -178,23 +185,35 @@ public class PostListActivity extends SMTHBaseActivity
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
+
     OnBackPressedCallback callback = new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-        // 替代 super.onBackPressed()
-        finish();
-      }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+          fragmentManager.popBackStack();
+        } else {
+          // 移除滑动状态检查直接执行关闭
+          SwipeBackHelper.finish(PostListActivity.this);
+        }
+     }
     };
     getOnBackPressedDispatcher().addCallback(this, callback);
 
+
     // Initialize the ActivityResultLauncher object.
-    mActivityLoginResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-              if(result.getResultCode() == Activity.RESULT_OK)
-              {
-                Intent intent = new Intent("com.zfdang.zsmth_android.UPDATE_USER_STATUS");
-                sendBroadcast(intent);
+      mActivityLoginResultLauncher = registerForActivityResult(
+              new ActivityResultContracts.StartActivityForResult(),
+              result -> {
+                  if(result.getResultCode() == Activity.RESULT_OK)
+                  {
+                      Log.d("vinney","800");
+                      // run worker immediately for once
+                      WorkRequest userStatusWorkRequest =
+                              new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
+                      WorkManager.getInstance(getApplicationContext()).enqueue(userStatusWorkRequest);
+                      Intent intent = new Intent("com.zfdang.zsmth_android.UPDATE_USER_STATUS");
+                      sendBroadcast(intent);
               }
             });
 

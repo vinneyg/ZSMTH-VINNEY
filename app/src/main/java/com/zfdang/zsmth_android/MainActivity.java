@@ -130,8 +130,9 @@ public class MainActivity extends SMTHBaseActivity
     @Override
     public void onReceive(Context context, Intent intent) {
       if (Objects.equals(intent.getAction(), "com.zfdang.zsmth_android.UPDATE_USER_STATUS")) {
-        updateUserStatusNow();
-        UpdateNavigationViewHeader();
+        Log.d("vinney","900");
+        //updateUserStatusNow();
+        runOnUiThread(() -> UpdateNavigationViewHeader());
       }
     }
   };
