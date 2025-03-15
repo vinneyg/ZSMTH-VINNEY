@@ -14,10 +14,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
-
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -38,8 +34,6 @@ import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.MailListContent;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
-import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
-
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -130,10 +124,6 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
             result -> {
               if(result.getResultCode() == Activity.RESULT_OK)
               {
-                  WorkRequest userStatusWorkRequest =
-                          new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
-                  WorkManager.getInstance(context).enqueue(userStatusWorkRequest);
-
                   Intent intent = new Intent("com.zfdang.zsmth_android.UPDATE_USER_STATUS");
                   context.sendBroadcast(intent);
                   LoadMailsFromBeginning();
@@ -424,7 +414,6 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
 
         if(mail.isCategory && mail.category.startsWith("产生错误的可能原因")){
           Intent intent = new Intent(requireActivity(), LoginActivity.class);
-          //startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
           mActivityLoginResultLauncher.launch(intent);
         }
       }

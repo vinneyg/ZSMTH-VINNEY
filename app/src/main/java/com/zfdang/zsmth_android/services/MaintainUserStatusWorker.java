@@ -12,14 +12,12 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.Settings;
-import com.zfdang.zsmth_android.helpers.MakeList;
-import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserInfo;
 import com.zfdang.zsmth_android.newsmth.UserStatus;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import io.reactivex.observers.DisposableObserver;
+import android.content.BroadcastReceiver;
 
 
 public class MaintainUserStatusWorker extends Worker {
@@ -28,6 +26,7 @@ public class MaintainUserStatusWorker extends Worker {
     private static final String TAG = "MUSWorker";
 
     public static final String WORKER_ID=MaintainUserStatusWorker.class.getName();
+    private BroadcastReceiver loginReceiver;
 
     public MaintainUserStatusWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -42,7 +41,7 @@ public class MaintainUserStatusWorker extends Worker {
 
         Data myData = getInputData();
         // schedule the next worker
-        boolean repeat = myData.getBoolean(this.REPEAT, true);
+        boolean repeat = myData.getBoolean(MaintainUserStatusWorker.REPEAT, true);
         if (repeat) {
             enqueueNextWorker();
         }
@@ -69,7 +68,7 @@ public class MaintainUserStatusWorker extends Worker {
 
         //Log.d(TAG, "1.0 get current UserStatus from remote");
         helper.wService.queryActiveUserStatus().map(userStatus -> {
-            Log.d(TAG, "2.0 " + userStatus.toString());
+            //Log.d(TAG, "2.0 " + userStatus.toString());
             // create a dummy userStatus if it is null
             if (userStatus == null) {
                 userStatus = new UserStatus();
@@ -83,17 +82,24 @@ public class MaintainUserStatusWorker extends Worker {
             boolean bSaveInfo = true;
             boolean bLastSuccess = true;
             boolean bUserOnline = true;
-            boolean bLoginSuccess = false;
-           // Log.d(TAG, "call: 2.2.1 " + String.format("Autologin: %b, LastSuccess: %b, Online: %b", bAutoLogin, bLastSuccess, bUserOnline));
+            boolean bLoginSuccess = true;
+
+            /*
+            Log.d(TAG, "call: 2.2.1 " + String.format(" LastSuccess: %b, Online: %b", bLastSuccess, bUserOnline));
             if (bSaveInfo && bLastSuccess && bUserOnline) {
+                Log.d(TAG,username+"--"+password );
                 Iterable<Integer> its = helper.wService.login(username, password, "7").map(response -> {
                     if (response.getAjax_st() == 1) {
                         // {"ajax_st":1,"ajax_code":"0005","ajax_msg":"操作成功"}
+                        Log.d(TAG,"101");
                         return AjaxResponse.AJAX_RESULT_OK;
-                    } else if (response.getAjax_code().equals("0005")) {
+                    } else if (response.getAjax_code().equals("0101")) {
                         // {"ajax_st":0,"ajax_code":"0101","ajax_msg":"您的用户名并不存在，或者您的密码错误"}
+                        Log.d(TAG,"102");
                         return AjaxResponse.AJAX_RESULT_FAILED;
                     }
+                    Log.d(TAG,response.getAjax_msg());
+                    Log.d(TAG,"103");
                     return AjaxResponse.AJAX_RESULT_UNKNOWN;
                 }).blockingIterable();
 
@@ -104,7 +110,7 @@ public class MaintainUserStatusWorker extends Worker {
                     int result = results.get(0);
                     if (result == AjaxResponse.AJAX_RESULT_OK) {
                         // set flag, so that we will query user status again
-                        //Log.d(TAG, "call: 2.2.3. Login success");
+                        Log.d(TAG, "call: 2.2.3. Login success");
                         bLoginSuccess = true;
                     } else if (result == AjaxResponse.AJAX_RESULT_FAILED) {
                         // set flag, so that we will not login again next time
@@ -113,29 +119,30 @@ public class MaintainUserStatusWorker extends Worker {
                     }
                 }
             } // if (bAutoLogin && bLastSuccess)
-
+*/
             // try to find new UserStatus only when login success
             if (bLoginSuccess) {
-                //Log.d(TAG, "call: " + "2.2.5.1 try to get userstatus again after login action");
+                Log.d(TAG, "call: " + "2.2.5.1 try to get userstatus again after login action");
                 UserStatus stat = SMTHHelper.queryActiveUserStatus().blockingFirst();
-                //Log.d(TAG, "call: " + stats.size());
+                //Log.d(TAG, "call: " + stat.size());
                 if (stat == null) {
                     stat = new UserStatus();
                 }
                 if (stat.getId() == null) {
                     stat.setId("guest");
                 }
+                Log.d(TAG,stat.getId());
                 return stat;
             } else {
                 return userStatus;
             }
         }).map(userStatus -> {
-            //Log.d(TAG, "3.0 call: " + userStatus.toString());
+            Log.d(TAG, "3.0 call: " + userStatus.toString());
             if (!TextUtils.equals(userStatus.getId(), "guest")) {
                 // valid user
                 if (SMTHApplication.activeUser != null && TextUtils.equals(userStatus.getId(), SMTHApplication.activeUser.getId())) {
                     // current user is already cached in SMTHApplication
-                    //Log.d(TAG, "call: " + "3.1 New user is the same with cached user, copy faceURL from local");
+                    Log.d(TAG, "call: " + "3.1 New user is the same with cached user, copy faceURL from local");
                     userStatus.setFace_url(SMTHApplication.activeUser.getFace_url());
                 } else {
                     // get correct faceURL
@@ -171,7 +178,7 @@ public class MaintainUserStatusWorker extends Worker {
                 UserStatusReceiver receiver = SMTHApplication.mUserStatusReceiver;
                 // send notification: 1. new message 2. new activeUser to update Sidebar status
                 if ((updateUserIcon || !message.isEmpty()) && receiver != null) {
-                    //Log.d(TAG, "4.2 cached user, valid message, valid receiver, send message");
+                    Log.d(TAG, "4.2 cached user, valid message, valid receiver, send message");
                     Bundle bundle = new Bundle();
                     if (!message.isEmpty()) {
                         bundle.putString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE, message);

@@ -13,8 +13,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
-
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -24,10 +25,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
-
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -64,8 +61,6 @@ import com.zfdang.zsmth_android.models.PostListContent;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
-import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
-
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.onekeyshare.OnekeyShare;
@@ -196,24 +191,19 @@ public class PostListActivity extends SMTHBaseActivity
           // 移除滑动状态检查直接执行关闭
           SwipeBackHelper.finish(PostListActivity.this);
         }
-     }
+      }
     };
     getOnBackPressedDispatcher().addCallback(this, callback);
 
-
     // Initialize the ActivityResultLauncher object.
-      mActivityLoginResultLauncher = registerForActivityResult(
-              new ActivityResultContracts.StartActivityForResult(),
-              result -> {
-                  if(result.getResultCode() == Activity.RESULT_OK)
-                  {
-                      Log.d("vinney","800");
-                      // run worker immediately for once
-                      WorkRequest userStatusWorkRequest =
-                              new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
-                      WorkManager.getInstance(getApplicationContext()).enqueue(userStatusWorkRequest);
-                      Intent intent = new Intent("com.zfdang.zsmth_android.UPDATE_USER_STATUS");
-                      sendBroadcast(intent);
+    mActivityLoginResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+              if(result.getResultCode() == Activity.RESULT_OK)
+              {
+                Intent intent = new Intent("com.zfdang.zsmth_android.UPDATE_USER_STATUS");
+                sendBroadcast(intent);
+                finish();
               }
             });
 
@@ -594,14 +584,15 @@ public class PostListActivity extends SMTHBaseActivity
                 if (PostListContent.POSTS.isEmpty()) {
                   //Toast.makeText(SMTHApplication.getAppContext(),"请重新登录-"+ PostListContent.POSTS.size()+"-!",Toast.LENGTH_SHORT).show();
                   PostListContent.clear();
-                  try {
-                    Thread.sleep(1000);
-                    Settings.getInstance().setUserOnline(false); //User Offline
-                    //onBackPressed();
-                    finish();
-                  } catch (InterruptedException e) {
-                    Log.e(TAG,"Error occurred: ", e);
-                  }
+
+                  new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    try {
+                      Toast.makeText(PostListActivity.this,"若登录请稍等，然后重新进入帖子页面",Toast.LENGTH_SHORT).show();
+                      finish();
+                    } catch (Exception e) {
+                      Log.e(TAG, "Error occurred during delayed operation: ", e);
+                    }
+                  }, 500);
                 }
               }
             });
@@ -698,32 +689,27 @@ public class PostListActivity extends SMTHBaseActivity
                         if (PostListContent.POSTS.isEmpty()) {
                           // Toast.makeText(SMTHApplication.getAppContext(),"请重新登录-"+
                           // PostListContent.POSTS.size()+"-!",Toast.LENGTH_SHORT).show();
-                          PostListContent.clear();
-                          try {
-                            Thread.sleep(500);
-                            //onBackPressed();
+
+                          new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                            Bundle req = getIntent().getExtras();
+                            String str = null;
+                            if(req != null) {
+                              str = req.getString(SMTHApplication.FROM_BOARD);
+                            }
+
+                            if (!SMTHApplication.isValidUser() && !Objects.equals(str, SMTHApplication.FROM_BOARD_HOT)) {
+                              Intent intent = new Intent(PostListActivity.this, LoginActivity.class);
+                              mActivityLoginResultLauncher.launch(intent);
+                            }
+                            else{
+                              if(Objects.equals(str, SMTHApplication.FROM_BOARD_HOT))
+                                Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请登录！",Toast.LENGTH_SHORT).show();
+                              else
+                                Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请刷新页面！",Toast.LENGTH_SHORT).show();
+                            }
                             finish();
-                          } catch (InterruptedException e) {
-                            Log.e(TAG,"Error occurred: ", e);
-                          }
+                          }, 500);
 
-                          Bundle req = getIntent().getExtras();
-                          String str = null;
-                          if(req != null) {
-                            str = req.getString(SMTHApplication.FROM_BOARD);
-                          }
-
-                          if (!SMTHApplication.isValidUser() && !Objects.equals(str, SMTHApplication.FROM_BOARD_HOT)) {
-                            Intent intent = new Intent(PostListActivity.this, LoginActivity.class);
-                            //startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
-                            mActivityLoginResultLauncher.launch(intent);
-                          }
-                          else{
-                            if(Objects.equals(str, SMTHApplication.FROM_BOARD_HOT))
-                              Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请登录！",Toast.LENGTH_SHORT).show();
-                            else
-                              Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请刷新页面！",Toast.LENGTH_SHORT).show();
-                          }
                         }
                       }
                     });
@@ -809,27 +795,26 @@ public class PostListActivity extends SMTHBaseActivity
                         // 确保 RecyclerView 刷新
                         Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
 
-
                         // Special User OFFLINE case: [] or [Category 第一页:]
 
                         if (PostListContent.POSTS.isEmpty()) {
                           // Toast.makeText(SMTHApplication.getAppContext(),"请重新登录-"+
                           // PostListContent.POSTS.size()+"-!",Toast.LENGTH_SHORT).show();
                           PostListContent.clear();
-                          try {
-                            Thread.sleep(500);
-                            //onBackPressed();
-                            finish();
-                          } catch (InterruptedException e) {
-                            Log.e(TAG,"Error occurred: ", e);
-                          }
 
-                          if (!SMTHApplication.isValidUser()) {
-                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                            mActivityLoginResultLauncher.launch(intent);
-                          }
-                          else
-                            Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请刷新页面！",Toast.LENGTH_SHORT).show();
+                          new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                            try {
+                              if (!SMTHApplication.isValidUser()) {
+                                Intent intent = new Intent(PostListActivity.this, LoginActivity.class);
+                                mActivityLoginResultLauncher.launch(intent);
+                              } else {
+                                Toast.makeText(PostListActivity.this, "链接错误，请刷新页面！", Toast.LENGTH_SHORT).show();
+                              }
+                            } catch (Exception e) {
+                              Log.e(TAG, "Error occurred during delayed operation: ", e);
+                            }
+                          }, 500);
+
                         }
                       }
                     });

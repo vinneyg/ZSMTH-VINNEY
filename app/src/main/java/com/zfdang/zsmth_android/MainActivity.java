@@ -90,12 +90,15 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+
+
 public class MainActivity extends SMTHBaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, OnTopicFragmentInteractionListener,
         OnBoardFragmentInteractionListener, OnMailInteractionListener {
   // used by startActivityForResult
   static final int LOGIN_ACTIVITY_REQUEST_CODE = 9527;  // The request code
   private static final String TAG = "MainActivity";
+
   // keep aive service
   private Intent keepAliveService;
   // guidance fragment: display hot topics
@@ -130,9 +133,8 @@ public class MainActivity extends SMTHBaseActivity
     @Override
     public void onReceive(Context context, Intent intent) {
       if (Objects.equals(intent.getAction(), "com.zfdang.zsmth_android.UPDATE_USER_STATUS")) {
-        Log.d("vinney","900");
-        //updateUserStatusNow();
-        runOnUiThread(() -> UpdateNavigationViewHeader());
+        updateUserStatusNow();
+
       }
     }
   };
@@ -318,6 +320,7 @@ public class MainActivity extends SMTHBaseActivity
     }
   }
 
+
   public void setApplicationNightMode() {
     boolean bNightMode = Settings.getInstance().isNightMode();
     if (bNightMode) {
@@ -446,7 +449,7 @@ public class MainActivity extends SMTHBaseActivity
     mReceiver.setReceiver(new UserStatusReceiver.Receiver() {
       @Override public void onReceiveResult(int resultCode, Bundle resultData) {
         if (resultCode == RESULT_OK) {
-          //Log.d(TAG,"onReceiveResult: " + "to update navigationview " + SMTHApplication.activeUser.toString());
+          Log.d(TAG,"onReceiveResult: " + "to update navigationview " + SMTHApplication.activeUser.toString());
           runOnUiThread(() -> UpdateNavigationViewHeader());
 
           // show notification if necessary
@@ -670,7 +673,6 @@ public class MainActivity extends SMTHBaseActivity
   public void UpdateNavigationViewHeader() {
     // update optionMenu
     getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
-
     if (SMTHApplication.isValidUser()) {
       // update user to logined user
       mUsername.setText(SMTHApplication.activeUser.getId());
@@ -841,7 +843,6 @@ public class MainActivity extends SMTHBaseActivity
 
               @Override
               public void onComplete() {
-
               }
             });
     Settings.getInstance().setAutoLogin(false);

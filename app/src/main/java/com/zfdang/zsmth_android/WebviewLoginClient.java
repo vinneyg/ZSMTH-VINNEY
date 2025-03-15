@@ -26,7 +26,7 @@ public class WebviewLoginClient extends WebViewClient {
     }
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-//        Log.d(TAG, "shouldOverrideUrlLoading" + request.getUrl().toString());
+       //Log.d(TAG, "shouldOverrideUrlLoading" + request.getUrl().toString());
         if (request.getUrl().toString().startsWith("https://m.newsmth.net/index?m=")||request.getUrl().toString().startsWith("https://m.mysmth.net/index?m=")) {
             Intent resultIntent = new Intent();
             activity.setResult(Activity.RESULT_OK, resultIntent);
@@ -56,7 +56,6 @@ public class WebviewLoginClient extends WebViewClient {
                     "var checkbox = document.getElementsByName('save');" +
                     "checkbox[0].checked = '" + true + "';" +
                     "document.getElementById('TencentCaptcha').click();";
-
             view.evaluateJavascript(js, s -> {
             });
         }

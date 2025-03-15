@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -29,6 +30,11 @@ public class SMTHBaseActivity extends AppCompatActivity {
             messageTextView.setText(message);
             builder.setView(view);
             pDialog = builder.create();
+            // 设置对话框背景为透明
+            if (pDialog.getWindow() != null) {
+                pDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            }
+
         } else {
             TextView messageTextView = pDialog.findViewById(R.id.dialog_message);
             if (messageTextView != null) {
@@ -66,4 +72,5 @@ public class SMTHBaseActivity extends AppCompatActivity {
         //Log.d("SMTHBaseActivity", "getResources: " + config.fontScale);
         return res;
     }
+
 }

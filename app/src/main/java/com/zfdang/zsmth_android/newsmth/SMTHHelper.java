@@ -55,9 +55,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.net.ssl.HostnameVerifier;
-//import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.security.cert.X509Certificate;
@@ -1095,7 +1093,7 @@ public class SMTHHelper {
     try {
       Kryo kryo = new Kryo();
       Input input = new Input(SMTHApplication.getAppContext().openFileInput(filename));
-      boards = kryo.readObject(input, ArrayList.class);
+      boards = kryo.readObject(input, new ArrayList<Board>(){}.getClass());
       input.close();
       Log.d("LoadBoardListFromCache", String.format(Locale.CHINA,"%d boards loaded from cache file %s", boards.size(), filename));
     } catch (Exception e) {
@@ -1363,9 +1361,6 @@ class OkHttpUtil {
   /**
    * Get initialized SSLContext instance which ignored SSL certification
    *
-   * @return
-   * @throws NoSuchAlgorithmException
-   * @throws KeyManagementException
    */
   public static SSLContext getIgnoreInitedSslContext() throws NoSuchAlgorithmException, KeyManagementException {
     SSLContext sslContext = SSLContext.getInstance("SSL");
@@ -1376,15 +1371,11 @@ class OkHttpUtil {
   /**
    * Get HostnameVerifier which ignored SSL certification
    *
-   * @return
    */
   public static HostnameVerifier getIgnoreSslHostnameVerifier() {
-    return new HostnameVerifier() {
-      @Override
-      public boolean verify(String arg0, SSLSession arg1) {
-        return true;
-        //return HttpsURLConnection.getDefaultHostnameVerifier().verify(arg0,arg1);
-      }
+    return (arg0, arg1) -> {
+      return true;
+      //return HttpsURLConnection.getDefaultHostnameVerifier().verify(arg0,arg1);
     };
   }
 }

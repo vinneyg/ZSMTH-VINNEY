@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
 import androidx.activity.result.ActivityResultLauncher;
@@ -16,10 +15,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
-
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -37,8 +34,6 @@ import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.models.TopicListContent;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
-import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
-
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -100,16 +95,6 @@ public class BoardTopicActivity extends SMTHBaseActivity
         SwipeBackHelper.onPostCreate(this);
     }
 
-  /*
-  @Override public void onBackPressed() {
-    if (isSearchMode) {
-      onRefresh();
-    }
-    super.onBackPressed();
-  }
-  */
-
-
     private static BoardTopicActivity mActivity1 = null;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
@@ -154,14 +139,9 @@ public class BoardTopicActivity extends SMTHBaseActivity
                 result -> {
                     if(result.getResultCode() == Activity.RESULT_OK)
                     {
-
-                        WorkRequest userStatusWorkRequest =
-                                new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
-                        WorkManager.getInstance(this).enqueue(userStatusWorkRequest);
-
                         Intent intent = new Intent("com.zfdang.zsmth_android.UPDATE_USER_STATUS");
                         sendBroadcast(intent);
-
+                        finish();
                     }
                 });
 
@@ -455,21 +435,19 @@ public class BoardTopicActivity extends SMTHBaseActivity
                                 else{
                                     mCurrentPageNo -= 1;
 
-                                    try {
-                                        Thread.sleep(500);
-                                        //onBackPressed();
-                                        finish();
-                                    } catch (InterruptedException ex) {
-                                        //ex.printStackTrace();
-                                        Log.d(TAG, ex.toString());
-                                    }
-                                    if (!SMTHApplication.isValidUser()) {
-                                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                                        //startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
-                                        mActivityLoginResultLauncher.launch(intent);
-                                    }
-                                    else
-                                        Toast.makeText(SMTHApplication.getAppContext(),"版面不存在！",Toast.LENGTH_SHORT).show();
+                                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                                        try {
+                                            if (!SMTHApplication.isValidUser()) {
+                                                Intent intent = new Intent(BoardTopicActivity.this, LoginActivity.class);
+                                                mActivityLoginResultLauncher.launch(intent);
+                                            } else {
+                                                Toast.makeText(BoardTopicActivity.this, "版面不存在！", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } catch (Exception ie) {
+                                            Log.e(TAG, "Error occurred during delayed operation: ", e);
+                                        }
+                                    }, 500);
+
                                 }
 
                             }

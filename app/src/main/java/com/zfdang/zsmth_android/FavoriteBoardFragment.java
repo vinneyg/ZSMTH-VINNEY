@@ -13,6 +13,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -29,6 +33,8 @@ import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.BoardListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
+
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -227,9 +233,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
         Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(BoardListContent.FAVORITE_BOARDS.size());
         // Log.d(TAG, board.toString());
         if(BoardListContent.FAVORITE_BOARDS.get(0).isInvalid()) {
-          //Toast.makeText(getContext(),"请先登录！",Toast.LENGTH_SHORT).show();
           Intent intent = new Intent(requireActivity(), LoginActivity.class);
-          //startActivityForResult(intent, MainActivity.LOGIN_ACTIVITY_REQUEST_CODE);
           mActivityLoginResultLauncher.launch(intent);
         }
       }
