@@ -23,15 +23,17 @@ import android.view.View;
     super(context, attrs);
   }
 
-  @Override public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, @NonNull View directTargetChild, @NonNull View target,
-                                               int nestedScrollAxes) {
+
+  @Override
+  public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
     if (appBarLayout != null) {
       // We need to check from when a scroll is started, as we may not have had the chance to update the layout at
       // the start of a scroll or fling event.
       startAnimationRunnable(child, appBarLayout);
     }
-    return super.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, nestedScrollAxes);
+    return super.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, axes, type);
   }
+
 
   @Override public boolean onMeasureChild(@NonNull CoordinatorLayout parent, @NonNull final View child, int parentWidthMeasureSpec, int widthUsed,
                                           int parentHeightMeasureSpec, int heightUsed) {

@@ -36,7 +36,7 @@
     <content url="file://$MODULE_DIR$/../../../tmpmob/assets">
       <sourceFolder url="file://$MODULE_DIR$/../../../tmpmob/assets" type="java-resource" />
     </content>
-    <orderEntry type="jdk" jdkName="Android API 35, extension level 13 Platform" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 36, extension level 17 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="ZSMTH-VINNEY.multiple-images-selector.main" />
     <orderEntry type="library" name="Gradle: androidx.exifinterface:exifinterface:1.3.7@aar" level="project" />

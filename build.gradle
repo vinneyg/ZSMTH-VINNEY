@@ -50,10 +50,10 @@ tasks.register('clean', Delete) {
 
 ext {
     minSdkVersion = 26
-    targetSdkVersion = 35
-    compileSdkVersion = 35
+    targetSdkVersion = 36
+    compileSdkVersion = 36
     // https://developer.android.com/studio/releases/build-tools
-    buildToolsVersion = '35.0.0'
+    buildToolsVersion = '36.0.0'
     FRESCO_VERSION = '2.6.0'
     RXJAVA2_VERSION = '2.2.21'
     RXANDROID2_VERSION = '2.1.1'

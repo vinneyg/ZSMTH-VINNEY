@@ -55,6 +55,10 @@ public class WebviewLoginClient extends WebViewClient {
                     "passwds[0].value = '" + this.password + "';" +
                     "var checkbox = document.getElementsByName('save');" +
                     "checkbox[0].checked = '" + true + "';" +
+                    "var captcha = document.getElementById('TencentCaptcha');" +
+                    "captcha.style.position = 'relative';" +
+                    "captcha.style.top = 'auto';" +
+                    "captcha.style.left = 'auto';" +
                     "document.getElementById('TencentCaptcha').click();";
             view.evaluateJavascript(js, s -> {
             });
