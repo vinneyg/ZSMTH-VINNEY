@@ -473,10 +473,13 @@ public class MainActivity extends SMTHBaseActivity
         stopService(keepAliveService);
         SMTHApplication.activeUser = null;
         SMTHApplication.displayedUserId = "guest";
+        /*
         runOnUiThread(() -> {
           mUsername.setText(getString(R.string.nav_header_click_to_login));
           mAvatar.setImageResource(R.drawable.ic_person_black_48dp);
         });
+        */
+        onLogin();
       }
     });
     SMTHApplication.mUserStatusReceiver = mReceiver;
@@ -810,16 +813,15 @@ public class MainActivity extends SMTHBaseActivity
   public void onLogin() {
     // still use the previous login method
     Intent intent = new Intent(this, LoginActivity.class);
-    //startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
     mActivityLoginResultLauncher.launch(intent);
   }
 
   public void onLogout() {
-    Settings.getInstance().setUserOnline(false);
-    if (SMTHApplication.activeUser != null) {
+
+    if (SMTHApplication.activeUser!=null ) {
       SMTHApplication.activeUser.setId("guest");
+      UpdateNavigationViewHeader();
     }
-    UpdateNavigationViewHeader();
 
     SMTHHelper helper = SMTHHelper.getInstance();
     helper.wService.logout()
@@ -834,28 +836,34 @@ public class MainActivity extends SMTHBaseActivity
               @Override
               public void onNext(@NonNull AjaxResponse ajaxResponse) {
                 //Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                if(ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK){
+                Settings.getInstance().setAutoLogin(false);
+                Settings.getInstance().setUserOnline(false);
+                }
               }
 
               @Override
               public void onError(@NonNull Throwable e) {
-                Toast.makeText(MainActivity.this, "退出登录失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "退出登录失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "退出登录失败!\n" , Toast.LENGTH_SHORT).show();
               }
 
               @Override
               public void onComplete() {
+                Settings.getInstance().setAutoLogin(false);
+                Settings.getInstance().setUserOnline(false);
+
+                Intent intent = new Intent("com.zfdang.zsmth_android.PREFERENCE_CLICKED");
+                intent.putExtra("preference_key", "setting_fresco_cache");
+                sendBroadcast(intent);
+
+                intent = new Intent("com.zfdang.zsmth_android.PREFERENCE_CLICKED");
+                intent.putExtra("preference_key", "setting_okhttp3_cache");
+                sendBroadcast(intent);
               }
             });
-    Settings.getInstance().setAutoLogin(false);
-    Intent intent = new Intent("com.zfdang.zsmth_android.PREFERENCE_CLICKED");
-    intent.putExtra("preference_key", "setting_fresco_cache");
-    sendBroadcast(intent);
-
-    intent = new Intent("com.zfdang.zsmth_android.PREFERENCE_CLICKED");
-    intent.putExtra("preference_key", "setting_okhttp3_cache");
-    sendBroadcast(intent);
 
   }
-
 
   //@SuppressWarnings("StatementWithEmptyBody")
   @Override

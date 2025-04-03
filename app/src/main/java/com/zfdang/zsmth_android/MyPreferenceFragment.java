@@ -66,6 +66,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
   ListPreference setting_fontsize_control;
   CheckBoxPreference image_quality_control;
   CheckBoxPreference login_with_verification;
+  CheckBoxPreference ssl_verification;
   CheckBoxPreference image_source_cdn;
 
   CheckBoxPreference notification_control_mail;
@@ -141,6 +142,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
 
     launch_bottom_navi = (CheckBoxPreference) findPreference("launch_bottom_navi");
+    assert launch_bottom_navi!= null;
     launch_bottom_navi.setChecked(Settings.getInstance().isLaunchBottomNavi());
     launch_bottom_navi.setOnPreferenceChangeListener((preference, newValue) -> {
       boolean bValue = Settings.getInstance().isLaunchBottomNavi();
@@ -222,6 +224,19 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
       }
       Settings.getInstance().setLoginWithVerification(value);
+      return true;
+    });
+
+    ssl_verification =(CheckBoxPreference) findPreference("ssl_verification");
+    assert ssl_verification != null;
+    ssl_verification.setChecked(Settings.getInstance().isSslVerification());
+    ssl_verification.setOnPreferenceChangeListener((preference, newValue) -> {
+      boolean value = Settings.getInstance().isSslVerification();
+      if (newValue instanceof Boolean) {
+        value = (Boolean) newValue;
+
+      }
+      Settings.getInstance().setSslVerification(value);
       return true;
     });
 

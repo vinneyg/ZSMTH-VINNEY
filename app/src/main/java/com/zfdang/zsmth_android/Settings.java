@@ -7,7 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 import com.zfdang.SMTHApplication;
-
+import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
 /**
  * Usage:
@@ -109,11 +109,10 @@ public class Settings {
   private static final String USER_ONLINE = "user_online";
   private boolean bUserOnline;
 
-  /*
   public boolean isUserOnline() {
     return bUserOnline;
   }
-  */
+
 
   public void setUserOnline(boolean bUserOnline) {
     if (this.bUserOnline != bUserOnline) {
@@ -643,11 +642,28 @@ public class Settings {
       mEditor.putBoolean(LOGIN_WITH_VERIFICATION, this.bLoginWithVerification);
       mEditor.commit();
     }
+  }
 
+  // use SSL verification
+  private static final String SSL_VERIFICATION = "SSL_VERIFICATION";
+  private boolean bSslVerification;
+
+  public boolean isSslVerification() {
+    return bSslVerification;
+  }
+
+  public void setSslVerification(boolean value) {
+    if (this.bSslVerification != value) {
+      this.bSslVerification = value;
+      mEditor.putBoolean(SSL_VERIFICATION, this.bSslVerification);
+      mEditor.commit();
+      SMTHHelper.resetInstance();
+    }
   }
 
 
     private SharedPreferences.Editor mEditor;
+
 
   // Singleton
   private static final Settings ourInstance = new Settings();
@@ -733,5 +749,7 @@ public class Settings {
 
     bLeftNavSlide = mPreference.getBoolean(left_nav_slide,false);
     bLoginWithVerification = mPreference.getBoolean(LOGIN_WITH_VERIFICATION, true);
+    bSslVerification = mPreference.getBoolean(SSL_VERIFICATION, false);
+
   }
 }

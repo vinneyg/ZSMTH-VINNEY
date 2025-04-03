@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: io.github.scwang90:refresh-layout-kernel:2.0.5@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/1ed9bdbd80f0c5b87bbefb1bd15711d6/transformed/jetified-refresh-layout-kernel-2.0.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/1ed9bdbd80f0c5b87bbefb1bd15711d6/transformed/jetified-refresh-layout-kernel-2.0.5/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/1ed9bdbd80f0c5b87bbefb1bd15711d6/transformed/jetified-refresh-layout-kernel-2.0.5/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.11.1/transforms/8fef9dd9df385bf9e5c73a27f405eb9c/transformed/jetified-refresh-layout-kernel-2.0.5/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.11.1/transforms/8fef9dd9df385bf9e5c73a27f405eb9c/transformed/jetified-refresh-layout-kernel-2.0.5/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.11.1/transforms/8fef9dd9df385bf9e5c73a27f405eb9c/transformed/jetified-refresh-layout-kernel-2.0.5/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

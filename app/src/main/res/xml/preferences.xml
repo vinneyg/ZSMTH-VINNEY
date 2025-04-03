@@ -102,6 +102,12 @@
         android:summaryOff="禁用音量键翻页"
         android:summaryOn="启用音量键翻页"
         android:title="音量键翻页"/>
+    <CheckBoxPreference
+        android:defaultValue="off"
+        android:key="ssl_verification"
+        android:summaryOff="忽略SSL验证"
+        android:summaryOn="强制SSL验证"
+        android:title="登录SSL验证"/>
 
     <ListPreference
         android:title="字体设置"
@@ -121,7 +127,7 @@
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="setting_image_source_cdn"
-        android:summaryOff="从水木加载图片(海外访问使用)"
+        android:summaryOff="从水木加载图片(默认)"
         android:summaryOn="从CDN加载图片(推荐)"
         android:title="图片来源"/>
 
@@ -181,7 +187,7 @@
         android:key="app_feedback"
         android:summary=""
         android:title="反馈建议"
-        app:isPreferenceVisible="true" />
+        app:isPreferenceVisible="false" />
     <EditTextPreference
         android:dialogTitle="输入水木社区站点地址"
         android:key="WebAddr"

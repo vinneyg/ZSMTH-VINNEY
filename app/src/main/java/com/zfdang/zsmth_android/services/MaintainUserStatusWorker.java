@@ -151,6 +151,7 @@ public class MaintainUserStatusWorker extends Worker {
                     if (userInfo != null) {
                         userStatus.setFace_url(userInfo.getFace_url());
                     }
+                    Settings.getInstance().setUserOnline(true);
                 }
             } else {
                 Log.d(TAG, "call: 3.3 " + "invalid logined user"+ userStatus.getId());

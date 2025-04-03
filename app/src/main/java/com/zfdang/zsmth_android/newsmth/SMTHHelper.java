@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.RectF;
+
+import androidx.annotation.NonNull;
 import androidx.exifinterface.media.ExifInterface;
 import android.os.Environment;
 import android.text.TextUtils;
@@ -116,6 +118,18 @@ public class SMTHHelper {
     return instance;
   }
 
+  public static synchronized SMTHHelper resetInstance() {
+    instance = null;
+    if (instance == null) {
+      try {
+        instance = new SMTHHelper();
+      } catch (NoSuchAlgorithmException | KeyManagementException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return instance;
+  }
+
   // response from WWW is GB2312, we need to conver it to UTF-8
   // http://www.newsmth.net/mainpage.html
   public static String DecodeResponseFromWWW(byte[] bytes) {
@@ -140,16 +154,16 @@ public class SMTHHelper {
     int cacheSize = 250 * 1024 * 1024; // 250 MiB
     Cache cache = new Cache(httpCacheDirectory, cacheSize);
 
-    mHttpClient = new OkHttpClient().newBuilder().addInterceptor(logging).addInterceptor(new Interceptor() {
-              @androidx.annotation.NonNull
-              @Override public Response intercept(@androidx.annotation.NonNull Chain chain) throws IOException {
+    OkHttpClient.Builder clientBuilder  = new OkHttpClient().newBuilder().addInterceptor(logging).addInterceptor(new Interceptor() {
+              @NonNull
+              @Override public Response intercept(@NonNull Chain chain) throws IOException {
                 Request request = chain.request().newBuilder().header("User-Agent", USER_AGENT).build();
                 return chain.proceed(request);
               }
             }).addNetworkInterceptor(new Interceptor() {
               // for error response, do not cache its content
-              @androidx.annotation.NonNull
-              @Override public Response intercept(@androidx.annotation.NonNull Chain chain) throws IOException {
+              @NonNull
+              @Override public Response intercept(@NonNull Chain chain) throws IOException {
                 Response originalResponse = chain.proceed(chain.request());
 //        if (originalResponse.isSuccessful() && originalResponse.body().toString().contains("您未登录,请登录后继续操作")) {
                 if (originalResponse.isSuccessful() && Objects.requireNonNull(originalResponse.body()).contentLength() > 4096) {
@@ -161,9 +175,19 @@ public class SMTHHelper {
                 }
               }
             }).cookieJar(new WebviewCookieHandler())  // https://gist.github.com/scitbiz/8cb6d8484bb20e47d241cc8e117fa705
-            .sslSocketFactory(OkHttpUtil.getIgnoreInitedSslContext().getSocketFactory(), OkHttpUtil.IGNORE_SSL_TRUST_MANAGER_X509)
-            .hostnameVerifier(OkHttpUtil.getIgnoreSslHostnameVerifier())
-            .cache(cache).readTimeout(15, TimeUnit.SECONDS).connectTimeout(10, TimeUnit.SECONDS).build();
+            //.sslSocketFactory(OkHttpUtil.getIgnoreInitedSslContext().getSocketFactory(), OkHttpUtil.IGNORE_SSL_TRUST_MANAGER_X509)
+            //.hostnameVerifier(OkHttpUtil.getIgnoreSslHostnameVerifier())
+            .cache(cache).readTimeout(15, TimeUnit.SECONDS).connectTimeout(10, TimeUnit.SECONDS).build().newBuilder();
+
+    if (!Settings.getInstance().isSslVerification()) {
+      SSLContext sslContext = OkHttpUtil.getIgnoreInitedSslContext();
+      X509TrustManager trustManager = OkHttpUtil.IGNORE_SSL_TRUST_MANAGER_X509;
+      HostnameVerifier hostnameVerifier = OkHttpUtil.getIgnoreSslHostnameVerifier();
+      clientBuilder.sslSocketFactory(sslContext.getSocketFactory(), trustManager)
+              .hostnameVerifier(hostnameVerifier);
+    }
+
+    mHttpClient = clientBuilder.build();
 
     //        mRetrofit = new Retrofit.Builder()
     //                .baseUrl(SMTH_MOBILE_URL)

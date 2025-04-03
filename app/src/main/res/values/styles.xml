@@ -107,12 +107,11 @@
   <!--<item name="android:topDark">@color/body_background_night</item>-->
   <!--</style>-->
 
-
   <style name="MyPreferenceThemeOverlay" parent="PreferenceThemeOverlay.v14.Material">
     <item name="android:background">@color/body_background_night</item>
     <item name="android:textColor">@color/status_text_night</item>
     <item name="android:textColorSecondary">@color/colorPrimary</item>
-  </style>
+ </style>
 
   <!--activity animation style-->
   <style name="ActivityAnimFade" parent="@android:style/Animation.Activity">

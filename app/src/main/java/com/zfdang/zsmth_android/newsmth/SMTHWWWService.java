@@ -71,6 +71,7 @@ public interface SMTHWWWService {
     // the header line is important, because newsmth will ignore it without this header
     @Headers("X-Requested-With:XMLHttpRequest")
     @GET("/nForum/user/query/{username}.json")
+    //@GET("https://m.newsmth.net/user/query/{username}")
     Observable<UserInfo> queryUserInformation(
             @Path("username") String username);
 
@@ -105,7 +106,9 @@ public interface SMTHWWWService {
     @FormUrlEncoded
     @Headers("X-Requested-With:XMLHttpRequest")
     @POST("/nForum/fav/op/{favid}.json")
+    //@POST("https://m.newsmth.net/favor")
     Observable<AjaxResponse> manageFavoriteBoard(@Path("favid") String favid, @Field("ac") String action, @Field("v") String boardEngName);
+    //Observable<AjaxResponse> manageFavoriteBoard(String favid, @Field("ac") String action, @Field("v") String boardEngName);
 
     @FormUrlEncoded
     @Headers("X-Requested-With:XMLHttpRequest")
