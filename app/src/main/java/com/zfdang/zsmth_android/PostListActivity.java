@@ -594,10 +594,10 @@ public class PostListActivity extends SMTHBaseActivity
                   new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     try {
                       Toast.makeText(PostListActivity.this,"若登录请稍等，然后重新进入帖子页面",Toast.LENGTH_SHORT).show();
-                      finish();
                     } catch (Exception e) {
                       Log.e(TAG, "Error occurred during delayed operation: ", e);
                     }
+                    finish();
                   }, 500);
                 }
                 isLoading = false;
@@ -822,6 +822,7 @@ public class PostListActivity extends SMTHBaseActivity
                             } catch (Exception e) {
                               Log.e(TAG, "Error occurred during delayed operation: ", e);
                             }
+                            finish();
                           }, 500);
 
                         }
