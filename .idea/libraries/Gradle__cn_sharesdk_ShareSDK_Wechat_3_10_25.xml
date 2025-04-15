@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: cn.sharesdk:ShareSDK-Wechat:3.10.25" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="cn.sharesdk" artifactId="ShareSDK-Wechat" version="3.10.25" baseVersion="3.10.25" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/cn.sharesdk/ShareSDK-Wechat/3.10.25/9c63065dea38c88c3e77be497c580965394a6ae8/ShareSDK-Wechat-3.10.25.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: com.mob:MobSupport:2025.0401.2032" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="com.mob" artifactId="MobSupport" version="2025.0401.2032" baseVersion="2025.0401.2032" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mob/MobSupport/2025.0401.2032/9ceb6ddfff4ad324e89f3ef9aac0b4d38b1425ca/MobSupport-2025.0401.2032.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

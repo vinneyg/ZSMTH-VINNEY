@@ -473,13 +473,23 @@ public class MainActivity extends SMTHBaseActivity
         stopService(keepAliveService);
         SMTHApplication.activeUser = null;
         SMTHApplication.displayedUserId = "guest";
-        /*
-        runOnUiThread(() -> {
-          mUsername.setText(getString(R.string.nav_header_click_to_login));
-          mAvatar.setImageResource(R.drawable.ic_person_black_48dp);
+
+        runOnUiThread(() -> UpdateNavigationViewHeader());
+
+        final AlertDialog dlg =
+                new AlertDialog.Builder(MainActivity.this).setIcon(R.drawable.ic_launcher).setTitle(R.string.about_title).setMessage("掉线请重新登录").create();
+
+        dlg.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.about_close), (dialog, which) -> {
+          // do nothing here
         });
+
+        dlg.show();
+
+        /*
+        if( getCurrentFragment() instanceof HotTopicFragment ||
+                getCurrentFragment() instanceof FavoriteBoardFragment)
+          onLogin();
         */
-        onLogin();
       }
     });
     SMTHApplication.mUserStatusReceiver = mReceiver;
@@ -837,8 +847,8 @@ public class MainActivity extends SMTHBaseActivity
               public void onNext(@NonNull AjaxResponse ajaxResponse) {
                 //Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
                 if(ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK){
-                Settings.getInstance().setAutoLogin(false);
-                Settings.getInstance().setUserOnline(false);
+                  Settings.getInstance().setAutoLogin(false);
+                  Settings.getInstance().setUserOnline(false);
                 }
               }
 
@@ -1331,5 +1341,9 @@ public class MainActivity extends SMTHBaseActivity
       return null; // 或者返回一个默认的 Drawable
     }
 
+  }
+
+  public Fragment getCurrentFragment() {
+    return getSupportFragmentManager().findFragmentById(R.id.content_frame);
   }
 }

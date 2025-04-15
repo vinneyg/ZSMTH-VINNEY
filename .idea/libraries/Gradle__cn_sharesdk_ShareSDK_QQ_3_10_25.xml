@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: cn.sharesdk:ShareSDK-QQ:3.10.25" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="cn.sharesdk" artifactId="ShareSDK-QQ" version="3.10.25" baseVersion="3.10.25" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/cn.sharesdk/ShareSDK-QQ/3.10.25/2ba722048846748fd062db3e63cc5d229463b66b/ShareSDK-QQ-3.10.25.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -127,6 +127,7 @@ public class PostListActivity extends SMTHBaseActivity
 
   private SmartRefreshLayout mRefreshLayout;
   private String mFrom;
+  private boolean isLoading = false;
 
   private GestureDetector mGestureDetector;
   private LinearLayoutManager linearLayoutManager;
@@ -289,7 +290,7 @@ public class PostListActivity extends SMTHBaseActivity
       boolean isSlidingToLast = false;
       //int mIndex = 0;
 
-      private boolean isLoading = false;
+
       @Override
       public void onScrollStateChanged(@androidx.annotation.NonNull RecyclerView recyclerView, int newState) {
         LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
@@ -347,7 +348,6 @@ public class PostListActivity extends SMTHBaseActivity
 
         // reach bottom
         if (lastVisiblePos == (totalItemCount - 1) && isSlidingToLast && (mCurrentPageNo < mTopic.getTotalPageNo())) {
-          //mCurrentPageNo++;
           LoadMoreItems();
         } else
         if (lastVisiblePos == (totalItemCount - 1) && isSlidingToLast && (mCurrentPageNo == mTopic.getTotalPageNo())) {
@@ -368,6 +368,9 @@ public class PostListActivity extends SMTHBaseActivity
           mTitle.setText(title);
           mPageNo.setText(String.format(Locale.CHINA, "%d", mCurrentPageNo));
           mCurrentReadPageNo = mCurrentPageNo;
+        }
+        else{
+          Log.d(TAG, mCurrentPageNo +"-"+ mTotalPageNo);
         }
         isLoading = false;
       }
@@ -444,6 +447,9 @@ public class PostListActivity extends SMTHBaseActivity
   }
 
   public void reloadPostListWithoutAlertNew() {
+    if (isLoading) {
+      return;
+    }
     //PostListContent.clear();
     //mRecyclerView.getAdapter().notifyDataSetChanged();
     //Two scenarios here:
@@ -460,9 +466,9 @@ public class PostListActivity extends SMTHBaseActivity
       Index = Integer.parseInt(temp);
     }
     int tmpIndex = Index % POST_PER_PAGE;
-    if (mCurrentPageNo == mTopic.getTotalPageNo() && tmpIndex<5 ) {
+    if (mCurrentPageNo == mTopic.getTotalPageNo() && tmpIndex<7 ) {
       loadnextpost();
-    } else if( mCurrentPageNo == mTopic.getTotalPageNo() && tmpIndex==5)  {
+    } else if( mCurrentPageNo == mTopic.getTotalPageNo() && tmpIndex==7)  {
       mCurrentPageNo += 1;
       loadnextpost();
     }
@@ -594,6 +600,7 @@ public class PostListActivity extends SMTHBaseActivity
                     }
                   }, 500);
                 }
+                isLoading = false;
               }
             });
   }
@@ -665,6 +672,7 @@ public class PostListActivity extends SMTHBaseActivity
                                         "加载失败！\n" + e.toString(),
                                         Toast.LENGTH_SHORT)
                                 .show();
+                          isLoading = false;
                       }
 
                       @Override
@@ -682,7 +690,7 @@ public class PostListActivity extends SMTHBaseActivity
                         mCurrentReadPageNo = mCurrentPageNo;
                         clearLoadingHints();
                         SMTHApplication.deletionCount++;
-                        // 确保 RecyclerView 刷新
+                          isLoading = false;
                         Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
 
                         // Special User OFFLINE case: [] or [Category 第一页:]
@@ -775,6 +783,7 @@ public class PostListActivity extends SMTHBaseActivity
                                         "加载失败！\n" + e.toString(),
                                         Toast.LENGTH_SHORT)
                                 .show();
+                          isLoading = false;
                       }
 
                       @Override
@@ -791,7 +800,7 @@ public class PostListActivity extends SMTHBaseActivity
                         mPageNo.setText(String.format(Locale.CHINA, "%d", mCurrentPageNo));
                         mCurrentReadPageNo = mCurrentPageNo;
                         clearLoadingHints();
-
+                          isLoading = false;
                         // 确保 RecyclerView 刷新
                         Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
 

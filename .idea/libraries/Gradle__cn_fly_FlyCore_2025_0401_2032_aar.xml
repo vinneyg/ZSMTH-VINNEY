@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: cn.fly:FlyCore:2025.0401.2032@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/8.11.1/transforms/2e9e570738247d71b7b676f27937e26d/transformed/jetified-FlyCore-2025.0401.2032/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.11.1/transforms/2e9e570738247d71b7b676f27937e26d/transformed/jetified-FlyCore-2025.0401.2032/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -45,7 +45,7 @@ android {
             if(buildType.name == "release") {
                 variant.getPackageApplicationProvider().get().outputDirectory = new File(
                       project.rootDir.absolutePath+"/Releases/" )
-                output.outputFileName = new File("zSMTH-v" + "-"+ defaultConfig.versionName +"-"+ defaultConfig.versionCode+ ".apk" )
+                output.outputFileName = new File("zSMTH-v" + "-" + defaultConfig.versionName +"-"+ defaultConfig.versionCode+ ".apk" )
             } else {
                 output.outputFileName = new File("zSMTH-v" + "-" + defaultConfig.versionName + ".apk" )
             }

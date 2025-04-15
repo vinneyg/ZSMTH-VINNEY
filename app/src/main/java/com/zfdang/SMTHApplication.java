@@ -54,7 +54,7 @@ public class SMTHApplication extends Application {
   public static final String NOTIFICATION_NEW_LIKE = "你有新Like!";
   public static final String NOTIFICATION_LOGIN_LOST = "登录已过期！请重新登录...";
 
-  public static final int INTERVAL_TO_CHECK_MESSAGE = 2; // 2 minutes for interval to check messages
+  public static final int INTERVAL_TO_CHECK_MESSAGE = 3; // 3 minutes for interval to check messages
   public static UserStatusReceiver mUserStatusReceiver = null;
 
   public static List<String> ReadTopicLists = new ArrayList<>();

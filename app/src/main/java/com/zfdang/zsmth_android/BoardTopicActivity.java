@@ -345,16 +345,22 @@ public class BoardTopicActivity extends SMTHBaseActivity
         // this method does not alert since it's triggered by SwipeRefreshLayout
         mCurrentPageNo = 1;
         TopicListContent.clearBoardTopics();
-        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
+        //Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
         LoadBoardTopics();
     }
 
     @SuppressLint("NotifyDataSetChanged")
     public void RefreshBoardTopicFromPageOne() {
         showProgress("刷新版面文章...");
+        int oldItemCount = TopicListContent.BOARD_TOPICS.size();
 
         TopicListContent.clearBoardTopics();
-        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
+        //Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
+        /*
+        if (oldItemCount > 0) {
+            Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemRangeRemoved(0, oldItemCount);
+        }
+        */
 
         mCurrentPageNo = 1;
         LoadBoardTopics();
@@ -441,7 +447,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
                                                 Intent intent = new Intent(BoardTopicActivity.this, LoginActivity.class);
                                                 mActivityLoginResultLauncher.launch(intent);
                                             } else {
-                                                Toast.makeText(BoardTopicActivity.this, "版面不存在！", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(BoardTopicActivity.this, "站点问题。\n稍等片刻重新进入！", Toast.LENGTH_SHORT).show();
+                                                new Handler(Looper.getMainLooper()).postDelayed(() -> finish(), Toast.LENGTH_SHORT);
                                             }
                                         } catch (Exception ie) {
                                             Log.e(TAG, "Error occurred during delayed operation: ", e);
@@ -517,7 +524,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
         showProgress("加载搜索结果...");
 
         TopicListContent.BOARD_TOPICS.clear();
-        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
+        //Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
 
         String eliteStr = null;
         if (elite) eliteStr = "on";
@@ -548,7 +555,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
                     @Override public void onNext(@NonNull Topic topic) {
                         TopicListContent.addBoardTopic(topic);
-                        mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
 
                     }
 
