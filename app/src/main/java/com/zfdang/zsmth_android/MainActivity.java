@@ -477,7 +477,7 @@ public class MainActivity extends SMTHBaseActivity
         runOnUiThread(() -> UpdateNavigationViewHeader());
 
         final AlertDialog dlg =
-                new AlertDialog.Builder(MainActivity.this).setIcon(R.drawable.ic_launcher).setTitle(R.string.about_title).setMessage("掉线请重新登录").create();
+                new AlertDialog.Builder(MainActivity.this).setIcon(R.drawable.ic_launcher).setTitle(R.string.app_name).setMessage("已掉线请登录！").create();
 
         dlg.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.about_close), (dialog, which) -> {
           // do nothing here

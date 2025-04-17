@@ -672,7 +672,7 @@ public class PostListActivity extends SMTHBaseActivity
                                         "加载失败！\n" + e.toString(),
                                         Toast.LENGTH_SHORT)
                                 .show();
-                          isLoading = false;
+                        isLoading = false;
                       }
 
                       @Override
@@ -690,7 +690,7 @@ public class PostListActivity extends SMTHBaseActivity
                         mCurrentReadPageNo = mCurrentPageNo;
                         clearLoadingHints();
                         SMTHApplication.deletionCount++;
-                          isLoading = false;
+                        isLoading = false;
                         Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
 
                         // Special User OFFLINE case: [] or [Category 第一页:]
@@ -783,7 +783,7 @@ public class PostListActivity extends SMTHBaseActivity
                                         "加载失败！\n" + e.toString(),
                                         Toast.LENGTH_SHORT)
                                 .show();
-                          isLoading = false;
+                        isLoading = false;
                       }
 
                       @Override
@@ -800,7 +800,7 @@ public class PostListActivity extends SMTHBaseActivity
                         mPageNo.setText(String.format(Locale.CHINA, "%d", mCurrentPageNo));
                         mCurrentReadPageNo = mCurrentPageNo;
                         clearLoadingHints();
-                          isLoading = false;
+                        isLoading = false;
                         // 确保 RecyclerView 刷新
                         Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
 

@@ -385,8 +385,9 @@ public class BoardTopicActivity extends SMTHBaseActivity
                             try {
                                 String response = responseBody.string();
                                 List<Topic> topics = SMTHHelper.ParseBoardTopicsFromWWW(response);
-                                if (topics.isEmpty())
+                                if (topics.isEmpty()){
                                     return null;
+                                }
                                 return Observable.fromIterable(topics);
                             } catch (Exception e) {
                                 Log.e(TAG, "call: " + Log.getStackTraceString(e));
@@ -447,7 +448,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                                                 Intent intent = new Intent(BoardTopicActivity.this, LoginActivity.class);
                                                 mActivityLoginResultLauncher.launch(intent);
                                             } else {
-                                                Toast.makeText(BoardTopicActivity.this, "站点问题。\n稍等片刻重新进入！", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(BoardTopicActivity.this, "站点问题，请稍等。\n或者重新登录进入！\n", Toast.LENGTH_SHORT).show();
                                                 new Handler(Looper.getMainLooper()).postDelayed(() -> finish(), Toast.LENGTH_SHORT);
                                             }
                                         } catch (Exception ie) {
