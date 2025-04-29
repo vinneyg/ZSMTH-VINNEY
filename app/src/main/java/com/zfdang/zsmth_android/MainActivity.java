@@ -231,7 +231,6 @@ public class MainActivity extends SMTHBaseActivity
     };
     ColorStateList csl = new ColorStateList(states, colors);
 
-
     mNavigationView = findViewById(R.id.nav_view);
     mNavigationView.setNavigationItemSelectedListener(this);
     mNavigationView.setItemTextColor(csl);

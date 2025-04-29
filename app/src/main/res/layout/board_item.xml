@@ -16,7 +16,8 @@
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:text="Category"
-      android:textColor="@color/colorPrimary"
+      android:textColor="@color/status_text_night"
+      android:textSize="@dimen/zsmth_font_size_extra_extra_small"
       />
 
   <TextView
@@ -26,7 +27,8 @@
       android:gravity="right"
       android:maxLength="25"
       android:text="版主"
-      android:textColor="@color/blue_text_night"
+      android:textColor="@color/status_text_night"
+      android:textSize="@dimen/zsmth_font_size_extra_extra_small"
       />
 
   <TextView

@@ -68,7 +68,7 @@
   <!--https://android.googlesource.com/platform/frameworks/support/+/46f5ea64c398ae336c85f3aa3a3d9f36398c3576/design/res/layout/design_drawer_item.xml-->
   <style name="NavigationDrawerStyle">
     <!-- text size in menu-->
-    <item name="android:textSize">20sp</item>
+    <item name="android:textSize">18sp</item>
     <!-- item size in menu-->
     <!--<item name="android:listPreferredItemHeightSmall">40dp</item>-->
   </style>

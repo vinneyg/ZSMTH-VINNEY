@@ -53,6 +53,7 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
       holder.mAuthorReplierRow.setVisibility(View.VISIBLE);
       holder.mStatusRow.setVisibility(View.VISIBLE);
 
+      /*
       if (Settings.getInstance().isDiffReadTopic()) {
         //Common Parts
         holder.mAuthor.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
@@ -64,8 +65,10 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
         if ((!SMTHApplication.ReadTopicLists.isEmpty()) && SMTHApplication.ReadTopicLists.contains(holder.mTopic.getTitle())) {
           holder.mTitle.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
         }
+
         else
         {
+
           //First byte 0xFF ...... means transparent mode.
           if (Settings.getInstance().isNightMode()) {
             holder.mTitle.setTextColor(Color.parseColor("#ABC2DA"));//R.color.status_text_night
@@ -74,7 +77,9 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
             holder.mTitle.setTextColor(Color.parseColor("#000000")); //R.color.status_text_night
           }
         }
+
       }
+      */
       //
       holder.mTitle.setText(topic.getTitle());
       holder.mAuthor.setText(topic.getAuthor());

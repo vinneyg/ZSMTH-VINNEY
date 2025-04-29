@@ -19,7 +19,7 @@
       android:paddingLeft="2dp"
       android:text="Category"
       android:textColor="@color/status_text_night"
-      android:textSize="@dimen/zsmth_font_size_small"
+      android:textSize="@dimen/zsmth_font_size_extra_small"
       />
   <TextView
       android:id="@+id/topic_title"
@@ -54,7 +54,8 @@
           android:layout_weight="1"
           android:paddingLeft="-4dp"
           android:text="作者"
-          android:textColor="@color/colorPrimary"
+          android:textColor="@color/status_text_night"
+          android:textSize="@dimen/zsmth_font_size_small"
           />
       <TextView
           android:id="@+id/topic_public_date"
@@ -64,7 +65,8 @@
           android:layout_weight="1"
           android:paddingLeft="4dp"
           android:text="2012-09-18"
-          android:textColor="@color/colorPrimary"
+          android:textColor="@color/status_text_night"
+          android:textSize="@dimen/zsmth_font_size_small"
           />
     </LinearLayout>
     <LinearLayout
@@ -82,7 +84,8 @@
           android:layout_weight="1"
           android:paddingRight="4dp"
           android:text="回复者"
-          android:textColor="@color/colorPrimary"
+          android:textColor="@color/status_text_night"
+          android:textSize="@dimen/zsmth_font_size_small"
           />
       <TextView
           android:id="@+id/topic_reply_date"
@@ -91,7 +94,8 @@
           android:layout_weight="1"
           android:paddingRight="6dp"
           android:text="2012-09-18"
-          android:textColor="@color/colorPrimary"
+          android:textColor="@color/status_text_night"
+          android:textSize="@dimen/zsmth_font_size_small"
           />
     </LinearLayout>
 
@@ -111,7 +115,8 @@
         android:layout_height="wrap_content"
         android:paddingLeft="3dp"
         android:text="Like: +15, 分数： -15; 回帖数: 129"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/status_text_night"
+        android:textSize="@dimen/zsmth_font_size_extra_small"
         />
     <ImageView
         android:id="@+id/topic_status_pinned"
