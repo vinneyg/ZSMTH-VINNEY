@@ -4,7 +4,26 @@
 
   <group
       android:checkableBehavior="single"
-      android:id="@+id/drawer_menu_group1">
+      android:id="@+id/drawer_menu_group1"
+      android:textSize = "10sp">
+    <item
+        android:id="@+id/nav_read"
+        android:icon="@drawable/ic_menu_allboard"
+        android:title="最近浏览"/>
+    <item
+        android:id="@+id/read_board1"
+        android:title="版块(空)" />
+    <item
+        android:id="@+id/read_board2"
+        android:title="版块(空)"/>
+    <item
+        android:id="@+id/read_board3"
+        android:title="版块(空)"/>
+  </group>
+
+  <group
+      android:checkableBehavior="single"
+      android:id="@+id/drawer_menu_group2">
     <item
         android:id="@+id/nav_guidance"
         android:icon="@drawable/ic_whatshot_white_48dp"
@@ -26,31 +45,8 @@
   </group>
 
   <group
-    android:checkableBehavior="single"
-    android:id="@+id/drawer_menu_group2"
-      android:textSize = "10sp">
-    <item
-        android:id="@+id/nav_read"
-        android:icon="@drawable/ic_menu_allboard"
-        android:title="最近浏览"/>
-    <item
-        android:id="@+id/read_board1"
-        android:title="版块(空)" />
-    <item
-        android:id="@+id/read_board2"
-        android:title="版块(空)"/>
-    <item
-        android:id="@+id/read_board3"
-        android:title="版块(空)"/>
-  </group>
-
-  <group
       android:checkableBehavior="single"
       android:id="@+id/drawer_menu_group3">
-    <item
-        android:id="@+id/nav_night_mode"
-        android:icon="@drawable/ic_arrow_downward_36dp"
-        android:title="切换配色"/>
     <item
         android:id="@+id/nav_setting"
         android:icon="@drawable/ic_settings_white_48dp"
@@ -59,7 +55,15 @@
         android:id="@+id/nav_about"
         android:icon="@drawable/ic_info_white_48dp"
         android:title="关于"/>
+  </group>
 
+  <group
+      android:checkableBehavior="single"
+      android:id="@+id/drawer_menu_group4">
+    <item
+        android:id="@+id/nav_night_mode"
+        android:icon="@drawable/ic_arrow_downward_36dp"
+        android:title="切换配色"/>
   </group>
 
 </menu>
