@@ -135,4 +135,12 @@
     <item name="android:textColor">@color/colorPrimary</item>
     <item name="android:textSize">14sp</item>
   </style>
+
+  <style name="CustomFloatingHint" parent="TextAppearance.Design.Hint">
+    <!-- 设置字体大小 -->
+    <item name="android:textSize">@dimen/zsmth_font_size_small</item>
+    <!-- 设置字体颜色 -->
+    <item name="android:textColor">@color/status_text_night</item>
+  </style>
+
 </resources>

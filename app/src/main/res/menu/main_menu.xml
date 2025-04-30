@@ -19,11 +19,13 @@
       android:orderInCategory="3"
       android:title="@string/action_login"
       android:icon="@drawable/ic_account_circle_black_48dp"
+      android:visible="false"
       app:showAsAction="never"/>
   <item
       android:id="@+id/main_action_logout"
       android:orderInCategory="4"
       android:title="@string/action_logout"
+      android:visible="false"
       app:showAsAction="never"/>
 	  
   <item

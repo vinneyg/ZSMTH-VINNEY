@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin_left"
-    android:paddingRight="@dimen/activity_horizontal_margin_right"
+    android:paddingStart="@dimen/activity_horizontal_margin_left"
+    android:paddingEnd="@dimen/activity_horizontal_margin_right"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".QueryUserActivity"
@@ -46,7 +46,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_gravity="center_vertical"
-          android:layout_marginLeft="10dp"
+          android:layout_marginStart="10dp"
           >
 
         <TableRow
@@ -70,7 +70,7 @@
               android:layout_height="wrap_content"
               android:layout_marginLeft="10dp"
               android:text=""
-              android:textColor="@color/colorPrimary"
+              android:textColor="@color/status_text_night"
               />
         </TableRow>
 
@@ -221,6 +221,7 @@
           android:textSize="@dimen/zsmth_font_size_large"
           />
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -490,6 +491,19 @@
           />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/query_user_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="5dp"
+        android:background="@drawable/navigation_button_background"
+        android:text="注销"
+        android:textColor="@color/status_text_night"
+        android:visibility= "visible"
+        android:onClick="onLogoutClick"
+        />
+
   </LinearLayout>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

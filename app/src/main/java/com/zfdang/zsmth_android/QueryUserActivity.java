@@ -8,6 +8,8 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,17 +57,36 @@ public class QueryUserActivity extends SMTHBaseActivity {
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
+    String title = getIntent().getStringExtra(SMTHApplication.QUERY_USER_INFO);
+    if (title != null) {
+      Objects.requireNonNull(getSupportActionBar()).setTitle(title);
+    }
+
     Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
     assignViews();
+
+    Button logoutButton = findViewById(R.id.query_user_logout);
+
+    if (shouldHideLogoutButton(title)) {
+      logoutButton.setVisibility(View.VISIBLE);
+    } else {
+      logoutButton.setVisibility(View.GONE);
+    }
 
     findViewById(R.id.query_user_action_query).setOnClickListener(v -> {
       EditText tv = findViewById(R.id.query_user_input);
       String userid = tv.getText().toString();
       if (!userid.isEmpty()) {
         mUsername = userid;
+        getSupportActionBar().setTitle(mUsername);
         KeyboardLess.$hide(QueryUserActivity.this, tv);
         tv.clearFocus();
+        if (shouldHideLogoutButton(userid)) {
+          logoutButton.setVisibility(View.VISIBLE);
+        } else {
+          logoutButton.setVisibility(View.GONE);
+        }
         LoadUserInfo();
       }
     });
@@ -79,6 +100,11 @@ public class QueryUserActivity extends SMTHBaseActivity {
     }
     mUsername = username;
     LoadUserInfo();
+
+  }
+
+  private boolean shouldHideLogoutButton(String userID) {
+    return SMTHApplication.activeUser != null && SMTHApplication.activeUser.getId().equalsIgnoreCase(userID);
   }
 
   private void assignViews() {
@@ -153,6 +179,57 @@ public class QueryUserActivity extends SMTHBaseActivity {
 
           }
         });
+  }
+
+  public void onLogoutClick(View view) {
+    //Toast.makeText(QueryUserActivity.this, "注销中...", Toast.LENGTH_SHORT).show();
+
+    if (SMTHApplication.activeUser!=null ) {
+      SMTHApplication.activeUser.setId("guest");
+    }
+
+    SMTHHelper helper = SMTHHelper.getInstance();
+    helper.wService.logout()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(new Observer<AjaxResponse>() {
+              @Override
+              public void onSubscribe(@NonNull Disposable disposable) {
+
+              }
+
+              @Override
+              public void onNext(@NonNull AjaxResponse ajaxResponse) {
+                //Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                if(ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK){
+                  Settings.getInstance().setAutoLogin(false);
+                  Settings.getInstance().setUserOnline(false);
+                }
+              }
+
+              @Override
+              public void onError(@NonNull Throwable e) {
+                //Toast.makeText(MainActivity.this, "退出登录失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(QueryUserActivity.this, "退出登录失败!\n" , Toast.LENGTH_SHORT).show();
+              }
+
+              @Override
+              public void onComplete() {
+                Settings.getInstance().setAutoLogin(false);
+                Settings.getInstance().setUserOnline(false);
+
+                Intent intent = new Intent("com.zfdang.zsmth_android.PREFERENCE_CLICKED");
+                intent.putExtra("preference_key", "setting_fresco_cache");
+                sendBroadcast(intent);
+
+                intent = new Intent("com.zfdang.zsmth_android.PREFERENCE_CLICKED");
+                intent.putExtra("preference_key", "setting_okhttp3_cache");
+                sendBroadcast(intent);
+
+                finish();
+              }
+            });
+
   }
 
   public void LoadUserInfo() {

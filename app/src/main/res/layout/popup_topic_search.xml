@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="5dp"
     android:background="@color/popupwindow_background"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
 
   <TextView
@@ -14,7 +14,7 @@
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
       android:text="@string/search_caption_label"
-      android:textColor="@color/blue_text_night"
+      android:textColor="@color/status_text_night"
       android:textSize="@dimen/zsmth_font_size_large"
       />
 
@@ -23,6 +23,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:textColorHint="@color/status_text_night"
+      app:hintTextAppearance="@style/CustomFloatingHint"
       >
 
     <EditText

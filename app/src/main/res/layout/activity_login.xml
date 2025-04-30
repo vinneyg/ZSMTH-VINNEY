@@ -21,6 +21,7 @@
         android:background="@color/colorPrimary"
         android:theme="@style/ThemeOverlay.ToolBar"
         app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
         />
 
   </com.google.android.material.appbar.AppBarLayout>

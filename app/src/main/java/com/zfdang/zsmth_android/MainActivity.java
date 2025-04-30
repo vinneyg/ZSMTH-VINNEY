@@ -91,7 +91,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 
-
 public class MainActivity extends SMTHBaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, OnTopicFragmentInteractionListener,
         OnBoardFragmentInteractionListener, OnMailInteractionListener {
@@ -204,8 +203,19 @@ public class MainActivity extends SMTHBaseActivity
       setDrawerLeftEdgeSize(this, mDrawer, (float) 0.3);
 
     mDrawer.addDrawerListener(new ActionBarDrawerToggle(this, mDrawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+      private boolean isUpdating = false;
+
+      @Override
+      public void onDrawerSlide(View drawerView, float slideOffset) {
+        super.onDrawerSlide(drawerView, slideOffset);
+        if (slideOffset > 0 && !isUpdating) {
+          UpdateNavigationViewHeader();
+          //isUpdating = true;
+        }
+      }
       @Override
       public void onDrawerOpened(View drawerView) {
+
         Menu menu = ((NavigationView) findViewById(R.id.nav_view)).getMenu();
 
         menu.findItem(R.id.read_board1).setTitle(SMTHApplication.ReadBoard1);
@@ -216,7 +226,21 @@ public class MainActivity extends SMTHBaseActivity
       }
     });
 
-    mToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+    mToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+      @Override
+      public boolean onOptionsItemSelected(MenuItem item) {
+        if (item != null && item.getItemId() == android.R.id.home) {
+          UpdateNavigationViewHeader();
+          if (mDrawer.isDrawerVisible(GravityCompat.START)) {
+            mDrawer.closeDrawer(GravityCompat.START);
+          } else {
+            mDrawer.openDrawer(GravityCompat.START);
+          }
+          return true;
+        }
+        return super.onOptionsItemSelected(item);
+      }
+    };
     //mDrawer.addDrawerListener(mToggle);
     mToggle.syncState();
     // Full Screen Drawer
@@ -671,6 +695,9 @@ public class MainActivity extends SMTHBaseActivity
   @Override public boolean onPrepareOptionsMenu(Menu menu) {
     MenuItem login = menu.findItem(R.id.main_action_login);
     MenuItem logout = menu.findItem(R.id.main_action_logout);
+    menu.removeItem(R.id.main_action_logout);
+    menu.removeItem(R.id.main_action_logout);
+    /*
     if (SMTHApplication.isValidUser()) {
       login.setVisible(false);
       logout.setVisible(true);
@@ -678,6 +705,7 @@ public class MainActivity extends SMTHBaseActivity
       login.setVisible(true);
       logout.setVisible(false);
     }
+    */
     return super.onPrepareOptionsMenu(menu);
   }
 

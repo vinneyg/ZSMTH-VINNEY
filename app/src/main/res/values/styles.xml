@@ -134,4 +134,12 @@
     <item name="android:textSize">14sp</item>
   </style>
   <style name="MyDialogStyle" parent="Theme.AppCompat.DayNight.Dialog.Alert"/>
+
+  <style name="CustomFloatingHint" parent="TextAppearance.Design.Hint">
+    <!-- 设置字体大小 -->
+    <item name="android:textSize">@dimen/zsmth_font_size_small</item>
+    <!-- 设置字体颜色 -->
+    <item name="android:textColor">@color/status_text_night</item>
+  </style>
+
 </resources>
