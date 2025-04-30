@@ -8,12 +8,13 @@ import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.BoardListContent;
+import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
@@ -156,7 +158,187 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
         SMTHApplication.bNewFavoriteBoard = false;
     }
 
+    // enable swipe to delete mail
+    initItemHelper();
+
     return rootView;
+  }
+
+  private void initItemHelper() {
+    //0则不执行拖动或者滑动
+    ItemTouchHelper.Callback mCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+      @Override public boolean onMove(@androidx.annotation.NonNull RecyclerView recyclerView, @androidx.annotation.NonNull RecyclerView.ViewHolder viewHolder, @androidx.annotation.NonNull RecyclerView.ViewHolder target) {
+        return false;
+      }
+
+      @Override public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+        //int position = viewHolder.getAdapterPosition();
+        int position = viewHolder.getBindingAdapterPosition();
+
+        Board board = BoardListContent.FAVORITE_BOARDS.get(position);
+        BoardListContent.FAVORITE_BOARDS.remove(position);
+        // favorite fragment, remove the board
+        if (board.isBoard()) {
+          // confirm dialog
+          AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+          String title = String.format("将版面\"%s\"从收藏中删除么？", board.getBoardName());
+          builder.setTitle("收藏操作").setMessage(title);
+
+          // Log.d(TAG, favoriteBoardFragment.getCurrentFavoritePath());
+
+          builder.setPositiveButton("删除", (dialog, which) -> {
+            dialog.dismiss();
+
+            SMTHHelper helper = SMTHHelper.getInstance();
+            helper.wService.manageFavoriteBoard("0", "db", board.getBoardEngName())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<AjaxResponse>() {
+                      @Override
+                      public void onSubscribe(@NonNull Disposable disposable) {
+
+                      }
+
+                      @Override
+                      public void onNext(@NonNull AjaxResponse ajaxResponse) {
+                        //Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                        if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+                          RefreshFavoriteBoardsWithCache();
+                        } else {
+                          Toast.makeText(getContext(), ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
+                        }
+
+                      }
+
+                      @Override
+                      public void onError(@NonNull Throwable e) {
+                        Toast.makeText(getContext(), "删除收藏版面失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+
+                      }
+
+                      @Override
+                      public void onComplete() {
+
+                      }
+                    });
+          });
+          //builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
+          builder.setNegativeButton("取消", (dialog, which) -> {
+            dialog.dismiss();
+            BoardListContent.FAVORITE_BOARDS.add(position, board);
+            //Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(position);
+            Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
+          });
+          AlertDialog noticeDialog = builder.create();
+          noticeDialog.show();
+        } else if(board.isSection()) {
+          //* + confirm Folder
+          AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+          String title = String.format("将版面二级目录\"%s\"从收藏中删除么？", board.getFolderName());
+          builder.setTitle("收藏操作").setMessage(title);
+
+          builder.setPositiveButton("删除", (dialog, which) -> {
+            dialog.dismiss();
+
+            SMTHHelper helper = SMTHHelper.getInstance();
+            //Log.d(TAG, favoriteBoardFragment.getCurrentPathInString());
+            helper.wService.manageFavoriteBoard("0", "db", board.getSectionID())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<AjaxResponse>() {
+                      @Override
+                      public void onSubscribe(@NonNull Disposable disposable) {
+
+                      }
+
+                      @Override
+                      public void onNext(@NonNull AjaxResponse ajaxResponse) {
+                        //(TAG, "onNext: " + ajaxResponse.toString());
+                        if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+                          RefreshFavoriteBoardsWithCache();
+                        } else {
+                          Toast.makeText(getContext(), ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
+                        }
+
+                      }
+
+                      @Override
+                      public void onError(@NonNull Throwable e) {
+                        Toast.makeText(getContext(), "删除收藏目录失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+
+                      }
+
+                      @Override
+                      public void onComplete() {
+
+                      }
+                    });
+          });
+          //builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
+          BoardListContent.FAVORITE_BOARDS.add(position, board);
+          //Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(position);
+          Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
+          AlertDialog noticeDialog = builder.create();
+          noticeDialog.show();
+        }
+        else if (board.isFolder())
+        {
+          AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+          String title = String.format("将版面二级目录\"%s\"从收藏中删除么？", board.getFolderName());
+          builder.setTitle("收藏操作").setMessage(title);
+
+          builder.setPositiveButton("删除", (dialog, which) -> {
+            dialog.dismiss();
+
+            SMTHHelper helper = SMTHHelper.getInstance();
+            //Log.d(TAG, favoriteBoardFragment.getCurrentPathInString());
+            helper.wService.manageFavoriteBoard("0", "db", board.getFolderID())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<AjaxResponse>() {
+                      @Override
+                      public void onSubscribe(@NonNull Disposable disposable) {
+
+                      }
+
+                      @Override
+                      public void onNext(@NonNull AjaxResponse ajaxResponse) {
+                        //Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                        if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+                          RefreshFavoriteBoardsWithCache();
+                        } else {
+                          Toast.makeText(getContext(), ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
+                        }
+
+                      }
+
+                      @Override
+                      public void onError(@NonNull Throwable e) {
+                        Toast.makeText(getContext(), "删除收藏目录失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+
+                      }
+
+                      @Override
+                      public void onComplete() {
+
+                      }
+                    });
+          });
+          //builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
+          BoardListContent.FAVORITE_BOARDS.add(position, board);
+          //Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(position);
+          Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
+          AlertDialog noticeDialog = builder.create();
+          noticeDialog.show();
+        }
+
+      }
+      //- confirm Folder */
+
+    };
+    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(mCallback);
+    itemTouchHelper.attachToRecyclerView(mRecyclerView);
   }
 
   public void showLoadingHints() {
