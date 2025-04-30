@@ -20,27 +20,27 @@
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
   <application
-        android:name="com.zfdang.SMTHApplication"
-        android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:largeHeap="true"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true"
-        android:requestLegacyExternalStorage="true"
-        android:preserveLegacyExternalStorage="true"
-        tools:replace="android:name"
-        tools:targetApi="r">
-        <service
-            android:name=".services.KeepAliveService"
-            android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType= "specialUse"
-            android:permission= "android.permission.FOREGROUND_SERVICE_SPECIAL_USE"
-            tools:ignore="ForegroundServicePermission">
+      android:name="com.zfdang.SMTHApplication"
+      android:allowBackup="true"
+      android:icon="@drawable/ic_launcher"
+      android:label="@string/app_name"
+      android:largeHeap="true"
+      android:supportsRtl="true"
+      android:theme="@style/AppTheme"
+      android:usesCleartextTraffic="true"
+      android:requestLegacyExternalStorage="true"
+      android:preserveLegacyExternalStorage="true"
+      tools:replace="android:name"
+      tools:targetApi="r">
+    <service
+        android:name=".services.KeepAliveService"
+        android:enabled="true"
+        android:exported="false"
+        android:foregroundServiceType= "specialUse"
+        android:permission= "android.permission.FOREGROUND_SERVICE_SPECIAL_USE"
+        tools:ignore="ForegroundServicePermission">
 
-        </service>
+    </service>
     <activity
         android:name=".MainActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
@@ -55,8 +55,10 @@
     <activity
         android:name=".LoginActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
+        android:theme="@style/AppTheme.NoActionBar"
         android:label="@string/title_activity_login" />
-    <activity android:name=".WebviewLoginActivity" />
+    <activity android:name=".WebviewLoginActivity"
+        android:theme="@style/AppTheme.NoActionBar"/>
     <activity
         android:name=".BoardTopicActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
@@ -94,13 +96,13 @@
     <!-- External activities -->
     <activity
         android:name="com.zfdang.multiple_images_selector.ImagesSelectorActivity"
-        android:configChanges="orientation|screenSize" /> 
+        android:configChanges="orientation|screenSize" />
 
     <!-- service -->
-        <!-- aadapt to S8 and Mix2 -->
+    <!-- aadapt to S8 and Mix2 -->
     <meta-data
-            android:name="android.max_aspect"
-            android:value="2.5" />
+        android:name="android.max_aspect"
+        android:value="2.5" />
   </application>
 
 </manifest>

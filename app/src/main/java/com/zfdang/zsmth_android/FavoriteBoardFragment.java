@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -40,6 +41,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 
 /**
  * A fragment representing a list of Items.
@@ -51,6 +53,8 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
 
   //private final String TAG = "FavoriteBoardFragment";
   private OnBoardFragmentInteractionListener mListener;
+
+  private SmartRefreshLayout mSwipeRefreshLayout;
 
   private RecyclerView mRecyclerView = null;
 
@@ -126,11 +130,18 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    mRecyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_favorite_board, container, false);
+    //mRecyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_favorite_board, container, false);
+    View rootView = inflater.inflate(R.layout.fragment_favorite_board, container, false);
+    mSwipeRefreshLayout = rootView.findViewById(R.id.swipeRefreshLayoutFavorite);
+    mRecyclerView = rootView.findViewById(R.id.recyclerViewFavorite);
+
+    mSwipeRefreshLayout.setEnableLoadMore(false);
+    mSwipeRefreshLayout.setOnRefreshListener(refreshLayout -> RefreshFavoriteBoardsWithCache());
+
 
     // Set the adapter
     if (mRecyclerView != null) {
-      //            http://stackoverflow.com/questions/28713231/recyclerview-item-separator
+      // http://stackoverflow.com/questions/28713231/recyclerview-item-separator
       mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 0));
       Context context = mRecyclerView.getContext();
       mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(context));
@@ -145,7 +156,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
         SMTHApplication.bNewFavoriteBoard = false;
     }
 
-    return mRecyclerView;
+    return rootView;
   }
 
   public void showLoadingHints() {
@@ -234,11 +245,17 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
 
       @Override public void onError(@NonNull Throwable e) {
         clearLoadingHints();
+        if (mSwipeRefreshLayout != null) {
+          mSwipeRefreshLayout.finishRefresh(false);
+        }
         Toast.makeText(SMTHApplication.getAppContext(), "加载收藏夹失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
       }
 
       @Override public void onComplete() {
         clearLoadingHints();
+        if (mSwipeRefreshLayout != null) {
+          mSwipeRefreshLayout.finishRefresh(true);
+        }
         updateFavoriteTitle();
       }
     });

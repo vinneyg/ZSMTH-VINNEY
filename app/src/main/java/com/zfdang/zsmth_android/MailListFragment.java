@@ -25,6 +25,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.listeners.EndlessRecyclerOnScrollListener;
 import com.zfdang.zsmth_android.listeners.OnMailInteractionListener;
@@ -67,6 +69,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
   private OnMailInteractionListener mListener;
   private RecyclerView recyclerView;
   private EndlessRecyclerOnScrollListener mScrollListener = null;
+  private SmartRefreshLayout mRefreshLayout = null;
 
   private Button btInbox;
   private Button btOutbox;
@@ -97,6 +100,12 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_mail_list, container, false);
+    mRefreshLayout = view.findViewById(R.id.swipeRefreshLayoutMail);
+    mRefreshLayout.setEnableLoadMore(false);
+    mRefreshLayout.setOnRefreshListener(refreshLayout ->  LoadMailsFromBeginning());
+
+    // http://sapandiwakar.in/pull-to-refresh-for-android-recyclerview-or-any-other-vertically-scrolling-view/
+    // pull to refresh for android recyclerview
 
     recyclerView = view.findViewById(R.id.recyclerview_mail_contents);
     Context context = view.getContext();
@@ -379,12 +388,18 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
 
       @Override public void onError(@NonNull Throwable e) {
         clearLoadingHints();
+        if (mRefreshLayout != null) {
+          mRefreshLayout.finishRefresh(false);
+        }
         Toast.makeText(getActivity(), "加载相关文章失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
 
       }
 
       @Override public void onComplete() {
         clearLoadingHints();
+        if (mRefreshLayout != null) {
+          mRefreshLayout.finishRefresh(true);
+        }
         recyclerView.smoothScrollToPosition(0);
       }
     });
@@ -420,11 +435,17 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
 
       @Override public void onError(@NonNull Throwable e) {
         clearLoadingHints();
+        if (mRefreshLayout != null) {
+          mRefreshLayout.finishRefresh(false);
+        }
         Toast.makeText(SMTHApplication.getAppContext(), "加载邮件列表失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
       }
 
       @Override public void onComplete() {
         clearLoadingHints();
+        if (mRefreshLayout != null) {
+          mRefreshLayout.finishRefresh(true);
+        }
         recyclerView.smoothScrollToPosition(0);
       }
     });

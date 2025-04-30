@@ -12,7 +12,7 @@
 
     <!--http://stackoverflow.com/questions/14462226/white-background-during-app-launch-->
     <item name="android:windowBackground">@color/black_background</item>
-
+    <item name="android:statusBarColor">@color/colorPrimary</item>
     <item name="preferenceTheme">@style/MyPreferenceThemeOverlay</item>
   </style>
 
@@ -28,11 +28,11 @@
     <!-- colorAccent is used as the default value for colorControlActivated
          which is used to tint widgets -->
     <item name="android:colorAccent">@color/colorAccent</item>
-    <item name="android:statusBarColor">@color/colorPrimary</item>
   </style>
 
   <style name="AppTheme.NoActionBar.MainActivity" parent="AppTheme.NoActionBar">
     <item name="android:windowIsTranslucent">false</item>
+    <item name="android:statusBarColor">@color/colorPrimary</item>
   </style>
 
   <!--AppBar-->
@@ -41,18 +41,20 @@
   <!--Toolbar withtin Appbar-->
   <style name="ThemeOverlay.ToolBar" parent="ThemeOverlay.AppCompat.ActionBar">
     <!-- Parent theme sets colorControlNormal to textColorPrimary. -->
-    <!--<item name="android:textColorPrimary">@color/actionbar_title_text</item>-->
+    <item name="android:textColorPrimary">@color/status_text_night</item>
     <item name="android:actionBarSize">@dimen/zsmth_actionbar_size</item>
     <item name="actionBarSize">@dimen/zsmth_actionbar_size</item>
+    <item name="colorControlNormal">@color/colorPrimaryLight</item>
   </style>
 
   <!--title text style in toolbar-->
   <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
     <item name="android:textSize">@dimen/zsmth_font_size_app_title</item>
+    <item name="android:textColor">@color/colorPrimaryLight</item>
   </style>
 
   <!--popup menu style in toolbar-->
-  <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+  <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark"/>
 
 
   <style name="RecyclerViewSeperatorStyle" parent="@android:style/Theme">

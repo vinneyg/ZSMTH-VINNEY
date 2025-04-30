@@ -18,7 +18,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/zsmth_actionbar_size"
-        android:background="?attr/colorPrimary"
+        android:background="@color/colorPrimary"
         android:longClickable="false"
         android:padding="0dp"
         android:theme="@style/ThemeOverlay.ToolBar"

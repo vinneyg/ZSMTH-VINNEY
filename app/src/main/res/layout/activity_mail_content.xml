@@ -16,12 +16,13 @@
       >
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/mail_toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/zsmth_actionbar_size"
-        android:background="?attr/colorPrimary"
+        android:background="@color/colorPrimary"
         android:theme="@style/ThemeOverlay.ToolBar"
         app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
         />
 
   </com.google.android.material.appbar.AppBarLayout>

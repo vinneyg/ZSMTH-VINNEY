@@ -148,10 +148,6 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
       activity.dismissProgress();
     }
 
-    // disable SmartFreshLayout
-    if(mRefreshLayout.isRefreshing()) {
-      mRefreshLayout.finishRefresh(100);
-    }
   }
 
   public void RefreshGuidance() {
@@ -188,12 +184,18 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
 
       @Override public void onError(@NonNull Throwable e) {
         clearLoadingHints();
+        if (mRefreshLayout != null) {
+          mRefreshLayout.finishRefresh(false);
+        }
         Toast.makeText(SMTHApplication.getAppContext(), "获取首页热帖失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
       }
 
       @Override public void onComplete() {
         Topic topic = new Topic("-- END --");
         TopicListContent.addHotTopic(topic);
+        if (mRefreshLayout != null) {
+          mRefreshLayout.finishRefresh(true);
+        }
         Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(TopicListContent.HOT_TOPICS.size() - 1);
         clearLoadingHints();
       }

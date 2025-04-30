@@ -37,6 +37,7 @@ import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 
 /**
  * A fragment representing a list of Items.
@@ -46,6 +47,7 @@ import java.util.Objects;
  */
 public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener {
 
+  private SmartRefreshLayout mRefreshLayout = null;
   private RecyclerView mRecyclerView = null;
   private QueryTextListener mQueryListener = null;
 
@@ -65,6 +67,11 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_all_board, container, false);
+
+    mRefreshLayout = view.findViewById(R.id.swipeRefreshLayoutAllBoard);
+    mRefreshLayout.setEnableLoadMore(false);
+    mRefreshLayout.setOnRefreshListener(refreshLayout ->  LoadAllBoards());
+
 
     mRecyclerView = view.findViewById(R.id.all_board_list);
     // Set the adapter
@@ -165,11 +172,17 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
 
       @Override public void onError(@NonNull Throwable e) {
         clearLoadingHints();
+        if (mRefreshLayout != null) {
+          mRefreshLayout.finishRefresh(false);
+        }
         Toast.makeText(SMTHApplication.getAppContext(), "加载所有版面失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
       }
 
       @Override public void onComplete() {
         clearLoadingHints();
+        if (mRefreshLayout != null) {
+          mRefreshLayout.finishRefresh(true);
+        }
 
       }
     });

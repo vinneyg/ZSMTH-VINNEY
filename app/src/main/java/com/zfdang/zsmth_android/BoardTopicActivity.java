@@ -9,12 +9,14 @@ import androidx.activity.OnBackPressedDispatcher;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.FragmentManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import androidx.appcompat.app.ActionBar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -71,7 +73,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     private int mCurrentPageNo = 1;
     //private final int LOAD_MORE_THRESHOLD = 1;
 
-    private SwipeRefreshLayout mSwipeRefreshLayout = null;
+    private SmartRefreshLayout mSwipeRefreshLayout = null;
     private EndlessRecyclerOnScrollListener mScrollListener = null;
     private RecyclerView mRecyclerView = null;
 
@@ -160,7 +162,9 @@ public class BoardTopicActivity extends SMTHBaseActivity
             Log.e(TAG, "mSwipeRefreshLayout is null");
             return;
         }
-        mSwipeRefreshLayout.setOnRefreshListener(this);
+        //mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setOnRefreshListener(refreshLayout -> RefreshBoardTopicsWithoutClear());
+
 
         mRecyclerView = findViewById(R.id.board_topic_list);
         if (mRecyclerView == null) {
@@ -248,7 +252,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
     public void updateTitle() {
         String title = mBoard.getBoardChsName();
-        setTitle(title + " - 主题列表");
+        //setTitle(title + " - 主题列表");
+        setTitle(title);
     }
 
     @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -318,10 +323,6 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
     public void clearLoadingHints() {
         dismissProgress();
-
-        if (mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing()) {
-            mSwipeRefreshLayout.setRefreshing(false);  // This hides the spinner
-        }
 
         if (mScrollListener != null) {
             mScrollListener.setLoading(false);
@@ -433,6 +434,10 @@ public class BoardTopicActivity extends SMTHBaseActivity
                             @Override
                             public void onError(@NonNull Throwable e) {
                                 clearLoadingHints();
+                                if (mSwipeRefreshLayout != null) {
+                                    mSwipeRefreshLayout.finishRefresh(false);
+                                }
+
                                 if(mCurrentPageNo != 1)
                                     Toast.makeText(
                                                     SMTHApplication.getAppContext(),
@@ -463,6 +468,9 @@ public class BoardTopicActivity extends SMTHBaseActivity
                             @Override
                             public void onComplete() {
                                 clearLoadingHints();
+                                if (mSwipeRefreshLayout != null) {
+                                    mSwipeRefreshLayout.finishRefresh(true);
+                                }
                             }
                         });
     }

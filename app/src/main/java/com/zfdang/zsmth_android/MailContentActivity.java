@@ -86,7 +86,8 @@ public class MailContentActivity extends AppCompatActivity {
       }
     });
 
-    Toolbar toolbar = findViewById(R.id.toolbar);
+
+    Toolbar toolbar = findViewById(R.id.mail_toolbar);
     setSupportActionBar(toolbar);
 
     // Show the Up button in the action bar.
@@ -94,6 +95,7 @@ public class MailContentActivity extends AppCompatActivity {
     if (actionBar != null) {
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
+
 
     // load mMail content
     Bundle bundle = getIntent().getExtras();

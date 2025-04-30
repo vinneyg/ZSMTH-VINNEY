@@ -7,6 +7,8 @@ import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+
 import android.text.TextUtils;
 import android.os.Handler;
 import android.text.method.LinkMovementMethod;
@@ -83,9 +85,14 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
         ubutton.setOnClickListener(this);
 
         // enable back button in the title barT
-        ActionBar bar = getSupportActionBar();
-        if (bar != null) {
-            bar.setDisplayHomeAsUpEnabled(true);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Show the Up button in the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
         // Initialize the ActivityResultLauncher object.

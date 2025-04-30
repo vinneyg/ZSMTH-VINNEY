@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,6 +14,7 @@
       android:id="@+id/board_topic_app_bar"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:background="@color/body_background_night"
       android:theme="@style/AppTheme.AppBarOverlay"
       >
 
@@ -20,6 +22,7 @@
         android:id="@+id/board_topic_toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/zsmth_actionbar_size"
+        android:background="@color/colorPrimary"
         android:theme="@style/ThemeOverlay.ToolBar"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:layout_scrollFlags="enterAlways"
@@ -38,11 +41,15 @@
       app:layout_behavior="@string/appbar_scrolling_view_behavior"
       >
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
+
+      <com.scwang.smart.refresh.header.ClassicsHeader
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content" />
 
       <androidx.recyclerview.widget.RecyclerView
           android:id="@+id/board_topic_list"
@@ -57,7 +64,7 @@
           app:layout_behavior="@string/appbar_scrolling_view_behavior"
           tools:listitem="@layout/board_topic_item"
           />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
   </FrameLayout>
 
