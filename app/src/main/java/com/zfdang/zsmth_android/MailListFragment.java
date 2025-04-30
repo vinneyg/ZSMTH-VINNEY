@@ -240,6 +240,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
       currentFolder = INBOX_LABEL;
     } else if (TextUtils.equals(folder, AT_LABEL)) {
       currentFolder = AT_LABEL;
+      currentFolder = AT_LABEL;
     } else if (TextUtils.equals(folder, REPLY_LABEL)) {
       currentFolder = REPLY_LABEL;
     } else if (TextUtils.equals(folder, LIKE_LABEL)) {
