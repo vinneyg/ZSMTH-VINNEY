@@ -101,7 +101,6 @@ public class SMTHApplication extends Application {
     return activeUser != null && !activeUser.getId().equalsIgnoreCase("guest");
   }
 
-
   public void onCreate() {
     super.onCreate();
 

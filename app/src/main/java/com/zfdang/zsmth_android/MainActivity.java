@@ -203,14 +203,12 @@ public class MainActivity extends SMTHBaseActivity
       setDrawerLeftEdgeSize(this, mDrawer, (float) 0.3);
 
     mDrawer.addDrawerListener(new ActionBarDrawerToggle(this, mDrawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-      private boolean isUpdating = false;
 
       @Override
       public void onDrawerSlide(View drawerView, float slideOffset) {
         super.onDrawerSlide(drawerView, slideOffset);
-        if (slideOffset > 0 && !isUpdating) {
+        if (slideOffset > 0) {
           UpdateNavigationViewHeader();
-          //isUpdating = true;
         }
       }
       @Override

@@ -20,5 +20,5 @@
       android:orderInCategory="1"
       android:title="@string/mail_content_menu_open_post"
       android:icon="@drawable/ic_launch_white_24dp"
-      app:showAsAction="always"/>
+      app:showAsAction="never"/>
 </menu>
