@@ -55,7 +55,7 @@
           android:paddingLeft="-4dp"
           android:text="作者"
           android:textColor="@color/status_text_night"
-          android:textSize="@dimen/zsmth_font_size_small"
+          android:textSize="@dimen/zsmth_font_size_extra_small"
           />
       <TextView
           android:id="@+id/topic_public_date"
@@ -66,7 +66,7 @@
           android:paddingLeft="4dp"
           android:text="2012-09-18"
           android:textColor="@color/status_text_night"
-          android:textSize="@dimen/zsmth_font_size_small"
+          android:textSize="@dimen/zsmth_font_size_extra_small"
           />
     </LinearLayout>
     <LinearLayout
@@ -85,7 +85,7 @@
           android:paddingRight="4dp"
           android:text="回复者"
           android:textColor="@color/status_text_night"
-          android:textSize="@dimen/zsmth_font_size_small"
+          android:textSize="@dimen/zsmth_font_size_extra_small"
           />
       <TextView
           android:id="@+id/topic_reply_date"
@@ -95,7 +95,7 @@
           android:paddingRight="6dp"
           android:text="2012-09-18"
           android:textColor="@color/status_text_night"
-          android:textSize="@dimen/zsmth_font_size_small"
+          android:textSize="@dimen/zsmth_font_size_extra_small"
           />
     </LinearLayout>
 

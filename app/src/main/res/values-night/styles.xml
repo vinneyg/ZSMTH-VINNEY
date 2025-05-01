@@ -135,6 +135,7 @@
     <item name="android:textColor">@color/colorPrimary</item>
     <item name="android:textSize">14sp</item>
   </style>
+  <style name="MyDialogStyle" parent="Theme.AppCompat.DayNight.Dialog.Alert"/>
 
   <style name="CustomFloatingHint" parent="TextAppearance.Design.Hint">
     <!-- 设置字体大小 -->

@@ -42,7 +42,8 @@ public class PopupLikeWindow extends PopupWindow {
     wheelView = contentView.findViewById(R.id.like_score);
 
     wheelView.setData(Arrays.asList(scores));
-    wheelView.setStyle( 2 ); //to be upgraded
+    wheelView.setStyle( 2 );
+    wheelView.setTextColor(R.color.status_text_night);
     wheelView.setDefaultPosition(5);
 
     etMessage = contentView.findViewById(R.id.like_message);
