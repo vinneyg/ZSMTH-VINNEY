@@ -73,7 +73,7 @@
             android:id="@+id/popup_forward_target_other_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:hint="他人ID或者邮箱"
             android:singleLine="true"
             android:textColor="@color/status_text_night"
@@ -90,7 +90,7 @@
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginLeft="10dp"
+      android:layout_marginStart="10dp"
       android:orientation="horizontal"
       >
 
@@ -106,7 +106,7 @@
         android:id="@+id/popup_forward_noref"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:text="不带引文"
         android:textColor="@color/status_text_night"
         />
@@ -115,7 +115,7 @@
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginLeft="10dp"
+      android:layout_marginStart="10dp"
       android:orientation="horizontal"
       >
 
@@ -141,7 +141,7 @@
         android:id="@+id/popup_forward_cancel"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:background="@drawable/navigation_button_background"
         android:textColor="@color/status_text_night"
         android:text="取消"
@@ -181,7 +181,7 @@
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginLeft="10dp"
+      android:layout_marginStart="10dp"
       android:gravity="center_vertical"
       android:orientation="horizontal"
       >
@@ -218,7 +218,7 @@
         android:id="@+id/popup_post_cancel"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:background="@drawable/navigation_button_background"
         android:textColor="@color/status_text_night"
         android:text="取消"

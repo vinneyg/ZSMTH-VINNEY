@@ -414,7 +414,7 @@
               android:id="@+id/query_user_loginip_label"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_marginRight="10dp"
+              android:layout_marginEnd="10dp"
               android:text="最后访问IP:"
               android:textColor="@color/status_text_night"
               />

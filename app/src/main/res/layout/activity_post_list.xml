@@ -92,7 +92,7 @@
           android:id="@+id/post_list_action_layout"
           android:layout_width="wrap_content"
           android:layout_height="match_parent"
-          android:layout_gravity="right"
+          android:layout_gravity="end"
           android:gravity="center_vertical"
           android:orientation="vertical"
           >

@@ -1188,7 +1188,6 @@ public class PostListActivity extends SMTHBaseActivity
 
       Intent intent = new Intent(this, ComposePostActivity.class);
       intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-      //startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
       mActivityPostResultLauncher.launch(intent);
     } else if (which == 1) {
       // like

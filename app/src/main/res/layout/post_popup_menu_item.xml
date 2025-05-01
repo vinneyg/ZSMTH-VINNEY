@@ -12,7 +12,7 @@
       android:layout_height="48dp"
       android:layout_gravity="center"
       android:contentDescription="desc"
-      android:paddingLeft="10dp"
+      android:paddingStart="10dp"
       />
 
   <TextView
@@ -20,7 +20,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
-      android:paddingLeft="16dp"
+      android:paddingStart="16dp"
       android:text="Menu Item"
       android:textColor="@color/colorPrimary"
       android:textSize="@dimen/zsmth_font_size_medium"

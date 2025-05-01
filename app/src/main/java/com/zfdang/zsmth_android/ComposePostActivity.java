@@ -487,7 +487,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
   }
 
   public void onBackAction() {
-    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ComposePostActivity.this);
+    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ComposePostActivity.this,R.style.MyDialogStyle);
     alertDialogBuilder.setTitle("退出确认")
             .setMessage("结束编辑，或者停留在当前界面继续编辑？")
             .setCancelable(false)

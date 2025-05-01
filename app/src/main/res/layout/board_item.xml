@@ -6,8 +6,8 @@
     android:layout_height="wrap_content"
     android:background="@drawable/recyclerview_item_bg"
     android:paddingBottom="2dp"
-    android:paddingLeft="2dp"
-    android:paddingRight="8dp"
+    android:paddingStart="2dp"
+    android:paddingEnd="8dp"
     android:paddingTop="2dp"
     >
 
@@ -24,7 +24,7 @@
       android:id="@+id/ModeratorID"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
-      android:gravity="right"
+      android:gravity="end"
       android:maxLength="25"
       android:text="版主"
       android:textColor="@color/status_text_night"
@@ -46,7 +46,7 @@
       android:layout_height="wrap_content"
       android:layout_below="@+id/CategoryName"
       android:text="engBoard"
-      android:gravity="right"
+      android:gravity="end"
       android:textColor="@color/status_text_night"
       android:textSize="@dimen/zsmth_font_size_medium"
       />
