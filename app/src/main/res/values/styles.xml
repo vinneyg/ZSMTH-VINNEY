@@ -137,7 +137,7 @@
 
   <style name="MyDialogStyle" parent="Theme.AppCompat.DayNight.Dialog.Alert">
     <!-- 设置对话框背景色 -->
-    <item name="android:windowBackground">@color/colorPrimaryLight</item>
+    <item name="android:windowBackground">@color/nav_background</item>
     <item name="android:textColorPrimary">@color/status_text_night</item>
     <!-- 设置对话框按钮字体颜色 -->
     <item name="colorAccent">@color/colorAccent</item>
