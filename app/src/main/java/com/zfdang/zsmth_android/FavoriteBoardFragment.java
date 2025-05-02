@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -17,8 +16,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,8 +23,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
@@ -186,7 +181,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
         // favorite fragment, remove the board
         if (board.isBoard()) {
           // confirm dialog
-          AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+          AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(),R.style.MyDialogStyle);
           String title = String.format("将版面\"%s\"从收藏中删除么？", board.getBoardName());
           builder.setTitle("收藏操作").setMessage(title);
 
@@ -239,7 +234,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
           noticeDialog.show();
         } else if(board.isSection()) {
           //* + confirm Folder
-          AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+          AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(),R.style.MyDialogStyle);
           String title = String.format("将版面二级目录\"%s\"从收藏中删除么？", board.getFolderName());
           builder.setTitle("收藏操作").setMessage(title);
 
@@ -289,7 +284,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
         }
         else if (board.isFolder())
         {
-          AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+          AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(),R.style.MyDialogStyle);
           String title = String.format("将版面二级目录\"%s\"从收藏中删除么？", board.getFolderName());
           builder.setTitle("收藏操作").setMessage(title);
 
@@ -374,6 +369,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
     // SMTHHelper helper = SMTHHelper.getInstance();
     Board board = getCurrentPath();
     final String finalCurrentPath = getCurrentPathInString();
+    final List<Board> newBoards = new ArrayList<>();
 
     // all boards loaded in cached file
     final Observable<List<Board>> cache = Observable.create(observableEmitter -> {
@@ -421,10 +417,13 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
       }
 
       @Override public void onNext(@NonNull Board board) {
-        BoardListContent.addFavoriteItem(board);
-        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(BoardListContent.FAVORITE_BOARDS.size());
+        //BoardListContent.addFavoriteItem(board);
+        //Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(BoardListContent.FAVORITE_BOARDS.size());
+        newBoards.add(board);
+
         // Log.d(TAG, board.toString());
-        if(BoardListContent.FAVORITE_BOARDS.get(0).isInvalid()) {
+        //if(BoardListContent.FAVORITE_BOARDS.get(0).isInvalid()) {
+        if(board.isInvalid()) {
           Intent intent = new Intent(requireActivity(), LoginActivity.class);
           mActivityLoginResultLauncher.launch(intent);
         }
@@ -444,6 +443,10 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
           mSwipeRefreshLayout.finishRefresh(true);
         }
         updateFavoriteTitle();
+        for (Board board : newBoards) {
+          BoardListContent.addFavoriteItem(board);
+        }
+        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
       }
     });
   }
@@ -469,7 +472,10 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
         }
       }
     }
-    activity.setTitle(title.toString());
+    String newTitle = title.toString();
+    if (!newTitle.contentEquals(activity.getTitle())) {
+      activity.setTitle(newTitle);
+    }
   }
 
   @Override public void onAttach(@androidx.annotation.NonNull Context context) {

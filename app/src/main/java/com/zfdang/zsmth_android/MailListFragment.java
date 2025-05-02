@@ -25,7 +25,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.listeners.EndlessRecyclerOnScrollListener;
@@ -84,6 +83,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
   private String currentFolder = INBOX_LABEL;
   private int currentPage;
 
+
   private ActivityResultLauncher<Intent> mActivityLoginResultLauncher;
 
   /**
@@ -95,7 +95,19 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+  }
 
+  @Override
+  public void onSaveInstanceState(@androidx.annotation.NonNull @NonNull Bundle outState) {
+    super.onSaveInstanceState(outState);
+    // Save data
+    outState.putString("current_folder", currentFolder);
+  }
+
+  public void restoreState(Bundle savedInstanceState) {
+    if (savedInstanceState != null) {
+      currentFolder = savedInstanceState.getString("current_folder", INBOX_LABEL);
+    }
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -133,9 +145,9 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
             result -> {
               if(result.getResultCode() == Activity.RESULT_OK)
               {
-                  Intent intent = new Intent("com.zfdang.zsmth_android.UPDATE_USER_STATUS");
-                  context.sendBroadcast(intent);
-                  LoadMailsFromBeginning();
+                Intent intent = new Intent("com.zfdang.zsmth_android.UPDATE_USER_STATUS");
+                context.sendBroadcast(intent);
+                LoadMailsFromBeginning();
               }
             });
 
@@ -156,15 +168,21 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
     //colorBlue = getResources().getColor(R.color.blue_text_night);
     colorBlue = getResources().getColor(R.color.colorPrimary,null);
 
-    //if (MailListContent.MAILS.isEmpty()||SMTHApplication.bNewMailSent) {
-    LoadMailsFromBeginning();
+    if (savedInstanceState != null) {
+      currentFolder = savedInstanceState.getString("current_folder");
+      //Toast.makeText(getContext(), "Restore state: " + currentFolder, Toast.LENGTH_SHORT).show();
+    }
+    else{
 
-    if(SMTHApplication.bNewMailSent)
-      SMTHApplication.bNewMailSent = false;
+      //if (MailListContent.MAILS.isEmpty()||SMTHApplication.bNewMailSent) {
+      LoadMailsFromBeginning();
 
-    if(SMTHApplication.isValidUser())
-      ( (MainActivity) requireActivity()).onRelogin();
-    //}
+      if(SMTHApplication.bNewMailSent)
+        SMTHApplication.bNewMailSent = false;
+
+      if(SMTHApplication.isValidUser())
+        ( (MainActivity) requireActivity()).onRelogin();
+    }
 
     // highlight the current folder
     highlightCurrentFolder();
@@ -221,13 +239,18 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
                     }
 
                     @Override public void onComplete() {
-
+                      /*
+                      if (TextUtils.equals(currentFolder, INBOX_LABEL) || TextUtils.equals(currentFolder, OUTBOX_LABEL) || TextUtils.equals(currentFolder,
+                              DELETED_LABEL)) {
+                        Toast.makeText(SMTHApplication.getAppContext(), "邮件已成功删除!",Toast.LENGTH_SHORT).show();
+                      }
+                      */
                     }
                   });
         }
         else{
           Objects.requireNonNull(recyclerView.getAdapter()).notifyItemChanged(position);
-          Toast.makeText(SMTHApplication.getAppContext(), "目录无法删除", Toast.LENGTH_SHORT).show();
+          Toast.makeText(SMTHApplication.getAppContext(), "目录无法删除!", Toast.LENGTH_SHORT).show();
         }
       }
     };
@@ -240,7 +263,6 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
       currentFolder = INBOX_LABEL;
     } else if (TextUtils.equals(folder, AT_LABEL)) {
       currentFolder = AT_LABEL;
-      currentFolder = AT_LABEL;
     } else if (TextUtils.equals(folder, REPLY_LABEL)) {
       currentFolder = REPLY_LABEL;
     } else if (TextUtils.equals(folder, LIKE_LABEL)) {
@@ -250,47 +272,24 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
   }
 
   public void highlightCurrentFolder() {
+    btInbox.setTextColor(colorNormal);
+    btOutbox.setTextColor(colorNormal);
+    btTrashbox.setTextColor(colorNormal);
+    btAt.setTextColor(colorNormal);
+    btReply.setTextColor(colorNormal);
+    btLike.setTextColor(colorNormal);
+
     if (TextUtils.equals(currentFolder, INBOX_LABEL)) {
       btInbox.setTextColor(colorBlue);
-      btOutbox.setTextColor(colorNormal);
-      btTrashbox.setTextColor(colorNormal);
-      btAt.setTextColor(colorNormal);
-      btReply.setTextColor(colorNormal);
-      btLike.setTextColor(colorNormal);
     } else if (TextUtils.equals(currentFolder, OUTBOX_LABEL)) {
-      btInbox.setTextColor(colorNormal);
       btOutbox.setTextColor(colorBlue);
-      btTrashbox.setTextColor(colorNormal);
-      btAt.setTextColor(colorNormal);
-      btReply.setTextColor(colorNormal);
-      btLike.setTextColor(colorNormal);
     } else if (TextUtils.equals(currentFolder, DELETED_LABEL)) {
-      btInbox.setTextColor(colorNormal);
-      btOutbox.setTextColor(colorNormal);
       btTrashbox.setTextColor(colorBlue);
-      btAt.setTextColor(colorNormal);
-      btReply.setTextColor(colorNormal);
-      btLike.setTextColor(colorNormal);
     } else if (TextUtils.equals(currentFolder, AT_LABEL)) {
-      btInbox.setTextColor(colorNormal);
-      btOutbox.setTextColor(colorNormal);
-      btTrashbox.setTextColor(colorNormal);
       btAt.setTextColor(colorBlue);
-      btReply.setTextColor(colorNormal);
-      btLike.setTextColor(colorNormal);
     } else if (TextUtils.equals(currentFolder, REPLY_LABEL)) {
-      btInbox.setTextColor(colorNormal);
-      btOutbox.setTextColor(colorNormal);
-      btTrashbox.setTextColor(colorNormal);
-      btAt.setTextColor(colorNormal);
       btReply.setTextColor(colorBlue);
-      btLike.setTextColor(colorNormal);
     } else if (TextUtils.equals(currentFolder, LIKE_LABEL)) {
-      btInbox.setTextColor(colorNormal);
-      btOutbox.setTextColor(colorNormal);
-      btTrashbox.setTextColor(colorNormal);
-      btAt.setTextColor(colorNormal);
-      btReply.setTextColor(colorNormal);
       btLike.setTextColor(colorBlue);
     }
   }
@@ -307,10 +306,10 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
 
     if (currentPage >= MailListContent.totalPages) {
       // reach the last page, do nothing
-      if (!(MailListContent.MAILS.get(MailListContent.MAILS.size()-1).isCategory&&MailListContent.MAILS.get(MailListContent.MAILS.size()-1).category.equals(".END."))) {
-        Mail mail = new Mail(".END.");
+      if (!(MailListContent.MAILS.get(MailListContent.MAILS.size()-1).isCategory&&MailListContent.MAILS.get(MailListContent.MAILS.size()-1).category.equals("结束"))) {
+        Mail mail = new Mail("结束");
         MailListContent.addItem(mail);
-        // recyclerView.getAdapter().notifyItemChanged(MailListContent.MAILS.size() - 1);
+        //recyclerView.getAdapter().notifyItemChanged(MailListContent.MAILS.size() - 1);
       }
       return;
     }
@@ -323,14 +322,17 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
   public void LoadMailsFromBeginning() {
     currentPage = 1;
     MailListContent.clear();
-    Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
-
+    if (recyclerView != null && recyclerView.getAdapter() != null) {
+      recyclerView.getAdapter().notifyDataSetChanged();
+    }
     showLoadingHints();
     LoadMailsOrReferPosts();
   }
 
   public void LoadMailsOrReferPosts() {
     MainActivity activity = (MainActivity) getActivity();
+    String title = SMTHApplication.App_Title_Prefix;
+
     if (activity == null) {
       Log.e("MailListFragment", "activity is null.");
       return;
@@ -339,26 +341,31 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
             DELETED_LABEL)) {
       // Load mails
       if (TextUtils.equals(currentFolder, INBOX_LABEL) ) {
-        activity.setTitle(SMTHApplication.App_Title_Prefix+"邮件");
+        title += "收件箱";
       }
       else if(TextUtils.equals(currentFolder,OUTBOX_LABEL)) {
-        activity.setTitle(SMTHApplication.App_Title_Prefix+"发件箱");
+        title += "发件箱";
       }
       else if(TextUtils.equals(currentFolder,DELETED_LABEL)) {
-        activity.setTitle(SMTHApplication.App_Title_Prefix+"回收站");
+        title += "回收站";
       }
+      Log.d("MailListFragment", "LOAD MAIL");
+
+      activity.setTitle(title);
       LoadMails();
     } else {
       // Load refer posts
       if (TextUtils.equals(currentFolder, REPLY_LABEL) ) {
-        activity.setTitle(SMTHApplication.App_Title_Prefix+"回复我");
+        title += "回复我";
       }
       else if(TextUtils.equals(currentFolder,AT_LABEL)) {
-        activity.setTitle(SMTHApplication.App_Title_Prefix+"@我");
+        title += "@我";
       }
       else if(TextUtils.equals(currentFolder,LIKE_LABEL)) {
-        activity.setTitle(SMTHApplication.App_Title_Prefix+"LIKE我");
+        title += "LIKE我";
       }
+      activity.setTitle(title);
+      Log.d("MailListFragment", "LOAD POST");
       LoadReferPosts();
     }
   }
@@ -373,7 +380,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
         List<Mail> results = SMTHHelper.ParseMailsFromWWW(response);
         return Observable.fromIterable(results);
       } catch (Exception e) {
-        Toast.makeText(SMTHApplication.getAppContext(), "加载文章提醒失败\n" + e, Toast.LENGTH_SHORT).show();
+        Toast.makeText(SMTHApplication.getAppContext(), "加载文章提醒失败!\n" + e, Toast.LENGTH_SHORT).show();
       }
       return null;
     }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Mail>() {
@@ -385,6 +392,11 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
         // Log.d(TAG, "onNext: " + mail.toString());
         MailListContent.addItem(mail);
         Objects.requireNonNull(recyclerView.getAdapter()).notifyItemChanged(MailListContent.MAILS.size() - 1);
+
+        if(mail.isCategory && mail.category.startsWith("产生错误的可能原因")){
+          Intent intent = new Intent(requireActivity(), LoginActivity.class);
+          mActivityLoginResultLauncher.launch(intent);
+        }
       }
 
       @Override public void onError(@NonNull Throwable e) {
@@ -401,6 +413,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
         if (mRefreshLayout != null) {
           mRefreshLayout.finishRefresh(true);
         }
+
         recyclerView.smoothScrollToPosition(0);
       }
     });
@@ -447,6 +460,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
         if (mRefreshLayout != null) {
           mRefreshLayout.finishRefresh(true);
         }
+
         recyclerView.smoothScrollToPosition(0);
       }
     });

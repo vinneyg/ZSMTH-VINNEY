@@ -6,7 +6,8 @@
       android:id="@+id/query_user_action_message"
       android:orderInCategory="1"
       android:title="@string/query_user_action_message"
-      app:showAsAction="never"/>
+      android:icon="@drawable/ic_reply_white_36dp"
+      app:showAsAction="always"/>
   <item
       android:id="@+id/query_user_action_friend"
       android:orderInCategory="2"

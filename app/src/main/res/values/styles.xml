@@ -17,6 +17,12 @@
   </style>
 
   <style name="AppTheme.NoActionBar">
+    <!-- 允许使用过渡动画 -->
+    <item name="android:windowActivityTransitions">true</item>
+    <!-- 设置进入和退出过渡动画 -->
+    <item name="android:windowEnterTransition">@android:transition/slide_right</item>
+    <item name="android:windowExitTransition">@android:transition/slide_left</item>
+
     <item name="windowActionBar">false</item>
     <item name="windowNoTitle">true</item>
 
@@ -149,6 +155,14 @@
     <item name="android:textSize">@dimen/zsmth_font_size_small</item>
     <!-- 设置字体颜色 -->
     <item name="android:textColor">@color/status_text_night</item>
+  </style>
+
+  <style name="AppTheme.Transition" parent="AppTheme">
+    <!-- 允许使用过渡动画 -->
+    <item name="android:windowActivityTransitions">true</item>
+    <!-- 设置进入和退出过渡动画 -->
+    <item name="android:windowEnterTransition">@android:transition/slide_right</item>
+    <item name="android:windowExitTransition">@android:transition/slide_left</item>
   </style>
 
 </resources>

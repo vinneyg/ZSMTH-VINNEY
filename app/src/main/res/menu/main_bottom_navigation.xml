@@ -24,6 +24,6 @@
         android:enabled="true"
         app:showAsAction="always"
         android:icon="@drawable/ic_email_white_48dp"
-        android:title="邮件" />
+        android:title="消息" />
 </menu>
 

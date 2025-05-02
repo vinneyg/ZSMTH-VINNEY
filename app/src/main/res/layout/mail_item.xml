@@ -47,7 +47,7 @@
         android:id="@+id/mail_item_author_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="left"
+        android:gravity="start"
         android:paddingStart="2dp"
         android:text="@string/mail_item_author_label"
         android:textColor="@color/status_text_night"

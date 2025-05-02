@@ -52,6 +52,8 @@ public class MailContentActivity extends AppCompatActivity {
   private LinearLayout mViewGroup;
   public LinkConsumableTextView mPostContent;
 
+  private boolean isMenuItemVisible = false;
+
   @Override protected void onDestroy() {
     super.onDestroy();
     SwipeBackHelper.onDestroy(this);
@@ -100,6 +102,10 @@ public class MailContentActivity extends AppCompatActivity {
     // load mMail content
     Bundle bundle = getIntent().getExtras();
     mMail = Objects.requireNonNull(bundle).getParcelable(SMTHApplication.MAIL_OBJECT);
+
+    isMenuItemVisible = mMail.isRefferedPost();
+    invalidateOptionsMenu();
+
     loadMailContent();
   }
 
@@ -210,10 +216,25 @@ public class MailContentActivity extends AppCompatActivity {
     return super.onOptionsItemSelected(item);
   }
 
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    MenuItem openPostItem = menu.findItem(R.id.mail_content_open_post);
+    if (openPostItem != null) {
+      openPostItem.setVisible(isMenuItemVisible);
+    }
+    return super.onPrepareOptionsMenu(menu);
+  }
+  
   @Override public boolean onCreateOptionsMenu(Menu menu) {
     // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.mail_content_menu, menu);
+
     return true;
+  }
+
+  public void setMenuItemVisible(boolean visible) {
+    this.isMenuItemVisible = visible;
+    invalidateOptionsMenu(); // 通知系统重新创建菜单
   }
 
   private void handleHomeMenuItem() {

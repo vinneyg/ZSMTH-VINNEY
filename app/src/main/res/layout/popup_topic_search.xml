@@ -19,6 +19,25 @@
       />
 
   <com.google.android.material.textfield.TextInputLayout
+      android:id="@+id/search_author_layout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textColorHint="@color/status_text_night"
+      >
+
+    <EditText
+        android:id="@+id/search_author"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/search_author_label"
+        android:inputType="text"
+        android:singleLine="true"
+        android:textColor="@color/status_text_night"
+        android:textColorHint="@color/status_text_night"
+        />
+  </com.google.android.material.textfield.TextInputLayout>
+
+  <com.google.android.material.textfield.TextInputLayout
       android:id="@+id/search_keyword_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -31,25 +50,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="@string/search_keyword_label"
-        android:inputType="text"
-        android:singleLine="true"
-        android:textColor="@color/status_text_night"
-        android:textColorHint="@color/status_text_night"
-        />
-  </com.google.android.material.textfield.TextInputLayout>
-
-  <com.google.android.material.textfield.TextInputLayout
-      android:id="@+id/search_author_layout"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:textColorHint="@color/status_text_night"
-      >
-
-    <EditText
-        android:id="@+id/search_author"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/search_author_label"
         android:inputType="text"
         android:singleLine="true"
         android:textColor="@color/status_text_night"

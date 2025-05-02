@@ -40,7 +40,7 @@
     <item
         android:id="@+id/nav_mail"
         android:icon="@drawable/ic_email_white_48dp"
-        android:title="邮件"/>
+        android:title="消息"/>
 
   </group>
 

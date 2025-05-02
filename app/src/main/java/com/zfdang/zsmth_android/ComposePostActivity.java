@@ -13,6 +13,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
@@ -160,6 +161,20 @@ public class ComposePostActivity extends SMTHBaseActivity {
     mContent = findViewById(R.id.compose_post_content);
     mContentCount = findViewById(R.id.compose_post_content_label);
 
+    String originalHint = mContent.getHint().toString();
+
+    mContent.setOnFocusChangeListener((v, hasFocus) -> {
+      if (hasFocus) {
+        // 获取焦点时清除 hint
+        mContent.setHint("");
+      } else {
+        if (TextUtils.isEmpty(mContent.getText())) {
+          // 失去焦点且无输入内容时恢复 hint
+          mContent.setHint(originalHint);
+        }
+      }
+    });
+
     Button mButton = findViewById(R.id.compose_post_attach_button);
     mButton.setOnClickListener(v -> {
       KeyboardLess.$hide(v.getContext(), mContent);
@@ -191,7 +206,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
   private void restorePostContentFromCache() {
     final String content = Settings.getInstance().getPostCache();
     if (content != null && !content.isEmpty() && content.length() != mContent.getText().toString().length()) {
-      AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ComposePostActivity.this);
+      AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ComposePostActivity.this,  R.style.MyDialogStyle);
       alertDialogBuilder.setTitle("恢复缓存的内容?")
               .setMessage(StringUtils.getEllipsizedMidString(content, 240))
               .setCancelable(false)

@@ -3,6 +3,7 @@ package com.zfdang.zsmth_android;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
+//import android.app.ActivityOptions;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -97,6 +98,9 @@ public class MainActivity extends SMTHBaseActivity
   // used by startActivityForResult
   static final int LOGIN_ACTIVITY_REQUEST_CODE = 9527;  // The request code
   private static final String TAG = "MainActivity";
+
+  private static final String KEY_CURRENT_FRAGMENT = "current_fragment";
+  private int currentFragmentId;
 
   // keep aive service
   private Intent keepAliveService;
@@ -284,11 +288,33 @@ public class MainActivity extends SMTHBaseActivity
     // init all fragments
     initFragments();
 
-    FragmentManager fm = getSupportFragmentManager();
-    if (Settings.getInstance().isLaunchHotTopic()) {
-      fm.beginTransaction().replace(R.id.content_frame, hotTopicFragment).commit();
+    if (savedInstanceState != null) {
+      currentFragmentId = savedInstanceState.getInt(KEY_CURRENT_FRAGMENT);
+      Fragment fragment = getFragmentById(currentFragmentId);
+
+      if (fragment instanceof MailListFragment) {
+        MailListFragment mailListFragment = (MailListFragment) fragment;
+        Bundle mailListState = savedInstanceState.getBundle("mail_list_fragment_state");
+        mailListFragment.restoreState(mailListState);
+      }
+
+      if (fragment != null) {
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        String title = getTitleByFragmentId(currentFragmentId);
+        if (fragment != favoriteBoardFragment) {
+          setTitle(SMTHApplication.App_Title_Prefix + title);
+        }
+      }
     } else {
-      fm.beginTransaction().replace(R.id.content_frame, favoriteBoardFragment).commit();
+      FragmentManager fm = getSupportFragmentManager();
+      if (Settings.getInstance().isLaunchHotTopic()) {
+        fm.beginTransaction().replace(R.id.content_frame, hotTopicFragment).commit();
+        currentFragmentId = R.id.nav_guidance;
+      } else {
+        fm.beginTransaction().replace(R.id.content_frame, favoriteBoardFragment).commit();
+        currentFragmentId = R.id.nav_favorite;
+      }
     }
 
     getSupportFragmentManager().addOnBackStackChangedListener(() -> {
@@ -645,7 +671,7 @@ public class MainActivity extends SMTHBaseActivity
           onLogin();
         } else {
           // find the actual folder for the new message
-          String subTitle = "邮件";
+          String subTitle = "收件箱";
           if (message.contains(SMTHApplication.NOTIFICATION_NEW_MAIL)) {
             mailListFragment.setCurrentFolder(MailListFragment.INBOX_LABEL);
           } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_LIKE)) {
@@ -695,15 +721,7 @@ public class MainActivity extends SMTHBaseActivity
     MenuItem logout = menu.findItem(R.id.main_action_logout);
     menu.removeItem(R.id.main_action_logout);
     menu.removeItem(R.id.main_action_logout);
-    /*
-    if (SMTHApplication.isValidUser()) {
-      login.setVisible(false);
-      logout.setVisible(true);
-    } else {
-      login.setVisible(true);
-      logout.setVisible(false);
-    }
-    */
+
     return super.onPrepareOptionsMenu(menu);
   }
 
@@ -880,7 +898,7 @@ public class MainActivity extends SMTHBaseActivity
               @Override
               public void onError(@NonNull Throwable e) {
                 //Toast.makeText(MainActivity.this, "退出登录失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(MainActivity.this, "退出登录失败!\n" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "退出登录失败!" , Toast.LENGTH_SHORT).show();
               }
 
               @Override
@@ -923,7 +941,7 @@ public class MainActivity extends SMTHBaseActivity
       title = "分区";
     } else if (menuID == R.id.nav_mail) {
       fragment = mailListFragment;
-      title = "邮件";
+      title = "收件箱";
     } else if (menuID == R.id.nav_setting) {
       //            fragment = settingFragment;
       fragment = preferenceFragment;
@@ -934,8 +952,10 @@ public class MainActivity extends SMTHBaseActivity
     } else if(menuID == R.id.nav_night_mode) {
       boolean bNightMode = Settings.getInstance().isNightMode();
       Settings.getInstance().setNightMode(!bNightMode);
+      currentFragmentId = getCurrentFragmentId();
       setApplicationNightMode();
-      //quitNow();
+      mDrawer.closeDrawer(GravityCompat.START);
+      return true;
     } else if( menuID == R.id.nav_read)
     {
       return true;
@@ -964,8 +984,10 @@ public class MainActivity extends SMTHBaseActivity
       }
     }
 
+
     // switch fragment
     if (fragment != null) {
+      mDrawer.closeDrawer(GravityCompat.START);
       FragmentManager fm = getSupportFragmentManager();
       fm.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
@@ -975,7 +997,6 @@ public class MainActivity extends SMTHBaseActivity
       }
     }
 
-    mDrawer.closeDrawer(GravityCompat.START);
     return true;
   }
 
@@ -1213,9 +1234,11 @@ public class MainActivity extends SMTHBaseActivity
 
 
   public void startBoardTopicActivity(Board board) {
+    //ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
     Intent intent = new Intent(this, BoardTopicActivity.class);
     intent.putExtra(SMTHApplication.BOARD_OBJECT, (Parcelable) board);
     startActivity(intent);
+    //startActivity(intent, options.toBundle());
   }
 
   class PendingDoubleBackToExit implements Runnable {
@@ -1277,7 +1300,7 @@ public class MainActivity extends SMTHBaseActivity
               }
 
               @Override public void onError(@NonNull Throwable e) {
-                Toast.makeText(getApplicationContext(), "用户掉线！\n" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "用户掉线！" , Toast.LENGTH_SHORT).show();
               }
 
               @Override public void onComplete() {
@@ -1356,14 +1379,12 @@ public class MainActivity extends SMTHBaseActivity
 
         return layerDrawable;
       } else {
-        // 处理 getConstantState() 返回 null 的情况
         Log.e(TAG, "ConstantState is null for the icon.");
-        return null; // 或者返回一个默认的 Drawable
+        return null;
       }
     } else {
-      // 处理 icon 为 null 的情况
       Log.e(TAG, "Icon is null.");
-      return null; // 或者返回一个默认的 Drawable
+      return null;
     }
 
   }
@@ -1371,4 +1392,70 @@ public class MainActivity extends SMTHBaseActivity
   public Fragment getCurrentFragment() {
     return getSupportFragmentManager().findFragmentById(R.id.content_frame);
   }
+
+  @Override
+  protected void onSaveInstanceState(@androidx.annotation.NonNull @NonNull Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putInt(KEY_CURRENT_FRAGMENT, currentFragmentId);
+
+    // 保存 MailListFragment 的状态
+    if (mailListFragment != null && mailListFragment.isAdded()) {
+      Bundle mailListState = new Bundle();
+      mailListFragment.onSaveInstanceState(mailListState);
+      outState.putBundle("mail_list_fragment_state", mailListState);
+    }
+  }
+  private Fragment getFragmentById(int fragmentId) {
+    Fragment fragment = null;
+    if (fragmentId == R.id.nav_guidance) {
+      fragment = hotTopicFragment;
+    } else if (fragmentId == R.id.nav_favorite) {
+      fragment = favoriteBoardFragment;
+    } else if (fragmentId == R.id.nav_all_boards) {
+      fragment = allBoardFragment;
+    } else if (fragmentId == R.id.nav_mail) {
+      fragment = mailListFragment;
+    } else if (fragmentId == R.id.nav_setting) {
+      fragment = preferenceFragment;
+    }
+    return fragment;
+  }
+
+  private String getTitleByFragmentId(int fragmentId) {
+    if (fragmentId == R.id.nav_guidance) {
+      return "首页";
+    } else if (fragmentId == R.id.nav_favorite) {
+      return "收藏";
+    } else if (fragmentId == R.id.nav_all_boards) {
+      return "分区";
+    } else if (fragmentId == R.id.nav_mail) {
+      return "收件箱";
+    } else if (fragmentId == R.id.nav_setting) {
+      return "设置";
+    } else if (fragmentId == R.id.nav_about) {
+      return "关于";
+    } else {
+      // Default case
+      return "";
+    }
+  }
+
+  private int getCurrentFragmentId() {
+    Fragment currentFragment = getCurrentFragment();
+    if (currentFragment == hotTopicFragment) {
+      return R.id.nav_guidance;
+    } else if (currentFragment == favoriteBoardFragment) {
+      return R.id.nav_favorite;
+    } else if (currentFragment == allBoardFragment) {
+      return R.id.nav_all_boards;
+    } else if (currentFragment == mailListFragment) {
+      return R.id.nav_mail;
+    } else if (currentFragment == preferenceFragment) {
+      return R.id.nav_setting;
+    } else if (currentFragment == aboutFragment) {
+      return R.id.nav_about;
+    }
+    return -1;
+  }
+
 }

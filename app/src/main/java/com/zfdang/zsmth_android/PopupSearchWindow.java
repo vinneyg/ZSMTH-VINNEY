@@ -66,9 +66,9 @@ public class PopupSearchWindow extends PopupWindow {
     this.setFocusable(true);
 
     new Handler().postDelayed(() -> {
-      etKeyword.requestFocus();
+      etAuthor.requestFocus();
       InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-      imm.showSoftInput(etKeyword, InputMethodManager.SHOW_IMPLICIT);
+      imm.showSoftInput(etAuthor, InputMethodManager.SHOW_IMPLICIT);
     }, 300);
   }
 

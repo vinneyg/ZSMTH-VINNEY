@@ -35,6 +35,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import okhttp3.ResponseBody;
@@ -91,20 +92,20 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
       mRecyclerView.setItemViewCacheSize(40);
 
 
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-          @Override
-          public void onScrollStateChanged(@androidx.annotation.NonNull RecyclerView recyclerView, int newState) {
-            super.onScrollStateChanged(recyclerView, newState);
-          }
+      mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(@androidx.annotation.NonNull RecyclerView recyclerView, int newState) {
+          super.onScrollStateChanged(recyclerView, newState);
+        }
 
         @Override
         public void onScrolled (@androidx.annotation.NonNull RecyclerView recyclerView, int dx , int dy){
           super.onScrolled(recyclerView,dx,dy);
-         // mRecyclerView.getAdapter().notifyDataSetChanged();
+          // mRecyclerView.getAdapter().notifyDataSetChanged();
         }
 
-        });
-      }
+      });
+    }
 
 
     requireActivity().setTitle(SMTHApplication.App_Title_Prefix + "首页");
@@ -158,6 +159,7 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
 
   public void RefreshGuidanceFromWWW() {
     final SMTHHelper helper = SMTHHelper.getInstance();
+    final List<Topic> newTopics = new ArrayList<>();
 
     helper.wService.getAllHotTopics().flatMap((Function<ResponseBody, ObservableSource<Topic>>) responseBody -> {
       try {
@@ -178,8 +180,9 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
 
       @Override public void onNext(@NonNull Topic topic) {
         //                        Log.d(TAG, topic.toString());
-        TopicListContent.addHotTopic(topic);
-        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(TopicListContent.HOT_TOPICS.size() - 1);
+        //TopicListContent.addHotTopic(topic);
+        //Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(TopicListContent.HOT_TOPICS.size() - 1);
+        newTopics.add(topic);
       }
 
       @Override public void onError(@NonNull Throwable e) {
@@ -192,9 +195,16 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
 
       @Override public void onComplete() {
         Topic topic = new Topic("-- END --");
-        TopicListContent.addHotTopic(topic);
+        //TopicListContent.addHotTopic(topic);
+
+        newTopics.add(topic);
+
         if (mRefreshLayout != null) {
           mRefreshLayout.finishRefresh(true);
+        }
+
+        for (Topic topicIn : newTopics) {
+          TopicListContent.addHotTopic(topicIn);
         }
         Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(TopicListContent.HOT_TOPICS.size() - 1);
         clearLoadingHints();

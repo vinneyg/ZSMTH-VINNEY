@@ -713,7 +713,7 @@ public class Settings {
     bLoadOriginalImage = mPreference.getBoolean(LOAD_ORIGINAL_IMAGE, false);
     bImageSourceCDN = mPreference.getBoolean(IMAGE_SOURCE_CDN, false);
 
-    bNightMode = mPreference.getBoolean(NIGHT_MODE, true);
+    bNightMode = mPreference.getBoolean(NIGHT_MODE, false);
 
     bDiffReadTopic = mPreference.getBoolean(DIFF_READ_TOPIC, true);
 

@@ -33,8 +33,8 @@
       android:id="@+id/post_list_linear_layout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:paddingLeft="@dimen/activity_horizontal_margin_left"
-      android:paddingRight="@dimen/activity_horizontal_margin_right"
+      android:paddingStart="@dimen/activity_horizontal_margin_left"
+      android:paddingEnd="@dimen/activity_horizontal_margin_right"
       android:background="@color/body_background_night"
       android:orientation="vertical"
       app:layout_behavior="com.zfdang.zsmth_android.helpers.CustomScrollingViewBehavior"
@@ -50,7 +50,7 @@
         android:paddingRight="4dp"
         android:text="@string/post_list_title"
         android:textColor="@color/status_text_night"
-        android:textSize="@dimen/zsmth_font_size_medium"
+        android:textSize="@dimen/zsmth_font_size_large"
         />
 
     <!-- Body -->

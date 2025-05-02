@@ -15,8 +15,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -39,6 +37,7 @@ import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -59,7 +58,8 @@ import io.reactivex.schedulers.Schedulers;
  * item details side-by-side using two vertical panes.
  */
 public class BoardTopicActivity extends SMTHBaseActivity
-        implements OnTopicFragmentInteractionListener, SwipeRefreshLayout.OnRefreshListener, PopupSearchWindow.SearchInterface {
+        //implements OnTopicFragmentInteractionListener, SwipeRefreshLayout.OnRefreshListener, PopupSearchWindow.SearchInterface {
+        implements OnTopicFragmentInteractionListener,  PopupSearchWindow.SearchInterface {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -90,6 +90,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     @Override protected void onDestroy() {
         super.onDestroy();
         SwipeBackHelper.onDestroy(this);
+
     }
 
     @Override protected void onPostCreate(Bundle savedInstanceState) {
@@ -102,6 +103,32 @@ public class BoardTopicActivity extends SMTHBaseActivity
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SwipeBackHelper.onCreate(this);
+        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(true); // 确保滑动返回功能开启
+        SwipeBackHelper.getCurrentPage(this).setDisallowInterceptTouchEvent(true); // 禁止拦截触摸事件
+        //SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false); // 禁用滑动返回时的返回键处理
+
+        OnBackPressedDispatcher dispatcher = getOnBackPressedDispatcher();
+
+        dispatcher.addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Handle the back button press here
+                if (isSearchMode) {
+                    onRefresh();
+                    return;
+                }
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                if (fragmentManager.getBackStackEntryCount() > 0) {
+                    fragmentManager.popBackStack();
+                } else {
+                    // 移除滑动状态检查直接执行关闭
+                    SwipeBackHelper.finish(BoardTopicActivity.this);
+                }
+
+            }
+        });
+
         mActivity1  = this;
 
         setContentView(R.layout.activity_board_topic);
@@ -113,25 +140,6 @@ public class BoardTopicActivity extends SMTHBaseActivity
             return;
         }
         toolbar.setTitle(getTitle());
-
-        OnBackPressedDispatcher dispatcher = getOnBackPressedDispatcher();
-
-        dispatcher.addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                // Handle the back button press here
-                if (isSearchMode) {
-                    onRefresh();
-                }
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                if (fragmentManager.getBackStackEntryCount() > 0) {
-                    fragmentManager.popBackStack();
-                } else {
-                    // 移除滑动状态检查直接执行关闭
-                    SwipeBackHelper.finish(BoardTopicActivity.this);
-                }
-            }
-        });
 
         mSetting = Settings.getInstance();
 
@@ -157,20 +165,29 @@ public class BoardTopicActivity extends SMTHBaseActivity
                 });
 
         // enable pull down to refresh
-        mSwipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout = findViewById(R.id.swipeRefreshLayoutBoard);
         if (mSwipeRefreshLayout == null) {
             Log.e(TAG, "mSwipeRefreshLayout is null");
             return;
         }
-        //mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setOnRefreshListener(refreshLayout -> RefreshBoardTopicsWithoutClear());
 
+        //mSwipeRefreshLayout.setOnRefreshListener(refreshLayout -> RefreshBoardTopicsWithoutClear());
+
+        mSwipeRefreshLayout.setOnRefreshListener(refreshLayout -> {
+            if (isSearchMode) {
+                onRefresh();
+            }
+            else {
+                RefreshBoardTopicsWithoutClear();
+            }
+        });
 
         mRecyclerView = findViewById(R.id.board_topic_list);
         if (mRecyclerView == null) {
             Log.e(TAG, "mRecyclerView is null");
             return;
         }
+        //mRecyclerView.setItemAnimator(null);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL, 0));
         LinearLayoutManager linearLayoutManager = new WrapContentLinearLayoutManager(this);
@@ -237,9 +254,10 @@ public class BoardTopicActivity extends SMTHBaseActivity
         updateTitle();
 
         if (TopicListContent.BOARD_TOPICS.isEmpty()) {
-            // only load boards on the first time
             RefreshBoardTopicsWithoutClear();
+            //new Handler(Looper.getMainLooper()).postDelayed(this::RefreshBoardTopicsWithoutClear, 100);
         }
+
     }
 
 
@@ -251,7 +269,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     }
 
     public void updateTitle() {
-        String title = mBoard.getBoardChsName();
+        String title = mBoard != null ? mBoard.getBoardChsName() : "";
         //setTitle(title + " - 主题列表");
         setTitle(title);
     }
@@ -259,8 +277,17 @@ public class BoardTopicActivity extends SMTHBaseActivity
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            //onBackPressed();
-            finish();
+            if (isSearchMode) {
+                onRefresh();
+                return true;
+            }
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            if (fragmentManager.getBackStackEntryCount() > 0) {
+                fragmentManager.popBackStack();
+            } else {
+                // 移除滑动状态检查直接执行关闭
+                SwipeBackHelper.finish(BoardTopicActivity.this);
+            }
             return true;
         } else if (id == R.id.board_topic_action_sticky) {
             mSetting.toggleShowSticky();
@@ -274,7 +301,6 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
             Intent intent = new Intent(this, ComposePostActivity.class);
             intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-            //startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
             mActivityPostResultLauncher.launch(intent);
         } else if (id == R.id.board_topic_action_search) {
             PopupSearchWindow popup = new PopupSearchWindow();
@@ -340,14 +366,16 @@ public class BoardTopicActivity extends SMTHBaseActivity
         // Log.d(TAG, mCurrentPageNo + " page is loading now...");
         LoadBoardTopics();
     }
+
     @SuppressLint("NotifyDataSetChanged")
-    @Override public void onRefresh() {
+    public void onRefresh() {
         // this method is slightly different with RefreshBoardTopicFromPageOne
         // this method does not alert since it's triggered by SwipeRefreshLayout
         mCurrentPageNo = 1;
         TopicListContent.clearBoardTopics();
         //Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
         LoadBoardTopics();
+        isSearchMode = false;
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -369,7 +397,6 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
     public void RefreshBoardTopicsWithoutClear() {
         showProgress("加载版面文章...");
-
         LoadBoardTopics();
     }
 
@@ -377,6 +404,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
         isSearchMode = false;
         final SMTHHelper helper = SMTHHelper.getInstance();
+        final List<Topic> newTopics = new ArrayList<>();
 
         helper
                 .wService
@@ -403,6 +431,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
                             public void onSubscribe(@NonNull Disposable disposable) {
                                 Topic topic = new Topic(String.format(Locale.CHINA, "第%d页:", mCurrentPageNo));
                                 topic.isCategory = true;
+                                newTopics.add(topic);
+                                /*
                                 TopicListContent.addBoardTopic(topic);
                                 // mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
                                 mRecyclerView.post(
@@ -411,6 +441,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                                             Objects.requireNonNull(mRecyclerView.getAdapter())
                                                     .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
                                         });
+                                */
                             }
 
                             @Override
@@ -421,10 +452,11 @@ public class BoardTopicActivity extends SMTHBaseActivity
                                         if (MapHash.size() >= MAXSIZE) {
                                             MapHash.clear();
                                         }
-                                        TopicListContent.addBoardTopic(topic);
+                                        //TopicListContent.addBoardTopic(topic);
+                                        newTopics.add(topic);
                                         MapHash.put(topic.getTitle(), topic.getTopicID());
-                                        Objects.requireNonNull(mRecyclerView.getAdapter())
-                                                .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                                        //Objects.requireNonNull(mRecyclerView.getAdapter())
+                                        //        .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
                                     } else {
                                         Log.d(TAG, "sticky " + topic.getTitle());
                                     }
@@ -471,6 +503,12 @@ public class BoardTopicActivity extends SMTHBaseActivity
                                 if (mSwipeRefreshLayout != null) {
                                     mSwipeRefreshLayout.finishRefresh(true);
                                 }
+                                for (Topic topic : newTopics) {
+                                    TopicListContent.addBoardTopic(topic);
+                                }
+
+                                Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
+
                             }
                         });
     }

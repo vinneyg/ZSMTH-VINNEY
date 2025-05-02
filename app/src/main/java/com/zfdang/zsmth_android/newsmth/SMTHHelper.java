@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android.newsmth;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -118,17 +119,15 @@ public class SMTHHelper {
     return instance;
   }
 
-  public static synchronized SMTHHelper resetInstance() {
+  public static synchronized void resetInstance() {
     instance = null;
-    if (instance == null) {
-      try {
-        instance = new SMTHHelper();
-      } catch (NoSuchAlgorithmException | KeyManagementException e) {
-        throw new RuntimeException(e);
-      }
+    try {
+      instance = new SMTHHelper();
+    } catch (NoSuchAlgorithmException | KeyManagementException e) {
+      throw new RuntimeException(e);
     }
-    return instance;
   }
+
 
   // response from WWW is GB2312, we need to conver it to UTF-8
   // http://www.newsmth.net/mainpage.html
@@ -1360,13 +1359,16 @@ class OkHttpUtil {
   /**
    * X509TrustManager instance which ignored SSL certification
    */
+  @SuppressLint("CustomX509TrustManager")
   public static final X509TrustManager IGNORE_SSL_TRUST_MANAGER_X509 = new X509TrustManager() {
     @Override
     public void checkClientTrusted(X509Certificate[] chain, String authType) {
+      Log.d("SSL", "checkClientTrusted");
     }
 
     @Override
     public void checkServerTrusted(X509Certificate[] chain, String authType) {
+      Log.d("SSL", "checkClientTrusted");
       /*
       try {
         chain[0].checkValidity();

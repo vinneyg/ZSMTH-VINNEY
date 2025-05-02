@@ -660,8 +660,8 @@ public class PostListActivity extends SMTHBaseActivity
                         }
                         Index = Index % POST_PER_PAGE;
                         PostListContent.addItem(post);
-                        //PostListContent.InsertItem(Index, post);
                         Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(Index);
+
                       }
 
                       @Override
@@ -691,6 +691,8 @@ public class PostListActivity extends SMTHBaseActivity
                         clearLoadingHints();
                         SMTHApplication.deletionCount++;
                         isLoading = false;
+
+                        // 确保 RecyclerView 刷新
                         Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
 
                         // Special User OFFLINE case: [] or [Category 第一页:]
@@ -769,9 +771,10 @@ public class PostListActivity extends SMTHBaseActivity
                         }
 
                         Index = Index % POST_PER_PAGE;
-                        // PostListContent.addItem(Index,post);
+
                         PostListContent.InsertItem(Index, post);
                         Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(Index);
+
 
                       }
 
@@ -784,6 +787,7 @@ public class PostListActivity extends SMTHBaseActivity
                                         Toast.LENGTH_SHORT)
                                 .show();
                         isLoading = false;
+
                       }
 
                       @Override
