@@ -478,6 +478,8 @@
           android:gravity="center_horizontal"
           android:selectAllOnFocus="true"
           android:textColor="@color/status_text_night"
+          android:hint="请输入网友ID"
+          android:textColorHint="@color/navigation_button_background"
           />
 
       <Button

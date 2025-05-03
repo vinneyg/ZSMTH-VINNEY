@@ -194,7 +194,7 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
       }
 
       @Override public void onComplete() {
-        Topic topic = new Topic("-- END --");
+        Topic topic = new Topic("结束");
         //TopicListContent.addHotTopic(topic);
 
         newTopics.add(topic);
