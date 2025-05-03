@@ -892,6 +892,7 @@ public class MainActivity extends SMTHBaseActivity
                 if(ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK){
                   Settings.getInstance().setAutoLogin(false);
                   Settings.getInstance().setUserOnline(false);
+                  SMTHApplication.ReadTopicLists.clear();
                 }
               }
 

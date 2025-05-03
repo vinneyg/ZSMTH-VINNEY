@@ -178,7 +178,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
                 onRefresh();
             }
             else {
-                RefreshBoardTopicsWithoutClear();
+               //RefreshBoardTopicsWithoutClear();
+                RefreshBoardTopicFromPageOne();
             }
         });
 
@@ -361,7 +362,6 @@ public class BoardTopicActivity extends SMTHBaseActivity
             return;
         }
 
-
         mCurrentPageNo += 1;
         // Log.d(TAG, mCurrentPageNo + " page is loading now...");
         LoadBoardTopics();
@@ -369,27 +369,19 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
     @SuppressLint("NotifyDataSetChanged")
     public void onRefresh() {
-        // this method is slightly different with RefreshBoardTopicFromPageOne
-        // this method does not alert since it's triggered by SwipeRefreshLayout
-        mCurrentPageNo = 1;
-        TopicListContent.clearBoardTopics();
-        //Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
-        LoadBoardTopics();
-        isSearchMode = false;
+        RefreshBoardTopicFromPageOne();
     }
 
     @SuppressLint("NotifyDataSetChanged")
     public void RefreshBoardTopicFromPageOne() {
         showProgress("刷新版面文章...");
         int oldItemCount = TopicListContent.BOARD_TOPICS.size();
-
         TopicListContent.clearBoardTopics();
         //Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
-        /*
+        MapHash.clear();
         if (oldItemCount > 0) {
             Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemRangeRemoved(0, oldItemCount);
         }
-        */
 
         mCurrentPageNo = 1;
         LoadBoardTopics();
@@ -432,6 +424,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                                 Topic topic = new Topic(String.format(Locale.CHINA, "第%d页:", mCurrentPageNo));
                                 topic.isCategory = true;
                                 newTopics.add(topic);
+
                                 /*
                                 TopicListContent.addBoardTopic(topic);
                                 // mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
@@ -442,6 +435,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                                                     .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
                                         });
                                 */
+
                             }
 
                             @Override
@@ -455,8 +449,10 @@ public class BoardTopicActivity extends SMTHBaseActivity
                                         //TopicListContent.addBoardTopic(topic);
                                         newTopics.add(topic);
                                         MapHash.put(topic.getTitle(), topic.getTopicID());
-                                        //Objects.requireNonNull(mRecyclerView.getAdapter())
-                                        //        .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                                        /*
+                                        Objects.requireNonNull(mRecyclerView.getAdapter())
+                                                .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                                        */
                                     } else {
                                         Log.d(TAG, "sticky " + topic.getTitle());
                                     }
@@ -503,6 +499,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
                                 if (mSwipeRefreshLayout != null) {
                                     mSwipeRefreshLayout.finishRefresh(true);
                                 }
+                                int oldSize = TopicListContent.BOARD_TOPICS.size();
+
                                 for (Topic topic : newTopics) {
                                     TopicListContent.addBoardTopic(topic);
                                 }

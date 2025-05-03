@@ -53,7 +53,7 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
       holder.mAuthorReplierRow.setVisibility(View.VISIBLE);
       holder.mStatusRow.setVisibility(View.VISIBLE);
 
-      /*
+
       if (Settings.getInstance().isDiffReadTopic()) {
         //Common Parts
         holder.mAuthor.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
@@ -79,7 +79,7 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
         }
 
       }
-      */
+
       //
       holder.mTitle.setText(topic.getTitle());
       holder.mAuthor.setText(topic.getAuthor());
@@ -110,6 +110,7 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
           // fragment is attached to one) that an item has been selected.
           mListener.onTopicFragmentInteraction(holder.mTopic);
           if (Settings.getInstance().isDiffReadTopic()) {
+            if (!SMTHApplication.ReadTopicLists.contains(holder.mTopic.getTitle())) {
             SMTHApplication.ReadTopicLists.add(holder.mTopic.getTitle());
             holder.mTitle.setTextColor(Color.parseColor("#607D8B"));//R.color.status_text_night
             holder.mAuthor.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
@@ -117,6 +118,7 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
             holder.mReplyDate.setTextColor(Color.parseColor("#607D8B"));
             holder.mPublishDate.setTextColor(Color.parseColor("#607D8B"));
             holder.mStatusSummary.setTextColor(Color.parseColor("#607D8B"));
+            }
           }
         }
       }

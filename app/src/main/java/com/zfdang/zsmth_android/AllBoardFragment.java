@@ -53,7 +53,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
 
   private OnBoardFragmentInteractionListener mListener = null;
   private BoardRecyclerViewAdapter mAdapter = null;
-
+  private Context mContext;
   /**
    * Mandatory empty constructor for the fragment manager to instantiate the
    * fragment (e.g. upon screen orientation changes).
@@ -75,9 +75,11 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
 
     mRecyclerView = view.findViewById(R.id.all_board_list);
     // Set the adapter
-    mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 0));
-    Context context = view.getContext();
-    mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(context));
+    if (mContext != null) {
+      mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, LinearLayoutManager.VERTICAL, 0));
+      mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(mContext));
+    }
+
     if (mAdapter == null) {
       // this is very important, we only create adapter on the first time.
       // otherwise, BoardListContent.ALL_BOARDS might be filtered result already
@@ -190,6 +192,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
 
   @Override public void onAttach(@androidx.annotation.NonNull Context context) {
     super.onAttach(context);
+    mContext = context;
     if (context instanceof OnBoardFragmentInteractionListener) {
       mListener = (OnBoardFragmentInteractionListener) context;
     } else {

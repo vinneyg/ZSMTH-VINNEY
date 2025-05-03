@@ -52,7 +52,6 @@ public class HotTopicRecyclerViewAdapter extends RecyclerView.Adapter<HotTopicRe
       holder.mBoardName.setText(holder.mItem.getBoardName());
       holder.mReplyCount.setText(holder.mItem.getTotalPostNoAsStr());
 
-      /*
       if(Settings.getInstance().isDiffReadTopic()) {
           //R.color.colorPrimary
           //R.color.colorPrimary
@@ -77,7 +76,7 @@ public class HotTopicRecyclerViewAdapter extends RecyclerView.Adapter<HotTopicRe
           holder.mBoardName.setTextColor(Color.parseColor("#607D8B")); //R.color.colorPrimary
           holder.mReplyCount.setTextColor(Color.parseColor("#607D8B"));//R.color.colorPrimary
       }
-      */
+
 
     }
 

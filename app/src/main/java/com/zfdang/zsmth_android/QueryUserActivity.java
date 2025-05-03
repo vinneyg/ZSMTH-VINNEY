@@ -204,6 +204,7 @@ public class QueryUserActivity extends SMTHBaseActivity {
                 if(ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK){
                   Settings.getInstance().setAutoLogin(false);
                   Settings.getInstance().setUserOnline(false);
+
                 }
               }
 
@@ -217,6 +218,7 @@ public class QueryUserActivity extends SMTHBaseActivity {
               public void onComplete() {
                 Settings.getInstance().setAutoLogin(false);
                 Settings.getInstance().setUserOnline(false);
+                SMTHApplication.ReadTopicLists.clear();
 
                 Intent intent = new Intent("com.zfdang.zsmth_android.PREFERENCE_CLICKED");
                 intent.putExtra("preference_key", "setting_fresco_cache");

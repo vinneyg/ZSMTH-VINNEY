@@ -46,8 +46,8 @@ public class KeepAliveService extends Service {
                 .setChannelId(channelId)
                 .build();
         notification.flags |= Notification.FLAG_NO_CLEAR;
-
         startForeground(notId, notification);
+
         OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(MyWork.class)
                 .setInitialDelay(interval, TimeUnit.SECONDS)
                 .build();
@@ -57,6 +57,28 @@ public class KeepAliveService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    private void createNotificationChannel() {
+        NotificationChannel channel = new NotificationChannel(channelId,
+                "SMTH", NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        channel.setSound(null, null);
+        notificationManager.createNotificationChannel(channel);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("KeepAliveService", "onDestroy");
+        stopForeground(true);
+    }
+    public KeepAliveService() {
     }
 
     public static class MyWork extends Worker {
@@ -101,25 +123,4 @@ public class KeepAliveService extends Service {
         }
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    private void createNotificationChannel() {
-        NotificationChannel channel = new NotificationChannel(channelId,
-                "SMTH", NotificationManager.IMPORTANCE_DEFAULT);
-        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-        channel.setSound(null, null);
-        notificationManager.createNotificationChannel(channel);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d("KeepAliveService", "onDestroy");
-        stopForeground(true);
-    }
-    public KeepAliveService() {
-    }
 }
