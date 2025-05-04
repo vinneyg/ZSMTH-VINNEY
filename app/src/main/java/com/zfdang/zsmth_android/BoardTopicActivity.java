@@ -396,7 +396,6 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
         isSearchMode = false;
         final SMTHHelper helper = SMTHHelper.getInstance();
-        final List<Topic> newTopics = new ArrayList<>();
 
         helper
                 .wService
@@ -423,11 +422,10 @@ public class BoardTopicActivity extends SMTHBaseActivity
                             public void onSubscribe(@NonNull Disposable disposable) {
                                 Topic topic = new Topic(String.format(Locale.CHINA, "第%d页:", mCurrentPageNo));
                                 topic.isCategory = true;
-                                newTopics.add(topic);
 
-                                /*
                                 TopicListContent.addBoardTopic(topic);
-                                // mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                                mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                                /*
                                 mRecyclerView.post(
                                         () -> {
                                             // Notify adapter with appropriate notify methods
@@ -446,13 +444,12 @@ public class BoardTopicActivity extends SMTHBaseActivity
                                         if (MapHash.size() >= MAXSIZE) {
                                             MapHash.clear();
                                         }
-                                        //TopicListContent.addBoardTopic(topic);
-                                        newTopics.add(topic);
+                                        TopicListContent.addBoardTopic(topic);
                                         MapHash.put(topic.getTitle(), topic.getTopicID());
-                                        /*
+
                                         Objects.requireNonNull(mRecyclerView.getAdapter())
                                                 .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
-                                        */
+
                                     } else {
                                         Log.d(TAG, "sticky " + topic.getTitle());
                                     }
@@ -499,13 +496,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
                                 if (mSwipeRefreshLayout != null) {
                                     mSwipeRefreshLayout.finishRefresh(true);
                                 }
-                                int oldSize = TopicListContent.BOARD_TOPICS.size();
 
-                                for (Topic topic : newTopics) {
-                                    TopicListContent.addBoardTopic(topic);
-                                }
-
-                                Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
+                                //Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
 
                             }
                         });
