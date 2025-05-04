@@ -218,9 +218,14 @@ public class PostListActivity extends SMTHBaseActivity
             });
 
     mTitle = findViewById(R.id.post_list_title);
-    assert mTitle != null;
+    if (mTitle == null) {
+      return;
+    }
+
     mPageNo = findViewById(R.id.post_list_page_no);
-    assert mPageNo != null;
+    if (mPageNo == null) {
+      return;
+    }
 
     // define swipe refresh function
     mRefreshLayout = findViewById(R.id.post_list_swipe_refresh_layout);
@@ -249,7 +254,10 @@ public class PostListActivity extends SMTHBaseActivity
     });
 
     mRecyclerView = findViewById(R.id.post_list);
-    assert mRecyclerView != null;
+    if (mRecyclerView == null) {
+      return;
+    }
+
     mRecyclerView.addItemDecoration(
             new DividerItemDecoration(this, LinearLayoutManager.VERTICAL, R.drawable.recyclerview_divider));
     linearLayoutManager = new WrapContentLinearLayoutManager(this);
@@ -262,7 +270,10 @@ public class PostListActivity extends SMTHBaseActivity
     // get Board information from launcher
     Intent intent = getIntent();
     Topic topic = intent.getParcelableExtra(SMTHApplication.TOPIC_OBJECT);
-    assert topic != null;
+    if (topic == null) {
+      return;
+    }
+
     mFrom = intent.getStringExtra(SMTHApplication.FROM_BOARD);
     // now onCreateOptionsMenu(...) is called again
     //        invalidateOptionsMenu();
@@ -328,7 +339,10 @@ public class PostListActivity extends SMTHBaseActivity
         if (isLoading) {
           return;
         }
-        assert manager != null;
+
+        if (manager == null) {
+          return;
+        }
         int lastVisiblePos = manager.findLastVisibleItemPosition();
         int totalItemCount = manager.getItemCount();
         int threshold = 3; // 预加载阈值，可根据实际情况调整
@@ -342,10 +356,11 @@ public class PostListActivity extends SMTHBaseActivity
       }
 
       private void updatePageInfo(RecyclerView recyclerView, LinearLayoutManager manager) {
-        assert manager != null;
+        if (manager == null) {
+          return;
+        }
         int lastVisiblePos = manager.findLastVisibleItemPosition();
         int totalItemCount = manager.getItemCount();
-
         // reach bottom
         if (lastVisiblePos == (totalItemCount - 1) && isSlidingToLast && (mCurrentPageNo < mTopic.getTotalPageNo())) {
           LoadMoreItems();
@@ -353,21 +368,27 @@ public class PostListActivity extends SMTHBaseActivity
         if (lastVisiblePos == (totalItemCount - 1) && isSlidingToLast && (mCurrentPageNo == mTopic.getTotalPageNo())) {
           clearLoadingHints();
         } else if ((!isSlidingToLast) || (lastVisiblePos < (totalItemCount - 1))) {
-          TextView mIndexView = (Objects.requireNonNull(manager.findViewByPosition(lastVisiblePos))).findViewById(R.id.post_index);
-          String temp = mIndexView.getText().toString();
-          int mIndex;
-          if (temp.equals("楼主")) {
-            mIndex = 0;
-          } else {
-            String newTemp = temp.replaceAll("第", "");
-            temp = newTemp.replaceAll("楼", "");
-            mIndex = Integer.parseInt(temp);
+          //TextView mIndexView = (Objects.requireNonNull(manager.findViewByPosition(lastVisiblePos))).findViewById(R.id.post_index);
+          View lastVisibleView = manager.findViewByPosition(lastVisiblePos);
+          if (lastVisibleView != null) {
+            TextView mIndexView = lastVisibleView.findViewById(R.id.post_index);
+            if (mIndexView != null) {
+              String temp = mIndexView.getText().toString();
+              int mIndex;
+              if (temp.equals("楼主")) {
+                mIndex = 0;
+              } else {
+                String newTemp = temp.replaceAll("第", "");
+                temp = newTemp.replaceAll("楼", "");
+                mIndex = Integer.parseInt(temp);
+              }
+              mCurrentPageNo = mIndex / POST_PER_PAGE + 1;
+              String title = String.format(Locale.CHINA, "[%d/%d] %s", mCurrentPageNo, mTotalPageNo, mTopic.getTitle());
+              mTitle.setText(title);
+              mPageNo.setText(String.format(Locale.CHINA, "%d", mCurrentPageNo));
+              mCurrentReadPageNo = mCurrentPageNo;
+            }
           }
-          mCurrentPageNo = mIndex / POST_PER_PAGE + 1;
-          String title = String.format(Locale.CHINA, "[%d/%d] %s", mCurrentPageNo, mTotalPageNo, mTopic.getTitle());
-          mTitle.setText(title);
-          mPageNo.setText(String.format(Locale.CHINA, "%d", mCurrentPageNo));
-          mCurrentReadPageNo = mCurrentPageNo;
         }
         else{
           Log.d(TAG, mCurrentPageNo +"-"+ mTotalPageNo);
@@ -1153,7 +1174,10 @@ public class PostListActivity extends SMTHBaseActivity
     LinearLayoutManager manager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
 
     //LastItemPosition
-    assert manager != null;
+    if (manager == null) {
+      return;
+    }
+
     int lastVisiblePos = manager.findLastVisibleItemPosition();
     int totalItemCount = manager.getItemCount();
     if(lastVisiblePos <= totalItemCount-1 )
@@ -1165,7 +1189,10 @@ public class PostListActivity extends SMTHBaseActivity
     LinearLayoutManager manager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
 
     //LastItemPosition
-    assert manager != null;
+    if (manager == null) {
+      return;
+    }
+
     int FirstVisiblePos = manager.findFirstVisibleItemPosition();
     if(FirstVisiblePos > 1 )
       mRecyclerView.scrollToPosition(FirstVisiblePos-1);
@@ -1280,7 +1307,9 @@ public class PostListActivity extends SMTHBaseActivity
       View v = Objects.requireNonNull(mRecyclerView.getLayoutManager()).findViewByPosition(position);
 
       // convert title + post to image
-      assert v != null;
+      if (v == null) {
+        return;
+      }
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         if(Environment.isExternalStorageManager())
