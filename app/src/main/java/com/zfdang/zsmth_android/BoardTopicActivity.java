@@ -37,7 +37,6 @@ import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -424,7 +423,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                                 topic.isCategory = true;
 
                                 TopicListContent.addBoardTopic(topic);
-                                mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                                Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
                                 /*
                                 mRecyclerView.post(
                                         () -> {

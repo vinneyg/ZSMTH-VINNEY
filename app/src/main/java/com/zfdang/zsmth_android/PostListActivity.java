@@ -37,6 +37,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -1116,7 +1118,14 @@ public class PostListActivity extends SMTHBaseActivity
             .create();
     dialog.setCanceledOnTouchOutside(true);
     dialog.setCancelable(true);
-
+    dialog.setOnShowListener(dialogInterface -> {
+      Window window = dialog.getWindow();
+      if (window != null) {
+        WindowManager.LayoutParams params = window.getAttributes();
+        params.width = (int) (getResources().getDisplayMetrics().widthPixels * 0.7);
+        window.setAttributes(params);
+      }
+    });
     dialog.show();
   }
 

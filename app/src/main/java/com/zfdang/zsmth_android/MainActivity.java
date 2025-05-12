@@ -856,7 +856,7 @@ public class MainActivity extends SMTHBaseActivity
       onLogout();
       return true;
     } else if (id == android.R.id.home) {
-      //onBackPressed();
+      //onHandleBackPressed();
       finish();
       return true;
     }
@@ -1235,15 +1235,12 @@ public class MainActivity extends SMTHBaseActivity
 
 
   public void startBoardTopicActivity(Board board) {
-    //ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
     Intent intent = new Intent(this, BoardTopicActivity.class);
     intent.putExtra(SMTHApplication.BOARD_OBJECT, (Parcelable) board);
     startActivity(intent);
-    //startActivity(intent, options.toBundle());
   }
 
-  class PendingDoubleBackToExit implements Runnable {
-    public void run() {
+  class PendingDoubleBackToExit implements Runnable { public void run() {
       mDoubleBackToExit = false;
     }
   }
