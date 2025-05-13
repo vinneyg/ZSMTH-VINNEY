@@ -670,27 +670,30 @@ public class MainActivity extends SMTHBaseActivity
           // login status lost, show login menu
           onLogin();
         } else {
-          // find the actual folder for the new message
-          String subTitle = "收件箱";
-          if (message.contains(SMTHApplication.NOTIFICATION_NEW_MAIL)) {
-            mailListFragment.setCurrentFolder(MailListFragment.INBOX_LABEL);
-          } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_LIKE)) {
-            subTitle = "LIKE我";
-            mailListFragment.setCurrentFolder(MailListFragment.LIKE_LABEL);
-          } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_AT)) {
-            subTitle = "@我";
-            mailListFragment.setCurrentFolder(MailListFragment.AT_LABEL);
-          } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_REPLY)) {
-            subTitle = "回复我";
-            mailListFragment.setCurrentFolder(MailListFragment.REPLY_LABEL);
-          }
-          // force mail fragment to reload
-          MailListContent.clear();
 
-          fm.beginTransaction().replace(R.id.content_frame, mailListFragment).commitAllowingStateLoss();
-          // switch title of mainActivity
-          // setTitle(SMTHApplication.App_Title_Prefix + "邮件");
-          setTitle(SMTHApplication.App_Title_Prefix + subTitle);
+          if(message.contains("你有新")){
+            // find the actual folder for the new message
+            String subTitle = "收件箱";
+            if (message.contains(SMTHApplication.NOTIFICATION_NEW_MAIL)) {
+              mailListFragment.setCurrentFolder(MailListFragment.INBOX_LABEL);
+            } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_LIKE)) {
+              subTitle = "LIKE我";
+              mailListFragment.setCurrentFolder(MailListFragment.LIKE_LABEL);
+            } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_AT)) {
+              subTitle = "@我";
+              mailListFragment.setCurrentFolder(MailListFragment.AT_LABEL);
+            } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_REPLY)) {
+              subTitle = "回复我";
+              mailListFragment.setCurrentFolder(MailListFragment.REPLY_LABEL);
+            }
+            // force mail fragment to reload
+            MailListContent.clear();
+
+            fm.beginTransaction().replace(R.id.content_frame, mailListFragment).commitAllowingStateLoss();
+            // switch title of mainActivity
+            // setTitle(SMTHApplication.App_Title_Prefix + "邮件");
+            setTitle(SMTHApplication.App_Title_Prefix + subTitle);
+          }
         }
       }
     }
@@ -1241,8 +1244,8 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   class PendingDoubleBackToExit implements Runnable { public void run() {
-      mDoubleBackToExit = false;
-    }
+    mDoubleBackToExit = false;
+  }
   }
 
   private void setDrawerLeftEdgeSize (Activity activity, DrawerLayout drawerLayout, float displayWidthPercentage) {

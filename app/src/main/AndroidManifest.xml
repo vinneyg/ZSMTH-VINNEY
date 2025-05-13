@@ -39,7 +39,6 @@
         android:foregroundServiceType= "specialUse"
         android:permission= "android.permission.FOREGROUND_SERVICE_SPECIAL_USE"
         tools:ignore="ForegroundServicePermission">
-
     </service>
     <activity
         android:name=".MainActivity"
@@ -93,7 +92,6 @@
         android:hardwareAccelerated="false"
         android:label="@string/title_activity_fullscreen_image_viewer"
         android:theme="@style/FullscreenTheme" />
-
     <!-- External activities -->
     <activity
         android:name="com.zfdang.multiple_images_selector.ImagesSelectorActivity"

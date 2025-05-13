@@ -163,7 +163,6 @@
 
   </PreferenceCategory>
 
-
   <PreferenceCategory android:title="提醒">
     <CheckBoxPreference
         android:defaultValue="on"
@@ -205,6 +204,4 @@
         android:title="设备型号"
         />
   </PreferenceCategory>
-
-
 </PreferenceScreen>

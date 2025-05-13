@@ -618,7 +618,6 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     FileLess.$del(cache);
     if (!cache.exists()) {
       cache.mkdir();
-
       updateOkHttp3Cache();
     }
   }
