@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.klinker.android.link_builder.Link;
@@ -32,10 +33,27 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
   private final List<Post> mPosts;
   private final Activity mListener;
 
-  public PostRecyclerViewAdapter(List<Post> posts, Activity listener) {
+  // 新增接口
+  public interface OnBtnMoreClickListener {
+    void onItemBtnMoreClicked(int position, View view);
+  }
+
+  public interface OnBtnReplyClickListener {
+    void onItemBtnReplyClicked(int position, View view);
+  }
+
+  private final OnBtnMoreClickListener mBtnMoreClickListener; // 添加监听器变量
+
+  private final OnBtnReplyClickListener mBtnReplyClickListener; // 添加监听器变量
+
+
+  public PostRecyclerViewAdapter(List<Post> posts, Activity listener,OnBtnMoreClickListener leftListener,OnBtnReplyClickListener rightListener) {
     mPosts = posts;
     mListener = listener;
+    mBtnMoreClickListener =leftListener;
+    mBtnReplyClickListener = rightListener;
   }
+
 
   @NonNull
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -58,7 +76,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
       ContentSegment content = contents.get(0);
 
       if (content.getSpanned().toString().contains("mp4") && content.getSpanned().toString().contains("附件")
-      && !(content.getSpanned().toString().contains(": 附件"))){ //Video
+              && !(content.getSpanned().toString().contains(": 附件"))){ //Video
         List<Attachment> attaches = post.getAttachVideoFiles();
         for (int i = 0; i < attaches.size(); i++) {
           Attachment attach = attaches.get(i);
@@ -106,87 +124,87 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
       }
     }
 
-      // http://stackoverflow.com/questions/13438473/clicking-html-link-in-textview-fires-weird-androidruntimeexception
+    // http://stackoverflow.com/questions/13438473/clicking-html-link-in-textview-fires-weird-androidruntimeexception
 
-      for (int i = 1; i < contents.size(); i++) {
-        ContentSegment content = contents.get(i);
+    for (int i = 1; i < contents.size(); i++) {
+      ContentSegment content = contents.get(i);
 
-        if (content.getType() == ContentSegment.SEGMENT_IMAGE) {
-          // Log.d("CreateView", "Image: " + content.getUrl());
+      if (content.getType() == ContentSegment.SEGMENT_IMAGE) {
+        // Log.d("CreateView", "Image: " + content.getUrl());
 
-          // Add the text layout to the parent layout
-          WrapContentDraweeView image = (WrapContentDraweeView) inflater.inflate(R.layout.post_item_imageview, viewGroup, false);
-          image.setImageFromStringURL(content.getUrl());
+        // Add the text layout to the parent layout
+        WrapContentDraweeView image = (WrapContentDraweeView) inflater.inflate(R.layout.post_item_imageview, viewGroup, false);
+        image.setImageFromStringURL(content.getUrl());
 
-          // set onclicklistener
-          image.setTag(R.id.image_tag, content.getImgIndex());
-          image.setOnClickListener(v -> {
-               int position = (int) v.getTag(R.id.image_tag);
+        // set onclicklistener
+        image.setTag(R.id.image_tag, content.getImgIndex());
+        image.setOnClickListener(v -> {
+          int position = (int) v.getTag(R.id.image_tag);
 
-               Intent intent = new Intent(mListener, FSImageViewerActivity.class);
+          Intent intent = new Intent(mListener, FSImageViewerActivity.class);
 
-               ArrayList<String> urls = new ArrayList<>();
-               List<Attachment> attaches = post.getAttachFiles();
-               for (Attachment attach : attaches) {
-                 // load original image in FS image viewer
-                 urls.add(attach.getOriginalImageSource());
-               }
+          ArrayList<String> urls = new ArrayList<>();
+          List<Attachment> attaches = post.getAttachFiles();
+          for (Attachment attach : attaches) {
+            // load original image in FS image viewer
+            urls.add(attach.getOriginalImageSource());
+          }
 
-               intent.putStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS, urls);
-               intent.putExtra(SMTHApplication.ATTACHMENT_CURRENT_POS, position);
-               mListener.startActivity(intent);
-             });
+          intent.putStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS, urls);
+          intent.putExtra(SMTHApplication.ATTACHMENT_CURRENT_POS, position);
+          mListener.startActivity(intent);
+        });
 
-          // Add the text view to the parent layout
-          viewGroup.addView(image);
-        } else if (content.getType() == ContentSegment.SEGMENT_TEXT) {
-          if (content.getSpanned().toString().contains("mp4") && content.getSpanned().toString().contains("附件")) { //Video
-            List<Attachment> attaches = post.getAttachVideoFiles();
-            for (int j = 0; j < attaches.size(); j++) {
-              Attachment attach = attaches.get(j);
+        // Add the text view to the parent layout
+        viewGroup.addView(image);
+      } else if (content.getType() == ContentSegment.SEGMENT_TEXT) {
+        if (content.getSpanned().toString().contains("mp4") && content.getSpanned().toString().contains("附件")) { //Video
+          List<Attachment> attaches = post.getAttachVideoFiles();
+          for (int j = 0; j < attaches.size(); j++) {
+            Attachment attach = attaches.get(j);
 
-              LinkConsumableTextView tv = (LinkConsumableTextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
-              String[] sUrl = new String[6];
-              String tempStr = content.getSpanned().toString().split(".mp4")[j];
-              sUrl[j] = "附件" + tempStr.split("附件")[1] + ".mp4";
-              if (j == 0) {
-                tv.setText(tempStr + ".mp4");
-              } else {
-                tv.setText(sUrl[j]);
-              }
-              Link link = new Link(sUrl[j])
-                      // .setTextColor(Color.parseColor("#259B24"))                  // optional, defaults to holo blue
-                      // .setTextColorOfHighlightedLink(Color.parseColor("#0D3D0C")) // optional, defaults to holo blue
-                      .setHighlightAlpha(.4f)                                     // optional, defaults to .15f
-                      .setUnderlined(false)                                       // optional, defaults to true
-                      .setBold(false)                                              // optional, defaults to false
-                      .setOnLongClickListener(clickedText -> {
-                        // long clicked
-                      })
-                      .setOnClickListener(clickedText -> {
-                        // single clicked
-                        Uri uri = Uri.parse(attach.getOriginalVideoSource());
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        //intent.setType("video/*");
-                        intent.setDataAndType(uri, "video/*");
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        mListener.startActivity(Intent.createChooser(intent, "选择视频播放器"));
-                      });
-              LinkBuilder.on(tv).addLink(link).build();
-
-              // Add the text view to the parent layout
-              viewGroup.addView(tv);
-            }
-          } else {
             LinkConsumableTextView tv = (LinkConsumableTextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
+            String[] sUrl = new String[6];
+            String tempStr = content.getSpanned().toString().split(".mp4")[j];
+            sUrl[j] = "附件" + tempStr.split("附件")[1] + ".mp4";
+            if (j == 0) {
+              tv.setText(tempStr + ".mp4");
+            } else {
+              tv.setText(sUrl[j]);
+            }
+            Link link = new Link(sUrl[j])
+                    // .setTextColor(Color.parseColor("#259B24"))                  // optional, defaults to holo blue
+                    // .setTextColorOfHighlightedLink(Color.parseColor("#0D3D0C")) // optional, defaults to holo blue
+                    .setHighlightAlpha(.4f)                                     // optional, defaults to .15f
+                    .setUnderlined(false)                                       // optional, defaults to true
+                    .setBold(false)                                              // optional, defaults to false
+                    .setOnLongClickListener(clickedText -> {
+                      // long clicked
+                    })
+                    .setOnClickListener(clickedText -> {
+                      // single clicked
+                      Uri uri = Uri.parse(attach.getOriginalVideoSource());
+                      Intent intent = new Intent(Intent.ACTION_VIEW);
+                      //intent.setType("video/*");
+                      intent.setDataAndType(uri, "video/*");
+                      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                      mListener.startActivity(Intent.createChooser(intent, "选择视频播放器"));
+                    });
+            LinkBuilder.on(tv).addLink(link).build();
 
-            tv.setText(content.getSpanned());
-            LinkBuilder.on(tv).addLinks(ActivityUtils.getPostSupportedLinks(mListener)).build();
             // Add the text view to the parent layout
             viewGroup.addView(tv);
           }
+        } else {
+          LinkConsumableTextView tv = (LinkConsumableTextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
+
+          tv.setText(content.getSpanned());
+          LinkBuilder.on(tv).addLinks(ActivityUtils.getPostSupportedLinks(mListener)).build();
+          // Add the text view to the parent layout
+          viewGroup.addView(tv);
         }
       }
+    }
   }
 
   @Override public void onBindViewHolder(final ViewHolder holder, final int position) {
@@ -202,6 +220,18 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         Intent intent = new Intent(v.getContext(), QueryUserActivity.class);
         intent.putExtra(SMTHApplication.QUERY_USER_INFO, post.getRawAuthor());
         v.getContext().startActivity(intent);
+      }
+    });
+
+    holder.mBtnReply.setOnClickListener(v -> {
+      if (mBtnReplyClickListener!= null) {
+        mBtnReplyClickListener.onItemBtnReplyClicked(position, v);
+      }
+    });
+
+    holder.mBtnMore.setOnClickListener(v -> {
+      if (mBtnMoreClickListener!= null) {
+        mBtnMoreClickListener.onItemBtnMoreClicked(position, v);
       }
     });
 
@@ -234,6 +264,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     public final LinkConsumableTextView mPostContent;
     public Post mPost;
 
+    public final Button mBtnReply;
+    public final Button mBtnMore;
+
     public ViewHolder(View view) {
       super(view);
       mView = view;
@@ -242,6 +275,8 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
       mPostPublishDate = view.findViewById(R.id.post_publish_date);
       mViewGroup = view.findViewById(R.id.post_content_holder);
       mPostContent = view.findViewById(R.id.post_content);
+      mBtnReply = view.findViewById(R.id.btn_post_reply);
+      mBtnMore= view.findViewById(R.id.btn_post_more);
     }
 
     @NonNull

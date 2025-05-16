@@ -138,7 +138,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
             Log.e(TAG, "toolbar is null");
             return;
         }
-        toolbar.setTitle(getTitle());
+        //toolbar.setTitle(getTitle());
 
         mSetting = Settings.getInstance();
 

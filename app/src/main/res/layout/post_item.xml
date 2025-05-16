@@ -14,9 +14,11 @@
 
     <TextView
         android:id="@+id/post_author"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
         android:ellipsize="end"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
         android:paddingStart="2dp"
         android:text="mozilla"
         android:textColor="@color/status_text_night"
@@ -24,21 +26,40 @@
         />
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:gravity="right"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
         android:orientation="horizontal"
-        >
+        android:padding="0dp"
+        android:gravity="end">
 
-      <TextView
-          android:id="@+id/post_index"
-          android:layout_width="wrap_content"
+      <Button
+          android:id="@+id/btn_post_reply"
           android:layout_height="wrap_content"
-          android:layout_marginEnd="4dp"
-          android:text="楼主"
+          android:layout_width="0dp"
+          android:layout_weight="0.5"
+          android:layout_marginBottom="5dp"
+          android:layout_marginLeft="2dp"
+          android:layout_marginRight="2dp"
+          android:layout_marginTop="5dp"
+          android:background="@drawable/navigation_button_background"
           android:textColor="@color/status_text_night"
-          android:textSize="@dimen/zsmth_font_size_small"
-          />
+          android:textSize="@dimen/zsmth_font_size_extra_small"
+          android:text="回复" />
+
+      <Button
+          android:id="@+id/btn_post_more"
+          android:layout_height="wrap_content"
+          android:layout_width="0dp"
+          android:layout_weight="0.5"
+          android:layout_marginStart="2dp"
+          android:layout_marginBottom="5dp"
+          android:layout_marginLeft="2dp"
+          android:layout_marginRight="2dp"
+          android:layout_marginTop="5dp"
+          android:background="@drawable/navigation_button_background"
+          android:textColor="@color/status_text_night"
+          android:textSize="@dimen/zsmth_font_size_extra_small"
+          android:text="•••" />
     </LinearLayout>
 
   </LinearLayout>
@@ -50,14 +71,32 @@
       >
 
     <TextView
-        android:id="@+id/post_publish_date"
+        android:id="@+id/post_index"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingStart="2dp"
         android:text=""
         android:textColor="@color/status_text_night"
-        android:textSize="@dimen/zsmth_font_size_extra_small"
+        android:textSize="@dimen/zsmth_font_size_medium"
         />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:gravity="end"
+        android:orientation="horizontal"
+        >
+
+      <TextView
+          android:id="@+id/post_publish_date"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="4dp"
+          android:text="楼主"
+          android:textColor="@color/status_text_night"
+          android:textSize="@dimen/zsmth_font_size_medium"
+          />
+    </LinearLayout>
+
   </LinearLayout>
 
   <LinearLayout

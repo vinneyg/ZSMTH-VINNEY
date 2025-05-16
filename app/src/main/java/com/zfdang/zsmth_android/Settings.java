@@ -729,7 +729,7 @@ public class Settings {
 
     bTopicFwdSelf = mPreference.getBoolean(SET_FWD_ADDRESS,true);
     bAutoLoadMore = mPreference.getBoolean(AUTO_LOAD_MORE,false);
-    bQuickReply = mPreference.getBoolean(QUICK_REPLY,true);
+    bQuickReply = mPreference.getBoolean(QUICK_REPLY,false);
     bMenuTextOn = mPreference.getBoolean(MENU_TEXT,false);
 
     bSetIdCheck = mPreference.getBoolean(SET_ID_CHECK,true);

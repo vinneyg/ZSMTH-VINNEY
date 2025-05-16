@@ -1082,6 +1082,7 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   @Override public void onBoardLongClick(final Board board) {
+    /*
     // shared by FavoriteBoard & AllBoard fragment
     // long click to remove board from favorite
     Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
@@ -1233,6 +1234,8 @@ public class MainActivity extends SMTHBaseActivity
       }
 
     }
+
+     */
     //- confirm Folder */
   }
 

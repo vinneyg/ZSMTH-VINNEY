@@ -115,9 +115,9 @@
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="quick_reply"
-        android:summaryOff="关"
-        android:summaryOn="开"
-        android:title="左右侧便捷回复设置"/>
+        android:summaryOff="显示原贴内容"
+        android:summaryOn="不显示原贴内容"
+        android:title="便捷回复设置"/>
 
     <CheckBoxPreference
         android:defaultValue="on"
