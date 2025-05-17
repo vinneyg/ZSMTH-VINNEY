@@ -289,21 +289,30 @@ public class MainActivity extends SMTHBaseActivity
     initFragments();
 
     if (savedInstanceState != null) {
-      currentFragmentId = savedInstanceState.getInt(KEY_CURRENT_FRAGMENT);
-      Fragment fragment = getFragmentById(currentFragmentId);
-
-      if (fragment instanceof MailListFragment) {
-        MailListFragment mailListFragment = (MailListFragment) fragment;
-        Bundle mailListState = savedInstanceState.getBundle("mail_list_fragment_state");
-        mailListFragment.restoreState(mailListState);
+      if (getIntent().hasExtra("FRAGMENT") &&
+              "PREFERENCE".equals(getIntent().getStringExtra("FRAGMENT"))) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content_frame, new MyPreferenceFragment())
+                .commit();
+        getIntent().removeExtra("FRAGMENT");
       }
+      else{
+        currentFragmentId = savedInstanceState.getInt(KEY_CURRENT_FRAGMENT);
+        Fragment fragment = getFragmentById(currentFragmentId);
 
-      if (fragment != null) {
-        FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction().replace(R.id.content_frame, fragment).commit();
-        String title = getTitleByFragmentId(currentFragmentId);
-        if (fragment != favoriteBoardFragment) {
-          setTitle(SMTHApplication.App_Title_Prefix + title);
+        if (fragment instanceof MailListFragment) {
+          MailListFragment mailListFragment = (MailListFragment) fragment;
+          Bundle mailListState = savedInstanceState.getBundle("mail_list_fragment_state");
+          mailListFragment.restoreState(mailListState);
+        }
+
+        if (fragment != null) {
+          FragmentManager fm = getSupportFragmentManager();
+          fm.beginTransaction().replace(R.id.content_frame, fragment).commit();
+          String title = getTitleByFragmentId(currentFragmentId);
+          if (fragment != favoriteBoardFragment) {
+            setTitle(SMTHApplication.App_Title_Prefix + title);
+          }
         }
       }
     } else {

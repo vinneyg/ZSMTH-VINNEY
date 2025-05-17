@@ -18,6 +18,9 @@ import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -62,31 +65,27 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
   CheckBoxPreference quick_reply;
   CheckBoxPreference show_signature;
   CheckBoxPreference menu_text;
-
   CheckBoxPreference setting_volume_key_scroll;
   ListPreference setting_fontsize_control;
   CheckBoxPreference image_quality_control;
   CheckBoxPreference login_with_verification;
   CheckBoxPreference ssl_verification;
   CheckBoxPreference image_source_cdn;
-
   CheckBoxPreference notification_control_mail;
   CheckBoxPreference notification_control_like;
   CheckBoxPreference notification_control_reply;
   CheckBoxPreference notification_control_at;
-
   CheckBoxPreference topic_fwd_self; //
   CheckBoxPreference set_id_check; //
-
   CheckBoxPreference set_left_nav_slide;
-
   Preference app_feedback;
   Preference app_version;
-
   Preference app_sponsor;
 
   private BroadcastReceiver receiver;
 
+  private  int preferenceScrollPosition = 0;
+  private static final String PREF_SCROLL_POSITION = "preference_scroll_position";
 
   @SuppressLint("UnspecifiedRegisterReceiverFlag")
   @Override public void onCreate(Bundle savedInstanceState) {
@@ -156,10 +155,12 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
       Activity activity = getActivity();
       if (activity != null) {
-        Intent intent = new Intent(activity.getApplicationContext(), MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        activity.finish();
+        Intent intent = activity.getIntent();
+
+        if (!intent.hasExtra("FRAGMENT")) {
+          intent.putExtra("FRAGMENT", "PREFERENCE");
+        }
+        activity.recreate();
       }
       return true;
     });
@@ -295,10 +296,12 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
         Activity activity = getActivity();
         if (activity != null) {
-          Intent intent = new Intent(activity.getApplicationContext(), MainActivity.class);
-          intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-          startActivity(intent);
-          activity.finish();
+          Intent intent = activity.getIntent();
+
+          if (!intent.hasExtra("FRAGMENT")) {
+            intent.putExtra("FRAGMENT", "PREFERENCE");
+          }
+          activity.recreate();
         }
         return true;
       }
@@ -330,6 +333,11 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       // recreate activity for font size to take effect
       Activity activity = getActivity();
       if (activity != null) {
+        Intent intent = activity.getIntent();
+
+        if (!intent.hasExtra("FRAGMENT")) {
+          intent.putExtra("FRAGMENT", "PREFERENCE");
+        }
         activity.recreate();
       }
       return true;
@@ -505,10 +513,12 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       Settings.getInstance().setLeftNavSlide(bValue);
       Activity activity = getActivity();
       if (activity != null) {
-        Intent intent = new Intent(activity.getApplicationContext(), MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        activity.finish();
+        Intent intent = activity.getIntent();
+
+        if (!intent.hasExtra("FRAGMENT")) {
+          intent.putExtra("FRAGMENT", "PREFERENCE");
+        }
+        activity.recreate();
       }
       return true;
     });
@@ -562,6 +572,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
   public void setApplicationNightMode() {
     boolean bNightMode = Settings.getInstance().isNightMode();
+
     if (bNightMode) {
       AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
     } else {
@@ -570,11 +581,14 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
     Activity activity = getActivity();
     if (activity != null) {
-      Intent intent = new Intent(activity.getApplicationContext(), MainActivity.class);
-      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-      startActivity(intent);
-      activity.finish();
+      Intent intent = activity.getIntent();
+
+      if (!intent.hasExtra("FRAGMENT")) {
+        intent.putExtra("FRAGMENT", "PREFERENCE");
+      }
+      activity.recreate();
     }
+
   }
 
   public void updateVersionInfo() {
@@ -658,4 +672,86 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       }
     }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
   }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+
+    View rootView = getView();
+    if (rootView != null) {
+      RecyclerView recyclerView = rootView.findViewById(androidx.preference.R.id.recycler_view);
+      if (recyclerView != null && recyclerView.getLayoutManager() != null) {
+        // 获取当前第一个可见 item 的位置
+        LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        int position = layoutManager.findFirstVisibleItemPosition();
+        //int position = findClosestToCenter(recyclerView); // 使用更精确的方式
+        preferenceScrollPosition = position;
+        saveScrollPosition(position);
+      }
+    }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+
+    preferenceScrollPosition = loadScrollPosition();
+
+    View rootView = getView();
+    if (rootView != null) {
+      RecyclerView recyclerView = rootView.findViewById(androidx.preference.R.id.recycler_view);
+      if (recyclerView != null && recyclerView.getLayoutManager() != null && preferenceScrollPosition >= 0) {
+        // 恢复到之前的位置
+        ((LinearLayoutManager) recyclerView.getLayoutManager())
+                .scrollToPositionWithOffset(preferenceScrollPosition, 0);
+      }
+    }
+  }
+
+  private int findClosestToCenter(RecyclerView recyclerView) {
+    LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+    if (layoutManager == null) return 0;
+
+    int firstPos = layoutManager.findFirstVisibleItemPosition();
+    int lastPos = layoutManager.findLastVisibleItemPosition();
+
+    if (firstPos == RecyclerView.NO_POSITION || firstPos == lastPos) {
+      return firstPos;
+    }
+
+    int closestPos = firstPos;
+    int centerY = recyclerView.getHeight() / 2;
+
+    for (int i = firstPos; i <= lastPos; i++) {
+      View child = layoutManager.findViewByPosition(i);
+      if (child == null) continue;
+
+      int childMidY = (child.getTop() + child.getBottom()) / 2;
+      int currentDelta = Math.abs(childMidY - centerY);
+      int bestDelta = (layoutManager.findViewByPosition(closestPos) == null) ? Integer.MAX_VALUE :
+              Math.abs(((Objects.requireNonNull(layoutManager.findViewByPosition(closestPos)).getTop() +
+                      Objects.requireNonNull(layoutManager.findViewByPosition(closestPos)).getBottom()) / 2 - centerY));
+
+      if (currentDelta < bestDelta) {
+        closestPos = i;
+      }
+    }
+
+    return closestPos;
+  }
+
+
+  private void saveScrollPosition(int position) {
+    requireContext().getSharedPreferences("PreferenceState", Context.MODE_PRIVATE)
+            .edit()
+            .putInt(PREF_SCROLL_POSITION, position)
+            .apply();
+  }
+
+  private int loadScrollPosition() {
+    return requireContext().getSharedPreferences("PreferenceState", Context.MODE_PRIVATE)
+            .getInt(PREF_SCROLL_POSITION, 0);
+  }
+
+
 }
