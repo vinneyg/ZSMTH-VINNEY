@@ -60,6 +60,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
   CheckBoxPreference setting_post_navigation_control;
   CheckBoxPreference auto_load_more;
   CheckBoxPreference quick_reply;
+  CheckBoxPreference show_signature;
   CheckBoxPreference menu_text;
 
   CheckBoxPreference setting_volume_key_scroll;
@@ -262,6 +263,18 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         bValue = (Boolean) newValue;
       }
       Settings.getInstance().SetQuickReply(bValue);
+      return true;
+    });
+
+    show_signature =(CheckBoxPreference) findPreference("show_signature");
+    assert show_signature != null;
+    show_signature.setChecked(Settings.getInstance().isShowSignature());
+    show_signature.setOnPreferenceChangeListener((preference, newValue) -> {
+      boolean bValue = Settings.getInstance().isShowSignature();
+      if (newValue instanceof Boolean) {
+        bValue = (Boolean) newValue;
+      }
+      Settings.getInstance().SetShowSignature(bValue);
       return true;
     });
 

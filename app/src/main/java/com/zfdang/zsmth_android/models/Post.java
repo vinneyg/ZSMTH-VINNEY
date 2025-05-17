@@ -484,7 +484,9 @@ public class Post {
       if (signatureMode == 1) {
         //line = "<small><font color=#808080>" + line + "</font></small>";
         line = "<small><font color=#607D8B>" + line + "</font></small>";
-        sb.append(line).append("<br />");
+        if(Settings.getInstance().isShowSignature()){
+          sb.append(line).append("<br />");
+        }
         continue;
       }
 

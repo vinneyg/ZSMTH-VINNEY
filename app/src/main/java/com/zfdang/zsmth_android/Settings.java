@@ -337,6 +337,21 @@ public class Settings {
     }
   }
 
+  private static final String SHOW_SIGNATURE = "SHOW_SIGNATURE";
+  private boolean bShowSignature;
+
+  public boolean isShowSignature() {
+    return bShowSignature;
+  }
+
+  public void SetShowSignature(boolean bShowSignature) {
+    if (this.bShowSignature != bShowSignature) {
+      this.bShowSignature = bShowSignature;
+      mEditor.putBoolean(SHOW_SIGNATURE, this.bShowSignature);
+      mEditor.commit();
+    }
+  }
+
   private static final String MENU_TEXT = "MENU_TEXT";
   private boolean bMenuTextOn;
 
@@ -689,10 +704,7 @@ public class Settings {
     mPassword = mPreference.getString(PASSWORD_KEY, "");
     //bAutoLogin = mPreference.getBoolean(AUTO_LOGIN, false);
     bSaveInfo = mPreference.getBoolean(SAVE_INFO, true);
-
-
     bLastLoginSuccess = mPreference.getBoolean(LAST_LOGIN_SUCCESS, false);
-
     bUseSignature = mPreference.getBoolean(USE_DEVICE_SIGNATURE, true);
     mSignature = mPreference.getString(DEVICE_SIGNATURE, "");
     if (mSignature.isEmpty()) {
@@ -707,49 +719,34 @@ public class Settings {
     }
 
     mTarget = mPreference.getString(FORWARD_TAEGET, "");
-
     bUserOnline = mPreference.getBoolean(USER_ONLINE, false);
-
     bLoadOriginalImage = mPreference.getBoolean(LOAD_ORIGINAL_IMAGE, false);
     bImageSourceCDN = mPreference.getBoolean(IMAGE_SOURCE_CDN, false);
-
     bNightMode = mPreference.getBoolean(NIGHT_MODE, false);
-
     bDiffReadTopic = mPreference.getBoolean(DIFF_READ_TOPIC, true);
-
     iLastVersion = mPreference.getInt(LAST_LAUNCH_VERSION, 0);
-
     bNotificationMail = mPreference.getBoolean(NOTIFICATION_MAIL, true);
     bNotificationAt = mPreference.getBoolean(NOTIFICATION_AT, true);
     bNotificationLike = mPreference.getBoolean(NOTIFICATION_LIKE, true);
     bNotificationReply = mPreference.getBoolean(NOTIFICATION_REPLY, true);
-
     bLaunchHotTopic = mPreference.getBoolean(LAUNCH_HOTTOPIC_AS_ENTRY, true);
     bLaunchBottomNavi = mPreference.getBoolean(LAUNCH_BOTTOM_NAVI, true);
-
     bTopicFwdSelf = mPreference.getBoolean(SET_FWD_ADDRESS,true);
     bAutoLoadMore = mPreference.getBoolean(AUTO_LOAD_MORE,false);
     bQuickReply = mPreference.getBoolean(QUICK_REPLY,false);
+    bShowSignature = mPreference.getBoolean(SHOW_SIGNATURE,false);
     bMenuTextOn = mPreference.getBoolean(MENU_TEXT,false);
-
     bSetIdCheck = mPreference.getBoolean(SET_ID_CHECK,true);
-
     bOpenTopicAdd = mPreference.getBoolean(OPEN_TOPIC_ADD,false);
-
-
     bPostNavBar = mPreference.getBoolean(SHOW_POST_NAVITATION_BAR, false);
     bVolumeKeyScroll = mPreference.getBoolean(VOLUME_KEY_SCROLL, true);
     iFontIndex = mPreference.getInt(ZSMTH_FONT_INDEX, 1);
-
     mPostCache = mPreference.getString(COMPOSE_POST_CACHE, "");
-
     bThread = mPreference.getBoolean(Target_Thread,false);
     bRef = mPreference.getBoolean(Target_Ref,false);
     bAtt = mPreference.getBoolean(Target_Att,false);
-
     bLeftNavSlide = mPreference.getBoolean(left_nav_slide,false);
     bLoginWithVerification = mPreference.getBoolean(LOGIN_WITH_VERIFICATION, true);
     bSslVerification = mPreference.getBoolean(SSL_VERIFICATION, false);
-
   }
 }

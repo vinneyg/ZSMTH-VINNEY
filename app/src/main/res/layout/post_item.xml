@@ -15,10 +15,11 @@
     <TextView
         android:id="@+id/post_author"
         android:layout_width="0dp"
-        android:layout_height="42dp"
+        android:layout_height="36dp"
         android:ellipsize="end"
+        android:singleLine="true"
         android:layout_weight="1"
-        android:gravity="center_vertical"
+        android:gravity="start"
         android:paddingStart="2dp"
         android:text="mozilla"
         android:textColor="@color/status_text_night"
@@ -27,7 +28,7 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="42dp"
+        android:layout_height="36dp"
         android:orientation="horizontal"
         android:padding="0dp"
         android:gravity="end">
@@ -36,12 +37,12 @@
           android:id="@+id/btn_post_reply"
           android:layout_height="wrap_content"
           android:layout_width="0dp"
-          android:layout_weight="0.5"
-          android:layout_marginBottom="5dp"
-          android:layout_marginLeft="2dp"
-          android:layout_marginRight="2dp"
-          android:layout_marginTop="5dp"
-          android:background="@drawable/navigation_button_background"
+          android:layout_weight="0.2"
+          android:layout_marginBottom="1dp"
+          android:layout_marginStart="1dp"
+          android:layout_marginEnd="1dp"
+          android:layout_marginTop="1dp"
+          android:background="@drawable/btn_outline"
           android:textColor="@color/status_text_night"
           android:textSize="@dimen/zsmth_font_size_extra_small"
           android:text="回复" />
@@ -50,13 +51,12 @@
           android:id="@+id/btn_post_more"
           android:layout_height="wrap_content"
           android:layout_width="0dp"
-          android:layout_weight="0.5"
-          android:layout_marginStart="2dp"
-          android:layout_marginBottom="5dp"
-          android:layout_marginLeft="2dp"
-          android:layout_marginRight="2dp"
-          android:layout_marginTop="5dp"
-          android:background="@drawable/navigation_button_background"
+          android:layout_weight="0.2"
+          android:layout_marginStart="1dp"
+          android:layout_marginBottom="1dp"
+          android:layout_marginEnd="1dp"
+          android:layout_marginTop="1dp"
+          android:background="@drawable/btn_outline"
           android:textColor="@color/status_text_night"
           android:textSize="@dimen/zsmth_font_size_extra_small"
           android:text="•••" />
@@ -75,9 +75,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingStart="2dp"
-        android:text=""
+        android:text="楼主"
         android:textColor="@color/status_text_night"
-        android:textSize="@dimen/zsmth_font_size_medium"
+        android:textSize="@dimen/zsmth_font_size_extra_small"
         />
     <LinearLayout
         android:layout_width="fill_parent"
@@ -91,9 +91,9 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginEnd="4dp"
-          android:text="楼主"
+          android:text=""
           android:textColor="@color/status_text_night"
-          android:textSize="@dimen/zsmth_font_size_medium"
+          android:textSize="@dimen/zsmth_font_size_extra_small"
           />
     </LinearLayout>
 
