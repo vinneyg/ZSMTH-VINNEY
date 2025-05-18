@@ -427,7 +427,9 @@ public class Post {
         if (linebreak >= 2) {
           // continuous linebreak, skip extra linebreak
         } else {
-          sb.append(line).append("<br />");
+          if(Settings.getInstance().isShowSignature()){
+            sb.append(line).append("<br />");
+          }
         }
         continue;
       } else {
@@ -442,7 +444,9 @@ public class Post {
         signatureMode = 1;
         //line = "<font color=#808080>" + line + "</font>";
         line = "<font color=#607D8B>" + line + "</font>";
-        sb.append(line).append("<br />");
+        if(Settings.getInstance().isShowSignature()){
+          sb.append(line).append("<br />");
+        }
         continue;
       }
 
@@ -468,7 +472,9 @@ public class Post {
 
         //line = "<font color=#808080>" + StringUtils.lookupIPLocation(line) + "</font>";
         line = "<font color=#607D8B>" + StringUtils.lookupIPLocation(line) + "</font>";
-        sb.append(line).append("<br />");
+        if(Settings.getInstance().isShowSignature()){
+          sb.append(line).append("<br />");
+        }
         continue;
       } else if (line.contains("※ 修改:·")) {
         // jump out of signature mode
@@ -476,7 +482,9 @@ public class Post {
         line = line.replace("·", "").replace("修改本文", "");
         //line = "<font color=#808080>" + StringUtils.lookupIPLocation(line) + "</font>";
         line = "<font color=#607D8B>" + StringUtils.lookupIPLocation(line) + "</font>";
-        sb.append(line).append("<br />");
+        if(Settings.getInstance().isShowSignature()){
+          sb.append(line).append("<br />");
+        }
         continue;
       }
 

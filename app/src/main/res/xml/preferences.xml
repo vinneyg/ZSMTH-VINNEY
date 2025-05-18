@@ -120,18 +120,11 @@
         android:title="便捷回复设置"/>
 
     <CheckBoxPreference
-        android:defaultValue="off"
+        android:defaultValue="true"
         android:key="show_signature"
         android:summaryOn="显示"
         android:summaryOff="隐藏"
-        android:title="显示个人签名档"/>
-
-    <CheckBoxPreference
-        android:defaultValue="on"
-        android:key="quick_reply"
-        android:summaryOff="显示原贴内容"
-        android:summaryOn="不显示原贴内容"
-        android:title="便捷回复设置"/>
+        android:title="显示签名档"/>
 
     <CheckBoxPreference
         android:defaultValue="on"

@@ -42,16 +42,16 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     void onItemBtnReplyClicked(int position, View view);
   }
 
-  private final OnBtnMoreClickListener mBtnMoreClickListener; // 添加监听器变量
+  private final OnBtnMoreClickListener mBtnMoreClickListener;
 
-  private final OnBtnReplyClickListener mBtnReplyClickListener; // 添加监听器变量
+  private final OnBtnReplyClickListener mBtnReplyClickListener;
 
 
-  public PostRecyclerViewAdapter(List<Post> posts, Activity listener,OnBtnMoreClickListener leftListener,OnBtnReplyClickListener rightListener) {
+  public PostRecyclerViewAdapter(List<Post> posts, Activity listener,OnBtnMoreClickListener replyListener,OnBtnReplyClickListener moreListener) {
     mPosts = posts;
     mListener = listener;
-    mBtnMoreClickListener =leftListener;
-    mBtnReplyClickListener = rightListener;
+    mBtnMoreClickListener =replyListener;
+    mBtnReplyClickListener = moreListener;
   }
 
 
@@ -119,6 +119,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
         tv.setText(content.getSpanned());
         LinkBuilder.on(tv).addLinks(ActivityUtils.getPostSupportedLinks(mListener)).build();
+
         // Add the text view to the parent layout
         viewGroup.addView(tv);
       }
@@ -200,6 +201,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
           tv.setText(content.getSpanned());
           LinkBuilder.on(tv).addLinks(ActivityUtils.getPostSupportedLinks(mListener)).build();
+
           // Add the text view to the parent layout
           viewGroup.addView(tv);
         }
@@ -238,6 +240,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     inflateContentViewGroup(holder.mViewGroup, post);
     // http://stackoverflow.com/questions/4415528/how-to-pass-the-onclick-event-to-its-parent-on-android
     // http://stackoverflow.com/questions/24885223/why-doesnt-recyclerview-have-onitemclicklistener-and-how-recyclerview-is-dif
+
     holder.mView.setOnClickListener(v -> {
     });
     holder.mView.setOnTouchListener(new View.OnTouchListener() {
@@ -249,6 +252,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         return false;
       }
     });
+
+    holder.mView.setOnTouchListener((v, event) -> false); // 返回false表示不消费事件
+
   }
 
   @Override public int getItemCount() {

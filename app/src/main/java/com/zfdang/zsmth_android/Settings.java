@@ -734,7 +734,7 @@ public class Settings {
     bTopicFwdSelf = mPreference.getBoolean(SET_FWD_ADDRESS,true);
     bAutoLoadMore = mPreference.getBoolean(AUTO_LOAD_MORE,false);
     bQuickReply = mPreference.getBoolean(QUICK_REPLY,false);
-    bShowSignature = mPreference.getBoolean(SHOW_SIGNATURE,false);
+    bShowSignature = mPreference.getBoolean(SHOW_SIGNATURE,true);
     bMenuTextOn = mPreference.getBoolean(MENU_TEXT,false);
     bSetIdCheck = mPreference.getBoolean(SET_ID_CHECK,true);
     bOpenTopicAdd = mPreference.getBoolean(OPEN_TOPIC_ADD,false);
