@@ -25,7 +25,7 @@
         android:paddingStart="2dp"
         android:text="mozilla"
         android:textColor="@color/status_text_night"
-        android:textSize="@dimen/zsmth_font_size_medium"
+        android:textSize="@dimen/zsmth_font_size_large"
         />
 
     <LinearLayout

@@ -6,15 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.text.style.URLSpan;
 import android.text.util.Linkify;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,10 +23,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import com.jude.swipbackhelper.SwipeBackHelper;
-import com.klinker.android.link_builder.LinkBuilder;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
-import com.zfdang.zsmth_android.helpers.ActivityUtils;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.models.ContentSegment;
@@ -41,9 +34,6 @@ import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -89,7 +79,6 @@ public class MailContentActivity extends AppCompatActivity {
     mPostAuthor = findViewById(R.id.post_author);
     mPostIndex = findViewById(R.id.post_index);
     //mPostIndex.setVisibility(View.GONE);
-    mPostIndex.setText("发信人");
     mPostPublishDate = findViewById(R.id.post_publish_date);
     mViewGroup = findViewById(R.id.post_content_holder);
     mPostContent = findViewById(R.id.post_content);
@@ -119,6 +108,13 @@ public class MailContentActivity extends AppCompatActivity {
 
     assert mMail != null;
     isMenuItemVisible = mMail.isRefferedPost();
+
+    if (mMail.isRefferedPost()) {
+      mPostIndex.setText("作者");
+    }else{
+      mPostIndex.setText("发信人");
+    }
+
     invalidateOptionsMenu();
 
     loadMailContent();
@@ -184,9 +180,10 @@ public class MailContentActivity extends AppCompatActivity {
       // there are multiple segments, add the first contentView first
       // contentView is always available, we don't have to inflate it again
       ContentSegment content = contents.get(0);
-      contentView.setTextIsSelectable(true);
       setupTextView(contentView, content.getSpanned());
       Linkify.addLinks(contentView, Linkify.ALL);
+      contentView.setTextIsSelectable(true);
+      contentView.setMovementMethod(LinkMovementMethod.getInstance());
       //LinkBuilder.on(contentView).addLinks(ActivityUtils.getPostSupportedLinks(MailContentActivity.this)).build();
 
       viewGroup.addView(contentView);
@@ -213,11 +210,11 @@ public class MailContentActivity extends AppCompatActivity {
         // Log.d("CreateView", "Text: " + content.getSpanned().toString());
 
         TextView tv = (TextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
-        tv.setTextIsSelectable(true);
         setupTextView(tv, content.getSpanned());
         //LinkBuilder.on(tv).addLinks(ActivityUtils.getPostSupportedLinks(MailContentActivity.this)).build();
         Linkify.addLinks(tv, Linkify.ALL);
-        //setupSelectableTextView(tv);
+        tv.setTextIsSelectable(true);
+        tv.setMovementMethod(LinkMovementMethod.getInstance());
 
         /*
         // 获取支持的链接配置
@@ -263,10 +260,6 @@ public class MailContentActivity extends AppCompatActivity {
       for (ClickableSpan span : clickableSpans) {
         spannable.removeSpan(span);
       }
-      URLSpan[] urlSpans = spannable.getSpans(0, spannable.length(), URLSpan.class);
-      for (URLSpan span : urlSpans) {
-        spannable.removeSpan(span);
-      }
       return spannable;
     }
     return text;
@@ -274,9 +267,10 @@ public class MailContentActivity extends AppCompatActivity {
 
   // 在设置文本时调用 removeSpans 方法
   private void setupTextView(TextView textView, CharSequence text) {
-    //CharSequence cleanText = removeSpans(text);
-    CharSequence cleanText = text;
+    CharSequence cleanText = removeSpans(text); // 只移除 ClickableSpan，保留 URLSpan
     textView.setText(cleanText);
+    textView.setTextIsSelectable(true);
+    textView.setMovementMethod(LinkMovementMethod.getInstance());
     textView.setFocusable(true);
     textView.setFocusableInTouchMode(true);
   }
