@@ -5,12 +5,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +29,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.klinker.android.link_builder.LinkBuilder;
-import com.klinker.android.link_builder.LinkConsumableTextView;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
 import com.zfdang.zsmth_android.helpers.ActivityUtils;
@@ -32,6 +41,9 @@ import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -39,7 +51,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class MailContentActivity extends AppCompatActivity {
-
   //private static final String TAG = "MailContent";
   private Mail mMail;
   private int mPostGroupId;
@@ -50,9 +61,12 @@ public class MailContentActivity extends AppCompatActivity {
   public TextView mPostIndex;
   public TextView mPostPublishDate;
   private LinearLayout mViewGroup;
-  public LinkConsumableTextView mPostContent;
+  public TextView mPostContent;
 
   private boolean isMenuItemVisible = false;
+
+  private Button mPostReplyButton;
+  private Button mPostMoreButton;
 
   @Override protected void onDestroy() {
     super.onDestroy();
@@ -74,7 +88,8 @@ public class MailContentActivity extends AppCompatActivity {
     // init post widget
     mPostAuthor = findViewById(R.id.post_author);
     mPostIndex = findViewById(R.id.post_index);
-    mPostIndex.setVisibility(View.GONE);
+    //mPostIndex.setVisibility(View.GONE);
+    mPostIndex.setText("发信人");
     mPostPublishDate = findViewById(R.id.post_publish_date);
     mViewGroup = findViewById(R.id.post_content_holder);
     mPostContent = findViewById(R.id.post_content);
@@ -82,7 +97,6 @@ public class MailContentActivity extends AppCompatActivity {
     mPostAuthor.setOnClickListener(v -> {
       if (Settings.getInstance().isSetIdCheck()) {
         Intent intent = new Intent(v.getContext(), QueryUserActivity.class);
-        // intent.putExtra(SMTHApplication.QUERY_USER_INFO, mMail.getFrom());
         intent.putExtra(SMTHApplication.QUERY_USER_INFO, mMail.author);
         v.getContext().startActivity(intent);
       }
@@ -103,10 +117,20 @@ public class MailContentActivity extends AppCompatActivity {
     Bundle bundle = getIntent().getExtras();
     mMail = Objects.requireNonNull(bundle).getParcelable(SMTHApplication.MAIL_OBJECT);
 
+    assert mMail != null;
     isMenuItemVisible = mMail.isRefferedPost();
     invalidateOptionsMenu();
 
     loadMailContent();
+    mPostReplyButton = findViewById(R.id.btn_post_reply);
+    mPostMoreButton = findViewById(R.id.btn_post_more);
+    updateButtonVisibility();
+    mPostMoreButton.setOnClickListener(v -> handleReplyMenuItem());
+  }
+
+  private void updateButtonVisibility() {
+    mPostReplyButton.setVisibility(View.GONE);
+    mPostMoreButton.setText("回复");
   }
 
   public void loadMailContent() {
@@ -160,8 +184,10 @@ public class MailContentActivity extends AppCompatActivity {
       // there are multiple segments, add the first contentView first
       // contentView is always available, we don't have to inflate it again
       ContentSegment content = contents.get(0);
-      contentView.setText(content.getSpanned());
-      LinkBuilder.on(contentView).addLinks(ActivityUtils.getPostSupportedLinks(MailContentActivity.this)).build();
+      contentView.setTextIsSelectable(true);
+      setupTextView(contentView, content.getSpanned());
+      Linkify.addLinks(contentView, Linkify.ALL);
+      //LinkBuilder.on(contentView).addLinks(ActivityUtils.getPostSupportedLinks(MailContentActivity.this)).build();
 
       viewGroup.addView(contentView);
     }
@@ -186,24 +212,79 @@ public class MailContentActivity extends AppCompatActivity {
       } else if (content.getType() == ContentSegment.SEGMENT_TEXT) {
         // Log.d("CreateView", "Text: " + content.getSpanned().toString());
 
-        // Add the links and make the links clickable
-        LinkConsumableTextView tv = (LinkConsumableTextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
-        tv.setText(content.getSpanned());
-        LinkBuilder.on(tv).addLinks(ActivityUtils.getPostSupportedLinks(MailContentActivity.this)).build();
+        TextView tv = (TextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
+        tv.setTextIsSelectable(true);
+        setupTextView(tv, content.getSpanned());
+        //LinkBuilder.on(tv).addLinks(ActivityUtils.getPostSupportedLinks(MailContentActivity.this)).build();
+        Linkify.addLinks(tv, Linkify.ALL);
+        //setupSelectableTextView(tv);
 
+        /*
+        // 获取支持的链接配置
+        List<com.klinker.android.link_builder.Link> supportedLinks = ActivityUtils.getPostSupportedLinks(MailContentActivity.this);
+        SpannableString spannableString = new SpannableString(tv.getText());
+
+        for (com.klinker.android.link_builder.Link link : supportedLinks) {
+          Pattern pattern = link.getPattern();
+          Matcher matcher = pattern.matcher(spannableString);
+          while (matcher.find()) {
+            int start = matcher.start();
+            int end = matcher.end();
+            ClickableSpan clickableSpan = new ClickableSpan() {
+              @Override
+              public void onClick(@NonNull View widget) {
+                link.getClickListener().onClick(spannableString.subSequence(start, end).toString());
+              }
+
+              @Override
+              public void updateDrawState(@NonNull TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(link.getTextColor());
+                ds.setUnderlineText(true);
+              }
+            };
+            spannableString.setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+          }
+        }
+                tv.setText(spannableString);
+        tv.setMovementMethod(LinkMovementMethod.getInstance());
+
+         */
         // Add the text view to the parent layout
         viewGroup.addView(tv);
       }
     }
   }
 
+  private CharSequence removeSpans(CharSequence text) {
+    if (text instanceof Spannable) {
+      Spannable spannable = (Spannable) text;
+      ClickableSpan[] clickableSpans = spannable.getSpans(0, spannable.length(), ClickableSpan.class);
+      for (ClickableSpan span : clickableSpans) {
+        spannable.removeSpan(span);
+      }
+      URLSpan[] urlSpans = spannable.getSpans(0, spannable.length(), URLSpan.class);
+      for (URLSpan span : urlSpans) {
+        spannable.removeSpan(span);
+      }
+      return spannable;
+    }
+    return text;
+  }
+
+  // 在设置文本时调用 removeSpans 方法
+  private void setupTextView(TextView textView, CharSequence text) {
+    //CharSequence cleanText = removeSpans(text);
+    CharSequence cleanText = text;
+    textView.setText(cleanText);
+    textView.setFocusable(true);
+    textView.setFocusableInTouchMode(true);
+  }
+
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int id = item.getItemId();
     if (id == android.R.id.home) {
       handleHomeMenuItem();
-      return true;
-    } else if (id == R.id.mail_content_reply) {
-      handleReplyMenuItem();
       return true;
     } else if (id == R.id.mail_content_open_post) {
       handleOpenPostMenuItem();
@@ -224,7 +305,7 @@ public class MailContentActivity extends AppCompatActivity {
     }
     return super.onPrepareOptionsMenu(menu);
   }
-  
+
   @Override public boolean onCreateOptionsMenu(Menu menu) {
     // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.mail_content_menu, menu);

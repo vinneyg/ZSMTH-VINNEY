@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="2dp"
     android:orientation="vertical"
-    >
+    android:descendantFocusability="afterDescendants">
 
   <LinearLayout
       android:layout_width="fill_parent"
@@ -15,11 +15,13 @@
     <TextView
         android:id="@+id/post_author"
         android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="36dp"
         android:ellipsize="end"
         android:singleLine="true"
-        android:layout_weight="1"
-        android:gravity="start"
+        android:gravity="center_vertical|start"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
         android:paddingStart="2dp"
         android:text="mozilla"
         android:textColor="@color/status_text_night"
@@ -36,8 +38,8 @@
       <Button
           android:id="@+id/btn_post_reply"
           android:layout_height="wrap_content"
-          android:layout_width="0dp"
-          android:layout_weight="0.2"
+          android:layout_width="wrap_content"
+          android:minWidth="48dp"
           android:layout_marginBottom="1dp"
           android:layout_marginStart="1dp"
           android:layout_marginEnd="1dp"
@@ -50,8 +52,8 @@
       <Button
           android:id="@+id/btn_post_more"
           android:layout_height="wrap_content"
-          android:layout_width="0dp"
-          android:layout_weight="0.2"
+          android:layout_width="wrap_content"
+          android:minWidth="48dp"
           android:layout_marginStart="1dp"
           android:layout_marginBottom="1dp"
           android:layout_marginEnd="1dp"

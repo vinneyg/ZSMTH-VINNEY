@@ -79,13 +79,6 @@ public class WrapContentDraweeView extends SimpleDraweeView {
     setAspectRatio((float) imageInfo.getWidth() / imageInfo.getHeight());
   }
 
-  /*
-  public WrapContentDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
-    super(context, hierarchy);
-    initDraweeView();
-  }
-  */
-
   public WrapContentDraweeView(Context context) {
     super(context);
     initDraweeView();
@@ -100,13 +93,6 @@ public class WrapContentDraweeView extends SimpleDraweeView {
     super(context, attrs, defStyle);
     initDraweeView();
   }
-
-  /*
-  public WrapContentDraweeView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-    super(context, attrs, defStyleAttr, defStyleRes);
-    initDraweeView();
-  }
-  */
 
   public void initDraweeView() {
     getHierarchy().setProgressBarImage(new LoadingProgressDrawable(SMTHApplication.getAppContext()));

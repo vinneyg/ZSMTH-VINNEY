@@ -8,12 +8,6 @@
       android:icon="@drawable/ic_content_copy_white_48dp"
       app:showAsAction="always"/>
 
-  <item
-      android:id="@+id/mail_content_reply"
-      android:orderInCategory="1"
-      android:title="@string/mail_content_menu_reply"
-      android:icon="@drawable/ic_reply_white_36dp"
-      app:showAsAction="always"/>
 
   <item
       android:id="@+id/mail_content_open_post"

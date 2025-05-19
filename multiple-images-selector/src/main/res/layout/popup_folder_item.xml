@@ -15,7 +15,7 @@
         android:layout_height="@dimen/folder_cover_size"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:scaleType="centerInside"
         fresco:placeholderImage="@drawable/default_image"
         fresco:placeholderImageScaleType="fitCenter"
@@ -25,9 +25,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="16dp"
-        android:layout_toLeftOf="@+id/folder_selected_indicator"
-        android:layout_toRightOf="@+id/folder_cover_image"
+        android:layout_marginStart="16dp"
+        android:layout_toStartOf="@+id/folder_selected_indicator"
+        android:layout_toEndOf="@+id/folder_cover_image"
         android:orientation="vertical">
 
         <TextView
@@ -66,11 +66,11 @@
         android:id="@+id/folder_selected_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="15dp"
         android:paddingBottom="18dp"
         android:src="@drawable/folder_checked"/>
 

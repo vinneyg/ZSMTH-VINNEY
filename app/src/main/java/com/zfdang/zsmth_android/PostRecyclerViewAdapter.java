@@ -6,6 +6,13 @@ import android.content.Intent;
 import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,12 +20,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.klinker.android.link_builder.Link;
-import com.klinker.android.link_builder.LinkBuilder;
-import com.klinker.android.link_builder.LinkConsumableTextView;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
-import com.zfdang.zsmth_android.helpers.ActivityUtils;
 import com.zfdang.zsmth_android.models.Attachment;
 import com.zfdang.zsmth_android.models.ContentSegment;
 import com.zfdang.zsmth_android.models.Post;
@@ -81,7 +84,8 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         for (int i = 0; i < attaches.size(); i++) {
           Attachment attach = attaches.get(i);
 
-          LinkConsumableTextView tv = (LinkConsumableTextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
+          TextView tv = (TextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
+          tv.setTextIsSelectable(true);
 
           String[] sUrl = new String[6];
           String tempStr = content.getSpanned().toString().split(".mp4")[i];
@@ -91,34 +95,35 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
           } else {
             tv.setText(sUrl[i]);
           }
-          Link link = new Link(sUrl[i])
-                  // .setTextColor(Color.parseColor("#259B24"))                  // optional, defaults to holo blue
-                  // .setTextColorOfHighlightedLink(Color.parseColor("#0D3D0C")) // optional, defaults to holo blue
-                  .setHighlightAlpha(.4f)                                     // optional, defaults to .15f
-                  .setUnderlined(false)                                       // optional, defaults to true
-                  .setBold(false)                                              // optional, defaults to false
-                  .setOnLongClickListener(clickedText -> {
-                    // long clicked
-                  })
-                  .setOnClickListener(clickedText -> {
-                    // single clicked
-                    Uri uri = Uri.parse(attach.getOriginalVideoSource());
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    //intent.setType("video/*");
-                    intent.setDataAndType(uri, "video/*");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mListener.startActivity(Intent.createChooser(intent, "选择视频播放器"));
-                  });
-          LinkBuilder.on(tv).addLink(link).build();
 
+          SpannableString spannableString = new SpannableString(tv.getText());
+          ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+              Uri uri = Uri.parse(attach.getOriginalVideoSource());
+              Intent intent = new Intent(Intent.ACTION_VIEW);
+              intent.setDataAndType(uri, "video/*");
+              intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+              mListener.startActivity(Intent.createChooser(intent, "选择视频播放器"));
+            }
+
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+              super.updateDrawState(ds);
+              ds.setUnderlineText(false); // 去掉下划线
+            }
+          };
+          spannableString.setSpan(clickableSpan, 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+          tv.setText(spannableString);
+          tv.setMovementMethod(LinkMovementMethod.getInstance());
           // Add the text view to the parent layout
           viewGroup.addView(tv);
         }
       } else {
-        LinkConsumableTextView tv = (LinkConsumableTextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
-
+        TextView tv = (TextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
+        tv.setTextIsSelectable(true);
         tv.setText(content.getSpanned());
-        LinkBuilder.on(tv).addLinks(ActivityUtils.getPostSupportedLinks(mListener)).build();
+        Linkify.addLinks(tv, Linkify.ALL);
 
         // Add the text view to the parent layout
         viewGroup.addView(tv);
@@ -164,7 +169,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
           for (int j = 0; j < attaches.size(); j++) {
             Attachment attach = attaches.get(j);
 
-            LinkConsumableTextView tv = (LinkConsumableTextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
+            TextView tv = (TextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
+            tv.setTextIsSelectable(true);
+
             String[] sUrl = new String[6];
             String tempStr = content.getSpanned().toString().split(".mp4")[j];
             sUrl[j] = "附件" + tempStr.split("附件")[1] + ".mp4";
@@ -173,34 +180,36 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             } else {
               tv.setText(sUrl[j]);
             }
-            Link link = new Link(sUrl[j])
-                    // .setTextColor(Color.parseColor("#259B24"))                  // optional, defaults to holo blue
-                    // .setTextColorOfHighlightedLink(Color.parseColor("#0D3D0C")) // optional, defaults to holo blue
-                    .setHighlightAlpha(.4f)                                     // optional, defaults to .15f
-                    .setUnderlined(false)                                       // optional, defaults to true
-                    .setBold(false)                                              // optional, defaults to false
-                    .setOnLongClickListener(clickedText -> {
-                      // long clicked
-                    })
-                    .setOnClickListener(clickedText -> {
-                      // single clicked
-                      Uri uri = Uri.parse(attach.getOriginalVideoSource());
-                      Intent intent = new Intent(Intent.ACTION_VIEW);
-                      //intent.setType("video/*");
-                      intent.setDataAndType(uri, "video/*");
-                      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                      mListener.startActivity(Intent.createChooser(intent, "选择视频播放器"));
-                    });
-            LinkBuilder.on(tv).addLink(link).build();
+
+            SpannableString spannableString = new SpannableString(tv.getText());
+            ClickableSpan clickableSpan = new ClickableSpan() {
+              @Override
+              public void onClick(@NonNull View widget) {
+                Uri uri = Uri.parse(attach.getOriginalVideoSource());
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(uri, "video/*");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mListener.startActivity(Intent.createChooser(intent, "选择视频播放器"));
+              }
+
+              @Override
+              public void updateDrawState(@NonNull TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false); // 去掉下划线
+              }
+            };
+            spannableString.setSpan(clickableSpan, 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tv.setText(spannableString);
+            tv.setMovementMethod(LinkMovementMethod.getInstance());
 
             // Add the text view to the parent layout
             viewGroup.addView(tv);
           }
         } else {
-          LinkConsumableTextView tv = (LinkConsumableTextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
-
+          TextView tv = (TextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
+          tv.setTextIsSelectable(true);
           tv.setText(content.getSpanned());
-          LinkBuilder.on(tv).addLinks(ActivityUtils.getPostSupportedLinks(mListener)).build();
+          Linkify.addLinks(tv, Linkify.ALL);
 
           // Add the text view to the parent layout
           viewGroup.addView(tv);
@@ -253,8 +262,6 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
       }
     });
 
-    holder.mView.setOnTouchListener((v, event) -> false); // 返回false表示不消费事件
-
   }
 
   @Override public int getItemCount() {
@@ -267,7 +274,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     public final TextView mPostIndex;
     public final TextView mPostPublishDate;
     private final LinearLayout mViewGroup;
-    public final LinkConsumableTextView mPostContent;
+    public final TextView mPostContent;
     public Post mPost;
 
     public final Button mBtnReply;

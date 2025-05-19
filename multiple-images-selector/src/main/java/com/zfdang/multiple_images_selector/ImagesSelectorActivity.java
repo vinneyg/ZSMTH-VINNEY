@@ -13,6 +13,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.ActionBar;
@@ -20,7 +22,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
@@ -77,6 +78,9 @@ public class ImagesSelectorActivity extends AppCompatActivity
     private File mTempImageFile;
     private static final int CAMERA_REQUEST_CODE = 694;
 
+    private ActivityResultLauncher<Intent> storagePermissionLauncher;
+    private ActivityResultLauncher<Intent> cameraLauncher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +91,42 @@ public class ImagesSelectorActivity extends AppCompatActivity
         if(actionBar != null) {
             actionBar.hide();
         }
+
+        storagePermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if(Build.VERSION.SDK_INT<Build.VERSION_CODES.R|| Environment.isExternalStorageManager()){
+                        LoadFolderAndImages();
+                    } else {
+                        Toast.makeText(ImagesSelectorActivity.this, getString(R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        cameraLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        if (mTempImageFile != null) {
+                            // notify system
+                            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(mTempImageFile)));
+
+                            Intent resultIntent = new Intent();
+                            ImageListContent.clear();
+                            ImageListContent.SELECTED_IMAGES.add(mTempImageFile.getAbsolutePath());
+                            resultIntent.putStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS, ImageListContent.SELECTED_IMAGES);
+                            setResult(RESULT_OK, resultIntent);
+                            finish();
+                        }
+                    } else {
+                        // if user click cancel, delete the temp file
+                        while (mTempImageFile != null && mTempImageFile.exists()) {
+                            boolean success = mTempImageFile.delete();
+                            if (success) {
+                                mTempImageFile = null;
+                            }
+                        }
+                    }
+                });
 
         // get parameters from bundle
         Intent intent = getIntent();
@@ -162,7 +202,7 @@ public class ImagesSelectorActivity extends AppCompatActivity
             else
             {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                startActivityForResult(intent,MY_PERMISSIONS_REQUEST_STORAGE_CODE);
+                storagePermissionLauncher.launch(intent);
             }
         } else {
             LoadFolderAndImages();
@@ -186,34 +226,19 @@ public class ImagesSelectorActivity extends AppCompatActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, @androidx.annotation.NonNull String[] permissions, @androidx.annotation.NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_STORAGE_CODE: {
-                if(Build.VERSION.SDK_INT<Build.VERSION_CODES.R|| Environment.isExternalStorageManager()){
-                    // contacts-related task you need to do.
-                    LoadFolderAndImages();
-                }
-                else{
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(ImagesSelectorActivity.this, getString(R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
-                }
-                return;
-            }
-            case MY_PERMISSIONS_REQUEST_CAMERA_CODE: {
-
-                if (ContextCompat.checkSelfPermission(
-                        ImagesSelectorActivity.this, Manifest.permission.CAMERA)
-                        == PackageManager.PERMISSION_GRANTED
-                        && ContextCompat.checkSelfPermission(
-                        ImagesSelectorActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        == PackageManager.PERMISSION_GRANTED) {
-                    // contacts-related task you need to do.
-                    launchCamera();
-                } else{
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(ImagesSelectorActivity.this, getString(R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
-                }
+        if (requestCode == MY_PERMISSIONS_REQUEST_CAMERA_CODE) {
+            if (ContextCompat.checkSelfPermission(
+                    ImagesSelectorActivity.this, Manifest.permission.CAMERA)
+                    == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(
+                    ImagesSelectorActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                // contacts-related task you need to do.
+                launchCamera();
+            } else{
+                // permission denied, boo! Disable the
+                // functionality that depends on this permission.
+                Toast.makeText(ImagesSelectorActivity.this, getString(R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -370,7 +395,7 @@ public class ImagesSelectorActivity extends AppCompatActivity
                 Uri photoURI = FileProvider.getUriForFile(this, this.getApplicationContext().getPackageName() + ".provider", mTempImageFile);
                 //cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mTempImageFile));
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
+                cameraLauncher.launch(cameraIntent);
             } else {
                 Toast.makeText(this, R.string.camera_temp_file_error, Toast.LENGTH_SHORT).show();
             }
@@ -379,36 +404,6 @@ public class ImagesSelectorActivity extends AppCompatActivity
         }
 
     }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // after capturing image, return the image path as selected result
-        if (requestCode == CAMERA_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                if (mTempImageFile != null) {
-                    // notify system
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(mTempImageFile)));
-
-                    Intent resultIntent = new Intent();
-                    ImageListContent.clear();
-                    ImageListContent.SELECTED_IMAGES.add(mTempImageFile.getAbsolutePath());
-                    resultIntent.putStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS, ImageListContent.SELECTED_IMAGES);
-                    setResult(RESULT_OK, resultIntent);
-                    finish();
-                }
-            } else {
-                // if user click cancel, delete the temp file
-                while (mTempImageFile != null && mTempImageFile.exists()) {
-                    boolean success = mTempImageFile.delete();
-                    if (success) {
-                        mTempImageFile = null;
-                    }
-                }
-            }
-        }
-    }
-
 
     @Override
     public void onClick(View v) {

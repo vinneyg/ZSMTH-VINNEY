@@ -312,12 +312,13 @@ public class ComposePostActivity extends SMTHBaseActivity {
         StringBuilder wordList = new StringBuilder();
         wordList.append("\n\n");
         wordList.append(String.format(Locale.CHINA,"【 在 %s 的大作中提到: 】", mPostContext.getPostAuthor())).append("\n");
-        for (int i = 0; i < lines.length && i < 5; i++) {
-          if (lines[i].startsWith("--")) {
+        //for (int i = 0; i < lines.length && i < 5; i++) {
+        for (String line : lines) {
+          if (line.startsWith("--")) {
             // this might be the start of signature, ignore following lines in quote
             break;
           }
-          wordList.append(String.format(Locale.CHINA,": %s", lines[i])).append("\n");
+          wordList.append(String.format(Locale.CHINA, ": %s", line)).append("\n");
         }
         mContent.setText(new String(wordList));
       }

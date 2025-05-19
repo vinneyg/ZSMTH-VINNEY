@@ -45,6 +45,7 @@
       android:layout_below="@+id/mail_content_title"
       android:id="@+id/scrollView"
       android:background="@color/body_background_night"
+      android:descendantFocusability="afterDescendants"
       >
 
     <include layout="@layout/post_item"/>

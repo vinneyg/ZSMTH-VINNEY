@@ -1064,74 +1064,9 @@ public class PostListActivity extends SMTHBaseActivity
   @Override public void onItemLongClicked(final int position, View v) {
     /*
     if (position == RecyclerView.NO_POSITION || position >= PostListContent.POSTS.size()) return;
-
-    //showPostActionMenu(position);
+      //showPostActionMenu(position);
     //Log.d(TAG, String.format(Locale.CHINA,"Post by %s is long clicked", PostListContent.POSTS.get(position).getAuthor()));
-
-
-    final PostActionAlertDialogItem[] menuItems = {
-            new PostActionAlertDialogItem(getString(R.string.post_reply_post), R.drawable.ic_reply_black_48dp),       // 0
-            new PostActionAlertDialogItem(getString(R.string.post_like_post), R.drawable.like_black),       // 1
-            new PostActionAlertDialogItem(getString(R.string.post_reply_mail), R.drawable.ic_email_black_48dp),    // 2
-            new PostActionAlertDialogItem(getString(R.string.post_query_author), R.drawable.ic_person_black_48dp),    // 3
-            new PostActionAlertDialogItem(getString(R.string.post_filter_author), R.drawable.ic_find_in_page_black_48dp),    // 4
-            new PostActionAlertDialogItem(getString(R.string.post_copy_content), R.drawable.ic_content_copy_black_48dp),    // 5
-            new PostActionAlertDialogItem(getString(R.string.post_foward), R.drawable.ic_send_black_48dp),     // 6
-            new PostActionAlertDialogItem(getString(R.string.post_view_in_browser), R.drawable.ic_open_in_browser_black_48dp), // 7
-            new PostActionAlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp), // 8
-            new PostActionAlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp), // 9
-            new PostActionAlertDialogItem(getString(R.string.post_edit_post), R.drawable.ic_edit_black_48dp), // 10
-            new PostActionAlertDialogItem(getString(R.string.post_convert_image), R.drawable.ic_photo_black_48dp), // 11
-            //new PostActionAlertDialogItem(getString(R.string.post_reply_author),R.drawable.ic_expand_less_36dp) // 11
-            new PostActionAlertDialogItem(getString(R.string.post_reply_author),R.drawable.ic_reply_black_48dp) // 11
-    };
-
-    ListAdapter adapter = new ArrayAdapter<PostActionAlertDialogItem>(getApplicationContext(), R.layout.post_popup_menu_item, menuItems) {
-      ViewHolder holder;
-
-      @androidx.annotation.NonNull
-      @SuppressLint("InflateParams")
-      public View getView(int position, View convertView, @androidx.annotation.NonNull ViewGroup parent) {
-        final LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        if (convertView == null) {
-          convertView = inflater.inflate(R.layout.post_popup_menu_item, null);
-
-          holder = new ViewHolder();
-          holder.mIcon = convertView.findViewById(R.id.post_popupmenu_icon);
-          holder.mTitle = convertView.findViewById(R.id.post_popupmenu_title);
-          convertView.setTag(holder);
-        } else {
-          // view already defined, retrieve view holder
-          holder = (ViewHolder) convertView.getTag();
-        }
-
-        holder.mTitle.setText(menuItems[position].text);
-        holder.mIcon.setImageResource(menuItems[position].icon);
-        return convertView;
-      }
-
-      class ViewHolder {
-        ImageView mIcon;
-        TextView mTitle;
-      }
-    };
-
-    AlertDialog dialog = new AlertDialog.Builder(this,R.style.MyDialogStyle).setTitle(getString(R.string.post_alert_title))
-            .setAdapter(adapter, (dialog1, which) -> onPostPopupMenuItem(position, which))
-            .create();
-    dialog.setCanceledOnTouchOutside(true);
-    dialog.setCancelable(true);
-    dialog.setOnShowListener(dialogInterface -> {
-      Window window = dialog.getWindow();
-      if (window != null) {
-        WindowManager.LayoutParams params = window.getAttributes();
-        params.width = (int) (getResources().getDisplayMetrics().widthPixels * 0.7);
-        window.setAttributes(params);
-      }
-    });
-    dialog.show();
-   */
+    */
   }
   public void onItemLeftClicked(final int position, View v) {
     /*
@@ -1157,7 +1092,6 @@ public class PostListActivity extends SMTHBaseActivity
       intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
       startActivity(intent);
     }
-
      */
   }
   public void onItemRightClicked(final int position, View v) {
@@ -1185,7 +1119,6 @@ public class PostListActivity extends SMTHBaseActivity
       mActivityPostResultLauncher.launch(intent);
     }
     */
-
   }
 
   public void onItemBottomClicked(final int position, View v) {
