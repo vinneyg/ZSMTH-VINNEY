@@ -8,6 +8,7 @@ import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
@@ -24,6 +25,8 @@ import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
+import com.zfdang.zsmth_android.models.Board;
+import com.zfdang.zsmth_android.models.BoardListContent;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.models.TopicListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
@@ -105,6 +108,7 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
         }
 
       });
+
     }
 
 
@@ -113,9 +117,38 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
     if (TopicListContent.HOT_TOPICS.isEmpty()) {
       RefreshGuidance();
     }
+
+    initItemHelper();
+
     return rootView;
   }
 
+  private void initItemHelper() {
+    //0则不执行拖动或者滑动
+    ItemTouchHelper.Callback mCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT ) {
+
+      @Override
+      public boolean onMove(@androidx.annotation.NonNull RecyclerView recyclerView, @androidx.annotation.NonNull RecyclerView.ViewHolder viewHolder, @androidx.annotation.NonNull RecyclerView.ViewHolder target) {
+        return false;
+      }
+      @Override
+      public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+        //int position = viewHolder.getAdapterPosition();
+        int position = viewHolder.getBindingAdapterPosition();
+
+        if (direction == ItemTouchHelper.RIGHT|| direction == ItemTouchHelper.LEFT) {
+          RefreshGuidance();
+          MainActivity mainActivity = (MainActivity) getActivity();
+          if (mainActivity != null) {
+            mainActivity.onHandleBackPressed();
+          }
+
+        }
+      }
+    };
+    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(mCallback);
+    itemTouchHelper.attachToRecyclerView(mRecyclerView);
+  }
   @Override
   public void onViewCreated(@androidx.annotation.NonNull @NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);

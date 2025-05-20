@@ -168,6 +168,7 @@ public class PostListActivity extends SMTHBaseActivity
     }
   }
 
+  @SuppressLint("ClickableViewAccessibility")
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     SwipeBackHelper.onCreate(this);
@@ -267,8 +268,11 @@ public class PostListActivity extends SMTHBaseActivity
     mRecyclerView.setAdapter(new PostRecyclerViewAdapter(PostListContent.POSTS, this,this,this));
 
     //  holder.mView.setOnTouchListener(this); so the event will be sent from holder.mView
-    mGestureDetector = new GestureDetector(SMTHApplication.getAppContext(), new RecyclerViewGestureListener(this, mRecyclerView));
-
+    mGestureDetector = new GestureDetector(this, new RecyclerViewGestureListener(this, mRecyclerView));
+    mRecyclerView.setOnTouchListener((v, event) -> {
+        mGestureDetector.onTouchEvent(event);
+        return false;
+    });
     // get Board information from launcher
     Intent intent = getIntent();
     Topic topic = intent.getParcelableExtra(SMTHApplication.TOPIC_OBJECT);
@@ -1122,6 +1126,7 @@ public class PostListActivity extends SMTHBaseActivity
   }
 
   public void onItemBottomClicked(final int position, View v) {
+    Log.d("Vinney","onItemBottomClicked");
     //goToNextPage();
     LinearLayoutManager manager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
 
@@ -1139,8 +1144,7 @@ public class PostListActivity extends SMTHBaseActivity
 
   public void onItemTopClicked(final int position, View v) {
     LinearLayoutManager manager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
-
-    //LastItemPosition
+    Log.d("Vinney","onItemTopclicked");//LastItemPosition
     if (manager == null) {
       return;
     }
@@ -1638,27 +1642,27 @@ public class PostListActivity extends SMTHBaseActivity
   }
 
   public void onItemBtnReplyClicked(final int position, View v) {
-      // post_reply_post
-      if (position >= PostListContent.POSTS.size()) {
-        Log.e(TAG, "onItemRightClicked: " + "Invalid Post index" + position);
-        return;
-      }
+    // post_reply_post
+    if (position >= PostListContent.POSTS.size()) {
+      Log.e(TAG, "onItemRightClicked: " + "Invalid Post index" + position);
+      return;
+    }
 
-      Post post = PostListContent.POSTS.get(position);
-      ComposePostContext postContext = new ComposePostContext();
-      postContext.setBoardEngName(mTopic.getBoardEngName());
-      postContext.setPostId(post.getPostID());
-      postContext.setPostTitle(mTopic.getTitle());
-      postContext.setPostAuthor(post.getRawAuthor());
-      if (Settings.getInstance().isQuickReply())
-        postContext.setPostContent("");
-      else
-        postContext.setPostContent(post.getRawContent());
-      postContext.setComposingMode(ComposePostContext.MODE_REPLY_POST);
+    Post post = PostListContent.POSTS.get(position);
+    ComposePostContext postContext = new ComposePostContext();
+    postContext.setBoardEngName(mTopic.getBoardEngName());
+    postContext.setPostId(post.getPostID());
+    postContext.setPostTitle(mTopic.getTitle());
+    postContext.setPostAuthor(post.getRawAuthor());
+    if (Settings.getInstance().isQuickReply())
+      postContext.setPostContent("");
+    else
+      postContext.setPostContent(post.getRawContent());
+    postContext.setComposingMode(ComposePostContext.MODE_REPLY_POST);
 
-      Intent intent = new Intent(this, ComposePostActivity.class);
-      intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-      //startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
-      mActivityPostResultLauncher.launch(intent);
+    Intent intent = new Intent(this, ComposePostActivity.class);
+    intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+    //startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
+    mActivityPostResultLauncher.launch(intent);
   }
 }

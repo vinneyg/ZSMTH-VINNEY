@@ -258,6 +258,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         if (mListener != null && mListener instanceof View.OnTouchListener) {
           return ((View.OnTouchListener) mListener).onTouch(v, event);
         }
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+          v.performClick(); // 必须调用 performClick()
+        }
         return false;
       }
     });

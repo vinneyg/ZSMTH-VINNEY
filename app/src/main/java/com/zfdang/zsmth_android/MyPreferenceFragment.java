@@ -693,7 +693,6 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
   @Override
   public void onResume() {
     super.onResume();
-    setPreferencesFromResource(R.xml.preferences, null);
     preferenceScrollPosition = loadScrollPosition();
 
     View rootView = getView();
