@@ -61,7 +61,8 @@
           android:background="@drawable/btn_outline"
           android:textColor="@color/status_text_night"
           android:textSize="@dimen/zsmth_font_size_extra_small"
-          android:text="其他" />
+          android:letterSpacing="-0.5"
+          android:text="•••" />
     </LinearLayout>
 
   </LinearLayout>
