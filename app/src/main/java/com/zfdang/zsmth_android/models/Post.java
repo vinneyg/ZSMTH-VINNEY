@@ -153,31 +153,31 @@ public class Post {
     parseContentToSegments();
   }
 
-    // parse like list in post content
-    public void ParseLikeElementInPostContent(Element likeNode) {
-      if(likes == null) {
-          likes = new ArrayList<>();
+  // parse like list in post content
+  public void ParseLikeElementInPostContent(Element likeNode) {
+    if(likes == null) {
+      likes = new ArrayList<>();
+    }
+    likes.clear();
+
+    // <div class="like_name">有36位用户评价了这篇文章：</div>
+    Elements nodes = likeNode.select("div.like_name");
+    if (nodes.size() == 1) {
+      Element node = nodes.first();
+    }
+
+    // <li><span class="like_score_0">[&nbsp;&nbsp;]</span><span class="like_user">fly891198061:</span>
+    // <span class="like_msg">无法忍受，我不会变节，先斗智，不行就自杀！来个痛快的~！</span>
+    // <span class="like_time">(2016-03-27 15:04)</span></li>
+    nodes = likeNode.select("li");
+    for (Element n : nodes) {
+      Elements spans = n.select("span");
+      if(spans.size() == 4) {
+        Like like = new Like(spans.get(0).text(), spans.get(1).text(), spans.get(2).text(), spans.get(3).text());
+        likes.add(like);
       }
-      likes.clear();
-
-        // <div class="like_name">有36位用户评价了这篇文章：</div>
-        Elements nodes = likeNode.select("div.like_name");
-        if (nodes.size() == 1) {
-            Element node = nodes.first();
-        }
-
-        // <li><span class="like_score_0">[&nbsp;&nbsp;]</span><span class="like_user">fly891198061:</span>
-        // <span class="like_msg">无法忍受，我不会变节，先斗智，不行就自杀！来个痛快的~！</span>
-        // <span class="like_time">(2016-03-27 15:04)</span></li>
-        nodes = likeNode.select("li");
-        for (Element n : nodes) {
-          Elements spans = n.select("span");
-          if(spans.size() == 4) {
-            Like like = new Like(spans.get(0).text(), spans.get(1).text(), spans.get(2).text(), spans.get(3).text());
-            likes.add(like);
-        }
     }
-    }
+  }
 
   // parse post pure content, then merge them to htmlCompleteContent, then split it into htmlSegments
   public void parsePostPureContent(Element content) {
@@ -195,7 +195,7 @@ public class Post {
     // new image url after 2020-06-10
     // <a target="_blank" href="//static.mysmth.net/nForum/att/FamilyLife/1763462541/17096">
     // <img border="0" title="单击此查看原图" src="//static.mysmth.net/nForum/att/FamilyLife/1763462541/17096/large" class="resizeable" /></a>
-  
+
     // other attachment
     // 		<a href="//static.mysmth.net/nForum/att/Test/943486/245" target="_blank">《三国演义》_(果麦经典)_罗贯中.epub</a>
 
@@ -210,8 +210,8 @@ public class Post {
         String origImageSrc = a.attr("href");
 
         Element img = imgs.first();
-          assert img != null;
-          String resizedImageSrc = img.attr("src");
+        assert img != null;
+        String resizedImageSrc = img.attr("src");
 
         Attachment attach = new Attachment(origImageSrc, resizedImageSrc);
         this.addAttachFile(attach);
@@ -259,23 +259,23 @@ public class Post {
   }
 
   public void mergePureContentAndLikes(){
-      htmlContentAndLikes = this.htmlContent;
+    htmlContentAndLikes = this.htmlContent;
 
-      if (likes != null && !likes.isEmpty()) {
-          StringBuilder wordList = new StringBuilder();
-        wordList.append("有").append(likes.size()).append("位用户评价了这篇文章:");
-        wordList.append("<br/>");
-        wordList.append("<small>");
-        for (Like like : likes) {
-          wordList.append("[<font face='monospace'>").append(like.score).append("</font>]");
-          wordList.append(" ").append(like.msg);
-          wordList.append(" ( ").append(like.user);
-          wordList.append(" @ ").append(like.time);
-          wordList.append(" )<br/>");
-        }
-        wordList.append("</small>");
-          htmlContentAndLikes += new String(wordList);
+    if (likes != null && !likes.isEmpty()) {
+      StringBuilder wordList = new StringBuilder();
+      wordList.append("有").append(likes.size()).append("位用户评价了这篇文章:");
+      wordList.append("<br/>");
+      wordList.append("<small>");
+      for (Like like : likes) {
+        wordList.append("[<font face='monospace'>").append(like.score).append("</font>]");
+        wordList.append(" ").append(like.msg);
+        wordList.append(" ( ").append(like.user);
+        wordList.append(" @ ").append(like.time);
+        wordList.append(" )<br/>");
       }
+      wordList.append("</small>");
+      htmlContentAndLikes += new String(wordList);
+    }
   }
 
   // split complete content with ATTACHMENT_MARK
@@ -415,8 +415,8 @@ public class Post {
       }
       // handle quoted content
       if (line.startsWith(":")) {
-       // line = "<font color=#00b4ae>" + line + "</font>";
-       // line = "<font color=#808080>" + line + "</font>";
+        // line = "<font color=#00b4ae>" + line + "</font>";
+        // line = "<font color=#808080>" + line + "</font>";
         line = "<font color=#607D8B>" + line + "</font>";
         sb.append(line).append("<br />");
         continue;
@@ -427,9 +427,7 @@ public class Post {
         if (linebreak >= 2) {
           // continuous linebreak, skip extra linebreak
         } else {
-          if(Settings.getInstance().isShowSignature()){
-            sb.append(line).append("<br />");
-          }
+          sb.append(line).append("<br />");
         }
         continue;
       } else {
@@ -456,19 +454,19 @@ public class Post {
         // jump out of signature mode
         signatureMode = 0;
         line = line.replace("·", "")
-            .replace("http://www.mysmth.net", "")
-            .replace("http://www.newsmth.net", "")
-            .replace("http://m.mysmth.net", "")
-            .replace("http://m.newsmth.net", "")
-            .replace("http://mysmth.net", "")
-            .replace("https://exp.mysmth.net", "")
-            .replace("http://newsmth.net", "")
-            .replace("mysmth.net", "")
-            .replace("newsmth.net", "")
-            .replace("m.mysmth.net", "")
-            .replace("m.newsmth.net", "")
-            .replace("官方应用", "")
-            .replace("客户端", "");
+                .replace("http://www.mysmth.net", "")
+                .replace("http://www.newsmth.net", "")
+                .replace("http://m.mysmth.net", "")
+                .replace("http://m.newsmth.net", "")
+                .replace("http://mysmth.net", "")
+                .replace("https://exp.mysmth.net", "")
+                .replace("http://newsmth.net", "")
+                .replace("mysmth.net", "")
+                .replace("newsmth.net", "")
+                .replace("m.mysmth.net", "")
+                .replace("m.newsmth.net", "")
+                .replace("官方应用", "")
+                .replace("客户端", "");
 
         //line = "<font color=#808080>" + StringUtils.lookupIPLocation(line) + "</font>";
         line = "<font color=#607D8B>" + StringUtils.lookupIPLocation(line) + "</font>";
@@ -500,6 +498,11 @@ public class Post {
 
       // for other normal line, add it directly
       sb.append(line).append("<br />");
+    }
+
+    // 移除末尾多余的 <br />
+    while (sb.length() >= 6 && sb.substring(sb.length() - 6).equals("<br />")) {
+      sb.setLength(sb.length() - 6);
     }
 
     return sb.toString().trim();
@@ -551,23 +554,23 @@ public class Post {
   @NonNull
   @Override public String toString() {
     return "Post{"
-        + "postID='"
-        + postID
-        + '\''
-        + ", title='"
-        + title
-        + '\''
-        + ", author='"
-        + author
-        + '\''
-        + ", nickName='"
-        + nickName
-        + '\''
-        + ", date="
-        + date
-        + ", position='"
-        + position
-        + '\''
-        + '}';
+            + "postID='"
+            + postID
+            + '\''
+            + ", title='"
+            + title
+            + '\''
+            + ", author='"
+            + author
+            + '\''
+            + ", nickName='"
+            + nickName
+            + '\''
+            + ", date="
+            + date
+            + ", position='"
+            + position
+            + '\''
+            + '}';
   }
 }

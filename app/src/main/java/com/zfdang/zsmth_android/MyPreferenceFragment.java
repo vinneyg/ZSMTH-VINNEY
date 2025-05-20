@@ -690,19 +690,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     }
   }
 
-  @SuppressLint("NotifyDataSetChanged")
-  private void refreshPreferences() {
-    RecyclerView recyclerView = getListView();
-    if (recyclerView != null && recyclerView.getAdapter() != null) {
-      recyclerView.getAdapter().notifyDataSetChanged();
-    }
-  }
-
   @Override
   public void onResume() {
     super.onResume();
-    refreshPreferences();
-
+    setPreferencesFromResource(R.xml.preferences, null);
     preferenceScrollPosition = loadScrollPosition();
 
     View rootView = getView();

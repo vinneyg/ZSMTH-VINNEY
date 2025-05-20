@@ -9,6 +9,8 @@ import androidx.activity.OnBackPressedDispatcher;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.FragmentManager;
+
+import com.jude.swipbackhelper.SwipeBackPage;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import androidx.appcompat.app.ActionBar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -102,9 +104,6 @@ public class BoardTopicActivity extends SMTHBaseActivity
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SwipeBackHelper.onCreate(this);
-        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(true); // 确保滑动返回功能开启
-        SwipeBackHelper.getCurrentPage(this).setDisallowInterceptTouchEvent(true); // 禁止拦截触摸事件
-        //SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false); // 禁用滑动返回时的返回键处理
 
         OnBackPressedDispatcher dispatcher = getOnBackPressedDispatcher();
 
@@ -116,7 +115,6 @@ public class BoardTopicActivity extends SMTHBaseActivity
                     onRefresh();
                     return;
                 }
-
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 if (fragmentManager.getBackStackEntryCount() > 0) {
                     fragmentManager.popBackStack();
