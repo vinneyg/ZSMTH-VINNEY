@@ -15,6 +15,9 @@ public class PostListContent {
   public static final Map<String, Post> POST_MAP = new HashMap<>();
 
   public static void addItem(Post item) {
+    if (item == null || POST_MAP.containsKey(item.getPostID())) {
+      return;
+    }
     POSTS.add(item);
     POST_MAP.put(item.getPostID(), item);
   }
