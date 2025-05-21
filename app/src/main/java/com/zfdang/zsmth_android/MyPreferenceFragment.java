@@ -650,7 +650,9 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
   @Override
   public void onDestroy() {
     super.onDestroy();
-    requireContext().unregisterReceiver(receiver);
+    if (receiver != null) {
+      requireContext().unregisterReceiver(receiver);
+    }
   }
 
   @Override

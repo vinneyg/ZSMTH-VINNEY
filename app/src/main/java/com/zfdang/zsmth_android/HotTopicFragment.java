@@ -146,13 +146,19 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
         if (direction == ItemTouchHelper.RIGHT) {
           //RefreshGuidance();
           if (mainActivity != null) {
-            mainActivity.onHandleBackPressed();
+            if(Settings.getInstance().isLeftNavSlide())
+              mainActivity.onHandleBackPressed();
+            else
+              mainActivity.handleRightSwipe();
           }
 
         }else  if (direction == ItemTouchHelper.LEFT) {
           //RefreshGuidance();
           if (mainActivity != null) {
-            mainActivity.handleRightSwipe();
+            if(Settings.getInstance().isLeftNavSlide())
+              mainActivity.handleRightSwipe();
+            else
+              mainActivity.onHandleBackPressed();
           }
         }
       }

@@ -265,13 +265,33 @@ public class PostListActivity extends SMTHBaseActivity
             new DividerItemDecoration(this, LinearLayoutManager.VERTICAL, R.drawable.recyclerview_divider));
     linearLayoutManager = new WrapContentLinearLayoutManager(this);
     mRecyclerView.setLayoutManager(linearLayoutManager);
-    mRecyclerView.setAdapter(new PostRecyclerViewAdapter(PostListContent.POSTS, this,this,this));
+    PostRecyclerViewAdapter adapter = new PostRecyclerViewAdapter(PostListContent.POSTS, this, this, this);
+    mRecyclerView.setAdapter(adapter);
+
+    // 为 RecyclerView 设置触摸监听器
+    mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+      @Override
+      public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+        // 将触摸事件传递给 GestureDetector
+        return mGestureDetector.onTouchEvent(e);
+      }
+
+      @Override
+      public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+        // 通常不需要处理
+      }
+
+      @Override
+      public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+        // 处理请求禁止拦截触摸事件
+      }
+    });
 
     //  holder.mView.setOnTouchListener(this); so the event will be sent from holder.mView
     mGestureDetector = new GestureDetector(this, new RecyclerViewGestureListener(this, mRecyclerView));
     mRecyclerView.setOnTouchListener((v, event) -> {
-        mGestureDetector.onTouchEvent(event);
-        return false;
+      mGestureDetector.onTouchEvent(event);
+      return false;
     });
     // get Board information from launcher
     Intent intent = getIntent();
@@ -1126,7 +1146,6 @@ public class PostListActivity extends SMTHBaseActivity
   }
 
   public void onItemBottomClicked(final int position, View v) {
-    Log.d("Vinney","onItemBottomClicked");
     //goToNextPage();
     LinearLayoutManager manager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
 
@@ -1137,21 +1156,21 @@ public class PostListActivity extends SMTHBaseActivity
 
     int lastVisiblePos = manager.findLastVisibleItemPosition();
     int totalItemCount = manager.getItemCount();
-    if(lastVisiblePos <= totalItemCount-1 )
+    if(lastVisiblePos <= totalItemCount-1 ){
       mRecyclerView.scrollToPosition(lastVisiblePos+1);
-
+    }
   }
 
   public void onItemTopClicked(final int position, View v) {
     LinearLayoutManager manager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
-    Log.d("Vinney","onItemTopclicked");//LastItemPosition
     if (manager == null) {
       return;
     }
 
     int FirstVisiblePos = manager.findFirstVisibleItemPosition();
-    if(FirstVisiblePos > 1 )
+    if(FirstVisiblePos > 1 ){
       mRecyclerView.scrollToPosition(FirstVisiblePos-1);
+    }
   }
   private void onPostPopupMenuItem(int position, int which) {
     //        Log.d(TAG, String.format(Locale.CHINA,"MenuItem %d was clicked", which));
