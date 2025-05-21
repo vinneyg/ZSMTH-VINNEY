@@ -125,8 +125,10 @@ public class MailContentActivity extends AppCompatActivity {
   }
 
   private void updateButtonVisibility() {
+    float newLetterSpacing = 0f;
     mPostReplyButton.setVisibility(View.GONE);
     mPostMoreButton.setText("回复");
+    mPostMoreButton.setLetterSpacing(newLetterSpacing);
   }
 
   public void loadMailContent() {

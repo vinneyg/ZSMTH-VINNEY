@@ -820,7 +820,7 @@ public class MainActivity extends SMTHBaseActivity
       toast.setDuration(Toast.LENGTH_SHORT);
       toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
       toast.show();
-      }
+    }
 
   }
 
@@ -1489,4 +1489,10 @@ public class MainActivity extends SMTHBaseActivity
     return -1;
   }
 
+  public void handleRightSwipe() {
+    // 处理右滑逻辑，例如打开 DrawerLayout
+    if (mDrawer != null) {
+      mDrawer.openDrawer(GravityCompat.START);
+    }
+  }
 }

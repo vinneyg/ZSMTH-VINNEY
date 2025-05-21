@@ -136,13 +136,24 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
         //int position = viewHolder.getAdapterPosition();
         int position = viewHolder.getBindingAdapterPosition();
 
-        if (direction == ItemTouchHelper.RIGHT|| direction == ItemTouchHelper.LEFT) {
-          RefreshGuidance();
-          MainActivity mainActivity = (MainActivity) getActivity();
+        Topic topic = TopicListContent.HOT_TOPICS.get(position);
+        TopicListContent.HOT_TOPICS.remove(position);
+        TopicListContent.HOT_TOPICS.add(position,topic);
+        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemRemoved(position);
+        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(position);
+        MainActivity mainActivity = (MainActivity) getActivity();
+
+        if (direction == ItemTouchHelper.RIGHT) {
+          //RefreshGuidance();
           if (mainActivity != null) {
             mainActivity.onHandleBackPressed();
           }
 
+        }else  if (direction == ItemTouchHelper.LEFT) {
+          //RefreshGuidance();
+          if (mainActivity != null) {
+            mainActivity.handleRightSwipe();
+          }
         }
       }
     };
