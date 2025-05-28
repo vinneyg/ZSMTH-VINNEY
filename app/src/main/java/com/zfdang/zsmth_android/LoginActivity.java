@@ -104,6 +104,11 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
                         Intent resultIntent = new Intent();
                         setResult(Activity.RESULT_OK, resultIntent);
                         finish();
+                    } else if(result.getResultCode() == Activity.RESULT_CANCELED)
+                    {
+                        Intent resultIntent = new Intent();
+                        setResult(Activity.RESULT_CANCELED, resultIntent);
+                        finish();
                     }
                 });
     }
