@@ -49,7 +49,7 @@ public interface SMTHWWWService {
     Observable<ResponseBody> getBoardsBySection(@Path("section") String section);
 
     // http://www.newsmth.net/nForum/board/FamilyLife?ajax&p=2
-    @GET("/nForum/board/{boardEngName}?ajax&")
+    @GET("/nForum/board/{boardEngName}?ajax")
     Observable<ResponseBody> getBoardTopicsByPage(@Path("boardEngName") String boardEngName,
                                                   @Query("p") String page);
 

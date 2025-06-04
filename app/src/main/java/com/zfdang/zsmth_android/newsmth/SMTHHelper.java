@@ -1597,7 +1597,7 @@ class OkHttpUtil {
 
 }
 
- class RequestInterceptor implements Interceptor {
+class RequestInterceptor implements Interceptor {
   @NonNull
   @Override
   public Response intercept(@NonNull Chain chain) throws IOException {
@@ -1615,7 +1615,7 @@ class OkHttpUtil {
   }
 }
 
- class ResponseInterceptor implements Interceptor {
+class ResponseInterceptor implements Interceptor {
   @NonNull
   @Override
   public Response intercept(@NonNull Chain chain) throws IOException {
@@ -1640,5 +1640,6 @@ class OkHttpUtil {
     return response.newBuilder().body(responseBody).build();
   }
 }
+
 
 

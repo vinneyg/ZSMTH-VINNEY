@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Created by zfdang on 2016 - 5 - 10.
- * Modified by vinneyguo on 2025 - 3 - 11.
  */
 public class SMTHBaseActivity extends AppCompatActivity {
     protected AlertDialog pDialog = null;

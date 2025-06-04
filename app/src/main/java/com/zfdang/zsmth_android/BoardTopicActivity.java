@@ -586,7 +586,6 @@ public class BoardTopicActivity extends SMTHBaseActivity
                         (Function<ResponseBody, ObservableSource<Topic>>) responseBody -> {
                             try {
                                 String response = responseBody.string().replace("&emsp;","");
-                                Log.d("Vinney",response);
                                 List<Topic> topics = SMTHHelper.ParseBoardTopicsFromWWW(response);
                                 if (topics.isEmpty()){
                                     return null;
