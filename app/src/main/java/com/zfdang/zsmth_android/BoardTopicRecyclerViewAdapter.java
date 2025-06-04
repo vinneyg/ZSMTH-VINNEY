@@ -22,10 +22,15 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
 
   private final List<Topic> mTopics;
   private final OnTopicFragmentInteractionListener mListener;
+  private boolean showReplierInfo;
+  private boolean showTopicStatus = true;
 
-  public BoardTopicRecyclerViewAdapter(List<Topic> items, OnTopicFragmentInteractionListener listener) {
+
+
+  public BoardTopicRecyclerViewAdapter(List<Topic> items, OnTopicFragmentInteractionListener listener,boolean showReplierInfo) {
     mTopics = items;
     mListener = listener;
+    this.showReplierInfo = showReplierInfo;
   }
 
   @NonNull
@@ -50,9 +55,19 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
       holder.mPageIndicator.setVisibility(View.GONE);
       holder.mTitle.setVisibility(View.VISIBLE);
 
-      holder.mAuthorReplierRow.setVisibility(View.VISIBLE);
-      holder.mStatusRow.setVisibility(View.VISIBLE);
+      if (showReplierInfo) {
+        holder.mReplier.setVisibility(View.VISIBLE);
+        holder.mReplyDate.setVisibility(View.VISIBLE);
+      } else {
+        holder.mReplier.setVisibility(View.GONE);
+        holder.mReplyDate.setVisibility(View.GONE);
+      }
 
+      if (showTopicStatus) {
+        holder.mStatusRow.setVisibility(View.VISIBLE);
+      } else {
+        holder.mStatusRow.setVisibility(View.GONE);
+      }
 
       if (Settings.getInstance().isDiffReadTopic()) {
         //Common Parts
@@ -68,7 +83,6 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
 
         else
         {
-
           //First byte 0xFF ...... means transparent mode.
           if (Settings.getInstance().isNightMode()) {
             holder.mTitle.setTextColor(Color.parseColor("#ABC2DA"));//R.color.status_text_night
@@ -166,5 +180,16 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
     @Override public String toString() {
       return mTopic.toString();
     }
+  }
+
+  // 添加方法用于更新显示状态
+  public void setShowReplierInfo(boolean showReplierInfo) {
+    this.showReplierInfo = showReplierInfo;
+    notifyDataSetChanged();
+  }
+
+  public void setShowTopicStatus(boolean showTopicStatus) {
+    this.showTopicStatus = showTopicStatus;
+    notifyDataSetChanged();
   }
 }

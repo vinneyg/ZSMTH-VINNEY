@@ -9,8 +9,6 @@ import androidx.activity.OnBackPressedDispatcher;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.FragmentManager;
-
-import com.jude.swipbackhelper.SwipeBackPage;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import androidx.appcompat.app.ActionBar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -39,9 +37,18 @@ import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import okhttp3.ResponseBody;
 import io.reactivex.Observable;
@@ -72,6 +79,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     private Board mBoard = null;
 
     private int mCurrentPageNo = 1;
+    private int mCurrentPageModeNo = 1;
     //private final int LOAD_MORE_THRESHOLD = 1;
 
     private SmartRefreshLayout mSwipeRefreshLayout = null;
@@ -87,6 +95,13 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
     private ActivityResultLauncher<Intent> mActivityLoginResultLauncher;
     private ActivityResultLauncher<Intent> mActivityPostResultLauncher;
+
+    private boolean showReplierInfo = true;
+
+    private Menu mMenu;
+    private String currentMode = SMTHApplication.ReadMode2;
+
+    private BoardTopicRecyclerViewAdapter adapter;
 
     @Override protected void onDestroy() {
         super.onDestroy();
@@ -175,7 +190,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                 onRefresh();
             }
             else {
-               //RefreshBoardTopicsWithoutClear();
+                //RefreshBoardTopicsWithoutClear();
                 RefreshBoardTopicFromPageOne();
             }
         });
@@ -190,7 +205,10 @@ public class BoardTopicActivity extends SMTHBaseActivity
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL, 0));
         LinearLayoutManager linearLayoutManager = new WrapContentLinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        mRecyclerView.setAdapter(new BoardTopicRecyclerViewAdapter(TopicListContent.BOARD_TOPICS, this));
+
+        adapter = new BoardTopicRecyclerViewAdapter(TopicListContent.BOARD_TOPICS, this,showReplierInfo);
+
+        mRecyclerView.setAdapter(adapter);
 
         mRecyclerView.setItemViewCacheSize(40);
 
@@ -299,6 +317,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
             Intent intent = new Intent(this, ComposePostActivity.class);
             intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+            intent.putExtra(SMTHApplication.READ_MODE,SMTHApplication.ReadMode0.equals(currentMode)?"0":"1");
             mActivityPostResultLauncher.launch(intent);
         } else if (id == R.id.board_topic_action_search) {
             PopupSearchWindow popup = new PopupSearchWindow();
@@ -335,13 +354,49 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
                         }
                     });
+        } else if (id == R.id.mode_2 || id == R.id.mode_1 || id == R.id.mode_0) {
+            resetModeMenuCheckedState();
+            item.setChecked(true);
+
+
+            if (id == R.id.mode_0) {
+                // Handle the logic when mode_0 is selected
+                currentMode = SMTHApplication.ReadMode0;
+            } else if (id == R.id.mode_1) {
+                currentMode = SMTHApplication.ReadMode1;
+                // Handle the logic when mode_1 is selected
+            } else if (id == R.id.mode_2) {
+                currentMode = SMTHApplication.ReadMode2;
+                // Handle the logic when mode_2 is selected
+            }
+            toggleReplierInfoVisibility(currentMode);
+            RefreshBoardTopicFromPageOne();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void resetModeMenuCheckedState() {
+        if (mMenu != null) {
+            MenuItem mode0 = mMenu.findItem(R.id.mode_0);
+            MenuItem mode1 = mMenu.findItem(R.id.mode_1);
+            MenuItem mode2 = mMenu.findItem(R.id.mode_2);
+
+            if (mode0 != null) {
+                mode0.setChecked(false);
+            }
+            if (mode1 != null) {
+                mode1.setChecked(false);
+            }
+            if (mode2 != null) {
+                mode2.setChecked(false);
+            }
+        }
     }
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.board_topic_menu, menu);
+        mMenu = menu;
         return true;
     }
 
@@ -359,9 +414,15 @@ public class BoardTopicActivity extends SMTHBaseActivity
             return;
         }
 
-        mCurrentPageNo += 1;
-        // Log.d(TAG, mCurrentPageNo + " page is loading now...");
-        LoadBoardTopics();
+        if(SMTHApplication.ReadMode0.equals(currentMode)){
+            //Mode 0
+            mCurrentPageModeNo +=1;
+            LoadBoardTopicsMobile();
+        }else{
+            mCurrentPageNo += 1;
+            // Log.d(TAG, mCurrentPageNo + " page is loading now...");
+            LoadBoardTopics(currentMode);
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -380,19 +441,143 @@ public class BoardTopicActivity extends SMTHBaseActivity
             Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemRangeRemoved(0, oldItemCount);
         }
 
-        mCurrentPageNo = 1;
-        LoadBoardTopics();
+        if(currentMode.equals("2")||currentMode.equals("1")){
+            mCurrentPageNo = 1;
+            LoadBoardTopics(currentMode);
+        } else {   //mode 0 & 1
+            mCurrentPageModeNo=1;
+            LoadBoardTopicsMobile();
+        }
+
+        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
     }
 
     public void RefreshBoardTopicsWithoutClear() {
         showProgress("加载版面文章...");
-        LoadBoardTopics();
+        if(SMTHApplication.ReadMode0.equals(currentMode)){
+            LoadBoardTopicsMobile();
+        }else{
+            LoadBoardTopics(currentMode);
+        }
+        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
     }
 
-    public void LoadBoardTopics() {
+    public void LoadBoardTopicsMobile() {
 
         isSearchMode = false;
         final SMTHHelper helper = SMTHHelper.getInstance();
+
+        // 用于临时存储新的 Topic
+        ArrayList<Topic> newTopics = new ArrayList<>();
+
+        // 添加页码提示 Topic
+        Topic pageTopic = new Topic(String.format(java.util.Locale.CHINA, "第%d页:", mCurrentPageModeNo));
+        pageTopic.isCategory = true;
+        newTopics.add(pageTopic);
+
+        helper
+                .mService
+                .getBoardTopicsByPage(mBoard.getBoardEngName(), Integer.toString(mCurrentPageModeNo))
+                .flatMap(
+                        (Function<ResponseBody, ObservableSource<Topic>>) responseBody -> {
+                            try {
+                                String response = responseBody.string();
+                                List<Topic> topics = SMTHHelper.ParseBoardTopicsFromWWWMobile(response);
+                                if (topics.isEmpty()){
+                                    return null;
+                                }
+                                return Observable.fromIterable(topics);
+                            } catch (Exception e) {
+                                Log.e(TAG, "call: " + Log.getStackTraceString(e));
+                                return null;
+                            }
+                        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        new Observer<Topic>() {
+                            @Override
+                            public void onSubscribe(@NonNull Disposable disposable) {
+                            }
+
+                            @Override
+                            public void onNext(@NonNull Topic topic) {
+                                // Log.d(TAG, topic.toString());
+                                if (!topic.isSticky || mSetting.isShowSticky()) {
+                                    if (!MapHash.contains(topic.getTitle())) {
+                                        if (MapHash.size() >= MAXSIZE) {
+                                            MapHash.clear();
+                                        }
+                                        newTopics.add(topic);
+                                        MapHash.put(topic.getTitle(), topic.getTopicID());
+                                    } else {
+                                        Log.d(TAG, "sticky " + topic.getTitle());
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onError(@NonNull Throwable e) {
+                                clearLoadingHints();
+                                if (mSwipeRefreshLayout != null) {
+                                    mSwipeRefreshLayout.finishRefresh(false);
+                                }
+
+                                if(mCurrentPageModeNo != 1)
+                                    Toast.makeText(
+                                                    SMTHApplication.getAppContext(),
+                                                    String.format(Locale.CHINA, "错误:获取第%d页的帖子失败!\n"+e.toString(), mCurrentPageNo),
+                                                    Toast.LENGTH_SHORT)
+                                            .show();
+                                else{
+                                    mCurrentPageModeNo -= 1;
+
+                                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                                        try {
+                                            if (!SMTHApplication.isValidUser()) {
+                                                Intent intent = new Intent(BoardTopicActivity.this, LoginActivity.class);
+                                                mActivityLoginResultLauncher.launch(intent);
+                                            } else {
+                                                Toast.makeText(BoardTopicActivity.this, "站点问题，请稍等。\n或者重新登录进入！\n", Toast.LENGTH_SHORT).show();
+                                                new Handler(Looper.getMainLooper()).postDelayed(() -> finish(), Toast.LENGTH_SHORT);
+                                            }
+                                        } catch (Exception ie) {
+                                            Log.e(TAG, "Error occurred during delayed operation: ", e);
+                                        }
+                                    }, 500);
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                clearLoadingHints();
+                                if (mSwipeRefreshLayout != null) {
+                                    mSwipeRefreshLayout.finishRefresh(true);
+                                }
+
+                                final int startPosition = TopicListContent.BOARD_TOPICS.size();
+                                TopicListContent.BOARD_TOPICS.addAll(newTopics);
+                                // 一次性通知适配器数据更新
+                                if (!newTopics.isEmpty()) {
+                                    Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemRangeInserted(startPosition, newTopics.size());
+                                }
+                            }
+                        });
+    }
+    public void LoadBoardTopics(String mode) {
+
+        isSearchMode = false;
+        final SMTHHelper helper = SMTHHelper.getInstance();
+
+        // 用于临时存储新的 Topic
+        ArrayList<Topic> newTopics = new ArrayList<>();
+
+        // 添加页码提示 Topic
+        Topic pageTopic = new Topic(String.format(java.util.Locale.CHINA, "第%d页:", mCurrentPageNo));
+        pageTopic.isCategory = true;
+        newTopics.add(pageTopic);
 
         helper
                 .wService
@@ -400,7 +585,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
                 .flatMap(
                         (Function<ResponseBody, ObservableSource<Topic>>) responseBody -> {
                             try {
-                                String response = responseBody.string();
+                                String response = responseBody.string().replace("&emsp;","");
+                                Log.d("Vinney",response);
                                 List<Topic> topics = SMTHHelper.ParseBoardTopicsFromWWW(response);
                                 if (topics.isEmpty()){
                                     return null;
@@ -417,20 +603,6 @@ public class BoardTopicActivity extends SMTHBaseActivity
                         new Observer<Topic>() {
                             @Override
                             public void onSubscribe(@NonNull Disposable disposable) {
-                                Topic topic = new Topic(String.format(Locale.CHINA, "第%d页:", mCurrentPageNo));
-                                topic.isCategory = true;
-
-                                TopicListContent.addBoardTopic(topic);
-                                Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
-                                /*
-                                mRecyclerView.post(
-                                        () -> {
-                                            // Notify adapter with appropriate notify methods
-                                            Objects.requireNonNull(mRecyclerView.getAdapter())
-                                                    .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
-                                        });
-                                */
-
                             }
 
                             @Override
@@ -441,12 +613,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
                                         if (MapHash.size() >= MAXSIZE) {
                                             MapHash.clear();
                                         }
-                                        TopicListContent.addBoardTopic(topic);
+                                        newTopics.add(topic);
                                         MapHash.put(topic.getTitle(), topic.getTopicID());
-
-                                        Objects.requireNonNull(mRecyclerView.getAdapter())
-                                                .notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
-
                                     } else {
                                         Log.d(TAG, "sticky " + topic.getTitle());
                                     }
@@ -494,15 +662,70 @@ public class BoardTopicActivity extends SMTHBaseActivity
                                     mSwipeRefreshLayout.finishRefresh(true);
                                 }
 
-                                //Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
+                                // 如果 mode 为 1，按 publishDate 排序
+                                if ("1".equals(mode)) {
+                                    Topic tempPageTopic = newTopics.remove(0);
 
+                                    newTopics.sort(new Comparator<Topic>() {
+                                        private final SimpleDateFormat timeFormat1 = new SimpleDateFormat("HH:mm", Locale.CHINA);
+                                        private final SimpleDateFormat timeFormat2 = new SimpleDateFormat("HH:mm:ss", Locale.CHINA);
+                                        private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+                                        private final Calendar today = Calendar.getInstance();
+                                        @Override
+                                        public int compare(Topic t1, Topic t2) {
+                                            try {
+                                                Date date1 = parsePublishDate(t1.getPublishDate());
+                                                Date date2 = parsePublishDate(t2.getPublishDate());
+                                                return date2.compareTo(date1); // 从新到旧排序
+                                            } catch (ParseException e) {
+                                                Log.e(TAG, "Error parsing publish date", e);
+                                                return 0;
+                                            }
+                                        }
+
+                                        private Date parsePublishDate(String publishDate) throws ParseException {
+                                            if (publishDate == null) {
+                                                // Handle null publishDate, for example, return the earliest possible date
+                                                return new Date(0);
+                                            }
+                                            if (publishDate.length() == 5) { // hh:mm 格式
+                                                Calendar cal = (Calendar) today.clone();
+                                                cal.setTime(Objects.requireNonNull(timeFormat1.parse(publishDate)));
+                                                cal.set(Calendar.YEAR, today.get(Calendar.YEAR));
+                                                cal.set(Calendar.MONTH, today.get(Calendar.MONTH));
+                                                cal.set(Calendar.DAY_OF_MONTH, today.get(Calendar.DAY_OF_MONTH));
+                                                return cal.getTime();
+                                            } else if (publishDate.length() == 8) { // hh:mm:ss 格式
+                                                Calendar cal = (Calendar) today.clone();
+                                                cal.setTime(Objects.requireNonNull(timeFormat2.parse(publishDate)));
+                                                cal.set(Calendar.YEAR, today.get(Calendar.YEAR));
+                                                cal.set(Calendar.MONTH, today.get(Calendar.MONTH));
+                                                cal.set(Calendar.DAY_OF_MONTH, today.get(Calendar.DAY_OF_MONTH));
+                                                return cal.getTime();
+                                            } else { // YYYY/MM/DD 格式
+                                                return dateFormat.parse(publishDate);
+                                            }
+                                        }
+                                    });
+
+                                    newTopics.add(0, tempPageTopic);
+
+                                }
+// 获取插入前的位置
+                                final int startPosition = TopicListContent.BOARD_TOPICS.size();
+                                TopicListContent.BOARD_TOPICS.addAll(newTopics);
+
+                                // 一次性通知适配器数据更新
+                                if (!newTopics.isEmpty()) {
+                                    Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemRangeInserted(startPosition, newTopics.size());
+                                }
                             }
                         });
     }
 
 
     @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (Settings.getInstance().isVolumeKeyScroll() && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+        if (Settings.getInstance().isVolumeKeyScroll() && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == android.view.KeyEvent.KEYCODE_VOLUME_DOWN)) {
             RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
             return true;
         }
@@ -512,7 +735,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     // http://stackoverflow.com/questions/4500354/control-volume-keys
     @Override public boolean onKeyUp(int keyCode, KeyEvent event) {
         // disable the beep sound when volume up/down is pressed
-        if (Settings.getInstance().isVolumeKeyScroll() && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+        if (Settings.getInstance().isVolumeKeyScroll() && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == android.view.KeyEvent.KEYCODE_VOLUME_DOWN)) {
             return true;
         }
         return super.onKeyUp(keyCode, event);
@@ -546,6 +769,12 @@ public class BoardTopicActivity extends SMTHBaseActivity
         }
 
         intent.putExtra(SMTHApplication.TOPIC_OBJECT, item);
+
+        if(SMTHApplication.ReadMode0.equals(currentMode))
+            intent.putExtra(SMTHApplication.READ_MODE, SMTHApplication.ReadMode0);
+        else
+            intent.putExtra(SMTHApplication.READ_MODE, SMTHApplication.ReadMode1);
+
         intent.putExtra(SMTHApplication.FROM_BOARD, SMTHApplication.FROM_BOARD_BOARD);
         startActivity(intent);
     }
@@ -614,4 +843,12 @@ public class BoardTopicActivity extends SMTHBaseActivity
         }
     }
 
+    public void toggleReplierInfoVisibility(String mode) {
+        showReplierInfo = SMTHApplication.ReadMode2.equals(mode);
+        boolean showTopicStatus = !SMTHApplication.ReadMode0.equals(mode);
+        if (adapter != null) {
+            adapter.setShowReplierInfo(showReplierInfo);
+            adapter.setShowTopicStatus(showTopicStatus);
+        }
+    }
 }

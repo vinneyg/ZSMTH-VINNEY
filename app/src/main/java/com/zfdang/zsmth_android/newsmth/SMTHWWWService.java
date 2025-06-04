@@ -15,6 +15,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import io.reactivex.Observable;
+import retrofit2.http.QueryMap;
 
 /**
  * Created by zfdang on 2016-3-16.
@@ -48,7 +49,7 @@ public interface SMTHWWWService {
     Observable<ResponseBody> getBoardsBySection(@Path("section") String section);
 
     // http://www.newsmth.net/nForum/board/FamilyLife?ajax&p=2
-    @GET("/nForum/board/{boardEngName}?ajax")
+    @GET("/nForum/board/{boardEngName}?ajax&")
     Observable<ResponseBody> getBoardTopicsByPage(@Path("boardEngName") String boardEngName,
                                                   @Query("p") String page);
 

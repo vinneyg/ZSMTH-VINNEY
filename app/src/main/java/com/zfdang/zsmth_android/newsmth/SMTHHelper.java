@@ -22,6 +22,7 @@ import com.zfdang.zsmth_android.Settings;
 import com.zfdang.zsmth_android.WebviewCookieHandler;
 import com.zfdang.zsmth_android.helpers.MakeList;
 import com.zfdang.zsmth_android.helpers.StringUtils;
+import com.zfdang.zsmth_android.utils.TimeUtils;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.BoardListContent;
 import com.zfdang.zsmth_android.models.BoardSection;
@@ -41,6 +42,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -50,6 +52,7 @@ import java.security.SecureRandom;
 //import java.security.cert.CertificateNotYetValidException;
 import java.util.ArrayList;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -84,6 +87,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class SMTHHelper {
 
   static final private String TAG = "SMTHHelper";
+
   public static final String USER_AGENT =
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.101 Safari/537.36";
 
@@ -97,6 +101,8 @@ public class SMTHHelper {
   static public final String SMTH_MOBILE_URL = "https://m.newsmth.net";
 
   public SMTHWWWService wService;
+  public SMTHMService mService;
+  public static SMTHMService pService;
   static private final String SMTH_WWW_ENCODING = "GB2312";
 
   // All boards cache file
@@ -134,11 +140,16 @@ public class SMTHHelper {
   public static String DecodeResponseFromWWW(byte[] bytes) {
     String result = null;
     try {
-      result = new String(bytes, SMTH_WWW_ENCODING);
+      //result = new String(bytes, SMTH_WWW_ENCODING);
+      String temp = new String(bytes, SMTH_WWW_ENCODING); // GB2312
+      if (temp.contains("utf-8") || temp.contains("UTF-8")) {
+        return new String(bytes, StandardCharsets.UTF_8);
+      }
+      return temp;
     } catch (UnsupportedEncodingException e) {
       Log.d("DecodeResponseFromWWW", e.toString());
+      return "";
     }
-    return result;
   }
 
   // protected constructor, can only be called by getInstance
@@ -159,7 +170,12 @@ public class SMTHHelper {
                 Request request = chain.request().newBuilder().header("User-Agent", USER_AGENT).build();
                 return chain.proceed(request);
               }
-            }).addNetworkInterceptor(new Interceptor() {
+            })
+            /*
+            .addInterceptor(new RequestInterceptor())
+            .addInterceptor(new ResponseInterceptor())
+            */
+            .addNetworkInterceptor(new Interceptor() {
               // for error response, do not cache its content
               @NonNull
               @Override public Response intercept(@NonNull Chain chain) throws IOException {
@@ -206,6 +222,14 @@ public class SMTHHelper {
             .client(mHttpClient)
             .build();
     wService = wRetrofit.create(SMTHWWWService.class);
+    // Mobile service of SMTH, baseUrl is https://m.newsmth.net
+    Retrofit mRetrofit = new Retrofit.Builder().baseUrl(SMTH_MOBILE_URL)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(mHttpClient)
+            .build();
+    mService = mRetrofit.create(SMTHMService.class);
   }
 
   // query active user status
@@ -401,6 +425,75 @@ public class SMTHHelper {
     return post;
   }
 
+  public static Post ParsePostListFromWWWMobile(String content, Topic topic) {
+
+    Post result = new Post();
+    if (content == null) {
+      return result;
+    }
+
+    //指定的文章不存在或链接错误
+    if(content.contains("指定的文章不存在或链接错误")){
+      topic.setTotalPostNoFromString("1");
+      result.setAuthor("发生错误");
+      result.setRawContent("指定的文章不存在或链接错误");
+      return result;
+    }
+
+    Document doc = Jsoup.parse(content);
+
+    // 提取标题：第一个 li.f 的文本
+    Element titleLi = doc.selectFirst("ul.list.sec > li.f");
+    String title = titleLi != null ? titleLi.text().replaceAll("[\\u00B7\\u2022\\u00A0]", "") : "";
+    title = title.replace("主题:", "");
+    // 提取用户名：第一个 a.nav 中的文本
+    Element userLink = doc.selectFirst("ul.list.sec > li .nav a[href]");
+    String username = userLink != null ? userLink.text() : "";
+    // 提取时间：class为 plant 的 a 标签
+    Element timeElement = doc.selectFirst("ul.list.sec > li .nav a.plant");
+    String postTimeStr = timeElement != null ? timeElement.text() : "";
+
+    // 提取回复链接：href 包含 /post/
+    Element replyLink = doc.selectFirst("ul.list.sec > li .nav a[href*=/post/]");
+    String replyHref = replyLink != null ? replyLink.attr("href") : "";
+    // 使用正则表达式提取第一个数字字符串
+    Pattern pattern = Pattern.compile("\\d+");
+    Matcher matcher = pattern.matcher(replyHref);
+
+    String firstNumber = "";
+    if (matcher.find()) {
+      firstNumber = matcher.group();
+      Log.d(TAG, "第一个数字字符串: " + firstNumber);
+    } else {
+      Log.d(TAG, "未找到数字字符串");
+    }
+
+    // 提取正文内容：div.sp 的内容
+    Element contentDiv = doc.selectFirst("ul.list.sec > li .sp");
+    String contentSP = contentDiv != null ? contentDiv.html() : "";
+
+    result.setTitle(title);
+    result.setAuthor(username);
+    result.setPostID(firstNumber);
+
+    Date postTime = TimeUtils.convertStringToDate(postTimeStr);
+    result.setDate(postTime);
+    result.setHtmlContent(contentSP);
+
+    return result;
+  }
+
+  public static boolean hasValidContent(Element contentTd) {
+    if (contentTd == null) return false;
+
+    String text = contentTd.text().trim();  // 获取纯文本并去除前后空格
+    String html = contentTd.html().trim(); // 获取HTML内容并去除前后空格
+
+    // 如果整个HTML为空或只有 <p></p> 这类标签，则视为无效
+    return !TextUtils.isEmpty(text) ||
+            (!html.contains("<p></p>") && !html.contains("<div></div>") && !html.isEmpty());
+  }
+
   public static List<Post> ParsePostListFromWWW(String content, Topic topic) {
     //final String TAG = "ParsePostListFromWWW";
     List<Post> results = new ArrayList<>();
@@ -421,14 +514,13 @@ public class SMTHHelper {
         String totalPostString = matcher.group(0);
         topic.setTotalPostNoFromString(totalPostString);
       }
-    }
-    else
-    {
+    }  else  {
       return results;
     }
 
     // find all posts
     Elements tables = doc.select("table.article");
+
     for (Element table : tables) {
       Post post = new Post();
 
@@ -462,10 +554,15 @@ public class SMTHHelper {
 
       // find & parse post content
       Elements contents = table.select("td.a-content");
-      if (contents.size() == 1) {
-        post.parsePostContent(contents.get(0), true);
+      if (!contents.isEmpty()) {
+        for (Element contentTd : contents) {
+          // 检查是否包含有效内容
+          if (hasValidContent(contentTd)) {
+            post.parsePostContent(contentTd, true);
+            results.add(post);
+          }
+        }
       }
-      results.add(post);
     }
 
     if (results.isEmpty()) {
@@ -485,7 +582,7 @@ public class SMTHHelper {
         topic.setTotalPostNoFromString("1");
 
         Post post = new Post();
-        post.setAuthor("错误信息");
+        post.setAuthor("发生错误");
         assert div != null;
         post.setRawContent(div.toString());
         results.add(post);
@@ -675,13 +772,83 @@ public class SMTHHelper {
     return results;
   }
 
+  public static List<Topic> ParseBoardTopicsFromWWWMobile(String content) {
+    List<Topic> results = new ArrayList<>();
+    if (content == null) {
+      return results;
+    }
+
+
+    Document doc = Jsoup.parse(content);
+
+    // <li class="page-select"><a title="当前页">2</a></li>
+    String currentPage = null;
+    Elements lis = doc.select("ul.list.sec li");
+
+    if (!lis.isEmpty()) {
+
+      for (Element li : lis) {
+        Topic topic = new Topic();
+        // 提取第一个 div 中的标题和数量信息
+        Element firstDiv = li.selectFirst("div:nth-of-type(1)");
+        String titleWithCount = Objects.requireNonNull(firstDiv).text();
+        Element firstDivLink = li.selectFirst("div:nth-of-type(1) a");
+        //略过文摘
+        if ("top".equals(Objects.requireNonNull(firstDivLink).attr("class"))) {
+          continue;
+        }
+        //Topic Href: "/article/Apple/single/1551240/0";
+        String href = firstDivLink.attr("href");
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(href);
+        String id="";
+        if (matcher.find()) {
+          id = matcher.group();
+        }
+
+        // 提取第二个 div 中的日期和作者信息
+        Element secondDiv = li.selectFirst("div:nth-of-type(2)");
+        assert secondDiv != null;
+        Element userLink = secondDiv.selectFirst("a");
+        assert userLink != null;
+        String firstAuthor = "  "+ userLink.text();
+        String[] parts = secondDiv.text().split(" ");
+        String firstDate= parts[1].replace("&nbsp;","");
+        topic.setTitle(titleWithCount);
+        topic.setTopicID(id);
+        topic.setAuthor(firstAuthor);
+        topic.setPublishDate(firstDate);
+        topic.setReplier(firstAuthor);
+        topic.setReplyDate(firstDate);
+        if (topic.getTitle() != null && !topic.getTitle().isEmpty()) {
+          results.add(topic);
+        }
+
+      }
+
+    }
+    // To handle Error case :  <title>水木社区-错误信息</title>
+    else
+    {
+      return results;
+    }
+
+    return results;
+  }
+
+
+  public static String getSubString(String str, int maxLength) {
+    if (str == null || str.isEmpty()) {
+      return "";
+    }
+    return str.length() <= maxLength ? str : str.substring(0, maxLength);
+  }
   // parse board topics from WWW
   public static List<Topic> ParseBoardTopicsFromWWW(String content) {
     List<Topic> results = new ArrayList<>();
     if (content == null) {
       return results;
     }
-
 
     Document doc = Jsoup.parse(content);
 
@@ -1045,8 +1212,29 @@ public class SMTHHelper {
     return mails;
   }
 
+
+  public static String parseDeleteResponseMobile(String response) {
+    if (response == null || response.isEmpty()) {
+      return "删除失败";
+    }
+
+    if (response.contains("删除成功")|| response.contains("删除文章成功")) {
+      return "删除成功";
+    }
+    return "删除失败";
+  }
+
+
   // sample response: assets/deletion_response.html
   public static String parseDeleteResponse(String response) {
+    if (response == null || response.isEmpty()) {
+      return "删除失败";
+    }
+    if (response.contains("删除成功")|| response.contains("删除文章成功")) {
+      return "删除成功";
+    }
+    return "删除失败";
+    /*
     String result = "";
     Document doc = Jsoup.parse(response);
     Elements bodies = doc.getElementsByTag("body");
@@ -1071,6 +1259,8 @@ public class SMTHHelper {
     result = result.replaceAll("用户名：", "");
     result = result.replaceAll("密　码：", "");
     return result;
+    */
+
   }
 
   // sample response: assets/deletion_response.html
@@ -1404,4 +1594,51 @@ class OkHttpUtil {
       //return HttpsURLConnection.getDefaultHostnameVerifier().verify(arg0,arg1);
     };
   }
+
 }
+
+ class RequestInterceptor implements Interceptor {
+  @NonNull
+  @Override
+  public Response intercept(@NonNull Chain chain) throws IOException {
+    Request request = chain.request();
+
+    // 打印请求 URL 和方法
+    Log.d("HTML_REQ", "Sending request to " + request.url());
+    Log.d("HTML_REQ", "Method: " + request.method());
+
+    // 可选：添加公共 Header，例如：
+    Request newRequest = request.newBuilder()
+            .build();
+
+    return chain.proceed(newRequest);
+  }
+}
+
+ class ResponseInterceptor implements Interceptor {
+  @NonNull
+  @Override
+  public Response intercept(@NonNull Chain chain) throws IOException {
+    Response response = chain.proceed(chain.request());
+
+    // 打印响应码和耗时
+    Log.d("HTML_RSP", "Received response for " + response.request().url());
+    Log.d("HTML_RSP", "Status Code: " + response.code());
+    Log.d("HTML_RSP", "Time taken: " +
+            (Long.parseLong(String.valueOf(response.receivedResponseAtMillis())) - response.sentRequestAtMillis()) + "ms");
+
+    // 可选：读取响应体内容（注意不要多次调用 body.string()）
+    ResponseBody responseBody = response.body();
+    if (responseBody != null) {
+      String bodyString = responseBody.string();
+      Log.d("HTML_RSP", "Response Body:\n" + bodyString);
+
+      // 重新设置回响应中以便后续处理继续使用
+      responseBody = ResponseBody.create(bodyString, responseBody.contentType());
+    }
+
+    return response.newBuilder().body(responseBody).build();
+  }
+}
+
+

@@ -76,9 +76,10 @@ public class QueryUserActivity extends SMTHBaseActivity {
 
     findViewById(R.id.query_user_action_query).setOnClickListener(v -> {
       EditText tv = findViewById(R.id.query_user_input);
-      String userid = tv.getText().toString();
+      String userid = tv.getText().toString().trim();
       if (!userid.isEmpty()) {
         mUsername = userid;
+        tv.setText(userid);
         getSupportActionBar().setTitle(mUsername);
         KeyboardLess.$hide(QueryUserActivity.this, tv);
         tv.clearFocus();

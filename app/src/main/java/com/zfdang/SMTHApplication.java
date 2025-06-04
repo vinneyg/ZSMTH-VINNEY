@@ -31,6 +31,8 @@ public class SMTHApplication extends Application {
   //public static String App_Title_Prefix = "zSMTH-v-";
   public static String App_Title_Prefix = "";
 
+  public static final String READ_MODE = "Read_Mode";
+
   public static final String FROM_BOARD = "From_Board";
   public static final String FROM_BOARD_HOT = "FROM_HOTTOPICS";
   public static final String FROM_BOARD_BOARD = "FROM_BOARDTOPICS";
@@ -61,6 +63,10 @@ public class SMTHApplication extends Application {
   public static Post ReadPostFirst = null;
   public static boolean ReadRec = false;
 
+  public static String ReadMode2 = "2";
+  public static String ReadMode1 = "1";
+  public static String ReadMode0 = "0";
+
   public static String ReadBoard1 = "版块(空)";
   public static String ReadBoard2 = "版块(空)";
   public static String ReadBoard3 = "版块(空)";
@@ -68,7 +74,6 @@ public class SMTHApplication extends Application {
   public static String ReadBoardEng2 = null;
   public static String ReadBoardEng3 = null;
   public static int ReadBoardCount = 0;
-
   public static  int deletionCount = 0;
 
   public static boolean bNewFavoriteBoard = false;

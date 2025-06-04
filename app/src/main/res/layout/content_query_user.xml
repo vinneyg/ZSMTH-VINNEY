@@ -430,7 +430,7 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
             android:layout_marginTop="2dp"
             >
@@ -445,9 +445,12 @@
 
           <TextView
               android:id="@+id/query_user_currentstatus"
-              android:layout_width="wrap_content"
+              android:layout_width="0dp"
               android:layout_height="wrap_content"
-              android:ellipsize="end"
+              android:layout_weight="1"
+              android:singleLine="false"
+              android:maxLines="2"
+              android:ellipsize="none"
               android:text=""
               android:textColor="@color/status_text_night"
               />

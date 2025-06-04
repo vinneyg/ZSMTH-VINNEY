@@ -573,4 +573,26 @@ public class Post {
             + '\''
             + '}';
   }
+
+  public void setHtmlContent(String htmlContent) {
+    if (htmlContent == null || htmlContent.isEmpty()) {
+      this.htmlContent = "";
+      this.htmlContentAndLikes = "";
+      parseContentToSegments();
+      return;
+    }
+
+    // Step 1: Replace <br> and <br/> with actual line breaks
+    String processed = htmlContent.replaceAll("<br\\s*/?>", "<br />");
+
+    // Step 2: Convert HTML to plain text with proper line breaks
+    CharSequence charSequence = Html.fromHtml(processed, Html.FROM_HTML_MODE_LEGACY);
+    String plainText = charSequence.toString();
+
+    // Step 3: Re-introduce HTML line breaks so that TextView can render them
+    this.htmlContent = plainText.replace("\n", "<br />");
+    this.htmlContentAndLikes = this.htmlContent;
+
+    parseContentToSegments();
+  }
 }

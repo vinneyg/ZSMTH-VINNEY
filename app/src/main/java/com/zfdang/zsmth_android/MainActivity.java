@@ -79,6 +79,7 @@ import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserInfo;
+import com.zfdang.zsmth_android.newsmth.UserStatus;
 import com.zfdang.zsmth_android.services.KeepAliveService;
 import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
@@ -512,7 +513,21 @@ public class MainActivity extends SMTHBaseActivity
       @Override public void onReceiveResult(int resultCode, Bundle resultData) {
         if (resultCode == RESULT_OK) {
           Log.d(TAG,"onReceiveResult: " + "to update navigationview " + SMTHApplication.activeUser.toString());
-          runOnUiThread(() -> UpdateNavigationViewHeader());
+          runOnUiThread(() -> {
+            UpdateNavigationViewHeader();
+            /*
+            // 获取当前用户信息
+            UserStatus userInfo = SMTHApplication.activeUser;
+            if (userInfo != null && !TextUtils.isEmpty(userInfo.getId())) {
+              String userId = userInfo.getId();
+
+              // 跳转到用户详情页面
+              Intent intent = new Intent(MainActivity.this, QueryUserActivity.class);
+              intent.putExtra(SMTHApplication.QUERY_USER_INFO, userId);
+              startActivity(intent);
+            }
+            */
+          });
 
           // show notification if necessary
           String message = resultData.getString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE);
@@ -1077,6 +1092,7 @@ public class MainActivity extends SMTHBaseActivity
 
       Intent intent = new Intent(this, PostListActivity.class);
       intent.putExtra(SMTHApplication.TOPIC_OBJECT, item);
+      intent.putExtra(SMTHApplication.READ_MODE, "1");
       intent.putExtra(SMTHApplication.FROM_BOARD, SMTHApplication.FROM_BOARD_HOT);
       startActivity(intent);
     }
