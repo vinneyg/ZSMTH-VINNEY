@@ -5,23 +5,23 @@
   <PreferenceCategory android:title="通用">
     <Preference
         android:key="app_feedback"
-        android:summary=""
+        app:summary=""
         android:title="反馈建议"
         app:isPreferenceVisible="false" />
     <EditTextPreference
         android:dialogTitle="输入水木社区站点地址"
         android:key="WebAddr"
-        android:summary="https://www.newsmth.net"
+        app:summary="https://www.newsmth.net"
         android:title="水木社区站点"
         />
     <Preference
         android:key="sponsor"
-        android:summary="支付宝帐号: vinneyguo@outlook.com\n点击自动复制"
+        app:summary="支付宝帐号: vinneyguo@outlook.com\n点击自动复制"
         android:title="赞助打赏"
         app:isPreferenceVisible="false" />
     <Preference
         android:key="setting_app_version"
-        android:summary="版本号: 未知"
+        app:summary="版本号: 未知"
         android:title="检查更新"/>
   </PreferenceCategory>
 
@@ -30,11 +30,11 @@
       app:iconSpaceReserved="true">
     <Preference
         android:key="setting_fresco_cache"
-        android:summary="缓存大小:0B"
+        app:summary="缓存大小:0B"
         android:title="清除图片缓存" />
     <Preference
         android:key="setting_okhttp3_cache"
-        android:summary="缓存大小:0B"
+        app:summary="缓存大小:0B"
         android:title="清除帖子缓存" />
   </PreferenceCategory>
 
@@ -42,108 +42,108 @@
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="setting_login_with_verification"
-        android:summaryOff="简单登录"
-        android:summaryOn="验证登录"
+        app:summaryOff="简单登录"
+        app:summaryOn="验证登录"
         android:title="水木登录方式"/>
     <CheckBoxPreference
         android:defaultValue="off"
         android:key="left_nav_slide"
-        android:summaryOff="左侧边缘右滑出"
-        android:summaryOn="全屏右滑出"
+        app:summaryOff="左侧边缘右滑出"
+        app:summaryOn="全屏右滑出"
         android:title="左侧导航栏滑动设置"/>
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="launch_bottom_navi"
-        android:summaryOff="ZPad"
-        android:summaryOn="底部导航栏"
+        app:summaryOff="ZPad"
+        app:summaryOn="底部导航栏"
         android:title="底部导航栏设置"/>
 
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="menu_text"
-        android:summaryOff="文字显示关"
-        android:summaryOn="文字显示开"
+        app:summaryOff="文字显示关"
+        app:summaryOn="文字显示开"
         android:title="底部导航栏菜单设置"/>
 
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="launch_hottopic_as_entry"
-        android:summaryOff="打开收藏"
-        android:summaryOn="打开首页"
+        app:summaryOff="打开收藏"
+        app:summaryOn="打开首页"
         android:title="初始页面"/>
 
     <CheckBoxPreference
         android:defaultValue="off"
         android:key="open_topic_add"
-        android:summaryOff="重新打开帖子首页"
-        android:summaryOn="记住帖子浏览位置"
+        app:summaryOff="重新打开帖子首页"
+        app:summaryOn="记住帖子浏览位置"
         app:isPreferenceVisible="false"
         android:title="记住帖子浏览位置"/>
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="setting_topic_fwd"
-        android:summaryOff="转寄他人"
-        android:summaryOn="转寄自己"
+        app:summaryOff="转寄他人"
+        app:summaryOn="转寄自己"
         android:title="转寄地址设置"/>
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="diff_read_topic"
-        android:summaryOff="不区分已读未读帖子"
-        android:summaryOn="区分已读未读帖子"
+        app:summaryOff="不区分已读未读帖子"
+        app:summaryOn="区分已读未读帖子"
         android:title="区分已读未读帖子"/>
 
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="setting_daynight_control"
-        android:summaryOff="使用白色背景"
-        android:summaryOn="使用黑色背景"
+        app:summaryOff="使用白色背景"
+        app:summaryOn="使用黑色背景"
         android:title="配色模式"/>
 
     <CheckBoxPreference
         android:defaultValue="off"
         android:key="setting_post_navigation_control"
-        android:summaryOff="快速导航栏已关闭"
-        android:summaryOn="快速导航栏已打开"
+        app:summaryOff="快速导航栏已关闭"
+        app:summaryOn="快速导航栏已打开"
         android:title="帖子快速导航栏"/>
 
     <CheckBoxPreference
         android:defaultValue="off"
         android:key="auto_load_more"
-        android:summaryOff="自动加载页面"
-        android:summaryOn="单页加载"
+        app:summaryOff="自动加载页面"
+        app:summaryOn="单页加载"
         android:title="帖子加载设置"/>
 
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="quick_reply"
-        android:summaryOff="显示原贴内容"
-        android:summaryOn="不显示原贴内容"
+        app:summaryOff="显示原贴内容"
+        app:summaryOn="不显示原贴内容"
         android:title="便捷回复设置"/>
 
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="show_signature"
-        android:summaryOn="显示"
-        android:summaryOff="隐藏"
+        app:summaryOn="显示"
+        app:summaryOff="隐藏"
         android:title="显示签名档"/>
 
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="setting_volume_key_scroll"
-        android:summaryOff="禁用音量键翻页"
-        android:summaryOn="启用音量键翻页"
+        app:summaryOff="禁用音量键翻页"
+        app:summaryOn="启用音量键翻页"
         android:title="音量键翻页"/>
     <CheckBoxPreference
         android:defaultValue="off"
         android:key="ssl_verification"
-        android:summaryOff="忽略SSL验证"
-        android:summaryOn="强制SSL验证"
+        app:summaryOff="忽略SSL验证"
+        app:summaryOn="强制SSL验证"
         android:title="登录SSL验证"/>
 
     <ListPreference
         android:title="字体设置"
         android:key="setting_fontsize_control"
-        android:summary="%s"
+        app:summary="%s"
         android:entries="@array/font_size_names"
         android:entryValues="@array/font_size_values">
     </ListPreference>
@@ -151,22 +151,22 @@
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="setting_image_quality_control"
-        android:summaryOff="仅在全屏看图时加载原图(GIF点击后播放)"
-        android:summaryOn="总是加载原图(加载失败的可能性较大)"
+        app:summaryOff="仅在全屏看图时加载原图(GIF点击后播放)"
+        app:summaryOn="总是加载原图(加载失败的可能性较大)"
         android:title="图片质量"/>
 
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="setting_image_source_cdn"
-        android:summaryOff="从水木加载图片(默认)"
-        android:summaryOn="从CDN加载图片(推荐)"
+        app:summaryOff="从水木加载图片(默认)"
+        app:summaryOn="从CDN加载图片(推荐)"
         android:title="图片来源"/>
 
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="set_id_check"
-        android:summaryOff="不支持点击用户ID查询"
-        android:summaryOn="支持点击用户ID查询"
+        app:summaryOff="不支持点击用户ID查询"
+        app:summaryOn="支持点击用户ID查询"
         android:title="用户ID查询"/>
 
   </PreferenceCategory>
@@ -175,26 +175,26 @@
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="setting_notification_control_mail"
-        android:summaryOff="邮件提醒已关闭"
-        android:summaryOn="邮件提醒已打开"
+        app:summaryOff="邮件提醒已关闭"
+        app:summaryOn="邮件提醒已打开"
         android:title="邮件提醒"/>
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="setting_notification_control_at"
-        android:summaryOff="\@提醒已关闭"
-        android:summaryOn="\@提醒已打开"
+        app:summaryOff="\@提醒已关闭"
+        app:summaryOn="\@提醒已打开"
         android:title="\@我提醒"/>
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="setting_notification_control_reply"
-        android:summaryOff="回复提醒已关闭"
-        android:summaryOn="回复提醒已打开"
+        app:summaryOff="回复提醒已关闭"
+        app:summaryOn="回复提醒已打开"
         android:title="回复提醒"/>
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="setting_notification_control_like"
-        android:summaryOff="Like提醒已关闭"
-        android:summaryOn="Like提醒已打开"
+        app:summaryOff="Like提醒已关闭"
+        app:summaryOn="Like提醒已打开"
         android:title="Like提醒"/>
   </PreferenceCategory>
 
@@ -202,13 +202,13 @@
     <CheckBoxPreference
         android:defaultValue="on"
         android:key="setting_signature_control"
-        android:summaryOff="不使用签名"
-        android:summaryOn="使用签名"
+        app:summaryOff="不使用签名"
+        app:summaryOn="使用签名"
         android:title="发帖时添加设备签名"/>
     <EditTextPreference
         android:dialogTitle="输入设备型号"
         android:key="setting_signature_content"
-        android:summary=""
+        app:summary=""
         android:title="设备型号"
         />
   </PreferenceCategory>

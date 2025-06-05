@@ -566,6 +566,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
+    setPreferencesFromResource(R.xml.preferences, s);
   }
 
 

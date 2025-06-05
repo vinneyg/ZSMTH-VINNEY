@@ -37,18 +37,15 @@ import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 import okhttp3.ResponseBody;
 import io.reactivex.Observable;
@@ -346,8 +343,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                         }
 
                         @Override public void onError(@NonNull Throwable e) {
-                            Toast.makeText(BoardTopicActivity.this, "收藏版面失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
-
+                            Toast.makeText(BoardTopicActivity.this, "收藏版面失败！\n" , Toast.LENGTH_SHORT).show();
                         }
 
                         @Override public void onComplete() {

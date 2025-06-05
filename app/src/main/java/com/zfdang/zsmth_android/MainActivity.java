@@ -26,7 +26,6 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -79,7 +78,6 @@ import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserInfo;
-import com.zfdang.zsmth_android.newsmth.UserStatus;
 import com.zfdang.zsmth_android.services.KeepAliveService;
 import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
@@ -823,22 +821,7 @@ public class MainActivity extends SMTHBaseActivity
       }
       // reset will be run after 2000 ms
       mHandler.postDelayed(new PendingDoubleBackToExit(), 2000);
-      //Toast.makeText(this, "再按一次退出zSMTH-v", Toast.LENGTH_SHORT).show();
-      // 创建自定义 TextView
-      TextView textView = new TextView(this);
-      textView.setText("再按一次退出zSMTH - v");
-      textView.setTextColor(ContextCompat.getColor(this,R.color.status_text_night));
-      textView.setTextSize(16);
-      textView.setPadding(24, 16, 24, 16);
-      // 设置背景色
-      textView.setBackgroundColor(ContextCompat.getColor(this, R.color.recycler_view_seperator));
-
-      // 创建并显示 Toast
-      Toast toast = new Toast(this);
-      toast.setView(textView);
-      toast.setDuration(Toast.LENGTH_SHORT);
-      toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
-      toast.show();
+      Toast.makeText(this, "再按一次退出zSMTH", Toast.LENGTH_SHORT).show();
     }
 
   }

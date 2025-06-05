@@ -280,28 +280,63 @@ public class PostListActivity extends SMTHBaseActivity
         // 为 RecyclerView 设置触摸监听器
         mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
-            public boolean onInterceptTouchEvent(@androidx.annotation.NonNull @NonNull RecyclerView rv, @androidx.annotation.NonNull @NonNull MotionEvent e) {
-                // 将触摸事件传递给 GestureDetector
-                return mGestureDetector.onTouchEvent(e);
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                LinearLayoutManager layoutManager = (LinearLayoutManager) rv.getLayoutManager();
+                if (layoutManager == null) return false;
+
+                // 获取第一个可见的 item position（可能不完全可见）
+                int firstVisiblePos = layoutManager.findFirstVisibleItemPosition();
+                if (firstVisiblePos == RecyclerView.NO_POSITION) return false;
+
+                // 获取对应的 View
+                View firstVisibleView = layoutManager.findViewByPosition(firstVisiblePos);
+                if (firstVisibleView == null) return false;
+
+                // 查找 post_author 控件
+                View targetView = firstVisibleView.findViewById(R.id.post_author);
+                if (targetView == null) return false;
+
+                // 计算 targetView 在屏幕上的坐标范围
+                int[] location = new int[2];
+                targetView.getLocationOnScreen(location);
+                int left = location[0];
+                int top = location[1];
+                int right = left + targetView.getWidth();
+                int bottom = top + targetView.getHeight();
+
+                // 判断是否点击了 targetView 区域
+                int x = (int) e.getRawX();
+                int y = (int) e.getRawY();
+                if (x >= left && x <= right && y >= top && y <= bottom) {
+                    // 点击的是第一个可见 item 的 post_author，不交给 GestureDetector
+                    return false;
+                }
+
+                // 其他情况继续交给 GestureDetector 处理
+                mGestureDetector.onTouchEvent(e);
+                return false;
             }
 
             @Override
-            public void onTouchEvent(@androidx.annotation.NonNull @NonNull RecyclerView rv, @androidx.annotation.NonNull @NonNull MotionEvent e) {
-                // 通常不需要处理
+            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                // 可选实现
             }
 
             @Override
             public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-                // 处理请求禁止拦截触摸事件
+                // 可选实现
             }
         });
 
+
         //  holder.mView.setOnTouchListener(this); so the event will be sent from holder.mView
         mGestureDetector = new GestureDetector(this, new RecyclerViewGestureListener(this, mRecyclerView));
+        /*
         mRecyclerView.setOnTouchListener((v, event) -> {
             mGestureDetector.onTouchEvent(event);
             return false;
         });
+        */
         // get Board information from launcher
         Intent intent = getIntent();
         Topic topic = intent.getParcelableExtra(SMTHApplication.TOPIC_OBJECT);
@@ -1014,6 +1049,9 @@ public class PostListActivity extends SMTHBaseActivity
         // page navigation buttons
         int id = v.getId();
         if (id == R.id.post_list_first_page) {
+            mCurrentPageNo = 1;
+            reloadPostList();
+            /*
             if (!Settings.getInstance().isautoloadmore()) {
                 if (mCurrentPageNo == 1) {
                     Toast.makeText(PostListActivity.this, "已在首页！", Toast.LENGTH_SHORT).show();
@@ -1025,6 +1063,7 @@ public class PostListActivity extends SMTHBaseActivity
                 mCurrentPageNo = 1;
                 reloadPostList();
             }
+            */
         } else if (id == R.id.post_list_pre_page) {
             if (!Settings.getInstance().isautoloadmore()) {
                 if (mCurrentPageNo == 1) {
@@ -1044,6 +1083,9 @@ public class PostListActivity extends SMTHBaseActivity
         } else if (id == R.id.post_list_next_page) {
             goToNextPage();
         } else if (id == R.id.post_list_last_page) {
+            mCurrentPageNo = mTotalPageNo;
+            reloadPostList();
+            /*
             if (!Settings.getInstance().isautoloadmore()) {
                 if (mCurrentPageNo == mTopic.getTotalPageNo() || mCurrentReadPageNo == mTotalPageNo) {
                     Toast.makeText(PostListActivity.this, "已在末页！", Toast.LENGTH_SHORT).show();
@@ -1056,6 +1098,7 @@ public class PostListActivity extends SMTHBaseActivity
                 mCurrentPageNo = mTotalPageNo;
                 reloadPostList();
             }
+            */
         } else if (id == R.id.post_list_go_page) {
             int pageNo;
             pageNo = Integer.parseInt(mPageNo.getText().toString());
@@ -1228,20 +1271,23 @@ public class PostListActivity extends SMTHBaseActivity
     }
 
     public void onItemBottomClicked(final int position, View v) {
-        //goToNextPage();
         LinearLayoutManager manager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
-
-        //LastItemPosition
-        if (manager == null) {
-            return;
-        }
+        if (manager == null) return;
 
         int lastVisiblePos = manager.findLastVisibleItemPosition();
-        int totalItemCount = manager.getItemCount();
-        if(lastVisiblePos <= totalItemCount-1 ){
-            mRecyclerView.scrollToPosition(lastVisiblePos+1);
+        int itemCount = manager.getItemCount();
+
+        if (lastVisiblePos < itemCount - 1) {
+            int targetPos = Math.min(itemCount - 1, lastVisiblePos + 1);
+            mRecyclerView.scrollToPosition(targetPos);
+        } else {
+            // 如果已经到达最后一个 item，提示“已到达底部”
+            Toast.makeText(v.getContext(), "已到达底部", Toast.LENGTH_SHORT).show();
+            mRecyclerView.scrollToPosition(lastVisiblePos);
         }
     }
+
+
 
     public void onItemTopClicked(final int position, View v) {
         LinearLayoutManager manager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
@@ -1249,11 +1295,20 @@ public class PostListActivity extends SMTHBaseActivity
             return;
         }
 
-        int FirstVisiblePos = manager.findFirstVisibleItemPosition();
-        if(FirstVisiblePos > 1 ){
-            mRecyclerView.scrollToPosition(FirstVisiblePos-1);
+        int firstVisiblePos = manager.findFirstVisibleItemPosition();
+        int lastVisiblePos = manager.findLastVisibleItemPosition();
+
+        if (firstVisiblePos > 0) {
+            int screenItemCount = lastVisiblePos - firstVisiblePos + 1;
+            int targetPos = Math.max(0, firstVisiblePos - screenItemCount);
+            mRecyclerView.scrollToPosition(targetPos);
+        } else{
+            // 如果 firstVisiblePos 是 0，说明已经在顶部
+            Toast.makeText(v.getContext(), "已在顶部", Toast.LENGTH_SHORT).show();
+            mRecyclerView.scrollToPosition(0);
         }
     }
+
     private void onPostPopupMenuItem(int position, int which) {
         //        Log.d(TAG, String.format(Locale.CHINA,"MenuItem %d was clicked", which));
         if (position >= PostListContent.POSTS.size()) {
