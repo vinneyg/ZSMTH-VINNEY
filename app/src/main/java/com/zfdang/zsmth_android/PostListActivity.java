@@ -1295,6 +1295,7 @@ public class PostListActivity extends SMTHBaseActivity
             return;
         }
 
+
         int firstVisiblePos = manager.findFirstVisibleItemPosition();
         int lastVisiblePos = manager.findLastVisibleItemPosition();
 
@@ -1302,11 +1303,14 @@ public class PostListActivity extends SMTHBaseActivity
             int screenItemCount = lastVisiblePos - firstVisiblePos + 1;
             int targetPos = Math.max(0, firstVisiblePos - screenItemCount);
             mRecyclerView.scrollToPosition(targetPos);
-        } else{
+        }
+        /*
+        else{
             // 如果 firstVisiblePos 是 0，说明已经在顶部
             Toast.makeText(v.getContext(), "已在顶部", Toast.LENGTH_SHORT).show();
             mRecyclerView.scrollToPosition(0);
         }
+       */
     }
 
     private void onPostPopupMenuItem(int position, int which) {
