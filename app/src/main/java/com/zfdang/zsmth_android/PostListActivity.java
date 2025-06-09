@@ -1941,5 +1941,7 @@ public class PostListActivity extends SMTHBaseActivity
         intent.putExtra(SMTHApplication.READ_MODE,mReadMode);
         //startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
         mActivityPostResultLauncher.launch(intent);
+        // 禁用跳转动画
+        overridePendingTransition(0, 0);
     }
 }
