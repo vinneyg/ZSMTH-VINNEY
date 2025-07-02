@@ -11,6 +11,7 @@ import com.klinker.android.link_builder.Link;
 import com.zfdang.SMTHApplication;
 import java.util.ArrayList;
 import java.util.List;
+//import kotlin.Unit;
 
 /**
  * Created by zfdang on 2016-5-14.
@@ -57,7 +58,11 @@ public class ActivityUtils {
     //weburl.setTextColor(Color.parseColor("#00BCD4"));
     weburl.setTextColor(Color.parseColor("#607D8B"));
     weburl.setHighlightAlpha(.4f);
-    weburl.setOnClickListener(clickedText -> ActivityUtils.openLink(clickedText, activity));
+    //weburl.setOnClickListener(clickedText -> ActivityUtils.openLink(clickedText, activity));
+    weburl.setOnClickListener(clickedText -> {
+      ActivityUtils.openLink(clickedText, activity);
+      //return Unit.INSTANCE;
+    });
     weburl.setOnLongClickListener(clickedText -> {
         final android.content.ClipboardManager clipboardManager =
             (android.content.ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -71,7 +76,12 @@ public class ActivityUtils {
     //emaillink.setTextColor(Color.parseColor("#00BCD4"));
     emaillink.setTextColor(Color.parseColor("#607D8B"));
     emaillink.setHighlightAlpha(.4f);
-    emaillink.setOnClickListener(clickedText -> ActivityUtils.sendEmail(clickedText, activity));
+    //emaillink.setOnClickListener(clickedText -> ActivityUtils.sendEmail(clickedText, activity));
+
+    emaillink.setOnClickListener(clickedText -> {
+      ActivityUtils.sendEmail(clickedText, activity);
+      //return Unit.INSTANCE;
+    });
 
     links.add(weburl);
     links.add(emaillink);

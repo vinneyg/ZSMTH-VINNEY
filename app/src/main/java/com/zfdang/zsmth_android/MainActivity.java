@@ -744,7 +744,6 @@ public class MainActivity extends SMTHBaseActivity
     aboutFragment = new LibsBuilder()
             .withLicenseShown(false)
             .supportFragment();
-
   }
 
   @Override public boolean onPrepareOptionsMenu(Menu menu) {
