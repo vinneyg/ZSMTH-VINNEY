@@ -15,7 +15,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import io.reactivex.Observable;
-import retrofit2.http.QueryMap;
 
 /**
  * Created by zfdang on 2016-3-16.
