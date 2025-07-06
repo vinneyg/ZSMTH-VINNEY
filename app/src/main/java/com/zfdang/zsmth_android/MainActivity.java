@@ -297,7 +297,7 @@ public class MainActivity extends SMTHBaseActivity
       if (getIntent().hasExtra("FRAGMENT") &&
               "PREFERENCE".equals(getIntent().getStringExtra("FRAGMENT"))) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, new MyPreferenceFragment())
+                .replace(R.id.content_frame, preferenceFragment)
                 .commit();
         getIntent().removeExtra("FRAGMENT");
       }
