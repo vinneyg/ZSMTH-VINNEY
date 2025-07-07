@@ -172,7 +172,7 @@ public class QueryUserActivity extends SMTHBaseActivity {
           }
 
           @Override public void onError(@NonNull Throwable e) {
-            Toast.makeText(QueryUserActivity.this, "增加好友失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(QueryUserActivity.this, "增加好友失败!\n", Toast.LENGTH_SHORT).show();
 
           }
 
@@ -211,7 +211,6 @@ public class QueryUserActivity extends SMTHBaseActivity {
 
               @Override
               public void onError(@NonNull Throwable e) {
-                //Toast.makeText(MainActivity.this, "退出登录失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
                 Toast.makeText(QueryUserActivity.this, "退出登录失败!\n" , Toast.LENGTH_SHORT).show();
               }
 
@@ -284,8 +283,7 @@ public class QueryUserActivity extends SMTHBaseActivity {
 
           @Override public void onError(@NonNull Throwable e) {
             dismissProgress();
-            Toast.makeText(QueryUserActivity.this, "加载用户信息失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
-
+            Toast.makeText(QueryUserActivity.this, "加载用户信息失败！\n", Toast.LENGTH_SHORT).show();
           }
 
           @Override public void onComplete() {

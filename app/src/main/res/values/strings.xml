@@ -49,7 +49,7 @@
 
   <!-- post弹出菜单 -->
   <string name="post_alert_title">请选择操作:</string>
-  <string name="post_reply_post">回复文章</string>
+  <string name="post_reply_post">简洁回复</string>
   <string name="post_reply_mail">回信给作者</string>
   <string name="post_query_author">查询作者信息</string>
   <string name="post_copy_content">复制帖子内容</string>
