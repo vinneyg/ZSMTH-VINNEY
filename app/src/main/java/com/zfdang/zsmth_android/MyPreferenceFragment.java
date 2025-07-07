@@ -20,7 +20,6 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -97,7 +96,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
             public void onReceive(Context context, Intent intent) {
                 if (intent.hasExtra("preference_key")) {
                     String key = intent.getStringExtra("preference_key");
-                    assert key != null;
+                    if (key == null) {
+                        Log.e(TAG, "Preference key is null");
+                        return;
+                    }
                     Preference preference = findPreference(key);
                     if (preference != null) {
                         CleanCache(preference);
@@ -114,8 +116,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         }
 
         fresco_cache = findPreference("setting_fresco_cache");
-
-        assert fresco_cache != null;
+        if (fresco_cache == null) {
+            Log.e(TAG, "fresco_cache key is null");
+            return;
+        }
         fresco_cache.setOnPreferenceClickListener(preference -> {
             // clear cache, then update cache size
             ImagePipeline imagePipeline = Fresco.getImagePipeline();
@@ -126,7 +130,11 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         okhttp3_cache = findPreference("setting_okhttp3_cache");
-        assert okhttp3_cache != null;
+        if (okhttp3_cache == null) {
+            Log.e(TAG, "okhttp3_cache key is null");
+            return;
+        }
+
         okhttp3_cache.setOnPreferenceClickListener(preference -> {
             // clear cache, then update cache size
             File cache = new File(SMTHApplication.getAppContext().getCacheDir(), "Responses");
@@ -139,9 +147,12 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
 
-
         launch_bottom_navi = (CheckBoxPreference) findPreference("launch_bottom_navi");
-        assert launch_bottom_navi!= null;
+        if (launch_bottom_navi == null) {
+            Log.e(TAG, "launch_bottom_navi key is null");
+            return;
+        }
+
         launch_bottom_navi.setChecked(Settings.getInstance().isLaunchBottomNavi());
         launch_bottom_navi.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean bValue = Settings.getInstance().isLaunchBottomNavi();
@@ -149,7 +160,6 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
                 bValue = (Boolean) newValue;
             }
             Settings.getInstance().setLaunchBottomNavi(bValue);
-
             findPreference("menu_text").setEnabled(bValue);
 
             Activity activity = getActivity();
@@ -164,10 +174,11 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
             return true;
         });
 
-
-
         launch_hottopic_as_entry = (CheckBoxPreference) findPreference("launch_hottopic_as_entry");
-        assert launch_hottopic_as_entry != null;
+        if (launch_hottopic_as_entry == null) {
+            Log.e(TAG, "launch_hottopic_as_entry key is null");
+            return;
+        }
         launch_hottopic_as_entry.setChecked(Settings.getInstance().isLaunchHotTopic());
         launch_hottopic_as_entry.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean bValue = Settings.getInstance().isLaunchHotTopic();
@@ -179,7 +190,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         open_topic_add = (CheckBoxPreference) findPreference("open_topic_add");
-        assert open_topic_add != null;
+        if (open_topic_add == null) {
+            Log.e(TAG, "open_topic_add key is null");
+            return;
+        }
         open_topic_add.setChecked(Settings.getInstance().isOpenTopicAdd());
         open_topic_add.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean bValue = Settings.getInstance().isOpenTopicAdd();
@@ -191,7 +205,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         diff_read_topic = (CheckBoxPreference) findPreference("diff_read_topic");
-        assert diff_read_topic != null;
+        if (diff_read_topic == null) {
+            Log.e(TAG, "diff_read_topic key is null");
+            return;
+        }
         diff_read_topic.setChecked(Settings.getInstance().isDiffReadTopic());
         diff_read_topic.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean bDiffRead = Settings.getInstance().isDiffReadTopic();
@@ -204,7 +221,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         setting_post_navigation_control =(CheckBoxPreference) findPreference("setting_post_navigation_control");
-        assert setting_post_navigation_control != null;
+        if (setting_post_navigation_control == null) {
+            Log.e(TAG, "setting_post_navigation_control key is null");
+            return;
+        }
         setting_post_navigation_control.setChecked(Settings.getInstance().hasPostNavBar());
         setting_post_navigation_control.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean bValue = Settings.getInstance().hasPostNavBar();
@@ -216,7 +236,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         login_with_verification =(CheckBoxPreference) findPreference("setting_login_with_verification");
-        assert login_with_verification != null;
+        if (login_with_verification == null) {
+            Log.e(TAG, "login_with_verification key is null");
+            return;
+        }
         login_with_verification.setChecked(Settings.getInstance().isLoginWithVerification());
         login_with_verification.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean value = Settings.getInstance().isLoginWithVerification();
@@ -229,7 +252,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         ssl_verification =(CheckBoxPreference) findPreference("ssl_verification");
-        assert ssl_verification != null;
+        if (ssl_verification == null) {
+            Log.e(TAG, "ssl_verification key is null");
+            return;
+        }
         ssl_verification.setChecked(Settings.getInstance().isSslVerification());
         ssl_verification.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean value = Settings.getInstance().isSslVerification();
@@ -243,7 +269,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
 
         auto_load_more =(CheckBoxPreference) findPreference("auto_load_more");
-        assert auto_load_more != null;
+        if (auto_load_more == null) {
+            Log.e(TAG, "auto_load_more key is null");
+            return;
+        }
         auto_load_more.setChecked(Settings.getInstance().isautoloadmore());
         auto_load_more.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean bValue = Settings.getInstance().isautoloadmore();
@@ -255,7 +284,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         quick_reply =(CheckBoxPreference) findPreference("quick_reply");
-        assert quick_reply != null;
+        if (quick_reply == null) {
+            Log.e(TAG, "quick_reply key is null");
+            return;
+        }
         quick_reply.setChecked(Settings.getInstance().isQuickReply());
         quick_reply.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean bValue = Settings.getInstance().isQuickReply();
@@ -267,7 +299,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         show_signature =(CheckBoxPreference) findPreference("show_signature");
-        assert show_signature != null;
+        if (show_signature == null) {
+            Log.e(TAG, "show_signature key is null");
+            return;
+        }
         show_signature.setChecked(Settings.getInstance().isShowSignature());
         show_signature.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean bValue = Settings.getInstance().isShowSignature();
@@ -279,7 +314,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         menu_text =(CheckBoxPreference) findPreference("menu_text");
-        assert menu_text != null;
+        if (menu_text == null) {
+            Log.e(TAG, "menu_text key is null");
+            return;
+        }
         menu_text.setChecked(Settings.getInstance().isMenuTextOn());
         menu_text.setOnPreferenceChangeListener((preference, newValue) -> {
 
@@ -308,7 +346,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
 
         setting_volume_key_scroll =(CheckBoxPreference) findPreference("setting_volume_key_scroll");
-        assert setting_volume_key_scroll != null;
+        if (setting_volume_key_scroll == null) {
+            Log.e(TAG, "setting_volume_key_scroll key is null");
+            return;
+        }
         setting_volume_key_scroll.setChecked(Settings.getInstance().isVolumeKeyScroll());
         setting_volume_key_scroll.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean bValue = Settings.getInstance().isVolumeKeyScroll();
@@ -320,7 +361,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         setting_fontsize_control =(ListPreference) findPreference("setting_fontsize_control");
-        assert setting_fontsize_control != null;
+        if (setting_fontsize_control == null) {
+            Log.e(TAG, "setting_fontsize_control key is null");
+            return;
+        }
         setting_fontsize_control.setValueIndex(Settings.getInstance().getFontIndex());
         setting_fontsize_control.setOnPreferenceChangeListener((preference, newValue) -> {
             int fontIndex = Settings.getInstance().getFontIndex();
@@ -343,7 +387,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         image_quality_control =(CheckBoxPreference) findPreference("setting_image_quality_control");
-        assert image_quality_control != null;
+        if (image_quality_control == null) {
+            Log.e(TAG, "image_quality_control key is null");
+            return;
+        }
         image_quality_control.setChecked(Settings.getInstance().isLoadOriginalImage());
         image_quality_control.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean bLoadOriginalImage = Settings.getInstance().isLoadOriginalImage();
@@ -355,7 +402,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         image_source_cdn =(CheckBoxPreference) findPreference("setting_image_source_cdn");
-        assert image_source_cdn != null;
+        if (image_source_cdn == null) {
+            Log.e(TAG, "image_source_cdn key is null");
+            return;
+        }
         image_source_cdn.setChecked(Settings.getInstance().isImageSourceCDN());
         image_source_cdn.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean bImageSourceCDN = Settings.getInstance().isImageSourceCDN();
@@ -367,7 +417,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         daynight_control =(CheckBoxPreference) findPreference("setting_daynight_control");
-        assert daynight_control != null;
+        if (daynight_control == null) {
+            Log.e(TAG, "daynight_control key is null");
+            return;
+        }
         daynight_control.setChecked(Settings.getInstance().isNightMode());
         daynight_control.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean bNightMode = Settings.getInstance().isNightMode();
@@ -381,7 +434,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         notification_control_mail = (CheckBoxPreference) findPreference("setting_notification_control_mail");
-        assert notification_control_mail != null;
+        if (notification_control_mail == null) {
+            Log.e(TAG, "notification_control_mail key is null");
+            return;
+        }
         notification_control_mail.setChecked(Settings.getInstance().isNotificationMail());
         notification_control_mail.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean bValue = Settings.getInstance().isNotificationMail();
@@ -393,7 +449,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         notification_control_at = (CheckBoxPreference) findPreference("setting_notification_control_at");
-        assert notification_control_at != null;
+        if (notification_control_at == null) {
+            Log.e(TAG, "notification_control_at key is null");
+            return;
+        }
         notification_control_at.setChecked(Settings.getInstance().isNotificationAt());
         notification_control_at.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean bValue = Settings.getInstance().isNotificationAt();
@@ -405,7 +464,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         notification_control_like = (CheckBoxPreference) findPreference("setting_notification_control_like");
-        assert notification_control_like != null;
+        if (notification_control_like == null) {
+            Log.e(TAG, "notification_control_like key is null");
+            return;
+        }
         notification_control_like.setChecked(Settings.getInstance().isNotificationLike());
         notification_control_like.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean bValue = Settings.getInstance().isNotificationLike();
@@ -417,7 +479,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         notification_control_reply = (CheckBoxPreference) findPreference("setting_notification_control_reply");
-        assert notification_control_reply != null;
+        if (notification_control_reply == null) {
+            Log.e(TAG, "notification_control_reply key is null");
+            return;
+        }
         notification_control_reply.setChecked(Settings.getInstance().isNotificationReply());
         notification_control_reply.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean bValue = Settings.getInstance().isNotificationReply();
@@ -429,7 +494,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         signature_control = (CheckBoxPreference) findPreference("setting_signature_control");
-        assert signature_control != null;
+        if (signature_control == null) {
+            Log.e(TAG, "signature_control key is null");
+            return;
+        }
         signature_control.setChecked(Settings.getInstance().bUseSignature());
         signature_control.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean bValue = Settings.getInstance().bUseSignature();
@@ -441,10 +509,12 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         signature_content = findPreference("setting_signature_content");
-        assert signature_content != null;
+        if (signature_content == null) {
+            Log.e(TAG, "signature_content key is null");
+            return;
+        }
         signature_content.setSummary(Settings.getInstance().getSignature());
         if (signature_content instanceof EditTextPreference) {
-            // set default value in editing dialog
             EditTextPreference et = (EditTextPreference) signature_content;
             et.setText(Settings.getInstance().getSignature());
         }
@@ -456,10 +526,12 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         web_content = findPreference("WebAddr");
-        assert web_content != null;
+        if (web_content == null) {
+            Log.e(TAG, "web_content key is null");
+            return;
+        }
         web_content.setSummary(Settings.getInstance().getWebAddr());
         if (web_content instanceof EditTextPreference) {
-            // set default value in editing dialog
             EditTextPreference et = (EditTextPreference) web_content;
             et.setText(Settings.getInstance().getWebAddr());
         }
@@ -479,7 +551,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         topic_fwd_self = (CheckBoxPreference) findPreference("setting_topic_fwd");
-        assert topic_fwd_self != null;
+        if (topic_fwd_self == null) {
+            Log.e(TAG, "topic_fwd_self key is null");
+            return;
+        }
         topic_fwd_self.setChecked(Settings.getInstance().isTopicFwdSelf());
         topic_fwd_self.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean bValue = Settings.getInstance().isTopicFwdSelf();
@@ -491,7 +566,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         set_id_check = (CheckBoxPreference) findPreference("set_id_check");
-        assert set_id_check != null;
+        if (set_id_check == null) {
+            Log.e(TAG, "set_id_check key is null");
+            return;
+        }
         set_id_check.setChecked(Settings.getInstance().isSetIdCheck());
         set_id_check.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean bValue = Settings.getInstance().isSetIdCheck();
@@ -523,7 +601,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         app_feedback = findPreference("app_feedback");
-        assert app_feedback != null;
+        if (app_feedback == null) {
+            Log.e(TAG, "set_id_check key is null");
+            return;
+        }
         app_feedback.setOnPreferenceClickListener(preference -> {
             ComposePostContext postContext = new ComposePostContext();
             postContext.setComposingMode(ComposePostContext.MODE_NEW_MAIL_TO_USER);
@@ -535,22 +616,30 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         app_version = findPreference("setting_app_version");
-        assert app_version != null;
+        if (app_version == null) {
+            Log.e(TAG, "app_version key is null");
+            return;
+        }
         app_version.setOnPreferenceClickListener(preference -> {
-            // ActivityUtils.openLink("http://zsmth-android.zfdang.com/release.html", getActivity());
-            Toast.makeText(SMTHApplication.getAppContext(),"这是Vinney的zSMTH改进版本，请用电脑或者电脑模式手机浏览器下载!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(SMTHApplication.getAppContext(),"zSMTH-v版本，请用电脑或者电脑模式手机浏览器下载!",Toast.LENGTH_SHORT).show();
             ActivityUtils.openLink("https://lanzoui.com/b01noyh6b", getActivity());
             return true;
         });
 
         app_sponsor = findPreference("sponsor");
-        assert app_sponsor != null;
+        if (app_sponsor == null) {
+            Log.e(TAG, "app_sponsor key is null");
+            return;
+        }
         app_sponsor.setOnPreferenceClickListener(preference -> {
-
             String alipay = "vinneyguo@outlook.com";
             final android.content.ClipboardManager clipboardManager =
                     (android.content.ClipboardManager) requireActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-            assert clipboardManager != null;
+            if (clipboardManager == null) {
+                Log.e(TAG, "clipboardManager  is null");
+                return false;
+            }
+
             clipboardManager.setPrimaryClip(ClipData.newPlainText(null,alipay));
             if (clipboardManager.hasPrimaryClip()){
                 Objects.requireNonNull(clipboardManager.getPrimaryClip()).getItemAt(0).getText();
@@ -682,10 +771,9 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         if (rootView != null) {
             RecyclerView recyclerView = rootView.findViewById(androidx.preference.R.id.recycler_view);
             if (recyclerView != null && recyclerView.getLayoutManager() != null) {
-                // 获取当前第一个可见 item 的位置
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 int position = layoutManager.findFirstVisibleItemPosition();
-                //int position = findClosestToCenter(recyclerView); // 使用更精确的方式
+                //int position = findClosestToCenter(recyclerView);
                 preferenceScrollPosition = position;
                 saveScrollPosition(position);
             }
@@ -701,7 +789,6 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         if (rootView != null) {
             RecyclerView recyclerView = rootView.findViewById(androidx.preference.R.id.recycler_view);
             if (recyclerView != null && recyclerView.getLayoutManager() != null && preferenceScrollPosition >= 0) {
-                // 恢复到之前的位置
                 ((LinearLayoutManager) recyclerView.getLayoutManager())
                         .scrollToPositionWithOffset(preferenceScrollPosition, 0);
             }

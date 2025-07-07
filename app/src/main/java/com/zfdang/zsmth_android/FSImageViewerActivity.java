@@ -46,30 +46,23 @@ import me.relex.circleindicator.CircleIndicator;
 public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoTapListener, OnOutsidePhotoTapListener {
 
   private static final String TAG = "FullViewer";
-
   private static final int MY_PERMISSIONS_REQUEST_STORAGE_CODE = 299;
   private HackyViewPager mViewPager;
-
   private FSImagePagerAdapter mPagerAdapter;
   private ArrayList<String> mURLs;
-
   private LinearLayout layoutToolbar;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    // 延伸显示区域到刘海
     Window window = this.getWindow();
     WindowManager.LayoutParams lp = this.getWindow().getAttributes();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
       lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
     }
     window.setAttributes(lp);
-
     setContentView(R.layout.activity_fs_image_viewer);
-
     mViewPager = findViewById(R.id.fullscreen_image_pager);
-
     // find parameters from parent
     mURLs = getIntent().getStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS);
 
@@ -162,8 +155,6 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
                   realSaveImageToFile();
 
               } else {
-                  //在版本低于此的时候，做一些处理
-
                   // permission denied, boo! Disable the
                   // functionality that depends on this permission.
                   Toast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT).show();

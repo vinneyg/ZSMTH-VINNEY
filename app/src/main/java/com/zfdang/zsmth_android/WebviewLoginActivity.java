@@ -10,7 +10,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
-
 import com.zfdang.SMTHApplication;
 
 public class WebviewLoginActivity extends SMTHBaseActivity {
@@ -32,9 +31,7 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
 
         activity = this;
 
-        // 获取根布局
         View rootView = findViewById(android.R.id.content);
-        // 请求根布局获取焦点
         rootView.requestFocus();
 
         // get username & password

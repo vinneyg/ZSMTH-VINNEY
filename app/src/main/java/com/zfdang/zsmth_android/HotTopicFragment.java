@@ -78,10 +78,6 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
     mRefreshLayout.setOnRefreshListener(refreshLayout -> RefreshGuidanceFromWWW());
 
     // http://blog.csdn.net/lmj623565791/article/details/45059587
-    // 你想要控制Item间的间隔（可绘制），请通过ItemDecoration
-    // 你想要控制Item增删的动画，请通过ItemAnimator
-    // 你想要控制点击、长按事件，请自己写
-    // item被按下的时候的highlight,这个是通过guidance item的backgroun属性来实现的 (android:background="@drawable/recyclerview_item_bg")
     mRecyclerView = rootView.findViewById(R.id.guidance_recycler_view);
     // Set the adapter
     if (mRecyclerView != null) {
@@ -91,7 +87,6 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
       mRecyclerView.setItemAnimator(new DefaultItemAnimator());
       mRecyclerView.setAdapter(new HotTopicRecyclerViewAdapter(TopicListContent.HOT_TOPICS, mListener));
       mRecyclerView.setItemViewCacheSize(40);
-
 
       mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
         @Override
@@ -108,7 +103,6 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
       });
 
     }
-
 
     requireActivity().setTitle(SMTHApplication.App_Title_Prefix + "首页");
 
@@ -131,7 +125,6 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
       }
       @Override
       public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-        //int position = viewHolder.getAdapterPosition();
         int position = viewHolder.getBindingAdapterPosition();
 
         Topic topic = TopicListContent.HOT_TOPICS.get(position);
@@ -221,13 +214,12 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
     }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Topic>() {
       @SuppressLint("NotifyDataSetChanged")
       @Override public void onSubscribe(@NonNull Disposable disposable) {
-        // clearHotTopics current hot topics
         TopicListContent.clearHotTopics();
         Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
       }
 
       @Override public void onNext(@NonNull Topic topic) {
-        //                        Log.d(TAG, topic.toString());
+        //Log.d(TAG, topic.toString());
         //TopicListContent.addHotTopic(topic);
         //Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(TopicListContent.HOT_TOPICS.size() - 1);
         newTopics.add(topic);
@@ -243,8 +235,6 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
 
       @Override public void onComplete() {
         Topic topic = new Topic("结束");
-        //TopicListContent.addHotTopic(topic);
-
         newTopics.add(topic);
 
         if (mRefreshLayout != null) {

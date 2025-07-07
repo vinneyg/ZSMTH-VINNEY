@@ -36,7 +36,6 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
   private final List<Post> mPosts;
   private final Activity mListener;
 
-  // 新增接口
   public interface OnBtnMoreClickListener {
     void onItemBtnMoreClicked(int position, View view);
   }

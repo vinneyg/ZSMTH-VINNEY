@@ -15,20 +15,19 @@ import androidx.appcompat.app.AppCompatActivity;
  */
 public class SMTHBaseActivity extends AppCompatActivity {
     protected AlertDialog pDialog = null;
-
-    // 使用 AlertDialog 创建进度对话框
+    
     public void showProgress(String message) {
         if (pDialog == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setCancelable(true);
-            // 加载自定义布局
+
             LayoutInflater inflater = this.getLayoutInflater();
             View view = inflater.inflate(R.layout.progress_dialog_layout, null);
             TextView messageTextView = view.findViewById(R.id.dialog_message);
             messageTextView.setText(message);
             builder.setView(view);
             pDialog = builder.create();
-            // 设置对话框背景为透明
+
             if (pDialog.getWindow() != null) {
                 pDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
             }
@@ -61,13 +60,12 @@ public class SMTHBaseActivity extends AppCompatActivity {
         newConfig.fontScale = Settings.getInstance().getFontSizeFloatValue();
 
         try {
-            //res.updateConfiguration(newConfig, res.getDisplayMetrics());
             Context context = createConfigurationContext(newConfig);
             res = context.getResources();
         } catch (Exception e) {
             Log.e("SMTHBaseActivity", "Error updating configuration: " + e.getMessage());
         }
-        //Log.d("SMTHBaseActivity", "getResources: " + config.fontScale);
+
         return res;
     }
 

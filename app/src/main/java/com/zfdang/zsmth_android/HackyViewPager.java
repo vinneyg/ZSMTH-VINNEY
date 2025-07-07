@@ -45,7 +45,6 @@ public class HackyViewPager extends ViewPager {
       try {
         return super.onInterceptTouchEvent(ev);
       } catch (IllegalArgumentException e) {
-        //e.printStackTrace();
         return false;
       }
     }
@@ -57,17 +56,4 @@ public class HackyViewPager extends ViewPager {
     return !isLocked && super.onTouchEvent(event);
   }
 
-  /*
-  public void toggleLock() {
-    isLocked = !isLocked;
-  }
-
-  public void setLocked(boolean isLocked) {
-    this.isLocked = isLocked;
-  }
-
-  public boolean isLocked() {
-    return isLocked;
-  }
-  */
 }

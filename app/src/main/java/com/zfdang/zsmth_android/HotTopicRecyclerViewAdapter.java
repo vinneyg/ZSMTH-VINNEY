@@ -54,7 +54,6 @@ public class HotTopicRecyclerViewAdapter extends RecyclerView.Adapter<HotTopicRe
 
       if(Settings.getInstance().isDiffReadTopic()) {
           //R.color.colorPrimary
-          //R.color.colorPrimary
           if ((!SMTHApplication.ReadTopicLists.isEmpty()) && SMTHApplication.ReadTopicLists.contains(holder.mItem.getTitle())) {
           holder.mTopicTitle.setTextColor(Color.parseColor("#607D8B")); //R.color.colorPrimary
 
@@ -62,8 +61,6 @@ public class HotTopicRecyclerViewAdapter extends RecyclerView.Adapter<HotTopicRe
         else
         {
             //First byte 0xFF ...... means transparent mode.
-            //R.color.colorPrimary
-            //R.color.colorPrimary
             if (Settings.getInstance().isNightMode()) {
             //holder.mTopicTitle.setTextColor(0xFFABC2DA);
             holder.mTopicTitle.setTextColor(Color.parseColor("#ABC2DA")); //R.color.status_text_night

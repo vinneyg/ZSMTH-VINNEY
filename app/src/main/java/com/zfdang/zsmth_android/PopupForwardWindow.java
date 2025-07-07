@@ -68,7 +68,6 @@ public class PopupForwardWindow extends PopupWindow {
 
     mThread = contentView.findViewById(R.id.popup_forward_thread);
     mNoRef = contentView.findViewById(R.id.popup_forward_noref);
-
     mNoAtt = contentView.findViewById(R.id.popup_forward_noatt);
 
     mThread.setOnClickListener(v -> {
