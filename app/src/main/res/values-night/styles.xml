@@ -122,6 +122,8 @@
     <item name="android:background">@color/body_background_night</item>
     <item name="android:textColor">@color/status_text_night</item>
     <item name="android:textColorSecondary">@color/colorPrimary</item>
+    <item name="colorControlNormal">@color/colorPrimaryDark</item>
+    <item name="colorControlActivated">@color/colorAccent</item>
   </style>
 
   <!--activity animation style-->
