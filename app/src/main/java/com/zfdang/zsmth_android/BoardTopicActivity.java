@@ -41,7 +41,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Comparator;
+//import java.util.Comparator;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
@@ -99,6 +99,9 @@ public class BoardTopicActivity extends SMTHBaseActivity
     private String currentMode = SMTHApplication.ReadMode2;
 
     private BoardTopicRecyclerViewAdapter adapter;
+
+    private static final int SERVICE_TYPE_W = 1; // WWW站
+    private static final int SERVICE_TYPE_M = 2; // Mobile站
 
     @Override protected void onDestroy() {
         super.onDestroy();
@@ -413,11 +416,11 @@ public class BoardTopicActivity extends SMTHBaseActivity
         if(SMTHApplication.ReadMode0.equals(currentMode)){
             //Mode 0
             mCurrentPageModeNo +=1;
-            LoadBoardTopicsMobile();
+            LoadBoardTopicsMobile(false);
         }else{
             mCurrentPageNo += 1;
             // Log.d(TAG, mCurrentPageNo + " page is loading now...");
-            LoadBoardTopics(currentMode);
+            LoadBoardTopics(currentMode,false);
         }
     }
 
@@ -431,7 +434,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
         showProgress("刷新版面文章...");
         int oldItemCount = TopicListContent.BOARD_TOPICS.size();
         TopicListContent.clearBoardTopics();
-        //Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
+
         MapHash.clear();
         if (oldItemCount > 0) {
             Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemRangeRemoved(0, oldItemCount);
@@ -439,285 +442,42 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
         if(currentMode.equals("2")||currentMode.equals("1")){
             mCurrentPageNo = 1;
-            LoadBoardTopics(currentMode);
+            LoadBoardTopics(currentMode,true);
         } else {   //mode 0 & 1
             mCurrentPageModeNo=1;
-            LoadBoardTopicsMobile();
+            LoadBoardTopicsMobile(true);
         }
 
-        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
     }
 
     public void RefreshBoardTopicsWithoutClear() {
         showProgress("加载版面文章...");
         if(SMTHApplication.ReadMode0.equals(currentMode)){
-            LoadBoardTopicsMobile();
+            LoadBoardTopicsMobile(false);
         }else{
-            LoadBoardTopics(currentMode);
+            LoadBoardTopics(currentMode,false);
         }
-        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
     }
 
-    public void LoadBoardTopicsMobile() {
+    public void LoadBoardTopicsMobile(boolean isRefresh) {
+        showProgress("加载版面文章...");
+        if (isRefresh) {
+            TopicListContent.clearBoardTopics();
+            MapHash.clear();
+        }
 
-        isSearchMode = false;
-        final SMTHHelper helper = SMTHHelper.getInstance();
-
-        // 用于临时存储新的 Topic
-        ArrayList<Topic> newTopics = new ArrayList<>();
-
-        // 添加页码提示 Topic
-        Topic pageTopic = new Topic(String.format(java.util.Locale.CHINA, "第%d页:", mCurrentPageModeNo));
-        pageTopic.isCategory = true;
-        newTopics.add(pageTopic);
-
-        helper
-                .mService
-                .getBoardTopicsByPage(mBoard.getBoardEngName(), Integer.toString(mCurrentPageModeNo))
-                .flatMap(
-                        (Function<ResponseBody, ObservableSource<Topic>>) responseBody -> {
-                            try {
-                                String response = responseBody.string();
-                                List<Topic> topics = SMTHHelper.ParseBoardTopicsFromWWWMobile(response);
-                                if (topics.isEmpty()){
-                                    return null;
-                                }
-                                return Observable.fromIterable(topics);
-                            } catch (Exception e) {
-                                Log.e(TAG, "call: " + Log.getStackTraceString(e));
-                                return null;
-                            }
-                        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        new Observer<Topic>() {
-                            @Override
-                            public void onSubscribe(@NonNull Disposable disposable) {
-                            }
-
-                            @Override
-                            public void onNext(@NonNull Topic topic) {
-                                // Log.d(TAG, topic.toString());
-                                if (!topic.isSticky || mSetting.isShowSticky()) {
-                                    if (!MapHash.contains(topic.getTitle())) {
-                                        if (MapHash.size() >= MAXSIZE) {
-                                            MapHash.clear();
-                                        }
-                                        newTopics.add(topic);
-                                        MapHash.put(topic.getTitle(), topic.getTopicID());
-                                    } else {
-                                        Log.d(TAG, "sticky " + topic.getTitle());
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onError(@NonNull Throwable e) {
-                                clearLoadingHints();
-                                if (mSwipeRefreshLayout != null) {
-                                    mSwipeRefreshLayout.finishRefresh(false);
-                                }
-
-                                if(mCurrentPageModeNo != 1)
-                                    Toast.makeText(
-                                                    SMTHApplication.getAppContext(),
-                                                    String.format(Locale.CHINA, "错误:获取第%d页的帖子失败!\n"+e.toString(), mCurrentPageNo),
-                                                    Toast.LENGTH_SHORT)
-                                            .show();
-                                else{
-                                    mCurrentPageModeNo -= 1;
-
-                                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                                        try {
-                                            if (!SMTHApplication.isValidUser()) {
-                                                Intent intent = new Intent(BoardTopicActivity.this, LoginActivity.class);
-                                                mActivityLoginResultLauncher.launch(intent);
-                                            } else {
-                                                Toast.makeText(BoardTopicActivity.this, "站点问题，请稍等。\n或者重新登录进入！\n", Toast.LENGTH_SHORT).show();
-                                                new Handler(Looper.getMainLooper()).postDelayed(() -> finish(), Toast.LENGTH_SHORT);
-                                            }
-                                        } catch (Exception ie) {
-                                            Log.e(TAG, "Error occurred during delayed operation: ", e);
-                                        }
-                                    }, 500);
-
-                                }
-
-                            }
-
-                            @Override
-                            public void onComplete() {
-                                clearLoadingHints();
-                                if (mSwipeRefreshLayout != null) {
-                                    mSwipeRefreshLayout.finishRefresh(true);
-                                }
-
-                                final int startPosition = TopicListContent.BOARD_TOPICS.size();
-                                TopicListContent.BOARD_TOPICS.addAll(newTopics);
-                                // 一次性通知适配器数据更新
-                                if (!newTopics.isEmpty()) {
-                                    Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemRangeInserted(startPosition, newTopics.size());
-                                }
-                            }
-                        });
-    }
-    public void LoadBoardTopics(String mode) {
-
-        isSearchMode = false;
-        final SMTHHelper helper = SMTHHelper.getInstance();
-
-        // 用于临时存储新的 Topic
-        ArrayList<Topic> newTopics = new ArrayList<>();
-
-        // 添加页码提示 Topic
-        Topic pageTopic = new Topic(String.format(java.util.Locale.CHINA, "第%d页:", mCurrentPageNo));
-        pageTopic.isCategory = true;
-        newTopics.add(pageTopic);
-
-        helper
-                .wService
-                .getBoardTopicsByPage(mBoard.getBoardEngName(), Integer.toString(mCurrentPageNo))
-                .flatMap(
-                        (Function<ResponseBody, ObservableSource<Topic>>) responseBody -> {
-                            try {
-                                String response = responseBody.string().replace("&emsp;","");
-                                List<Topic> topics = SMTHHelper.ParseBoardTopicsFromWWW(response);
-                                if (topics.isEmpty()){
-                                    return null;
-                                }
-                                return Observable.fromIterable(topics);
-                            } catch (Exception e) {
-                                Log.e(TAG, "call: " + Log.getStackTraceString(e));
-                                return null;
-                            }
-                        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        new Observer<Topic>() {
-                            @Override
-                            public void onSubscribe(@NonNull Disposable disposable) {
-                            }
-
-                            @Override
-                            public void onNext(@NonNull Topic topic) {
-                                // Log.d(TAG, topic.toString());
-                                if (!topic.isSticky || mSetting.isShowSticky()) {
-                                    if (!MapHash.contains(topic.getTitle())) {
-                                        if (MapHash.size() >= MAXSIZE) {
-                                            MapHash.clear();
-                                        }
-                                        newTopics.add(topic);
-                                        MapHash.put(topic.getTitle(), topic.getTopicID());
-                                    } else {
-                                        Log.d(TAG, "sticky " + topic.getTitle());
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onError(@NonNull Throwable e) {
-                                clearLoadingHints();
-                                if (mSwipeRefreshLayout != null) {
-                                    mSwipeRefreshLayout.finishRefresh(false);
-                                }
-
-                                if(mCurrentPageNo != 1)
-                                    Toast.makeText(
-                                                    SMTHApplication.getAppContext(),
-                                                    String.format(Locale.CHINA, "错误:获取第%d页的帖子失败!\n"+e.toString(), mCurrentPageNo),
-                                                    Toast.LENGTH_SHORT)
-                                            .show();
-                                else{
-                                    mCurrentPageNo -= 1;
-
-                                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                                        try {
-                                            if (!SMTHApplication.isValidUser()) {
-                                                Intent intent = new Intent(BoardTopicActivity.this, LoginActivity.class);
-                                                mActivityLoginResultLauncher.launch(intent);
-                                            } else {
-                                                Toast.makeText(BoardTopicActivity.this, "站点问题，请稍等。\n或者重新登录进入！\n", Toast.LENGTH_SHORT).show();
-                                                new Handler(Looper.getMainLooper()).postDelayed(() -> finish(), Toast.LENGTH_SHORT);
-                                            }
-                                        } catch (Exception ie) {
-                                            Log.e(TAG, "Error occurred during delayed operation: ", e);
-                                        }
-                                    }, 500);
-
-                                }
-
-                            }
-
-                            @Override
-                            public void onComplete() {
-                                clearLoadingHints();
-                                if (mSwipeRefreshLayout != null) {
-                                    mSwipeRefreshLayout.finishRefresh(true);
-                                }
-
-                                // 如果 mode 为 1，按 publishDate 排序
-                                if ("1".equals(mode)) {
-                                    Topic tempPageTopic = newTopics.remove(0);
-
-                                    newTopics.sort(new Comparator<Topic>() {
-                                        private final SimpleDateFormat timeFormat1 = new SimpleDateFormat("HH:mm", Locale.CHINA);
-                                        private final SimpleDateFormat timeFormat2 = new SimpleDateFormat("HH:mm:ss", Locale.CHINA);
-                                        private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
-                                        private final Calendar today = Calendar.getInstance();
-                                        @Override
-                                        public int compare(Topic t1, Topic t2) {
-                                            try {
-                                                Date date1 = parsePublishDate(t1.getPublishDate());
-                                                Date date2 = parsePublishDate(t2.getPublishDate());
-                                                return date2.compareTo(date1); // 从新到旧排序
-                                            } catch (ParseException e) {
-                                                Log.e(TAG, "Error parsing publish date", e);
-                                                return 0;
-                                            }
-                                        }
-
-                                        private Date parsePublishDate(String publishDate) throws ParseException {
-                                            if (publishDate == null) {
-                                                // Handle null publishDate, for example, return the earliest possible date
-                                                return new Date(0);
-                                            }
-                                            if (publishDate.length() == 5) { // hh:mm 格式
-                                                Calendar cal = (Calendar) today.clone();
-                                                cal.setTime(Objects.requireNonNull(timeFormat1.parse(publishDate)));
-                                                cal.set(Calendar.YEAR, today.get(Calendar.YEAR));
-                                                cal.set(Calendar.MONTH, today.get(Calendar.MONTH));
-                                                cal.set(Calendar.DAY_OF_MONTH, today.get(Calendar.DAY_OF_MONTH));
-                                                return cal.getTime();
-                                            } else if (publishDate.length() == 8) { // hh:mm:ss 格式
-                                                Calendar cal = (Calendar) today.clone();
-                                                cal.setTime(Objects.requireNonNull(timeFormat2.parse(publishDate)));
-                                                cal.set(Calendar.YEAR, today.get(Calendar.YEAR));
-                                                cal.set(Calendar.MONTH, today.get(Calendar.MONTH));
-                                                cal.set(Calendar.DAY_OF_MONTH, today.get(Calendar.DAY_OF_MONTH));
-                                                return cal.getTime();
-                                            } else { // YYYY/MM/DD 格式
-                                                return dateFormat.parse(publishDate);
-                                            }
-                                        }
-                                    });
-
-                                    newTopics.add(0, tempPageTopic);
-
-                                }
-// 获取插入前的位置
-                                final int startPosition = TopicListContent.BOARD_TOPICS.size();
-                                TopicListContent.BOARD_TOPICS.addAll(newTopics);
-
-                                // 一次性通知适配器数据更新
-                                if (!newTopics.isEmpty()) {
-                                    Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemRangeInserted(startPosition, newTopics.size());
-                                }
-                            }
-                        });
+        loadBoardTopicsInternal(SERVICE_TYPE_M, "", mCurrentPageModeNo, isRefresh);
     }
 
+    public void LoadBoardTopics(String mode, boolean isRefresh) {
+        showProgress("加载版面文章...");
+        if (isRefresh) {
+            TopicListContent.clearBoardTopics();
+            MapHash.clear();
+        }
+
+        loadBoardTopicsInternal(SERVICE_TYPE_W, mode, mCurrentPageNo, isRefresh);
+    }
 
     @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (Settings.getInstance().isVolumeKeyScroll() && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == android.view.KeyEvent.KEYCODE_VOLUME_DOWN)) {
@@ -846,4 +606,172 @@ public class BoardTopicActivity extends SMTHBaseActivity
             adapter.setShowTopicStatus(showTopicStatus);
         }
     }
+
+    private void loadBoardTopicsInternal(int serviceType, String mode, int pageNo, boolean isRefresh) {
+        isSearchMode = false;
+        final SMTHHelper helper = SMTHHelper.getInstance();
+
+        ArrayList<Topic> newTopics = new ArrayList<>();
+
+        Topic pageTopic = new Topic(String.format(Locale.CHINA, "第%d页:", pageNo));
+        pageTopic.isCategory = true;
+        newTopics.add(pageTopic);
+
+        Observable<ResponseBody> apiCall;
+        Function<ResponseBody, List<Topic>> parseFunction;
+
+        if (serviceType == SERVICE_TYPE_W) {
+            apiCall = helper.wService.getBoardTopicsByPage(mBoard.getBoardEngName(), Integer.toString(pageNo));
+            parseFunction = responseBody -> {
+                try {
+                    String response = responseBody.string().replace("&emsp;", "");
+                    return SMTHHelper.ParseBoardTopicsFromWWW(response);
+                } catch (Exception e) {
+                    Log.e(TAG, "ParseBoardTopicsFromWWW error: ", e);
+                    return new ArrayList<>();
+                }
+            };
+        } else { // SERVICE_TYPE_M
+            apiCall = helper.mService.getBoardTopicsByPage(mBoard.getBoardEngName(), Integer.toString(pageNo));
+            parseFunction = responseBody -> {
+                try {
+                    String response = responseBody.string();
+                    return SMTHHelper.ParseBoardTopicsFromWWWMobile(response);
+                } catch (Exception e) {
+                    Log.e(TAG, "ParseBoardTopicsFromWWWMobile error: ", e);
+                    return new ArrayList<>();
+                }
+            };
+        }
+
+        apiCall
+                .flatMap((Function<ResponseBody, ObservableSource<Topic>>) responseBody -> {
+                    List<Topic> topics = parseFunction.apply(responseBody);
+                    if (topics.isEmpty()) {
+                        return Observable.empty();
+                    }
+                    return Observable.fromIterable(topics);
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Topic>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {}
+
+                    @Override
+                    public void onNext(@NonNull Topic topic) {
+                        if (!topic.isSticky || mSetting.isShowSticky()) {
+                            if (!MapHash.contains(topic.getTitle())) {
+                                if (MapHash.size() >= MAXSIZE) {
+                                    MapHash.clear();
+                                }
+                                newTopics.add(topic);
+                                MapHash.put(topic.getTitle(), topic.getTopicID());
+                            } else {
+                                Log.d(TAG, "sticky " + topic.getTitle());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        clearLoadingHints();
+                        if (mSwipeRefreshLayout != null) {
+                            mSwipeRefreshLayout.finishRefresh(false);
+                        }
+
+                        if (pageNo != 1)
+                            Toast.makeText(SMTHApplication.getAppContext(),
+                                    String.format(Locale.CHINA, "错误:获取第%d页的帖子失败!\n%s", pageNo, e.toString()),
+                                    Toast.LENGTH_SHORT).show();
+                        else {
+                            if (serviceType == SERVICE_TYPE_M) mCurrentPageModeNo -= 1;
+                            else mCurrentPageNo -= 1;
+
+                            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                                try {
+                                    if (!SMTHApplication.isValidUser()) {
+                                        Intent intent = new Intent(BoardTopicActivity.this, LoginActivity.class);
+                                        mActivityLoginResultLauncher.launch(intent);
+                                    } else {
+                                        Toast.makeText(BoardTopicActivity.this,
+                                                "站点问题，请稍等。\n或者重新登录进入！", Toast.LENGTH_SHORT).show();
+                                        new Handler(Looper.getMainLooper()).postDelayed(BoardTopicActivity.this::finish, 500);
+                                    }
+                                } catch (Exception ie) {
+                                    Log.e(TAG, "延迟操作异常: ", ie);
+                                }
+                            }, 500);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        clearLoadingHints();
+                        if (mSwipeRefreshLayout != null) {
+                            mSwipeRefreshLayout.finishRefresh(true);
+                        }
+
+                        if ("1".equals(mode)) {
+                            Topic tempPageTopic = newTopics.remove(0);
+                            sortTopicsByPublishDate(newTopics);
+                            newTopics.add(0, tempPageTopic);
+                        }
+
+                        final int startPosition = TopicListContent.BOARD_TOPICS.size();
+                        TopicListContent.BOARD_TOPICS.addAll(newTopics);
+
+                        if (!newTopics.isEmpty()) {
+                            Objects.requireNonNull(mRecyclerView.getAdapter())
+                                    .notifyItemRangeInserted(startPosition, newTopics.size());
+                        }
+                    }
+                });
+    }
+
+    private void sortTopicsByPublishDate(ArrayList<Topic> topics) {
+        SimpleDateFormat timeFormat1 = new SimpleDateFormat("HH:mm", Locale.CHINA);
+        SimpleDateFormat timeFormat2 = new SimpleDateFormat("HH:mm:ss", Locale.CHINA);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+        Calendar today = Calendar.getInstance();
+
+        topics.sort((t1, t2) -> {
+            try {
+                Date date1 = parsePublishDate(t1.getPublishDate(), timeFormat1, timeFormat2, dateFormat, today);
+                Date date2 = parsePublishDate(t2.getPublishDate(), timeFormat1, timeFormat2, dateFormat, today);
+                return date2.compareTo(date1); // 从新到旧排序
+            } catch (ParseException e) {
+                Log.e(TAG, "Error parsing publish date", e);
+                return 0;
+            }
+        });
+    }
+
+    private Date parsePublishDate(String publishDate,
+                                  SimpleDateFormat timeFormat1,
+                                  SimpleDateFormat timeFormat2,
+                                  SimpleDateFormat dateFormat,
+                                  Calendar today) throws ParseException {
+        if (publishDate == null) {
+            return new Date(0);
+        }
+        if (publishDate.length() == 5) {
+            Calendar cal = (Calendar) today.clone();
+            cal.setTime(Objects.requireNonNull(timeFormat1.parse(publishDate)));
+            cal.set(Calendar.YEAR, today.get(Calendar.YEAR));
+            cal.set(Calendar.MONTH, today.get(Calendar.MONTH));
+            cal.set(Calendar.DAY_OF_MONTH, today.get(Calendar.DAY_OF_MONTH));
+            return cal.getTime();
+        } else if (publishDate.length() == 8) {
+            Calendar cal = (Calendar) today.clone();
+            cal.setTime(Objects.requireNonNull(timeFormat2.parse(publishDate)));
+            cal.set(Calendar.YEAR, today.get(Calendar.YEAR));
+            cal.set(Calendar.MONTH, today.get(Calendar.MONTH));
+            cal.set(Calendar.DAY_OF_MONTH, today.get(Calendar.DAY_OF_MONTH));
+            return cal.getTime();
+        } else {
+            return dateFormat.parse(publishDate);
+        }
+    }
+
 }

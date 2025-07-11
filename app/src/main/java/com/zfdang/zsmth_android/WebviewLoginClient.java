@@ -43,6 +43,7 @@ public class WebviewLoginClient extends WebViewClient {
 
 
     public void onPageFinished(WebView view, String url) {
+        if (url == null || view == null) return;
         // Log.d(TAG, "onPageFinished" + url);
         if (url.equals("https://m.newsmth.net/index")||url.equals("https://m.mysmth.net/index")) {
             // login page, input id and passwd automatically

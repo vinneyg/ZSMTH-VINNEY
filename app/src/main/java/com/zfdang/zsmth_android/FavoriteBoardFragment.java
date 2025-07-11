@@ -225,11 +225,10 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
                         }
                       });
             });
-            //builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
+
             builder.setNegativeButton("取消", (dialog, which) -> {
               dialog.dismiss();
               BoardListContent.FAVORITE_BOARDS.add(position, board);
-              //Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(position);
               Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
             });
             AlertDialog noticeDialog = builder.create();
@@ -430,16 +429,11 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
       @SuppressLint("NotifyDataSetChanged")
       @Override public void onSubscribe(@NonNull Disposable disposable) {
         BoardListContent.clearFavorites();
-        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
       }
 
       @Override public void onNext(@NonNull Board board) {
-        //BoardListContent.addFavoriteItem(board);
-        //Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(BoardListContent.FAVORITE_BOARDS.size());
         newBoards.add(board);
 
-        // Log.d(TAG, board.toString());
-        //if(BoardListContent.FAVORITE_BOARDS.get(0).isInvalid()) {
         if(board.isInvalid()) {
           Intent intent = new Intent(requireActivity(), LoginActivity.class);
           mActivityLoginResultLauncher.launch(intent);

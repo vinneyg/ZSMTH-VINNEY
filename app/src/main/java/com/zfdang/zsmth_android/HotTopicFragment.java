@@ -215,13 +215,9 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
       @SuppressLint("NotifyDataSetChanged")
       @Override public void onSubscribe(@NonNull Disposable disposable) {
         TopicListContent.clearHotTopics();
-        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
       }
 
       @Override public void onNext(@NonNull Topic topic) {
-        //Log.d(TAG, topic.toString());
-        //TopicListContent.addHotTopic(topic);
-        //Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(TopicListContent.HOT_TOPICS.size() - 1);
         newTopics.add(topic);
       }
 
