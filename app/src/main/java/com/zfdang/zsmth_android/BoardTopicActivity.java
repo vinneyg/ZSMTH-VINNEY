@@ -145,7 +145,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                 } else {
                     // 移除滑动状态检查直接执行关闭
                     SwipeBackHelper.finish(BoardTopicActivity.this);
-                    overridePendingTransition(0, 0);
+                    overridePendingTransition(0,0);
                 }
 
             }
@@ -328,6 +328,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
             } else {
                 // 移除滑动状态检查直接执行关闭
                 SwipeBackHelper.finish(BoardTopicActivity.this);
+                overridePendingTransition(0,0);
             }
             return true;
         } else if (id == R.id.board_topic_action_sticky) {
