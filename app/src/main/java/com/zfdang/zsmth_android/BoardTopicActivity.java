@@ -122,14 +122,12 @@ public class BoardTopicActivity extends SMTHBaseActivity
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SwipeBackHelper.onCreate(this);
+        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(true);
 
-        int backgroundColor;
-        if (Settings.getInstance().isNightMode()) {
-            backgroundColor = Color.BLACK;
-        } else {
-            backgroundColor = Color.WHITE;
-        }
-        SwipeBackHelper.getCurrentPage(this).setScrimColor(backgroundColor);
+        if(Settings.getInstance().isNightMode())
+            SwipeBackHelper.getCurrentPage(this).setScrimColor(Color.BLACK);
+        else
+            SwipeBackHelper.getCurrentPage(this).setScrimColor(Color.WHITE);
 
         OnBackPressedDispatcher dispatcher = getOnBackPressedDispatcher();
 
@@ -147,6 +145,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                 } else {
                     // 移除滑动状态检查直接执行关闭
                     SwipeBackHelper.finish(BoardTopicActivity.this);
+                    overridePendingTransition(0, 0);
                 }
 
             }
