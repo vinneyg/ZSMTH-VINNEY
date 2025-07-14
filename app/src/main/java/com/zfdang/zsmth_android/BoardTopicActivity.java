@@ -3,6 +3,7 @@ package com.zfdang.zsmth_android;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
@@ -22,9 +23,11 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.NewToast;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.listeners.EndlessRecyclerOnScrollListener;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
@@ -119,6 +122,14 @@ public class BoardTopicActivity extends SMTHBaseActivity
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SwipeBackHelper.onCreate(this);
+
+        int backgroundColor;
+        if (Settings.getInstance().isNightMode()) {
+            backgroundColor = Color.BLACK;
+        } else {
+            backgroundColor = Color.WHITE;
+        }
+        SwipeBackHelper.getCurrentPage(this).setScrimColor(backgroundColor);
 
         OnBackPressedDispatcher dispatcher = getOnBackPressedDispatcher();
 
@@ -227,6 +238,21 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
         };
         mRecyclerView.addOnScrollListener(mScrollListener);
+
+        mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // 添加 RecyclerView 从右往左的动画
+                mRecyclerView.setTranslationX(mRecyclerView.getWidth()); // 初始位置在屏幕右侧
+                mRecyclerView.animate()
+                        .translationX(0) // 移动到正常位置
+                        .setDuration(300) // 动画时长 500 毫秒
+                        .setStartDelay(100) // 延迟 100 毫秒开始动画
+                        .start();
+
+                mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -339,14 +365,15 @@ public class BoardTopicActivity extends SMTHBaseActivity
                                 //Toast.makeText(BoardTopicActivity.this, ajaxResponse.getAjax_msg() + "\n请手动刷新收藏夹！", Toast.LENGTH_SHORT).show();
                                 SMTHApplication.bNewFavoriteBoard = true;
                             } else {
-                                //Toast.makeText(BoardTopicActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
-                                Toast.makeText(BoardTopicActivity.this, "该版面已经收藏！", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(BoardTopicActivity.this, "该版面已经收藏！", Toast.LENGTH_SHORT).show();
+                                NewToast.makeText(BoardTopicActivity.this, "该版面已经收藏！", Toast.LENGTH_SHORT);
                             }
 
                         }
 
                         @Override public void onError(@NonNull Throwable e) {
-                            Toast.makeText(BoardTopicActivity.this, "收藏版面失败！\n" , Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(BoardTopicActivity.this, "收藏版面失败！\n" , Toast.LENGTH_SHORT).show();
+                            NewToast.makeText(BoardTopicActivity.this, "收藏版面失败！\n" , Toast.LENGTH_SHORT);
                         }
 
                         @Override public void onComplete() {
@@ -409,7 +436,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
     // load topics from next page, without alert
     public void loadMoreItems() {
-        if (isSearchMode || mSwipeRefreshLayout.isRefreshing() || pDialog.isShowing()) {
+        if (isSearchMode || mSwipeRefreshLayout.isRefreshing() || pDialog!= null && pDialog.isShowing()) {
             return;
         }
 
@@ -431,7 +458,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
     @SuppressLint("NotifyDataSetChanged")
     public void RefreshBoardTopicFromPageOne() {
-        showProgress("刷新版面文章...");
+        //showProgress("刷新版面文章...");
         int oldItemCount = TopicListContent.BOARD_TOPICS.size();
         TopicListContent.clearBoardTopics();
 
@@ -451,7 +478,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     }
 
     public void RefreshBoardTopicsWithoutClear() {
-        showProgress("加载版面文章...");
+        //showProgress("加载版面文章...");
         if(SMTHApplication.ReadMode0.equals(currentMode)){
             LoadBoardTopicsMobile(false);
         }else{
@@ -460,7 +487,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     }
 
     public void LoadBoardTopicsMobile(boolean isRefresh) {
-        showProgress("加载版面文章...");
+        //showProgress("加载版面文章...");
         if (isRefresh) {
             TopicListContent.clearBoardTopics();
             MapHash.clear();
@@ -470,7 +497,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     }
 
     public void LoadBoardTopics(String mode, boolean isRefresh) {
-        showProgress("加载版面文章...");
+        //showProgress("加载版面文章...");
         if (isRefresh) {
             TopicListContent.clearBoardTopics();
             MapHash.clear();
@@ -539,7 +566,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
         Log.d(TAG, "OnSearchAction: " + keyword + author + elite + attachment);
 
         isSearchMode = true;
-        showProgress("加载搜索结果...");
+        //showProgress("加载搜索结果...");
 
         TopicListContent.BOARD_TOPICS.clear();
         //Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
@@ -578,8 +605,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
                     }
 
                     @Override public void onError(@NonNull Throwable e) {
-                        Toast.makeText(SMTHApplication.getAppContext(), "加载搜索结果失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
-
+                        //Toast.makeText(SMTHApplication.getAppContext(), "加载搜索结果失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                        NewToast.makeText(SMTHApplication.getAppContext(), "加载搜索结果失败!\n" + e.toString(), Toast.LENGTH_SHORT);
                     }
 
                     @Override public void onComplete() {
@@ -680,10 +707,16 @@ public class BoardTopicActivity extends SMTHBaseActivity
                             mSwipeRefreshLayout.finishRefresh(false);
                         }
 
-                        if (pageNo != 1)
+                        if (pageNo != 1){
+                            /*
                             Toast.makeText(SMTHApplication.getAppContext(),
                                     String.format(Locale.CHINA, "错误:获取第%d页的帖子失败!\n%s", pageNo, e.toString()),
                                     Toast.LENGTH_SHORT).show();
+                            */
+                            NewToast.makeText(SMTHApplication.getAppContext(),
+                                String.format(Locale.CHINA, "错误:获取第%d页的帖子失败!\n%s", pageNo, e.toString()),
+                                Toast.LENGTH_SHORT);
+                        }
                         else {
                             if (serviceType == SERVICE_TYPE_M) mCurrentPageModeNo -= 1;
                             else mCurrentPageNo -= 1;
@@ -694,8 +727,12 @@ public class BoardTopicActivity extends SMTHBaseActivity
                                         Intent intent = new Intent(BoardTopicActivity.this, LoginActivity.class);
                                         mActivityLoginResultLauncher.launch(intent);
                                     } else {
+                                        /*
                                         Toast.makeText(BoardTopicActivity.this,
                                                 "站点问题，请稍等。\n或者重新登录进入！", Toast.LENGTH_SHORT).show();
+                                        */
+                                        NewToast.makeText(BoardTopicActivity.this,
+                                                "站点问题，请稍等。\n或者重新登录进入！", Toast.LENGTH_SHORT);
                                         new Handler(Looper.getMainLooper()).postDelayed(BoardTopicActivity.this::finish, 500);
                                     }
                                 } catch (Exception ie) {

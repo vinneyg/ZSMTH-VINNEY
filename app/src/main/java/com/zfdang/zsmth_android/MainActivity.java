@@ -89,6 +89,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import com.zfdang.zsmth_android.helpers.NewToast;
 
 
 public class MainActivity extends SMTHBaseActivity
@@ -136,7 +137,6 @@ public class MainActivity extends SMTHBaseActivity
     public void onReceive(Context context, Intent intent) {
       if (Objects.equals(intent.getAction(), "com.zfdang.zsmth_android.UPDATE_USER_STATUS")) {
         updateUserStatusNow();
-
       }
     }
   };
@@ -510,21 +510,7 @@ public class MainActivity extends SMTHBaseActivity
       @Override public void onReceiveResult(int resultCode, Bundle resultData) {
         if (resultCode == RESULT_OK) {
           Log.d(TAG,"onReceiveResult: " + "to update navigationview " + SMTHApplication.activeUser.toString());
-          runOnUiThread(() -> {
-            UpdateNavigationViewHeader();
-            /*
-            // 获取当前用户信息
-            UserStatus userInfo = SMTHApplication.activeUser;
-            if (userInfo != null && !TextUtils.isEmpty(userInfo.getId())) {
-              String userId = userInfo.getId();
-
-              // 跳转到用户详情页面
-              Intent intent = new Intent(MainActivity.this, QueryUserActivity.class);
-              intent.putExtra(SMTHApplication.QUERY_USER_INFO, userId);
-              startActivity(intent);
-            }
-            */
-          });
+          runOnUiThread(() -> UpdateNavigationViewHeader());
 
           // show notification if necessary
           String message = resultData.getString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE);
@@ -806,6 +792,7 @@ public class MainActivity extends SMTHBaseActivity
     DoubleBackToExit();
   }
 
+  @SuppressLint("ResourceAsColor")
   private void DoubleBackToExit() {
     if (mDoubleBackToExit) {
       // if mDoubleBackToExit is true, exit now
@@ -819,7 +806,9 @@ public class MainActivity extends SMTHBaseActivity
       }
       // reset will be run after 2000 ms
       mHandler.postDelayed(new PendingDoubleBackToExit(), 2000);
-      Toast.makeText(this, "再按一次退出zSMTH", Toast.LENGTH_SHORT).show();
+      //Toast.makeText(this, "再按一次退出zSMTH", Toast.LENGTH_SHORT).show();
+      NewToast.makeText(this, "再按一次退出zSMTH", Toast.LENGTH_SHORT,R.color.colorDivider);
+
     }
 
   }
@@ -928,8 +917,8 @@ public class MainActivity extends SMTHBaseActivity
 
               @Override
               public void onError(@NonNull Throwable e) {
-                //Toast.makeText(MainActivity.this, "退出登录失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(MainActivity.this, "退出登录失败!" , Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "退出登录失败!" , Toast.LENGTH_SHORT).show();
+                NewToast.makeText(MainActivity.this, "退出登录失败!" , Toast.LENGTH_SHORT);
               }
 
               @Override
@@ -1328,13 +1317,15 @@ public class MainActivity extends SMTHBaseActivity
                 Log.d(TAG, "onNext: " + user.toString());
 
                 if (!user.is_online()) {
-                  Toast.makeText(getApplicationContext(),"掉线将自动登录！", Toast.LENGTH_SHORT).show();
+                  //Toast.makeText(getApplicationContext(),"掉线将自动登录！", Toast.LENGTH_SHORT).show();
+                  NewToast.makeText(getApplicationContext(),"掉线将自动登录！", Toast.LENGTH_SHORT);
                   onLogin();
                 }
               }
 
               @Override public void onError(@NonNull Throwable e) {
-                Toast.makeText(getApplicationContext(), "用户掉线！" , Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "用户掉线！" , Toast.LENGTH_SHORT).show();
+                NewToast.makeText(getApplicationContext(), "用户掉线！" , Toast.LENGTH_SHORT);
               }
 
               @Override public void onComplete() {

@@ -32,6 +32,8 @@ import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.FrescoUtils;
 import com.zfdang.zsmth_android.fresco.MyPhotoView;
 import com.zfdang.zsmth_android.helpers.FileSizeUtil;
+import com.zfdang.zsmth_android.helpers.NewToast;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -157,7 +159,8 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
               } else {
                   // permission denied, boo! Disable the
                   // functionality that depends on this permission.
-                  Toast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
+                  //Toast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
+                  NewToast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT);
               }
           } else {
               if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
@@ -169,7 +172,8 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
               } else {
                   // permission denied, boo! Disable the
                   // functionality that depends on this permission.
-                  Toast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
+                  //Toast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
+                  NewToast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT);
               }
           }
       }
@@ -249,7 +253,8 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
   public void saveImageToFile(String imagePath, boolean isAnimation) {
     File imageFile = FrescoUtils.getCachedImageOnDisk(Uri.parse(imagePath));
     if (imageFile == null) {
-      Toast.makeText(FSImageViewerActivity.this, "无法读取缓存文件！", Toast.LENGTH_SHORT).show();
+      //Toast.makeText(FSImageViewerActivity.this, "无法读取缓存文件！", Toast.LENGTH_SHORT).show();
+      NewToast.makeText(FSImageViewerActivity.this, "无法读取缓存文件！", Toast.LENGTH_SHORT);
       return;
     }
     // Log.d(TAG, "saveImageToFile: " + imageFile.getAbsolutePath());
@@ -286,11 +291,13 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
         // make sure the new file can be recognized soon
         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(outFile)));
 
-        Toast.makeText(FSImageViewerActivity.this, "图片已存为: /zSMTH/" + outFile.getName(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(FSImageViewerActivity.this, "图片已存为: /zSMTH/" + outFile.getName(), Toast.LENGTH_SHORT).show();
+        NewToast.makeText(FSImageViewerActivity.this, "图片已存为: /zSMTH/" + outFile.getName(), Toast.LENGTH_SHORT);
       }
     } catch (Exception e) {
       Log.e(TAG, "saveImageToFile: " + Log.getStackTraceString(e));
-      Toast.makeText(FSImageViewerActivity.this, "保存图片失败:\n请授予应用存储权限！\n" + e, Toast.LENGTH_SHORT).show();
+      //Toast.makeText(FSImageViewerActivity.this, "保存图片失败:\n请授予应用存储权限！\n" + e, Toast.LENGTH_SHORT).show();
+      NewToast.makeText(FSImageViewerActivity.this, "保存图片失败:\n请授予应用存储权限！\n", Toast.LENGTH_SHORT);
     }
   }
 
@@ -437,7 +444,8 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
   public void showExifDialog(String imagePath) {
     File imageFile = FrescoUtils.getCachedImageOnDisk(Uri.parse(imagePath));
     if (imageFile == null) {
-      Toast.makeText(FSImageViewerActivity.this, "无法读取缓存文件！", Toast.LENGTH_SHORT).show();
+      //Toast.makeText(FSImageViewerActivity.this, "无法读取缓存文件！", Toast.LENGTH_SHORT).show();
+      NewToast.makeText(FSImageViewerActivity.this, "无法读取缓存文件！", Toast.LENGTH_SHORT);
       return;
     }
 

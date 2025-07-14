@@ -18,10 +18,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.NewToast;
 import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
 import com.zfdang.zsmth_android.models.Board;
@@ -86,6 +88,21 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
       mAdapter = new BoardRecyclerViewAdapter(BoardListContent.ALL_BOARDS, mListener);
     }
     mRecyclerView.setAdapter(mAdapter);
+
+    mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+      @Override
+      public void onGlobalLayout() {
+        // 添加 RecyclerView 从右往左的动画
+        mRecyclerView.setTranslationX(mRecyclerView.getWidth()); // 初始位置在屏幕右侧
+        mRecyclerView.animate()
+                .translationX(0) // 移动到正常位置
+                .setDuration(200) // 动画时长 500 毫秒
+                .setStartDelay(0) // 延迟 100 毫秒开始动画
+                .start();
+
+        mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+      }
+    });
 
     SearchView mSearchView = view.findViewById(R.id.all_board_search);
     mSearchView.setIconifiedByDefault(false);
@@ -177,7 +194,8 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
         if (mRefreshLayout != null) {
           mRefreshLayout.finishRefresh(false);
         }
-        Toast.makeText(SMTHApplication.getAppContext(), "加载所有版面失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(SMTHApplication.getAppContext(), "加载所有版面失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+        NewToast.makeText(SMTHApplication.getAppContext(), "加载所有版面失败!\n", Toast.LENGTH_SHORT);
       }
 
       @Override public void onComplete() {

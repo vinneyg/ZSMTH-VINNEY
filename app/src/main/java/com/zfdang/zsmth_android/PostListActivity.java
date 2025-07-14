@@ -37,6 +37,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -53,6 +54,7 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.ClassicsHeader;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.NewToast;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.models.Attachment;
 import com.zfdang.zsmth_android.models.Board;
@@ -178,6 +180,15 @@ public class PostListActivity extends SMTHBaseActivity
         super.onCreate(savedInstanceState);
         SwipeBackHelper.onCreate(this);
 
+        int backgroundColor;
+        if (Settings.getInstance().isNightMode()) {
+            backgroundColor = Color.BLACK;
+        } else {
+            backgroundColor = Color.WHITE;
+        }
+        SwipeBackHelper.getCurrentPage(this).setScrimColor(backgroundColor);
+
+
         setContentView(R.layout.activity_post_list);
 
         Toolbar toolbar = findViewById(R.id.post_list_toolbar);
@@ -185,8 +196,17 @@ public class PostListActivity extends SMTHBaseActivity
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
+        // get Board information from launcher
+        Intent intent = getIntent();
+        mFrom = intent.getStringExtra(SMTHApplication.FROM_BOARD);
+        mReadMode = intent.getStringExtra(SMTHApplication.READ_MODE);
+        Topic topic = intent.getParcelableExtra(SMTHApplication.TOPIC_OBJECT);
+        if (topic == null) {
+            return;
+        }
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(topic.getBoardChsName() + " - 阅读文章");
         }
 
 
@@ -210,8 +230,8 @@ public class PostListActivity extends SMTHBaseActivity
                 result -> {
                     if(result.getResultCode() == Activity.RESULT_OK)
                     {
-                        Intent intent = new Intent("com.zfdang.zsmth_android.UPDATE_USER_STATUS");
-                        sendBroadcast(intent);
+                        Intent intentTemp = new Intent("com.zfdang.zsmth_android.UPDATE_USER_STATUS");
+                        sendBroadcast(intentTemp);
                         finish();
                     }
                 });
@@ -280,7 +300,7 @@ public class PostListActivity extends SMTHBaseActivity
         // 为 RecyclerView 设置触摸监听器
         mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+            public boolean onInterceptTouchEvent(@androidx.annotation.NonNull  RecyclerView rv, @androidx.annotation.NonNull  MotionEvent e) {
                 LinearLayoutManager layoutManager = (LinearLayoutManager) rv.getLayoutManager();
                 if (layoutManager == null) return false;
 
@@ -318,7 +338,7 @@ public class PostListActivity extends SMTHBaseActivity
             }
 
             @Override
-            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+            public void onTouchEvent(@androidx.annotation.NonNull  RecyclerView rv, @androidx.annotation.NonNull MotionEvent e) {
                 // 可选实现
             }
 
@@ -328,29 +348,9 @@ public class PostListActivity extends SMTHBaseActivity
             }
         });
 
-
         //  holder.mView.setOnTouchListener(this); so the event will be sent from holder.mView
         mGestureDetector = new GestureDetector(this, new RecyclerViewGestureListener(this, mRecyclerView));
-        /*
-        mRecyclerView.setOnTouchListener((v, event) -> {
-            mGestureDetector.onTouchEvent(event);
-            return false;
-        });
-        */
-        // get Board information from launcher
-        Intent intent = getIntent();
-        Topic topic = intent.getParcelableExtra(SMTHApplication.TOPIC_OBJECT);
-        if (topic == null) {
-            return;
-        }
 
-
-        mFrom = intent.getStringExtra(SMTHApplication.FROM_BOARD);
-        // now onCreateOptionsMenu(...) is called again
-        //        invalidateOptionsMenu();
-        //        Log.d(TAG, String.format(Locale.CHINA,"Load post list for topic = %s, source = %s", topic.toString(), mFrom));
-
-        mReadMode = intent.getStringExtra(SMTHApplication.READ_MODE);
         if(SMTHApplication.ReadMode1.equals(mReadMode)){
             // set onClick Lisetner for page navigator buttons
 
@@ -495,13 +495,13 @@ public class PostListActivity extends SMTHBaseActivity
                 mTitle.setText(mTopic.getTitle());
                 reloadPostListMobile();
             }
-            setTitle(mTopic.getBoardChsName() + " - 阅读文章");
+            //setTitle(mTopic.getBoardChsName() + " - 阅读文章");
         }
         else
         {
             mTopic = topic;
             mFilterUser = null;
-            setTitle(mTopic.getBoardChsName() + " - 阅读文章");
+            //setTitle(mTopic.getBoardChsName() + " - 阅读文章");
             if(!Settings.getInstance().isOpenTopicAdd()) {
                 reloadPostList();
             }
@@ -513,6 +513,21 @@ public class PostListActivity extends SMTHBaseActivity
                 clearLoadingHints();
             }
         }
+        mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // 添加 RecyclerView 从右往左的动画
+                mRecyclerView.setTranslationX(mRecyclerView.getWidth()); // 初始位置在屏幕右侧
+                mRecyclerView.animate()
+                        .translationX(0) // 移动到正常位置
+                        .setDuration(200) // 动画时长 500 毫秒
+                        .setStartDelay(100) // 延迟 100 毫秒开始动画
+                        .start();
+
+                mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
+
     }
 
     public void initPostNavigationButtons() {
@@ -556,7 +571,8 @@ public class PostListActivity extends SMTHBaseActivity
         else {
             //  loadPostListByPages();
             clearLoadingHints();
-            Toast.makeText(PostListActivity.this, "已在首页", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(PostListActivity.this, "已在首页", Toast.LENGTH_SHORT).show();
+            NewToast.makeText(PostListActivity.this, "已在首页", Toast.LENGTH_SHORT);
         }
     }
 
@@ -607,12 +623,12 @@ public class PostListActivity extends SMTHBaseActivity
     }
 
     public void reloadPostListMobile() {
-        showProgress("加载文章中, 请稍候...");
+        //showProgress("加载文章中, 请稍候...");
 
         reloadPostListWithoutAlertMobile();
     }
     public void reloadPostList() {
-        showProgress("加载文章中, 请稍候...");
+        //showProgress("加载文章中, 请稍候...");
 
         reloadPostListWithoutAlert();
     }
@@ -683,7 +699,8 @@ public class PostListActivity extends SMTHBaseActivity
 
                     @Override public void onError(@NonNull Throwable e) {
                         clearLoadingHints();
-                        Toast.makeText(SMTHApplication.getAppContext(), "加载失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(SMTHApplication.getAppContext(), "加载失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                        NewToast.makeText(SMTHApplication.getAppContext(), "加载失败！\n" + e.toString(), Toast.LENGTH_SHORT);
                     }
 
                     @Override public void onComplete() {
@@ -698,12 +715,14 @@ public class PostListActivity extends SMTHBaseActivity
                         }
                         if(Index == mTotalPageNo*POST_PER_PAGE-1) {
                             mCurrentPageNo -= 1;
-                            Toast.makeText(SMTHApplication.getAppContext(),"没有新数据",Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(SMTHApplication.getAppContext(),"没有新数据",Toast.LENGTH_SHORT).show();
+                            NewToast.makeText(SMTHApplication.getAppContext(),"没有新数据",Toast.LENGTH_SHORT);
                         }
                         else if(Index >= mTotalPageNo*POST_PER_PAGE) {
                             mTotalPageNo += 1;
                             mTopic.setTotalPageNo(mTotalPageNo);
-                            Toast.makeText(SMTHApplication.getAppContext(),"没有新数据",Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(SMTHApplication.getAppContext(),"没有新数据",Toast.LENGTH_SHORT).show();
+                            NewToast.makeText(SMTHApplication.getAppContext(),"没有新数据",Toast.LENGTH_SHORT);
                         }
                         String title = String.format(Locale.CHINA,"[%d/%d] %s", mCurrentPageNo, mTotalPageNo, mTopic.getTitle());
                         mTitle.setText(title);
@@ -719,7 +738,8 @@ public class PostListActivity extends SMTHBaseActivity
 
                             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                                 try {
-                                    Toast.makeText(PostListActivity.this,"若登录请稍等，然后重新进入帖子页面",Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(PostListActivity.this,"若登录请稍等，然后重新进入帖子页面",Toast.LENGTH_SHORT).show();
+                                    NewToast.makeText(PostListActivity.this,"若登录请稍等，然后重新进入帖子页面",Toast.LENGTH_SHORT);
                                 } catch (Exception e) {
                                     Log.e(TAG, "Error occurred during delayed operation: ", e);
                                 }
@@ -756,11 +776,17 @@ public class PostListActivity extends SMTHBaseActivity
                         } else {
                             // NULL
                             clearLoadingHints();
+                            /*
                             Toast.makeText(
                                             SMTHApplication.getAppContext(),
                                             "加载失败！\n" ,
                                             Toast.LENGTH_SHORT)
                                     .show();
+                            */
+                            NewToast.makeText(
+                                            SMTHApplication.getAppContext(),
+                                            "加载失败！\n" ,
+                                            Toast.LENGTH_SHORT);
                             isLoading = false;
                         }
                     }
@@ -806,12 +832,6 @@ public class PostListActivity extends SMTHBaseActivity
 
                             @Override
                             public void onNext(@NonNull Post post) {
-                        /*
-                        if (!post.getContentSegments().isEmpty()) {
-                          PostListContent.addItem(post);
-                          Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(PostListContent.POSTS.size() - 1);
-                        }
-                        */
 
                                 String temp = post.getPosition();
                                 int Index;
@@ -831,11 +851,17 @@ public class PostListActivity extends SMTHBaseActivity
                             @Override
                             public void onError(@NonNull Throwable e) {
                                 clearLoadingHints();
+                                /*
                                 Toast.makeText(
                                                 SMTHApplication.getAppContext(),
                                                 "加载失败！\n" + e.toString(),
                                                 Toast.LENGTH_SHORT)
                                         .show();
+                                */
+                                NewToast.makeText(
+                                                SMTHApplication.getAppContext(),
+                                                "加载失败！\n" + e.toString(),
+                                                Toast.LENGTH_SHORT);
                                 isLoading = false;
                             }
 
@@ -877,9 +903,11 @@ public class PostListActivity extends SMTHBaseActivity
                                         }
                                         else{
                                             if(Objects.equals(str, SMTHApplication.FROM_BOARD_HOT))
-                                                Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请登录！",Toast.LENGTH_SHORT).show();
+                                                //Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请登录！",Toast.LENGTH_SHORT).show();
+                                                NewToast.makeText(SMTHApplication.getAppContext(),"链接错误，请登录！",Toast.LENGTH_SHORT);
                                             else
-                                                Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请刷新页面！",Toast.LENGTH_SHORT).show();
+                                                //Toast.makeText(SMTHApplication.getAppContext(),"链接错误，请刷新页面！",Toast.LENGTH_SHORT).show();
+                                                NewToast.makeText(SMTHApplication.getAppContext(),"链接错误，请刷新页面！",Toast.LENGTH_SHORT);
                                         }
                                         finish();
                                     }, 500);
@@ -945,11 +973,17 @@ public class PostListActivity extends SMTHBaseActivity
                             @Override
                             public void onError(@NonNull Throwable e) {
                                 clearLoadingHints();
+                                /*
                                 Toast.makeText(
                                                 SMTHApplication.getAppContext(),
                                                 "加载失败！\n" + e.toString(),
                                                 Toast.LENGTH_SHORT)
                                         .show();
+                                */
+                                NewToast.makeText(
+                                                SMTHApplication.getAppContext(),
+                                                "加载失败！\n" + e.toString(),
+                                                Toast.LENGTH_SHORT);
                                 isLoading = false;
 
                             }
@@ -985,7 +1019,8 @@ public class PostListActivity extends SMTHBaseActivity
                                                 Intent intent = new Intent(PostListActivity.this, LoginActivity.class);
                                                 mActivityLoginResultLauncher.launch(intent);
                                             } else {
-                                                Toast.makeText(PostListActivity.this, "链接错误，请刷新页面！", Toast.LENGTH_SHORT).show();
+                                                //Toast.makeText(PostListActivity.this, "链接错误，请刷新页面！", Toast.LENGTH_SHORT).show();
+                                                NewToast.makeText(PostListActivity.this, "链接错误，请刷新页面！", Toast.LENGTH_SHORT);
                                             }
                                         } catch (Exception e) {
                                             Log.e(TAG, "Error occurred during delayed operation: ", e);
@@ -1038,11 +1073,6 @@ public class PostListActivity extends SMTHBaseActivity
         return super.onOptionsItemSelected(item);
     }
 
-  /*
-  @Override public void onBackPressed() {
-    super.onBackPressed();
-  }
-  */
 
     @SuppressLint("NonConstantResourceId")
     @Override public void onClick(View v) {
@@ -1067,7 +1097,8 @@ public class PostListActivity extends SMTHBaseActivity
         } else if (id == R.id.post_list_pre_page) {
             if (!Settings.getInstance().isautoloadmore()) {
                 if (mCurrentPageNo == 1) {
-                    Toast.makeText(PostListActivity.this, "已在首页！", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(PostListActivity.this, "已在首页！", Toast.LENGTH_SHORT).show();
+                    NewToast.makeText(PostListActivity.this, "已在首页！", Toast.LENGTH_SHORT);
                 } else {
                     mCurrentPageNo -= 1;
                     reloadPostList();
@@ -1105,7 +1136,8 @@ public class PostListActivity extends SMTHBaseActivity
             if (!Settings.getInstance().isautoloadmore()) {
                 try {
                     if (mCurrentPageNo == pageNo) {
-                        Toast.makeText(PostListActivity.this, String.format(Locale.CHINA, "已在第%d页！", pageNo), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(PostListActivity.this, String.format(Locale.CHINA, "已在第%d页！", pageNo), Toast.LENGTH_SHORT).show();
+                        NewToast.makeText(PostListActivity.this, String.format(Locale.CHINA, "已在第%d页！", pageNo), Toast.LENGTH_SHORT);
                     } else if (pageNo >= 1 && pageNo <= mTopic.getTotalPageNo()) {
                         mCurrentPageNo = pageNo;
                         // turn off keyboard
@@ -1115,10 +1147,12 @@ public class PostListActivity extends SMTHBaseActivity
                         // jump now
                         reloadPostList();
                     } else {
-                        Toast.makeText(PostListActivity.this, "非法页码！", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(PostListActivity.this, "非法页码！", Toast.LENGTH_SHORT).show();
+                        NewToast.makeText(PostListActivity.this, "非法页码！", Toast.LENGTH_SHORT);
                     }
                 } catch (Exception e) {
-                    Toast.makeText(PostListActivity.this, "非法输入！", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(PostListActivity.this, "非法输入！", Toast.LENGTH_SHORT).show();
+                    NewToast.makeText(PostListActivity.this, "非法输入！", Toast.LENGTH_SHORT);
                 }
             } else {
                 try {
@@ -1133,10 +1167,12 @@ public class PostListActivity extends SMTHBaseActivity
                         // jump now
                         reloadPostList();
                     } else {
-                        Toast.makeText(PostListActivity.this, "非法页码！", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(PostListActivity.this, "非法页码！", Toast.LENGTH_SHORT).show();
+                        NewToast.makeText(PostListActivity.this, "非法页码！", Toast.LENGTH_SHORT);
                     }
                 } catch (Exception e) {
-                    Toast.makeText(PostListActivity.this, "非法输入！", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(PostListActivity.this, "非法输入！", Toast.LENGTH_SHORT).show();
+                    NewToast.makeText(PostListActivity.this, "非法输入！", Toast.LENGTH_SHORT);
                 }
             }
         } else if (id == R.id.post_list_action_top) {
@@ -1159,7 +1195,8 @@ public class PostListActivity extends SMTHBaseActivity
     public void goToNextPage() {
         if(!Settings.getInstance().isautoloadmore()) {
             if (mCurrentPageNo == mTopic.getTotalPageNo()) {
-                Toast.makeText(PostListActivity.this, "已在末页！", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PostListActivity.this, "已在末页！", Toast.LENGTH_SHORT).show();
+                NewToast.makeText(PostListActivity.this, "已在末页！", Toast.LENGTH_SHORT);
                 clearLoadingHints();
             } else {
                 mCurrentPageNo += 1;
@@ -1180,12 +1217,13 @@ public class PostListActivity extends SMTHBaseActivity
     public void LoadMoreItems() {
 
         if (mCurrentPageNo == mTopic.getTotalPageNo()) {
-            Toast.makeText(PostListActivity.this, "已在末页！", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(PostListActivity.this, "已在末页！", Toast.LENGTH_SHORT).show();
+            NewToast.makeText(PostListActivity.this, "已在末页！", Toast.LENGTH_SHORT);
             clearLoadingHints();
         } else {
             synchronized (this) {
                 mCurrentPageNo += 1;
-                // showProgress("加载文章中, 请稍候...");
+                //showProgress("加载文章中, 请稍候...");
                 loadPostListByPages();
             }
         }
@@ -1282,7 +1320,8 @@ public class PostListActivity extends SMTHBaseActivity
             mRecyclerView.scrollToPosition(targetPos);
         } else {
             // 如果已经到达最后一个 item，提示“已到达底部”
-            Toast.makeText(v.getContext(), "已到达底部", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(v.getContext(), "已到达底部", Toast.LENGTH_SHORT).show();
+            NewToast.makeText(v.getContext(), "已到达底部", Toast.LENGTH_SHORT);
             mRecyclerView.scrollToPosition(lastVisiblePos);
         }
     }
@@ -1304,13 +1343,7 @@ public class PostListActivity extends SMTHBaseActivity
             int targetPos = Math.max(0, firstVisiblePos - screenItemCount);
             mRecyclerView.scrollToPosition(targetPos);
         }
-        /*
-        else{
-            // 如果 firstVisiblePos 是 0，说明已经在顶部
-            Toast.makeText(v.getContext(), "已在顶部", Toast.LENGTH_SHORT).show();
-            mRecyclerView.scrollToPosition(0);
-        }
-       */
+
     }
 
     private void onPostPopupMenuItem(int position, int which) {
@@ -1389,10 +1422,12 @@ public class PostListActivity extends SMTHBaseActivity
         } else if (which == 4) {
             // read posts from current users only
             if (mFilterUser == null) {
-                Toast.makeText(PostListActivity.this, "只看此ID! 再次选择将查看所有文章.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PostListActivity.this, "只看此ID! 再次选择将查看所有文章.", Toast.LENGTH_SHORT).show();
+                NewToast.makeText(PostListActivity.this, "只看此ID! 再次选择将查看所有文章.", Toast.LENGTH_SHORT);
                 mFilterUser = post.getRawAuthor();
             } else {
-                Toast.makeText(PostListActivity.this, "查看所有文章!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PostListActivity.this, "查看所有文章!", Toast.LENGTH_SHORT).show();
+                NewToast.makeText(PostListActivity.this, "查看所有文章!", Toast.LENGTH_SHORT);
                 mFilterUser = null;
             }
             mCurrentPageNo = 1;
@@ -1407,9 +1442,11 @@ public class PostListActivity extends SMTHBaseActivity
                         (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
                 final ClipData clipData = ClipData.newPlainText("PostContent", content);
                 clipboardManager.setPrimaryClip(clipData);
-                Toast.makeText(PostListActivity.this, "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PostListActivity.this, "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT).show();
+                NewToast.makeText(PostListActivity.this, "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT);
             } else {
-                Toast.makeText(PostListActivity.this, "复制失败！", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PostListActivity.this, "复制失败！", Toast.LENGTH_SHORT).show();
+                NewToast.makeText(PostListActivity.this, "复制失败！", Toast.LENGTH_SHORT);
             }
         } else if (which == 6) {
             // post_foward_self
@@ -1521,14 +1558,16 @@ public class PostListActivity extends SMTHBaseActivity
                 FileOutputStream out = new FileOutputStream(outFile);
 
                 image.compress(Bitmap.CompressFormat.JPEG, 90, out); //Output
-                Toast.makeText(PostListActivity.this, "截图已存为: /zSMTH-v/" + outFile.getName(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PostListActivity.this, "截图已存为: /zSMTH-v/" + outFile.getName(), Toast.LENGTH_SHORT).show();
+                NewToast.makeText(PostListActivity.this, "截图已存为: /zSMTH-v/" + outFile.getName(), Toast.LENGTH_SHORT);
 
                 // make sure the new file can be recognized soon
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(outFile)));
             }
         } catch (Exception e) {
             Log.e(TAG, "saveImageToFile: " + Log.getStackTraceString(e));
-            Toast.makeText(PostListActivity.this, "保存截图失败:\n请授予应用存储权限！\n" + e, Toast.LENGTH_LONG).show();
+            //Toast.makeText(PostListActivity.this, "保存截图失败:\n请授予应用存储权限！\n" + e, Toast.LENGTH_LONG).show();
+            NewToast.makeText(PostListActivity.this, "保存截图失败:\n请授予应用存储权限！\n" + e, Toast.LENGTH_LONG);
         }
     }
 
@@ -1560,19 +1599,22 @@ public class PostListActivity extends SMTHBaseActivity
                                     //Toast.makeText(PostListActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
                                     PostListActivity.this.finish();
                                 } else {
-                                    Toast.makeText(PostListActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(PostListActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
+                                    NewToast.makeText(PostListActivity.this, "删除失败", Toast.LENGTH_SHORT);
                                     new Handler(Looper.getMainLooper()).postDelayed(PostListActivity.this::finish, 500); // 可以调整延迟时间
                                 }
                                 }
                         } catch (IOException e) {
                             Log.d(TAG, Objects.requireNonNull(e.getMessage()));
-                            Toast.makeText(PostListActivity.this, "解析失败: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(PostListActivity.this, "解析失败: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            NewToast.makeText(PostListActivity.this, "解析失败: " + e.getMessage(), Toast.LENGTH_SHORT);
                         }
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        Toast.makeText(PostListActivity.this, "网络错误: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(PostListActivity.this, "网络错误: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        NewToast.makeText(PostListActivity.this, "网络错误: " + e.getMessage(), Toast.LENGTH_SHORT);
                     }
 
                     @Override
@@ -1608,29 +1650,21 @@ public class PostListActivity extends SMTHBaseActivity
                     //Toast.makeText(PostListActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
                     PostListActivity.this.finish();
                 } else {
-                    Toast.makeText(PostListActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(PostListActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
+                    NewToast.makeText(PostListActivity.this, "删除失败", Toast.LENGTH_SHORT);
                     new Handler(Looper.getMainLooper()).postDelayed(PostListActivity.this::finish, 500); // 可以调整延迟时间
                 }
             }
 
             @Override public void onError(@NonNull Throwable e) {
-                Toast.makeText(PostListActivity.this, "删除帖子失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PostListActivity.this, "删除帖子失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                NewToast.makeText(PostListActivity.this, "删除帖子失败！\n" + e.toString(), Toast.LENGTH_SHORT);
 
             }
 
             @SuppressLint("NotifyDataSetChanged")
             @Override public void onComplete() {
-                /*
-                SMTHApplication.bNewPost = true;
-                mCurrentPageNo = 1;
-                mCurrentReadPageNo = 1;
-                Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
-                //onBackPressed();
-                PostListActivity.this.finish();
-                */
 
-                //Toast.makeText(PostListActivity.this, "请刷新版面!", Toast.LENGTH_SHORT).show();
-                //reloadPostListWithoutAlert();
             }
         });
     }
@@ -1691,11 +1725,13 @@ public class PostListActivity extends SMTHBaseActivity
         // set callback functions
         oks.setCallback(new PlatformActionListener() {
             @Override public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-                Toast.makeText(PostListActivity.this, "分享成功!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PostListActivity.this, "分享成功!", Toast.LENGTH_SHORT).show();
+                NewToast.makeText(PostListActivity.this, "分享成功!", Toast.LENGTH_SHORT);
             }
 
             @Override public void onError(Platform platform, int i, Throwable throwable) {
-                Toast.makeText(PostListActivity.this, "分享失败:\n" + throwable.toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PostListActivity.this, "分享失败:\n" + throwable.toString(), Toast.LENGTH_SHORT).show();
+                NewToast.makeText(PostListActivity.this, "分享失败:\n" + throwable.toString(), Toast.LENGTH_SHORT);
             }
 
             @Override public void onCancel(Platform platform, int i) {
@@ -1730,12 +1766,14 @@ public class PostListActivity extends SMTHBaseActivity
                             //Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
                             reloadPostList();
                         } else {
-                            Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
+                            NewToast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT);
                         }
                     }
 
                     @Override public void onError(@NonNull Throwable e) {
-                        Toast.makeText(PostListActivity.this, "增加Like失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(PostListActivity.this, "增加Like失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                        NewToast.makeText(PostListActivity.this, "增加Like失败!\n" + e.toString(), Toast.LENGTH_SHORT);
                     }
 
                     @Override public void onComplete() {
@@ -1768,14 +1806,17 @@ public class PostListActivity extends SMTHBaseActivity
                     @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
                         // Log.d(TAG, "onNext: " + ajaxResponse.toString());
                         if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-                            Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                            NewToast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT);
                         } else {
-                            Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
+                            NewToast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_SHORT);
                         }
                     }
 
                     @Override public void onError(@NonNull Throwable e) {
-                        Toast.makeText(PostListActivity.this, "转寄失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(PostListActivity.this, "转寄失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                        NewToast.makeText(PostListActivity.this, "转寄失败！\n" + e.toString(), Toast.LENGTH_SHORT);
                     }
 
                     @Override public void onComplete() {
@@ -1800,11 +1841,13 @@ public class PostListActivity extends SMTHBaseActivity
             }
 
             @Override public void onNext(@NonNull String s) {
-                Toast.makeText(SMTHApplication.getAppContext(), s, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(SMTHApplication.getAppContext(), s, Toast.LENGTH_SHORT).show();
+                NewToast.makeText(SMTHApplication.getAppContext(), s, Toast.LENGTH_SHORT);
             }
 
             @Override public void onError(@NonNull Throwable e) {
-                Toast.makeText(SMTHApplication.getAppContext(), "发生错误:\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(SMTHApplication.getAppContext(), "发生错误:\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                NewToast.makeText(SMTHApplication.getAppContext(), "发生错误:\n" + e.toString(), Toast.LENGTH_SHORT);
             }
 
             @Override public void onComplete() {
@@ -1845,24 +1888,6 @@ public class PostListActivity extends SMTHBaseActivity
         }
 
         final PostActionAlertDialogItem[] menuItems = menuItemList.toArray(new PostActionAlertDialogItem[0]);
-
-        /*
-        final PostActionAlertDialogItem[] menuItems = {
-                new PostActionAlertDialogItem(getString(R.string.post_reply_post), R.drawable.ic_reply_black_48dp),
-                new PostActionAlertDialogItem(getString(R.string.post_like_post), R.drawable.like_black),
-                new PostActionAlertDialogItem(getString(R.string.post_reply_mail), R.drawable.ic_email_black_48dp),
-                new PostActionAlertDialogItem(getString(R.string.post_query_author), R.drawable.ic_person_black_48dp),
-                new PostActionAlertDialogItem(getString(R.string.post_filter_author), R.drawable.ic_find_in_page_black_48dp),
-                new PostActionAlertDialogItem(getString(R.string.post_copy_content), R.drawable.ic_content_copy_black_48dp),
-                new PostActionAlertDialogItem(getString(R.string.post_foward), R.drawable.ic_send_black_48dp),
-                new PostActionAlertDialogItem(getString(R.string.post_view_in_browser), R.drawable.ic_open_in_browser_black_48dp),
-                new PostActionAlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp),
-                new PostActionAlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp),
-                new PostActionAlertDialogItem(getString(R.string.post_edit_post), R.drawable.ic_edit_black_48dp),
-                new PostActionAlertDialogItem(getString(R.string.post_convert_image), R.drawable.ic_photo_black_48dp),
-                new PostActionAlertDialogItem(getString(R.string.post_reply_author), R.drawable.ic_reply_black_48dp)
-        };
-        */
 
         ListAdapter adapter = new ArrayAdapter<PostActionAlertDialogItem>(this, R.layout.post_popup_menu_item, menuItems) {
             ViewHolder holder;
@@ -1939,9 +1964,7 @@ public class PostListActivity extends SMTHBaseActivity
         Intent intent = new Intent(this, ComposePostActivity.class);
         intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
         intent.putExtra(SMTHApplication.READ_MODE,mReadMode);
-        //startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
         mActivityPostResultLauncher.launch(intent);
-        // 禁用跳转动画
         overridePendingTransition(0, 0);
     }
 }

@@ -29,6 +29,7 @@ import com.zfdang.SMTHApplication;
 import com.zfdang.multiple_images_selector.ImagesSelectorActivity;
 import com.zfdang.multiple_images_selector.SelectorSettings;
 import com.zfdang.zsmth_android.helpers.KeyboardLess;
+import com.zfdang.zsmth_android.helpers.NewToast;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
@@ -453,11 +454,17 @@ public class ComposePostActivity extends SMTHBaseActivity {
                       @Override
                       public void onError(@NonNull Throwable e) {
                         dismissProgress();
+                        /*
                         Toast.makeText(
                                         SMTHApplication.getAppContext(),
                                         "发生错误:\n" + e.toString(),
                                         Toast.LENGTH_SHORT)
                                 .show();
+                        */
+                        NewToast.makeText(
+                                        SMTHApplication.getAppContext(),
+                                        "发生错误:\n" + e.toString(),
+                                        Toast.LENGTH_SHORT);
                       }
 
                       @Override
@@ -467,7 +474,9 @@ public class ComposePostActivity extends SMTHBaseActivity {
                         String message;
                         if (postPublishResult != AjaxResponse.AJAX_RESULT_OK) {
                           message = "操作失败! \n错误信息:\n" + postPublishMessage;
-                          Toast.makeText(ComposePostActivity.this, message, Toast.LENGTH_SHORT).show();
+                          //Toast.makeText(ComposePostActivity.this, message, Toast.LENGTH_SHORT).show();
+                          NewToast.makeText(ComposePostActivity.this, message, Toast.LENGTH_SHORT);
+
                           if(SMTHApplication.bNewMailSent)
                             SMTHApplication.bNewMailSent = false;
                           if(!SMTHApplication.isValidUser()){
@@ -488,13 +497,14 @@ public class ComposePostActivity extends SMTHBaseActivity {
 
                           if (message != null && !message.contains("本文可能含有不当内容")) {
                             if(!message.contains("成功"))
-                              Toast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT).show();
+                              //Toast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT).show();
+                              NewToast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT);
                             mContent.setText("");
                             clearPostContentCache();
                             ComposePostActivity.this.finish();
                           } else {
-                            Toast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT)
-                                    .show();
+                            //Toast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT).show();
+                            NewToast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT);
                             if(SMTHApplication.bNewMailSent)
                               SMTHApplication.bNewMailSent = false;
 

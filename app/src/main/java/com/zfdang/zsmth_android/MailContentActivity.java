@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
+import com.zfdang.zsmth_android.helpers.NewToast;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.models.ContentSegment;
@@ -122,6 +124,24 @@ public class MailContentActivity extends AppCompatActivity {
     mPostMoreButton = findViewById(R.id.btn_post_more);
     updateButtonVisibility();
     mPostMoreButton.setOnClickListener(v -> handleReplyMenuItem());
+
+    // 使用 ViewTreeObserver 确保在布局完成后执行动画
+    mViewGroup.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+      @Override
+      public void onGlobalLayout() {
+        // 移除监听器，避免重复触发
+        mViewGroup.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+        // 设置初始位置在屏幕右侧
+        mViewGroup.setTranslationX(mViewGroup.getWidth());
+        // 执行从右到左的动画
+        mViewGroup.animate()
+                .translationX(0) // 移动到正常位置
+                .setDuration(200) // 动画时长 500 毫秒
+                .setStartDelay(100) // 延迟 100 毫秒开始动画
+                .start();
+      }
+    });
   }
 
   private void updateButtonVisibility() {
@@ -330,7 +350,8 @@ public class MailContentActivity extends AppCompatActivity {
 
   private void handleReplyMenuItem() {
     if (mPost == null) {
-      Toast.makeText(MailContentActivity.this, "帖子内容错误，无法回复！", Toast.LENGTH_SHORT).show();
+      //Toast.makeText(MailContentActivity.this, "帖子内容错误，无法回复！", Toast.LENGTH_SHORT).show();
+      NewToast.makeText(MailContentActivity.this, "帖子内容错误，无法回复！", Toast.LENGTH_SHORT);
     } else {
       ComposePostContext postContext = createComposePostContext();
       Intent intent = new Intent(this, ComposePostActivity.class);
@@ -347,7 +368,8 @@ public class MailContentActivity extends AppCompatActivity {
       intent.putExtra(SMTHApplication.FROM_BOARD, SMTHApplication.FROM_BOARD_BOARD);
       startActivity(intent);
     } else {
-      Toast.makeText(MailContentActivity.this, "普通邮件，无法打开原贴!", Toast.LENGTH_SHORT).show();
+      //Toast.makeText(MailContentActivity.this, "普通邮件，无法打开原贴!", Toast.LENGTH_SHORT).show();
+      NewToast.makeText(MailContentActivity.this, "普通邮件，无法打开原贴!", Toast.LENGTH_SHORT);
     }
   }
 
@@ -361,9 +383,11 @@ public class MailContentActivity extends AppCompatActivity {
       final android.content.ClipData clipData = android.content.ClipData.newPlainText("PostContent", content);
       clipboardManager.setPrimaryClip(clipData);
 
-      Toast.makeText(MailContentActivity.this, "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT).show();
+      //Toast.makeText(MailContentActivity.this, "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT).show();
+      NewToast.makeText(MailContentActivity.this, "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT);
     } else {
-      Toast.makeText(MailContentActivity.this, "复制失败！", Toast.LENGTH_SHORT).show();
+      //Toast.makeText(MailContentActivity.this, "复制失败！", Toast.LENGTH_SHORT).show();
+      NewToast.makeText(MailContentActivity.this, "复制失败！", Toast.LENGTH_SHORT);
     }
   }
 

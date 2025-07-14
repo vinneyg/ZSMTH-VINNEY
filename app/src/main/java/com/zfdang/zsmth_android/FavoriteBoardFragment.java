@@ -23,8 +23,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.NewToast;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
@@ -148,6 +150,21 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
       Context context = mRecyclerView.getContext();
       mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(context));
       mRecyclerView.setAdapter(new BoardRecyclerViewAdapter(BoardListContent.FAVORITE_BOARDS, mListener));
+
+      mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override
+        public void onGlobalLayout() {
+          // 添加 RecyclerView 从右往左的动画
+          mRecyclerView.setTranslationX(mRecyclerView.getWidth()); // 初始位置在屏幕右侧
+          mRecyclerView.animate()
+                  .translationX(0) // 移动到正常位置
+                  .setDuration(200) // 动画时长 500 毫秒
+                  .setStartDelay(0) // 延迟 100 毫秒开始动画
+                  .start();
+
+          mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        }
+      });
     }
 
     if (BoardListContent.FAVORITE_BOARDS.isEmpty() || SMTHApplication.bNewFavoriteBoard) {
@@ -208,14 +225,16 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
                           if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
                             RefreshFavoriteBoardsWithCache();
                           } else {
-                            Toast.makeText(getContext(), ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getContext(), ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
+                            NewToast.makeText(getContext(), ajaxResponse.toString(), Toast.LENGTH_SHORT);
                           }
 
                         }
 
                         @Override
                         public void onError(@NonNull Throwable e) {
-                          Toast.makeText(getContext(), "删除收藏版面失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                          //Toast.makeText(getContext(), "删除收藏版面失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                          NewToast.makeText(getContext(), "删除收藏版面失败！\n", Toast.LENGTH_SHORT);
 
                         }
 
@@ -259,15 +278,16 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
                           if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
                             RefreshFavoriteBoardsWithCache();
                           } else {
-                            Toast.makeText(getContext(), ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getContext(), ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
+                            NewToast.makeText(getContext(), ajaxResponse.toString(), Toast.LENGTH_SHORT);
                           }
 
                         }
 
                         @Override
                         public void onError(@NonNull Throwable e) {
-                          Toast.makeText(getContext(), "删除收藏目录失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
-
+                          //Toast.makeText(getContext(), "删除收藏目录失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                          NewToast.makeText(getContext(), "删除收藏目录失败！\n", Toast.LENGTH_SHORT);
                         }
 
                         @Override
@@ -309,14 +329,16 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
                           if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
                             RefreshFavoriteBoardsWithCache();
                           } else {
-                            Toast.makeText(getContext(), ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getContext(), ajaxResponse.toString(), Toast.LENGTH_SHORT).show();
+                            NewToast.makeText(getContext(), ajaxResponse.toString(), Toast.LENGTH_SHORT);
                           }
 
                         }
 
                         @Override
                         public void onError(@NonNull Throwable e) {
-                          Toast.makeText(getContext(), "删除收藏目录失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                          //Toast.makeText(getContext(), "删除收藏目录失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                          NewToast.makeText(getContext(), "删除收藏目录失败！\n", Toast.LENGTH_SHORT);
 
                         }
 
@@ -376,7 +398,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
   }
 
   public void RefreshFavoriteBoards() {
-    showLoadingHints();
+    //showLoadingHints();
     LoadFavoriteBoardsByPath();
 
   }
@@ -445,7 +467,8 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
         if (mSwipeRefreshLayout != null) {
           mSwipeRefreshLayout.finishRefresh(false);
         }
-        Toast.makeText(SMTHApplication.getAppContext(), "加载收藏夹失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(SMTHApplication.getAppContext(), "加载收藏夹失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+        NewToast.makeText(SMTHApplication.getAppContext(), "加载收藏夹失败!\n", Toast.LENGTH_SHORT);
       }
 
       @Override public void onComplete() {

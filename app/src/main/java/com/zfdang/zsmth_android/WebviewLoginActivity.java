@@ -11,6 +11,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.NewToast;
 
 public class WebviewLoginActivity extends SMTHBaseActivity {
 
@@ -74,7 +75,8 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
                             Intent resultIntent = new Intent();
                             activity.setResult(Activity.RESULT_CANCELED, resultIntent);
                             activity.finish();
-                            Toast.makeText(WebviewLoginActivity.this, "您的用户名并不存在，\n或者您的密码错误!", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(WebviewLoginActivity.this, "您的用户名并不存在，\n或者您的密码错误!", Toast.LENGTH_LONG).show();
+                            NewToast.makeText(WebviewLoginActivity.this, "您的用户名并不存在，\n或者您的密码错误!", Toast.LENGTH_LONG);
                         });
                     } else if (html.contains("登陆成功")){
                         // 登录成功

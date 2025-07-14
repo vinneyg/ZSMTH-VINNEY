@@ -6,8 +6,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
 import com.zfdang.zsmth_android.helpers.KeyboardLess;
+import com.zfdang.zsmth_android.helpers.NewToast;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
@@ -51,6 +54,10 @@ public class QueryUserActivity extends SMTHBaseActivity {
   private TextView mUserLoginip;
   private TextView mUserCurrentstatus;
 
+  private static final int SWIPE_THRESHOLD = 100;
+  private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+
+  @SuppressLint("ClickableViewAccessibility")
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_query_user);
@@ -101,6 +108,36 @@ public class QueryUserActivity extends SMTHBaseActivity {
     }
     mUsername = username;
     LoadUserInfo();
+
+
+    GestureDetector mGestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+      @Override
+      public boolean onFling(MotionEvent e1, @androidx.annotation.NonNull MotionEvent e2, float velocityX, float velocityY) {
+        try {
+          float diffX = e2.getX() - e1.getX();
+          float diffY = e2.getY() - e1.getY();
+          if (Math.abs(diffX) > Math.abs(diffY)) {
+            if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+              if (diffX < 0) {
+                // 左滑操作，退回上一级菜单
+                finish();
+              } else if (diffX > 0) {
+                // 右滑操作，退回上一级菜单
+                finish();
+              }
+            }
+          }
+        } catch (Exception exception) {
+          Log.e(exception.toString(), "onFling");
+        }
+        return false;
+      }
+    });
+
+    findViewById(android.R.id.content).setOnTouchListener((v, event) -> {
+      mGestureDetector.onTouchEvent(event);
+      return true;
+    });
 
   }
 
@@ -159,27 +196,28 @@ public class QueryUserActivity extends SMTHBaseActivity {
   public void addFriend(String userid) {
     SMTHHelper helper = SMTHHelper.getInstance();
     helper.wService.addFriend(userid)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Observer<AjaxResponse>() {
-          @Override public void onSubscribe(@NonNull Disposable disposable) {
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Observer<AjaxResponse>() {
+              @Override public void onSubscribe(@NonNull Disposable disposable) {
 
-          }
+              }
 
-          @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
-            Toast.makeText(QueryUserActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+              @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
+                //Toast.makeText(QueryUserActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                NewToast.makeText(QueryUserActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT);
+              }
 
-          }
+              @Override public void onError(@NonNull Throwable e) {
+                //Toast.makeText(QueryUserActivity.this, "增加好友失败!\n", Toast.LENGTH_SHORT).show();
+                NewToast.makeText(QueryUserActivity.this, "增加好友失败!\n", Toast.LENGTH_SHORT);
 
-          @Override public void onError(@NonNull Throwable e) {
-            Toast.makeText(QueryUserActivity.this, "增加好友失败!\n", Toast.LENGTH_SHORT).show();
+              }
 
-          }
+              @Override public void onComplete() {
 
-          @Override public void onComplete() {
-
-          }
-        });
+              }
+            });
   }
 
   public void onLogoutClick(View view) {
@@ -210,7 +248,8 @@ public class QueryUserActivity extends SMTHBaseActivity {
 
               @Override
               public void onError(@NonNull Throwable e) {
-                Toast.makeText(QueryUserActivity.this, "退出登录失败!\n" , Toast.LENGTH_SHORT).show();
+                //Toast.makeText(QueryUserActivity.this, "退出登录失败!\n" , Toast.LENGTH_SHORT).show();
+                NewToast.makeText(QueryUserActivity.this, "退出登录失败!\n" , Toast.LENGTH_SHORT);
               }
 
               @Override
@@ -238,56 +277,57 @@ public class QueryUserActivity extends SMTHBaseActivity {
     showProgress("加载用户信息中...");
     SMTHHelper helper = SMTHHelper.getInstance();
     helper.wService.queryUserInformation(mUsername)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Observer<UserInfo>() {
-          @Override public void onSubscribe(@NonNull Disposable disposable) {
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Observer<UserInfo>() {
+              @Override public void onSubscribe(@NonNull Disposable disposable) {
 
-          }
+              }
 
-          @SuppressLint("SetTextI18n")
-          @Override public void onNext(@NonNull UserInfo user) {
-            if(user.getId() == null)
-            {
-              EditText tv = findViewById(R.id.query_user_input);
-              tv.setText(mUsername+"不存在！");
-              tv.setTextColor(Color.RED);
-              dismissProgress();
-              return;
-            }
+              @SuppressLint("SetTextI18n")
+              @Override public void onNext(@NonNull UserInfo user) {
+                if(user.getId() == null)
+                {
+                  EditText tv = findViewById(R.id.query_user_input);
+                  tv.setText(mUsername+"不存在！");
+                  tv.setTextColor(Color.RED);
+                  dismissProgress();
+                  return;
+                }
 
-            mUserId.setText(user.getId());
-            mUserNickname.setText(user.getUser_name());
-            mUserGender.setText(user.getGender());
-            mUserConstellation.setText(user.getAstro());
-            mUserQq.setText(user.getQq());
-            mUserHomepage.setText(user.getHome_page());
+                mUserId.setText(user.getId());
+                mUserNickname.setText(user.getUser_name());
+                mUserGender.setText(user.getGender());
+                mUserConstellation.setText(user.getAstro());
+                mUserQq.setText(user.getQq());
+                mUserHomepage.setText(user.getHome_page());
 
-            mUserLevel.setText(user.getLevel());
-            mUserTotalpost.setText(user.getPost_count());
-            mUserLogincount.setText(user.getLogin_count());
-            mUserLife.setText(user.getLifeDesc());
-            mUserScore.setText(user.getScore_user());
-            mUserFirstLogintime.setText(user.getFirst_login_time());
-            mUserLastLogintime.setText(user.getLast_login_time());
-            mUserLoginip.setText(StringUtils.lookupIPLocationInProfile(user.getLast_login_ip()));
-            mUserCurrentstatus.setText(user.getStatus());
+                mUserLevel.setText(user.getLevel());
+                mUserTotalpost.setText(user.getPost_count());
+                mUserLogincount.setText(user.getLogin_count());
+                mUserLife.setText(user.getLifeDesc());
+                mUserScore.setText(user.getScore_user());
+                mUserFirstLogintime.setText(user.getFirst_login_time());
+                mUserLastLogintime.setText(user.getLast_login_time());
+                mUserLoginip.setText(StringUtils.lookupIPLocationInProfile(user.getLast_login_ip()));
+                mUserCurrentstatus.setText(user.getStatus());
 
-            if (user.getFace_url() != null && user.getFace_url().length() > 10) {
-              mImageView.setImageFromStringURL(user.getFace_url());
-            }
-            dismissProgress();
+                if (user.getFace_url() != null && user.getFace_url().length() > 10) {
+                  mImageView.setImageFromStringURL(user.getFace_url());
+                }
+                dismissProgress();
 
-          }
+              }
 
-          @Override public void onError(@NonNull Throwable e) {
-            dismissProgress();
-            Toast.makeText(QueryUserActivity.this, "加载用户信息失败！\n", Toast.LENGTH_SHORT).show();
-          }
+              @Override public void onError(@NonNull Throwable e) {
+                dismissProgress();
+                //Toast.makeText(QueryUserActivity.this, "加载用户信息失败！\n", Toast.LENGTH_SHORT).show();
+                NewToast.makeText(QueryUserActivity.this, "加载用户信息失败！\n", Toast.LENGTH_SHORT);
+              }
 
-          @Override public void onComplete() {
+              @Override public void onComplete() {
 
-          }
-        });
+              }
+            });
   }
 }

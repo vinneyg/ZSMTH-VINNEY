@@ -32,6 +32,7 @@ import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.ActivityUtils;
 import com.zfdang.zsmth_android.helpers.FileLess;
 import com.zfdang.zsmth_android.helpers.FileSizeUtil;
+import com.zfdang.zsmth_android.helpers.NewToast;
 import com.zfdang.zsmth_android.models.ComposePostContext;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -621,7 +622,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
             return;
         }
         app_version.setOnPreferenceClickListener(preference -> {
-            Toast.makeText(SMTHApplication.getAppContext(),"zSMTH-v版本，请用电脑或者电脑模式手机浏览器下载!",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(SMTHApplication.getAppContext(),"zSMTH-v版本，请用电脑或者电脑模式手机浏览器下载!",Toast.LENGTH_SHORT).show();
+            NewToast.makeText(SMTHApplication.getAppContext(),"zSMTH-v版本，请用电脑或者电脑模式手机浏览器下载!",Toast.LENGTH_SHORT);
             ActivityUtils.openLink("https://lanzoui.com/b01noyh6b", getActivity());
             return true;
         });
@@ -644,7 +646,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
             if (clipboardManager.hasPrimaryClip()){
                 Objects.requireNonNull(clipboardManager.getPrimaryClip()).getItemAt(0).getText();
             }
-            Toast.makeText(getActivity(), "作者支付宝ID已复制到剪贴板...", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "作者支付宝ID已复制到剪贴板...", Toast.LENGTH_SHORT).show();
+            NewToast.makeText(getActivity(), "作者支付宝ID已复制到剪贴板...", Toast.LENGTH_SHORT);
             return true;
         });
 
@@ -715,7 +718,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
             }
 
             @Override public void onError(@NonNull Throwable e) {
-                Toast.makeText(SMTHApplication.getAppContext(), "获取缓存大小失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(SMTHApplication.getAppContext(), "获取缓存大小失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                NewToast.makeText(SMTHApplication.getAppContext(), "获取缓存大小失败!\n" + e.toString(), Toast.LENGTH_SHORT);
             }
 
             @Override public void onComplete() {

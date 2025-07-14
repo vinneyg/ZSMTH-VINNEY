@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.NewToast;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import io.reactivex.Observer;
@@ -131,7 +132,8 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
             if (focusView != null) {
                 // There was an error; don't attempt login and focus the first field with an alert
                 focusView.requestFocus();
-                Toast.makeText(SMTHApplication.getAppContext(), "请输入用户名/密码！", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(SMTHApplication.getAppContext(), "请输入用户名/密码！", Toast.LENGTH_SHORT).show();
+                NewToast.makeText(SMTHApplication.getAppContext(), "请输入用户名/密码！", Toast.LENGTH_SHORT);
             } else {
                 // use two methods for login: with verification, or simple login
                 if(Settings.getInstance().isLoginWithVerification()) {
@@ -195,7 +197,8 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
                         // {"ajax_st":1,"ajax_code":"0005","ajax_msg":"操作成功"}
                         Log.d(TAG, ajaxResponse.toString());
                         if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-                            Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
+                            NewToast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT);
 
                             // save username & password
                             Settings.getInstance().setUsername(username);
@@ -206,13 +209,15 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
                             setResult(Activity.RESULT_OK, resultIntent);
                             finish();
                         } else {
-                            Toast.makeText(SMTHApplication.getAppContext(), ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(SMTHApplication.getAppContext(), ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+                            NewToast.makeText(SMTHApplication.getAppContext(), ajaxResponse.toString(), Toast.LENGTH_LONG);
                         }
                     }
 
                     @Override public void onError(@NonNull Throwable e) {
                         dismissProgress();
-                        Toast.makeText(SMTHApplication.getAppContext(), "登录失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(SMTHApplication.getAppContext(), "登录失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
+                        NewToast.makeText(SMTHApplication.getAppContext(), "登录失败!\n" + e.toString(), Toast.LENGTH_LONG);
                     }
 
                     @Override public void onComplete() {
