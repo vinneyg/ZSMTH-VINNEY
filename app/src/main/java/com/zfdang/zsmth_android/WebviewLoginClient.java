@@ -79,6 +79,7 @@ public class WebviewLoginClient extends WebViewClient {
                 url.equals("https://m.mysmth.net/user/login")||
                 url.startsWith("https://m.newsmth.net/index?m=")||
                 url.startsWith("https://m.mysmth.net/index?m=")) {
+            view.setVisibility(WebView.GONE);
             final String js = "javascript: " +
                     "setTimeout(function() { window.HtmlViewer.showHTML(document.body.innerHTML); },100);";
             view.evaluateJavascript(js, null);

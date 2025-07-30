@@ -471,6 +471,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
         NewToast.makeText(SMTHApplication.getAppContext(), "加载收藏夹失败!\n", Toast.LENGTH_SHORT);
       }
 
+      @SuppressLint("NotifyDataSetChanged")
       @Override public void onComplete() {
         clearLoadingHints();
         if (mSwipeRefreshLayout != null) {

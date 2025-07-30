@@ -675,7 +675,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                 .flatMap((Function<ResponseBody, ObservableSource<Topic>>) responseBody -> {
                     List<Topic> topics = parseFunction.apply(responseBody);
                     if (topics.isEmpty()) {
-                        return Observable.empty();
+                        return Observable.error(new RuntimeException("未获取到主题数据"));
                     }
                     return Observable.fromIterable(topics);
                 })
@@ -749,7 +749,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                             mSwipeRefreshLayout.finishRefresh(true);
                         }
 
-                        if ("1".equals(mode)) {
+                        if ("1".equals(mode) && newTopics.size() > 1) {
                             Topic tempPageTopic = newTopics.remove(0);
                             sortTopicsByPublishDate(newTopics);
                             newTopics.add(0, tempPageTopic);
