@@ -230,6 +230,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         Intent intent = new Intent(v.getContext(), QueryUserActivity.class);
         intent.putExtra(SMTHApplication.QUERY_USER_INFO, post.getRawAuthor());
         v.getContext().startActivity(intent);
+        if (v.getContext() instanceof Activity) {
+          ((Activity) v.getContext()).overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        }
       }
     });
 

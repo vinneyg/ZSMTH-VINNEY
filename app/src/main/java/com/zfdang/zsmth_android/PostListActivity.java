@@ -1400,6 +1400,7 @@ public class PostListActivity extends SMTHBaseActivity
                 Intent intent = new Intent(this, QueryUserActivity.class);
                 intent.putExtra(SMTHApplication.QUERY_USER_INFO, post.getRawAuthor());
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             } else if (which == 4) {
                 // read posts from current users only
                 if (mFilterUser == null) {

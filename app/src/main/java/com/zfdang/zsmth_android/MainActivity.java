@@ -1029,6 +1029,7 @@ public class MainActivity extends SMTHBaseActivity
         Intent intent = new Intent(this, QueryUserActivity.class);
         intent.putExtra(SMTHApplication.QUERY_USER_INFO, SMTHApplication.activeUser.getId());
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
       } else {
         onLogin();
       }
@@ -1065,6 +1066,7 @@ public class MainActivity extends SMTHBaseActivity
       intent.putExtra(SMTHApplication.READ_MODE, "1");
       intent.putExtra(SMTHApplication.FROM_BOARD, SMTHApplication.FROM_BOARD_HOT);
       startActivity(intent);
+      overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
   }
 
@@ -1077,6 +1079,7 @@ public class MainActivity extends SMTHBaseActivity
     Intent intent = new Intent(this, MailContentActivity.class);
     intent.putExtra(SMTHApplication.MAIL_OBJECT, item);
     startActivity(intent);
+    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
   }
 
   @Override public void onBoardFragmentInteraction(Board item) {

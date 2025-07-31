@@ -434,6 +434,10 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
           mRefreshLayout.finishRefresh(true);
         }
 
+        if (mRecyclerView.getAdapter() != null) {
+          mRecyclerView.getAdapter().notifyDataSetChanged();
+        }
+
         mRecyclerView.smoothScrollToPosition(0);
         if (!MailListContent.MAILS.isEmpty() && mRecyclerView != null) {
           mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -503,6 +507,24 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
         }
 
         mRecyclerView.smoothScrollToPosition(0);
+        if (!MailListContent.MAILS.isEmpty() && mRecyclerView != null) {
+          mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+              // 移除监听器，避免重复触发
+              mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+              mRecyclerView.setTranslationX(mRecyclerView.getWidth());
+
+              mRecyclerView.animate()
+                      .translationX(0)
+                      .setDuration(200)
+                      .setStartDelay(100)
+                      .withEndAction(null)
+                      .start();
+            }
+          });
+        }
       }
     });
   }
