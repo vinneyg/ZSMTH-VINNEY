@@ -502,7 +502,7 @@ public class PostListActivity extends SMTHBaseActivity
                 mRecyclerView.animate()
                         .translationX(0) // 移动到正常位置
                         .setDuration(200) // 动画时长 500 毫秒
-                        .setStartDelay(100) // 延迟 100 毫秒开始动画
+                        .setStartDelay(50) // 延迟 100 毫秒开始动画
                         .start();
 
                 mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);

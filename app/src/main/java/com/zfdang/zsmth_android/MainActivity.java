@@ -1261,8 +1261,7 @@ public class MainActivity extends SMTHBaseActivity
     Intent intent = new Intent(this, BoardTopicActivity.class);
     intent.putExtra(SMTHApplication.BOARD_OBJECT, (Parcelable) board);
     startActivity(intent);
-    // 禁用跳转动画
-    overridePendingTransition(0, 0);
+    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
   }
 
   class PendingDoubleBackToExit implements Runnable { public void run() {

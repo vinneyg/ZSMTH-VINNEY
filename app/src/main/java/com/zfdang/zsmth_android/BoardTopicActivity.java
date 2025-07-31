@@ -235,8 +235,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
                 mRecyclerView.setTranslationX(mRecyclerView.getWidth()); // 初始位置在屏幕右侧
                 mRecyclerView.animate()
                         .translationX(0) // 移动到正常位置
-                        .setDuration(300) // 动画时长 500 毫秒
-                        .setStartDelay(100) // 延迟 100 毫秒开始动画
+                        .setDuration(200) // 动画时长 500 毫秒
+                        .setStartDelay(50) // 延迟 100 毫秒开始动画
                         .start();
 
                 mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
