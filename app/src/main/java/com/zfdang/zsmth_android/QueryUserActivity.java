@@ -118,12 +118,9 @@ public class QueryUserActivity extends SMTHBaseActivity {
           float diffY = e2.getY() - e1.getY();
           if (Math.abs(diffX) > Math.abs(diffY)) {
             if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-              if (diffX < 0) {
-                // 左滑操作，退回上一级菜单
+              if (diffX != 0) {
                 finish();
-              } else if (diffX > 0) {
-                // 右滑操作，退回上一级菜单
-                finish();
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
               }
             }
           }
@@ -176,6 +173,7 @@ public class QueryUserActivity extends SMTHBaseActivity {
     if (code == android.R.id.home) {
       //onBackPressed();
       finish();
+      overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     } else if (code == R.id.query_user_action_message) {
       // write mail to current user
       ComposePostContext postContext = new ComposePostContext();

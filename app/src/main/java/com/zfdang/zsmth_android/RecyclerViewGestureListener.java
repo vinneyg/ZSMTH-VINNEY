@@ -1,6 +1,8 @@
 package com.zfdang.zsmth_android;
 
 import android.content.Context;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -14,6 +16,11 @@ import android.view.WindowManager;
  * Created by zfdang on 2016-5-5.
  */
 public class RecyclerViewGestureListener extends GestureDetector.SimpleOnGestureListener {
+  private static final int SWIPE_THRESHOLD = 100;
+  private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+  private final PostListActivity activity;
+  private boolean isFinishing = false;
+
 
   public interface OnItemLongClickListener {
     void onItemLongClicked(int position, View v);
@@ -29,9 +36,33 @@ public class RecyclerViewGestureListener extends GestureDetector.SimpleOnGesture
   private final int mScreenWidth;
 
 
-  public RecyclerViewGestureListener(OnItemLongClickListener listener, RecyclerView recyclerView) {
+  @Override
+  public boolean onFling(MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
+    try {
+      if (e1 != null &&!isFinishing ) {
+        float diffY = e2.getY() - e1.getY();
+        float diffX = e2.getX() - e1.getX();
+
+        if (Math.abs(diffX) > Math.abs(diffY) &&
+                Math.abs(diffX) > SWIPE_THRESHOLD &&
+                Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD &&
+                diffX != 0) {
+          isFinishing = true;
+          activity.finish();
+          activity.overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+          return true;
+        }
+      }
+    } catch (Exception e) {
+      Log.e("RecyclerViewGes", "onFling: " + e);
+    }
+    return super.onFling(e1, e2, velocityX, velocityY);
+  }
+
+  public RecyclerViewGestureListener(OnItemLongClickListener listener, RecyclerView recyclerView, PostListActivity activity) {
     this.mListener = listener;
     this.recyclerView = recyclerView;
+    this.activity = activity;
 
     WindowManager wm = (WindowManager) this.recyclerView.getContext().getSystemService(Context.WINDOW_SERVICE);
 
@@ -97,4 +128,5 @@ public class RecyclerViewGestureListener extends GestureDetector.SimpleOnGesture
     }
     return super.onSingleTapConfirmed(e);
   }
+
 }

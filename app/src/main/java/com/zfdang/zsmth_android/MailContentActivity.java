@@ -10,9 +10,12 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.util.Linkify;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -23,7 +26,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
 import com.zfdang.zsmth_android.helpers.NewToast;
@@ -60,21 +62,23 @@ public class MailContentActivity extends AppCompatActivity {
   private Button mPostReplyButton;
   private Button mPostMoreButton;
 
+  private GestureDetector gestureDetector;
+  private static final int SWIPE_THRESHOLD = 100;
+  private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+
   @Override protected void onDestroy() {
     super.onDestroy();
-    SwipeBackHelper.onDestroy(this);
   }
 
   @Override protected void onPostCreate(Bundle savedInstanceState) {
     super.onPostCreate(savedInstanceState);
-    SwipeBackHelper.onPostCreate(this);
   }
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    SwipeBackHelper.onCreate(this);
 
     setContentView(R.layout.activity_mail_content);
+    gestureDetector = new GestureDetector(this, new SwipeGestureListener());
 
     mMailTitle = findViewById(R.id.mail_content_title);
     // init post widget
@@ -144,6 +148,35 @@ public class MailContentActivity extends AppCompatActivity {
     });
   }
 
+  @Override
+  public boolean dispatchTouchEvent(MotionEvent ev) {
+    if (gestureDetector.onTouchEvent(ev)) {
+      return true;
+    }
+    return super.dispatchTouchEvent(ev);
+  }
+  private class SwipeGestureListener extends GestureDetector.SimpleOnGestureListener {
+    @Override
+    public boolean onFling(MotionEvent e1, @androidx.annotation.NonNull MotionEvent e2, float velocityX, float velocityY) {
+      try {
+        if (e1 != null) {
+          float diffX = e2.getX() - e1.getX();
+          float diffY = e2.getY() - e1.getY();
+          if (Math.abs(diffX) > Math.abs(diffY)
+                  && Math.abs(diffX) > SWIPE_THRESHOLD
+                  && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD
+                  && diffX != 0) {
+            finish();
+            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+            return true;
+          }
+        }
+      } catch (Exception e) {
+        Log.e("MailContentActivity", "onFling: ", e);
+      }
+      return false;
+    }
+  }
   private void updateButtonVisibility() {
     float newLetterSpacing = 0f;
     mPostReplyButton.setVisibility(View.GONE);

@@ -3,7 +3,7 @@ package com.zfdang.zsmth_android;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import androidx.appcompat.app.ActionBar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
@@ -25,7 +26,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
-import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.NewToast;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
@@ -106,29 +106,19 @@ public class BoardTopicActivity extends SMTHBaseActivity
     private static final int SERVICE_TYPE_W = 1; // WWW站
     private static final int SERVICE_TYPE_M = 2; // Mobile站
 
+
     @Override protected void onDestroy() {
         super.onDestroy();
-        SwipeBackHelper.onDestroy(this);
-
     }
 
     @Override protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        SwipeBackHelper.onPostCreate(this);
     }
 
     private static BoardTopicActivity mActivity1 = null;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SwipeBackHelper.onCreate(this);
-        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(true);
-
-        if(Settings.getInstance().isNightMode())
-            SwipeBackHelper.getCurrentPage(this).setScrimColor(Color.BLACK);
-        else
-            SwipeBackHelper.getCurrentPage(this).setScrimColor(Color.WHITE);
-
         OnBackPressedDispatcher dispatcher = getOnBackPressedDispatcher();
 
         dispatcher.addCallback(this, new OnBackPressedCallback(true) {
@@ -144,8 +134,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
                     fragmentManager.popBackStack();
                 } else {
                     // 移除滑动状态检查直接执行关闭
-                    SwipeBackHelper.finish(BoardTopicActivity.this);
-                    overridePendingTransition(0,0);
+                    BoardTopicActivity.this.finish();
+                    overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 }
 
             }
@@ -253,6 +243,55 @@ public class BoardTopicActivity extends SMTHBaseActivity
             }
         });
 
+
+        ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
+            @Override
+            public int getMovementFlags(@androidx.annotation.NonNull @NonNull RecyclerView recyclerView, @androidx.annotation.NonNull @NonNull RecyclerView.ViewHolder viewHolder) {
+                // 允许右滑
+                return makeMovementFlags(0, ItemTouchHelper.RIGHT);
+            }
+
+            @Override
+            public boolean onMove(@androidx.annotation.NonNull @NonNull RecyclerView recyclerView, @androidx.annotation.NonNull @NonNull RecyclerView.ViewHolder viewHolder, @androidx.annotation.NonNull @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@androidx.annotation.NonNull @NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                if (direction == ItemTouchHelper.RIGHT || direction == ItemTouchHelper.LEFT) {
+                    // 从左向右滑动，执行返回操作
+                    BoardTopicActivity.this.finish();
+                    overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                }
+            }
+
+            @Override
+            public float getSwipeThreshold(@androidx.annotation.NonNull @NonNull RecyclerView.ViewHolder viewHolder) {
+                // 设置滑动阈值，可根据需要调整
+                return 0.3f;
+            }
+
+            @Override
+            public float getSwipeEscapeVelocity(float defaultValue) {
+                // 设置滑动速度阈值，可根据需要调整
+                return defaultValue * 0.5f;
+            }
+
+            @Override
+            public void onChildDraw(@androidx.annotation.NonNull @NonNull Canvas c, @androidx.annotation.NonNull @NonNull RecyclerView recyclerView, @androidx.annotation.NonNull @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                // 不绘制 item 的滑动动画，避免单个 item 移动
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    // 直接调用父类方法，不做额外绘制
+                    super.onChildDraw(c, recyclerView, viewHolder, 0, dY, actionState, isCurrentlyActive);
+                } else {
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                }
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -301,7 +340,6 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
     }
 
-
     public static BoardTopicActivity getInstance () {
         if (mActivity1 != null) {
             return mActivity1;
@@ -327,8 +365,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
                 fragmentManager.popBackStack();
             } else {
                 // 移除滑动状态检查直接执行关闭
-                SwipeBackHelper.finish(BoardTopicActivity.this);
-                overridePendingTransition(0,0);
+                BoardTopicActivity.this.finish();
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
             return true;
         } else if (id == R.id.board_topic_action_sticky) {
@@ -714,8 +752,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
                                     Toast.LENGTH_SHORT).show();
                             */
                             NewToast.makeText(SMTHApplication.getAppContext(),
-                                String.format(Locale.CHINA, "错误:获取第%d页的帖子失败!\n%s", pageNo, e.toString()),
-                                Toast.LENGTH_SHORT);
+                                    String.format(Locale.CHINA, "错误:获取第%d页的帖子失败!\n%s", pageNo, e.toString()),
+                                    Toast.LENGTH_SHORT);
                         }
                         else {
                             if (serviceType == SERVICE_TYPE_M) mCurrentPageModeNo -= 1;

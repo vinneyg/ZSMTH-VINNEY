@@ -44,6 +44,7 @@
         android:name=".MainActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:exported="true"
+        android:launchMode="standard"
         android:windowSoftInputMode="adjustPan"
         android:theme="@style/AppTheme.NoActionBar.MainActivity">
       <intent-filter>
@@ -74,6 +75,7 @@
         android:name=".PostListActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:label="@string/title_topic_detail"
+        android:launchMode="standard"
         android:theme="@style/AppTheme.NoActionBar" />
     <activity
         android:name=".ComposePostActivity"

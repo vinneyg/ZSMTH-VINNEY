@@ -2,6 +2,7 @@ package com.zfdang.zsmth_android;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.core.view.MenuProvider;
@@ -168,6 +169,15 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
             else
               mainActivity.onHandleBackPressed();
           }
+        }
+      }
+      @Override
+      public void onChildDraw(@androidx.annotation.NonNull @NonNull Canvas c, @androidx.annotation.NonNull @NonNull RecyclerView recyclerView, @androidx.annotation.NonNull @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        // 不绘制 item 的滑动动画，避免单个 item 移动
+        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+          super.onChildDraw(c, recyclerView, viewHolder, 0, dY, actionState, isCurrentlyActive);
+        } else {
+          super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
       }
     };

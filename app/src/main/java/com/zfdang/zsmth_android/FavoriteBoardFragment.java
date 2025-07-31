@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -187,6 +188,21 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
 
       @Override public boolean onMove(@androidx.annotation.NonNull RecyclerView recyclerView, @androidx.annotation.NonNull RecyclerView.ViewHolder viewHolder, @androidx.annotation.NonNull RecyclerView.ViewHolder target) {
         return false;
+      }
+
+      @Override
+      public void onChildDraw(@androidx.annotation.NonNull @NonNull Canvas c, @androidx.annotation.NonNull @NonNull RecyclerView recyclerView, @androidx.annotation.NonNull @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        // 不绘制 item 的滑动动画，避免单个 item 移动
+        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+          if (dX > 0) {
+            // 左向右滑动，不绘制 item 的滑动动画，避免单个 item 移动
+            super.onChildDraw(c, recyclerView, viewHolder, 0, dY, actionState, isCurrentlyActive);
+          } else {
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+          }
+        } else {
+          super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
       }
 
       @Override public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {

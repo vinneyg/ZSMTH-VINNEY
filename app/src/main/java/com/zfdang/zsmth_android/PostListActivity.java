@@ -49,7 +49,6 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.jude.swipbackhelper.SwipeBackHelper;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.ClassicsHeader;
@@ -146,13 +145,10 @@ public class PostListActivity extends SMTHBaseActivity
 
     @Override protected void onDestroy() {
         super.onDestroy();
-        SwipeBackHelper.onDestroy(this);
-
     }
 
     @Override protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        SwipeBackHelper.onPostCreate(this);
     }
 
     /**
@@ -178,14 +174,6 @@ public class PostListActivity extends SMTHBaseActivity
     @SuppressLint("ClickableViewAccessibility")
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SwipeBackHelper.onCreate(this);
-        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(true);
-
-        if(Settings.getInstance().isNightMode())
-            SwipeBackHelper.getCurrentPage(this).setScrimColor(Color.BLACK);
-        else
-            SwipeBackHelper.getCurrentPage(this).setScrimColor(Color.WHITE);
-
         setContentView(R.layout.activity_post_list);
 
         Toolbar toolbar = findViewById(R.id.post_list_toolbar);
@@ -206,7 +194,6 @@ public class PostListActivity extends SMTHBaseActivity
             actionBar.setTitle(topic.getBoardChsName() + " - 阅读文章");
         }
 
-
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -214,9 +201,8 @@ public class PostListActivity extends SMTHBaseActivity
                 if (fragmentManager.getBackStackEntryCount() > 0) {
                     fragmentManager.popBackStack();
                 } else {
-                    // 移除滑动状态检查直接执行关闭
-                    SwipeBackHelper.finish(PostListActivity.this);
-                    overridePendingTransition(0, 0);
+                    PostListActivity.this.finish();
+                    overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 }
             }
         };
@@ -347,8 +333,8 @@ public class PostListActivity extends SMTHBaseActivity
         });
 
         //  holder.mView.setOnTouchListener(this); so the event will be sent from holder.mView
-        mGestureDetector = new GestureDetector(this, new RecyclerViewGestureListener(this, mRecyclerView));
-
+        mGestureDetector = new GestureDetector(this, new RecyclerViewGestureListener(this, mRecyclerView,PostListActivity.this));
+        //mGestureDetector = new GestureDetector(this, new SwipeBackGestureListener(this, mRecyclerView));
         if(SMTHApplication.ReadMode1.equals(mReadMode)){
             // set onClick Lisetner for page navigator buttons
 
@@ -368,10 +354,8 @@ public class PostListActivity extends SMTHBaseActivity
             initPostNavigationButtons();
 
             mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
                 boolean isSlidingToLast = false;
                 //int mIndex = 0;
-
 
                 @Override
                 public void onScrollStateChanged(@androidx.annotation.NonNull RecyclerView recyclerView, int newState) {
@@ -383,7 +367,6 @@ public class PostListActivity extends SMTHBaseActivity
                     }
                     if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                         // 处理用户手动拖动列表的情况
-                        // 例如，停止预加载
                         if (mRefreshLayout.isLoading()) {
                             mRefreshLayout.finishLoadMore();
                         }
@@ -782,9 +765,9 @@ public class PostListActivity extends SMTHBaseActivity
                                     .show();
                             */
                             NewToast.makeText(
-                                            SMTHApplication.getAppContext(),
-                                            "加载失败！\n" ,
-                                            Toast.LENGTH_SHORT);
+                                    SMTHApplication.getAppContext(),
+                                    "加载失败！\n" ,
+                                    Toast.LENGTH_SHORT);
                             isLoading = false;
                         }
                     }
@@ -857,9 +840,9 @@ public class PostListActivity extends SMTHBaseActivity
                                         .show();
                                 */
                                 NewToast.makeText(
-                                                SMTHApplication.getAppContext(),
-                                                "加载失败！\n" + e.toString(),
-                                                Toast.LENGTH_SHORT);
+                                        SMTHApplication.getAppContext(),
+                                        "加载失败！\n" + e.toString(),
+                                        Toast.LENGTH_SHORT);
                                 isLoading = false;
                             }
 
@@ -979,9 +962,9 @@ public class PostListActivity extends SMTHBaseActivity
                                         .show();
                                 */
                                 NewToast.makeText(
-                                                SMTHApplication.getAppContext(),
-                                                "加载失败！\n" + e.toString(),
-                                                Toast.LENGTH_SHORT);
+                                        SMTHApplication.getAppContext(),
+                                        "加载失败！\n" + e.toString(),
+                                        Toast.LENGTH_SHORT);
                                 isLoading = false;
 
                             }
@@ -1056,8 +1039,8 @@ public class PostListActivity extends SMTHBaseActivity
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            //onBackPressed();
-            finish();
+            PostListActivity.this.finish();
+            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             return true;
         } else if (id == R.id.post_list_action_refresh) {
             reloadPostList();
@@ -1369,158 +1352,158 @@ public class PostListActivity extends SMTHBaseActivity
                 intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
                 intent.putExtra(SMTHApplication.READ_MODE, mReadMode);
                 mActivityPostResultLauncher.launch(intent);
-        } else if (which == 1){
+            } else if (which == 1){
                 deletePostMobile(post);
             }
 
-    } else {
+        } else {
 
-        if (which == 0) {
-            // post_reply_post
-            ComposePostContext postContext = new ComposePostContext();
-            postContext.setBoardEngName(mTopic.getBoardEngName());
-            postContext.setPostId(post.getPostID());
-            postContext.setPostTitle(mTopic.getTitle());
-            postContext.setPostAuthor(post.getRawAuthor());
-            //postContext.setPostContent(post.getRawContent());
-            postContext.setPostContent("");
-            postContext.setComposingMode(ComposePostContext.MODE_REPLY_POST);
+            if (which == 0) {
+                // post_reply_post
+                ComposePostContext postContext = new ComposePostContext();
+                postContext.setBoardEngName(mTopic.getBoardEngName());
+                postContext.setPostId(post.getPostID());
+                postContext.setPostTitle(mTopic.getTitle());
+                postContext.setPostAuthor(post.getRawAuthor());
+                //postContext.setPostContent(post.getRawContent());
+                postContext.setPostContent("");
+                postContext.setComposingMode(ComposePostContext.MODE_REPLY_POST);
 
-            Intent intent = new Intent(this, ComposePostActivity.class);
-            intent.putExtra(SMTHApplication.READ_MODE, mReadMode);
-            intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-            mActivityPostResultLauncher.launch(intent);
-        } else if (which == 1) {
-            // like
-            // Toast.makeText(PostListActivity.this, "Like:TBD", Toast.LENGTH_SHORT).show();
-            PopupLikeWindow popup = new PopupLikeWindow();
-            popup.initPopupWindow(this);
-            popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 100);
-        } else if (which == 2) {
-            // post_reply_mail
-            // Toast.makeText(PostListActivity.this, "回复到作者信箱:TBD", Toast.LENGTH_SHORT).show();
-            ComposePostContext postContext = new ComposePostContext();
-            postContext.setBoardEngName(mTopic.getBoardEngName());
-            postContext.setPostId(post.getPostID());
-            postContext.setPostTitle(mTopic.getTitle());
-            postContext.setPostAuthor(post.getRawAuthor());
-            //postContext.setPostContent(post.getRawContent());
-            postContext.setPostContent("");
-            postContext.setComposingMode(ComposePostContext.MODE_REPLY_MAIL);
+                Intent intent = new Intent(this, ComposePostActivity.class);
+                intent.putExtra(SMTHApplication.READ_MODE, mReadMode);
+                intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+                mActivityPostResultLauncher.launch(intent);
+            } else if (which == 1) {
+                // like
+                // Toast.makeText(PostListActivity.this, "Like:TBD", Toast.LENGTH_SHORT).show();
+                PopupLikeWindow popup = new PopupLikeWindow();
+                popup.initPopupWindow(this);
+                popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 100);
+            } else if (which == 2) {
+                // post_reply_mail
+                // Toast.makeText(PostListActivity.this, "回复到作者信箱:TBD", Toast.LENGTH_SHORT).show();
+                ComposePostContext postContext = new ComposePostContext();
+                postContext.setBoardEngName(mTopic.getBoardEngName());
+                postContext.setPostId(post.getPostID());
+                postContext.setPostTitle(mTopic.getTitle());
+                postContext.setPostAuthor(post.getRawAuthor());
+                //postContext.setPostContent(post.getRawContent());
+                postContext.setPostContent("");
+                postContext.setComposingMode(ComposePostContext.MODE_REPLY_MAIL);
 
-            Intent intent = new Intent(this, ComposePostActivity.class);
-            intent.putExtra(SMTHApplication.READ_MODE, mReadMode);
-            intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-            startActivity(intent);
-        } else if (which == 3) {
-            // post_query_author
-            Intent intent = new Intent(this, QueryUserActivity.class);
-            intent.putExtra(SMTHApplication.QUERY_USER_INFO, post.getRawAuthor());
-            startActivity(intent);
-        } else if (which == 4) {
-            // read posts from current users only
-            if (mFilterUser == null) {
-                //Toast.makeText(PostListActivity.this, "只看此ID! 再次选择将查看所有文章.", Toast.LENGTH_SHORT).show();
-                NewToast.makeText(PostListActivity.this, "只看此ID! 再次选择将查看所有文章.", Toast.LENGTH_SHORT);
-                mFilterUser = post.getRawAuthor();
-            } else {
-                //Toast.makeText(PostListActivity.this, "查看所有文章!", Toast.LENGTH_SHORT).show();
-                NewToast.makeText(PostListActivity.this, "查看所有文章!", Toast.LENGTH_SHORT);
-                mFilterUser = null;
-            }
-            mCurrentPageNo = 1;
-            reloadPostList();
-        } else if (which == 5) {
-            // copy post content
-            // http://stackoverflow.com/questions/8056838/dealing-with-deprecated-android-text-clipboardmanager
-            String content;
-            if (post != null) {
-                content = post.getRawContent();
-                final ClipboardManager clipboardManager =
-                        (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
-                final ClipData clipData = ClipData.newPlainText("PostContent", content);
-                clipboardManager.setPrimaryClip(clipData);
-                //Toast.makeText(PostListActivity.this, "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT).show();
-                NewToast.makeText(PostListActivity.this, "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT);
-            } else {
-                //Toast.makeText(PostListActivity.this, "复制失败！", Toast.LENGTH_SHORT).show();
-                NewToast.makeText(PostListActivity.this, "复制失败！", Toast.LENGTH_SHORT);
-            }
-        } else if (which == 6) {
-            // post_foward_self
-            // Toast.makeText(PostListActivity.this, "转寄信箱:TBD", Toast.LENGTH_SHORT).show();
-            PopupForwardWindow popup = new PopupForwardWindow();
-            popup.initPopupWindow(this, post);
-            popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 100);
-        } else if (which == 7) {
-            // open post in browser
-            String url = String.format(Locale.CHINA,SMTHHelper.SMTH_MOBILE_URL + "/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-        } else if (which == 8) {
-            // post_share
-            // Toast.makeText(PostListActivity.this, "分享:TBD", Toast.LENGTH_SHORT).show();
-            sharePost(post);
-        } else if (which == 9) {
-            // delete post
-            deletePost(post);
+                Intent intent = new Intent(this, ComposePostActivity.class);
+                intent.putExtra(SMTHApplication.READ_MODE, mReadMode);
+                intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+                startActivity(intent);
+            } else if (which == 3) {
+                // post_query_author
+                Intent intent = new Intent(this, QueryUserActivity.class);
+                intent.putExtra(SMTHApplication.QUERY_USER_INFO, post.getRawAuthor());
+                startActivity(intent);
+            } else if (which == 4) {
+                // read posts from current users only
+                if (mFilterUser == null) {
+                    //Toast.makeText(PostListActivity.this, "只看此ID! 再次选择将查看所有文章.", Toast.LENGTH_SHORT).show();
+                    NewToast.makeText(PostListActivity.this, "只看此ID! 再次选择将查看所有文章.", Toast.LENGTH_SHORT);
+                    mFilterUser = post.getRawAuthor();
+                } else {
+                    //Toast.makeText(PostListActivity.this, "查看所有文章!", Toast.LENGTH_SHORT).show();
+                    NewToast.makeText(PostListActivity.this, "查看所有文章!", Toast.LENGTH_SHORT);
+                    mFilterUser = null;
+                }
+                mCurrentPageNo = 1;
+                reloadPostList();
+            } else if (which == 5) {
+                // copy post content
+                // http://stackoverflow.com/questions/8056838/dealing-with-deprecated-android-text-clipboardmanager
+                String content;
+                if (post != null) {
+                    content = post.getRawContent();
+                    final ClipboardManager clipboardManager =
+                            (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+                    final ClipData clipData = ClipData.newPlainText("PostContent", content);
+                    clipboardManager.setPrimaryClip(clipData);
+                    //Toast.makeText(PostListActivity.this, "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT).show();
+                    NewToast.makeText(PostListActivity.this, "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT);
+                } else {
+                    //Toast.makeText(PostListActivity.this, "复制失败！", Toast.LENGTH_SHORT).show();
+                    NewToast.makeText(PostListActivity.this, "复制失败！", Toast.LENGTH_SHORT);
+                }
+            } else if (which == 6) {
+                // post_foward_self
+                // Toast.makeText(PostListActivity.this, "转寄信箱:TBD", Toast.LENGTH_SHORT).show();
+                PopupForwardWindow popup = new PopupForwardWindow();
+                popup.initPopupWindow(this, post);
+                popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 100);
+            } else if (which == 7) {
+                // open post in browser
+                String url = String.format(Locale.CHINA,SMTHHelper.SMTH_MOBILE_URL + "/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+            } else if (which == 8) {
+                // post_share
+                // Toast.makeText(PostListActivity.this, "分享:TBD", Toast.LENGTH_SHORT).show();
+                sharePost(post);
+            } else if (which == 9) {
+                // delete post
+                deletePost(post);
 
-        } else if (which == 10) {
-            // edit post
-            ComposePostContext postContext = new ComposePostContext();
-            postContext.setBoardEngName(mTopic.getBoardEngName());
-            postContext.setPostId(post.getPostID());
-            postContext.setPostTitle(mTopic.getTitle());
-            postContext.setPostAuthor(post.getRawAuthor());
-            postContext.setPostContent(post.getRawContent());
-            postContext.setComposingMode(ComposePostContext.MODE_EDIT_POST);
+            } else if (which == 10) {
+                // edit post
+                ComposePostContext postContext = new ComposePostContext();
+                postContext.setBoardEngName(mTopic.getBoardEngName());
+                postContext.setPostId(post.getPostID());
+                postContext.setPostTitle(mTopic.getTitle());
+                postContext.setPostAuthor(post.getRawAuthor());
+                postContext.setPostContent(post.getRawContent());
+                postContext.setComposingMode(ComposePostContext.MODE_EDIT_POST);
 
-            Intent intent = new Intent(this, ComposePostActivity.class);
-            intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-            intent.putExtra(SMTHApplication.READ_MODE, mReadMode);
-            startActivity(intent);
-        } else if (which == 11) {
-            // generate screenshot of current post
-            View v = Objects.requireNonNull(mRecyclerView.getLayoutManager()).findViewByPosition(position);
+                Intent intent = new Intent(this, ComposePostActivity.class);
+                intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+                intent.putExtra(SMTHApplication.READ_MODE, mReadMode);
+                startActivity(intent);
+            } else if (which == 11) {
+                // generate screenshot of current post
+                View v = Objects.requireNonNull(mRecyclerView.getLayoutManager()).findViewByPosition(position);
 
-            // convert title + post to image
-            if (v == null) {
-                return;
-            }
+                // convert title + post to image
+                if (v == null) {
+                    return;
+                }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                if(Environment.isExternalStorageManager())
-                {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    if(Environment.isExternalStorageManager())
+                    {
+                        captureView(mTitle, v, post.getPostID());
+                    }
+                    else
+                    {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                        startActivity(intent);
+                    }
+                } else{
                     captureView(mTitle, v, post.getPostID());
                 }
-                else
-                {
-                    Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                    startActivity(intent);
-                }
-            } else{
-                captureView(mTitle, v, post.getPostID());
+
+
             }
+            else if (which == 12) {
+                // post_reply_post
+                ComposePostContext postContext = new ComposePostContext();
+                postContext.setBoardEngName(mTopic.getBoardEngName());
+                postContext.setPostId(SMTHApplication.ReadPostFirst.getPostID());
+                postContext.setPostTitle(mTopic.getTitle());
 
+                postContext.setPostAuthor(SMTHApplication.ReadPostFirst.getRawAuthor());
+                postContext.setPostContent(SMTHApplication.ReadPostFirst.getRawContent());
 
-        }
-        else if (which == 12) {
-            // post_reply_post
-            ComposePostContext postContext = new ComposePostContext();
-            postContext.setBoardEngName(mTopic.getBoardEngName());
-            postContext.setPostId(SMTHApplication.ReadPostFirst.getPostID());
-            postContext.setPostTitle(mTopic.getTitle());
+                postContext.setComposingMode(ComposePostContext.MODE_REPLY_POST);
 
-            postContext.setPostAuthor(SMTHApplication.ReadPostFirst.getRawAuthor());
-            postContext.setPostContent(SMTHApplication.ReadPostFirst.getRawContent());
-
-            postContext.setComposingMode(ComposePostContext.MODE_REPLY_POST);
-
-            Intent intent = new Intent(this, ComposePostActivity.class);
-            intent.putExtra(SMTHApplication.READ_MODE, mReadMode);
-            intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-            //startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
-            mActivityPostResultLauncher.launch(intent);
-        }
+                Intent intent = new Intent(this, ComposePostActivity.class);
+                intent.putExtra(SMTHApplication.READ_MODE, mReadMode);
+                intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+                //startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
+                mActivityPostResultLauncher.launch(intent);
+            }
         }
 
     }
@@ -1601,7 +1584,7 @@ public class PostListActivity extends SMTHBaseActivity
                                     NewToast.makeText(PostListActivity.this, "删除失败", Toast.LENGTH_SHORT);
                                     new Handler(Looper.getMainLooper()).postDelayed(PostListActivity.this::finish, 500); // 可以调整延迟时间
                                 }
-                                }
+                            }
                         } catch (IOException e) {
                             Log.d(TAG, Objects.requireNonNull(e.getMessage()));
                             //Toast.makeText(PostListActivity.this, "解析失败: " + e.getMessage(), Toast.LENGTH_SHORT).show();
