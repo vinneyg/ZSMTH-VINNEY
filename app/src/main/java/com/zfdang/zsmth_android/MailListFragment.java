@@ -322,7 +322,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
 
     if (currentPage >= MailListContent.totalPages) {
       // reach the last page, do nothing
-      if (MailListContent.MAILS.size()>0 && !(MailListContent.MAILS.get(MailListContent.MAILS.size()-1).isCategory
+      if (!MailListContent.MAILS.isEmpty() && !(MailListContent.MAILS.get(MailListContent.MAILS.size()-1).isCategory
               && MailListContent.MAILS.get(MailListContent.MAILS.size()-1).category.equals("结束"))) {
         Mail mail = new Mail("结束");
         MailListContent.addItem(mail);
@@ -434,10 +434,6 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
           mRefreshLayout.finishRefresh(true);
         }
 
-        if (mRecyclerView.getAdapter() != null) {
-          mRecyclerView.getAdapter().notifyDataSetChanged();
-        }
-
         mRecyclerView.smoothScrollToPosition(0);
         if (!MailListContent.MAILS.isEmpty() && mRecyclerView != null) {
           mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -451,8 +447,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
               mRecyclerView.animate()
                       .translationX(0)
                       .setDuration(200)
-                      .setStartDelay(100)
-                      .withEndAction(null)
+                      .setStartDelay(50)
                       .start();
             }
           });
@@ -506,6 +501,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
           mRefreshLayout.finishRefresh(true);
         }
 
+
         mRecyclerView.smoothScrollToPosition(0);
         if (!MailListContent.MAILS.isEmpty() && mRecyclerView != null) {
           mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -519,8 +515,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
               mRecyclerView.animate()
                       .translationX(0)
                       .setDuration(200)
-                      .setStartDelay(100)
-                      .withEndAction(null)
+                      .setStartDelay(50)
                       .start();
             }
           });
