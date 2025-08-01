@@ -16,8 +16,10 @@ import androidx.core.content.ContextCompat;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,7 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener;
 import com.github.chrisbanes.photoview.OnPhotoTapListener;
-import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.FrescoUtils;
 import com.zfdang.zsmth_android.fresco.MyPhotoView;
@@ -53,6 +54,10 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
   private FSImagePagerAdapter mPagerAdapter;
   private ArrayList<String> mURLs;
   private LinearLayout layoutToolbar;
+
+  private GestureDetector gestureDetector;
+  private static final int SWIPE_THRESHOLD = 100;
+  private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -126,10 +131,63 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
     });
 
     hideSystemUI();
-
-    SwipeBackHelper.onCreate(this);
-    SwipeBackHelper.getCurrentPage(this).setSwipeEdgePercent(0.2f);
+    gestureDetector = new GestureDetector(this, new SwipeGestureListener());
   }
+
+  private class SwipeGestureListener extends GestureDetector.SimpleOnGestureListener {
+    @Override
+    public boolean onDown(MotionEvent e) {
+      return true;
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
+      try {
+        if (e1 != null) {
+          float diffX = e2.getX() - e1.getX();
+          float diffY = e2.getY() - e1.getY();
+
+          // 检查是否主要是水平滑动
+          if (Math.abs(diffX) > Math.abs(diffY)
+                  && Math.abs(diffX) > SWIPE_THRESHOLD
+                  && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+
+            if (diffX > 0) {
+              // 右滑，上一张图片
+              int current = mViewPager.getCurrentItem();
+              if (current > 0) {
+                mViewPager.setCurrentItem(current - 1, true);
+              } else {
+                finish(); // 第一张图片右滑退出
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+              }
+            } else {
+              // 左滑，下一张图片
+              int current = mViewPager.getCurrentItem();
+              if (current < mURLs.size() - 1) {
+                mViewPager.setCurrentItem(current + 1, true);
+              } else {
+                finish(); // 最后一张图片左滑退出
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+              }
+            }
+            return true;
+          }
+        }
+      } catch (Exception exception) {
+        Log.e(TAG, "onFling error: " + exception.toString());
+      }
+      return false;
+    }
+  }
+
+  @Override
+  public boolean dispatchTouchEvent(MotionEvent event) {
+    // 先让 GestureDetector 处理事件
+    gestureDetector.onTouchEvent(event);
+    return super.dispatchTouchEvent(event);
+  }
+
 
   public void realSaveImageToFile()
   {
@@ -148,35 +206,35 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode,permissions,grantResults);
-      if (requestCode == MY_PERMISSIONS_REQUEST_STORAGE_CODE) {// If request is cancelled, the result arrays are empty.
-          if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+    if (requestCode == MY_PERMISSIONS_REQUEST_STORAGE_CODE) {// If request is cancelled, the result arrays are empty.
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
 
-              if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                  // permission was granted, yay! Do the
-                  // contacts-related task you need to do.
-                  realSaveImageToFile();
+        if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          // permission was granted, yay! Do the
+          // contacts-related task you need to do.
+          realSaveImageToFile();
 
-              } else {
-                  // permission denied, boo! Disable the
-                  // functionality that depends on this permission.
-                  //Toast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
-                  NewToast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT);
-              }
-          } else {
-              if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                      && grantResults[1] == PackageManager.PERMISSION_GRANTED
-                      || Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                  // permission was granted, yay! Do the
-                  // contacts-related task you need to do.
-                  realSaveImageToFile();
-              } else {
-                  // permission denied, boo! Disable the
-                  // functionality that depends on this permission.
-                  //Toast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
-                  NewToast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT);
-              }
-          }
+        } else {
+          // permission denied, boo! Disable the
+          // functionality that depends on this permission.
+          //Toast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
+          NewToast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT);
+        }
+      } else {
+        if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                && grantResults[1] == PackageManager.PERMISSION_GRANTED
+                || Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+          // permission was granted, yay! Do the
+          // contacts-related task you need to do.
+          realSaveImageToFile();
+        } else {
+          // permission denied, boo! Disable the
+          // functionality that depends on this permission.
+          //Toast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT).show();
+          NewToast.makeText(FSImageViewerActivity.this, getString(com.zfdang.multiple_images_selector.R.string.selector_permission_error), Toast.LENGTH_SHORT);
+        }
       }
+    }
   }
   @Override
   public void onWindowFocusChanged(boolean hasFocus) {
@@ -218,12 +276,10 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
 
   @Override protected void onPostCreate(Bundle savedInstanceState) {
     super.onPostCreate(savedInstanceState);
-    SwipeBackHelper.onPostCreate(this);
   }
 
   @Override protected void onDestroy() {
     super.onDestroy();
-    SwipeBackHelper.onDestroy(this);
   }
 
   @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
