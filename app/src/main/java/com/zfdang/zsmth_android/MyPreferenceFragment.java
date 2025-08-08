@@ -3,7 +3,6 @@ package com.zfdang.zsmth_android;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -33,7 +32,6 @@ import com.zfdang.zsmth_android.helpers.ActivityUtils;
 import com.zfdang.zsmth_android.helpers.FileLess;
 import com.zfdang.zsmth_android.helpers.FileSizeUtil;
 import com.zfdang.zsmth_android.helpers.NewToast;
-import com.zfdang.zsmth_android.models.ComposePostContext;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -78,9 +76,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     CheckBoxPreference topic_fwd_self; //
     CheckBoxPreference set_id_check; //
     CheckBoxPreference set_left_nav_slide;
-    Preference app_feedback;
     Preference app_version;
-    Preference app_sponsor;
 
     private BroadcastReceiver receiver;
 
@@ -601,21 +597,6 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
             return true;
         });
 
-        app_feedback = findPreference("app_feedback");
-        if (app_feedback == null) {
-            Log.e(TAG, "set_id_check key is null");
-            return;
-        }
-        app_feedback.setOnPreferenceClickListener(preference -> {
-            ComposePostContext postContext = new ComposePostContext();
-            postContext.setComposingMode(ComposePostContext.MODE_NEW_MAIL_TO_USER);
-            postContext.setPostAuthor("Vinney");
-            Intent intent = new Intent(getActivity(), ComposePostActivity.class);
-            intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-            startActivity(intent);
-            return true;
-        });
-
         app_version = findPreference("setting_app_version");
         if (app_version == null) {
             Log.e(TAG, "app_version key is null");
@@ -625,29 +606,6 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
             //Toast.makeText(SMTHApplication.getAppContext(),"zSMTH-v版本，请用电脑或者电脑模式手机浏览器下载!",Toast.LENGTH_SHORT).show();
             NewToast.makeText(SMTHApplication.getAppContext(),"zSMTH-v版本，请用电脑或者电脑模式手机浏览器下载!",Toast.LENGTH_SHORT);
             ActivityUtils.openLink("https://lanzoui.com/b01noyh6b", getActivity());
-            return true;
-        });
-
-        app_sponsor = findPreference("sponsor");
-        if (app_sponsor == null) {
-            Log.e(TAG, "app_sponsor key is null");
-            return;
-        }
-        app_sponsor.setOnPreferenceClickListener(preference -> {
-            String alipay = "vinneyguo@outlook.com";
-            final android.content.ClipboardManager clipboardManager =
-                    (android.content.ClipboardManager) requireActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-            if (clipboardManager == null) {
-                Log.e(TAG, "clipboardManager  is null");
-                return false;
-            }
-
-            clipboardManager.setPrimaryClip(ClipData.newPlainText(null,alipay));
-            if (clipboardManager.hasPrimaryClip()){
-                Objects.requireNonNull(clipboardManager.getPrimaryClip()).getItemAt(0).getText();
-            }
-            //Toast.makeText(getActivity(), "作者支付宝ID已复制到剪贴板...", Toast.LENGTH_SHORT).show();
-            NewToast.makeText(getActivity(), "作者支付宝ID已复制到剪贴板...", Toast.LENGTH_SHORT);
             return true;
         });
 
@@ -831,7 +789,6 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         return closestPos;
     }
 
-
     private void saveScrollPosition(int position) {
         requireContext().getSharedPreferences("PreferenceState", Context.MODE_PRIVATE)
                 .edit()
@@ -843,6 +800,5 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         return requireContext().getSharedPreferences("PreferenceState", Context.MODE_PRIVATE)
                 .getInt(PREF_SCROLL_POSITION, 0);
     }
-
 
 }

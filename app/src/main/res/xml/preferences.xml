@@ -3,22 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
   <PreferenceCategory android:title="通用">
-    <Preference
-        android:key="app_feedback"
-        app:summary=""
-        android:title="反馈建议"
-        app:isPreferenceVisible="false" />
     <EditTextPreference
         android:dialogTitle="输入水木社区站点地址"
         android:key="WebAddr"
         app:summary="https://www.newsmth.net"
         android:title="水木社区站点"
         />
-    <Preference
-        android:key="sponsor"
-        app:summary="支付宝帐号: vinneyguo@outlook.com\n点击自动复制"
-        android:title="赞助打赏"
-        app:isPreferenceVisible="false" />
     <Preference
         android:key="setting_app_version"
         app:summary="版本号: 未知"
