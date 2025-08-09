@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -176,7 +177,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
         SMTHApplication.bNewFavoriteBoard = false;
     }
 
-    // enable swipe to delete mail
+    // enable swipe to delete board item
     initItemHelper();
 
     return rootView;
@@ -185,6 +186,8 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
   private void initItemHelper() {
     //0则不执行拖动或者滑动
     ItemTouchHelper.Callback mCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+      // 记录当前正在滑动的 ViewHolder
+      private RecyclerView.ViewHolder currentSwipingViewHolder;
 
       @Override public boolean onMove(@androidx.annotation.NonNull RecyclerView recyclerView, @androidx.annotation.NonNull RecyclerView.ViewHolder viewHolder, @androidx.annotation.NonNull RecyclerView.ViewHolder target) {
         return false;
@@ -198,11 +201,56 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
             // 左向右滑动，不绘制 item 的滑动动画，避免单个 item 移动
             super.onChildDraw(c, recyclerView, viewHolder, 0, dY, actionState, isCurrentlyActive);
           } else {
+            currentSwipingViewHolder = viewHolder;
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            drawText(c, viewHolder, "删除收藏版块", dX);
           }
         } else {
+          if (currentSwipingViewHolder == viewHolder) {
+            drawText(c, viewHolder, "删除收藏版块", 0);
+          }
           super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
+      }
+
+      @Override
+      public void clearView(@androidx.annotation.NonNull RecyclerView recyclerView, @androidx.annotation.NonNull RecyclerView.ViewHolder viewHolder) {
+        super.clearView(recyclerView, viewHolder);
+        // 松手后，重置当前滑动的 ViewHolder
+        if (currentSwipingViewHolder == viewHolder) {
+          currentSwipingViewHolder = null;
+        }
+      }
+
+      @SuppressLint("ResourceAsColor")
+      private void drawText(Canvas c, RecyclerView.ViewHolder viewHolder, String text, float dX) {
+        // 创建绘制背景的 Paint 对象
+        android.graphics.Paint bgPaint = new android.graphics.Paint();
+        bgPaint.setColor(Color.GRAY);
+
+        // 获取 item 视图
+        View itemView = viewHolder.itemView;
+        // 计算背景矩形的位置和大小
+        android.graphics.RectF bgRect = new android.graphics.RectF(
+                itemView.getRight() + dX, // 背景矩形左边界，考虑滑动距离
+                itemView.getTop(),
+                itemView.getRight(),
+                itemView.getBottom()
+        );
+        // 绘制背景矩形
+        c.drawRect(bgRect, bgPaint);
+
+        // 创建绘制文字的 Paint 对象
+        android.graphics.Paint textPaint = new android.graphics.Paint();
+        textPaint.setColor(android.graphics.Color.WHITE);
+        textPaint.setTextSize(50);
+        textPaint.setTextAlign(android.graphics.Paint.Align.RIGHT);
+
+        float textHeight = textPaint.descent() - textPaint.ascent();
+        float textOffset = (textHeight / 2) - textPaint.descent();
+        float x = itemView.getRight() - 50;
+        float y = itemView.getTop() + ((float) itemView.getHeight() / 2) + textOffset;
+        c.drawText(text, x, y, textPaint);
       }
 
       @Override public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {

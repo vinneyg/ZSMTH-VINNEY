@@ -37,7 +37,8 @@
       android:layout_gravity="bottom|end"
       android:layout_margin="@dimen/fab_margin"
       android:src="@drawable/zpad"
-      app:fabSize="mini" />
+      app:fabSize="mini"
+      tools:ignore="ContentDescription" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
