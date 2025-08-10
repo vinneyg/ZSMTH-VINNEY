@@ -136,7 +136,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
 
   private class SwipeGestureListener extends GestureDetector.SimpleOnGestureListener {
     @Override
-    public boolean onDown(MotionEvent e) {
+    public boolean onDown(@NonNull MotionEvent e) {
       return true;
     }
 
@@ -148,13 +148,13 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
           float diffY = e2.getY() - e1.getY();
 
           // 检查是否主要是水平滑动
-          if (Math.abs(diffX) > Math.abs(diffY)
+          if (Math.abs(diffX) > (Math.abs(diffY) + (float)SWIPE_THRESHOLD/2)
                   && Math.abs(diffX) > SWIPE_THRESHOLD
                   && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
 
+            int current = mViewPager.getCurrentItem();
             if (diffX > 0) {
               // 右滑，上一张图片
-              int current = mViewPager.getCurrentItem();
               if (current > 0) {
                 mViewPager.setCurrentItem(current - 1, true);
               } else {
@@ -163,7 +163,6 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
               }
             } else {
               // 左滑，下一张图片
-              int current = mViewPager.getCurrentItem();
               if (current < mURLs.size() - 1) {
                 mViewPager.setCurrentItem(current + 1, true);
               } else {
@@ -175,7 +174,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
           }
         }
       } catch (Exception exception) {
-        Log.e(TAG, "onFling error: " + exception.toString());
+        Log.e(TAG, "onFling error: " + exception);
       }
       return false;
     }

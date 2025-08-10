@@ -203,11 +203,11 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
           } else {
             currentSwipingViewHolder = viewHolder;
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-            drawText(c, viewHolder, "删除收藏版块", dX);
+            drawText(c, viewHolder, dX);
           }
         } else {
           if (currentSwipingViewHolder == viewHolder) {
-            drawText(c, viewHolder, "删除收藏版块", 0);
+            drawText(c, viewHolder, 0);
           }
           super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
@@ -223,7 +223,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
       }
 
       @SuppressLint("ResourceAsColor")
-      private void drawText(Canvas c, RecyclerView.ViewHolder viewHolder, String text, float dX) {
+      private void drawText(Canvas c, RecyclerView.ViewHolder viewHolder, float dX) {
         // 创建绘制背景的 Paint 对象
         android.graphics.Paint bgPaint = new android.graphics.Paint();
         bgPaint.setColor(Color.GRAY);
@@ -250,7 +250,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
         float textOffset = (textHeight / 2) - textPaint.descent();
         float x = itemView.getRight() - 50;
         float y = itemView.getTop() + ((float) itemView.getHeight() / 2) + textOffset;
-        c.drawText(text, x, y, textPaint);
+        c.drawText("删除收藏版块", x, y, textPaint);
       }
 
       @Override public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {

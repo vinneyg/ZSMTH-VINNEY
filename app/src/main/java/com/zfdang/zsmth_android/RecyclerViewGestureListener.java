@@ -43,10 +43,9 @@ public class RecyclerViewGestureListener extends GestureDetector.SimpleOnGesture
         float diffY = e2.getY() - e1.getY();
         float diffX = e2.getX() - e1.getX();
 
-        if (Math.abs(diffX) > Math.abs(diffY) &&
+        if (Math.abs(diffX) > (Math.abs(diffY) + (float) SWIPE_THRESHOLD /2) &&
                 Math.abs(diffX) > SWIPE_THRESHOLD &&
-                Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD &&
-                diffX != 0) {
+                Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD ) {
           isFinishing = true;
           activity.finish();
           activity.overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
