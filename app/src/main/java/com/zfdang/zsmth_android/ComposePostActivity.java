@@ -63,7 +63,6 @@ public class ComposePostActivity extends SMTHBaseActivity {
   private TextView mContentCount;
 
   private ComposePostContext mPostContext;
-  private String mReadMode = SMTHApplication.ReadMode1;
 
   // used to show progress while publishing
   private static int totalSteps = 1;
@@ -122,7 +121,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
             result -> {
               if(result.getResultCode() == Activity.RESULT_OK)
               {
-                  publishPost();
+                publishPost();
               }
             });
 
@@ -244,7 +243,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
     // get ComposePostContext from caller
     Intent intent = getIntent();
     mPostContext = intent.getParcelableExtra(SMTHApplication.COMPOSE_POST_CONTEXT);
-    mReadMode = intent.getStringExtra(SMTHApplication.READ_MODE);
+    String mReadMode = intent.getStringExtra(SMTHApplication.READ_MODE);
     if (mPostContext == null) {
       Log.e(TAG, "mPostContext is null.");
       return;
@@ -341,7 +340,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
     if (code == android.R.id.home) {
       onBackAction();
     } else if (code == R.id.compose_post_publish) {
-        publishPost();
+      publishPost();
     }
     return super.onOptionsItemSelected(item);
   }
@@ -462,9 +461,9 @@ public class ComposePostActivity extends SMTHBaseActivity {
                                 .show();
                         */
                         NewToast.makeText(
-                                        SMTHApplication.getAppContext(),
-                                        "发生错误:\n" + e.toString(),
-                                        Toast.LENGTH_SHORT);
+                                SMTHApplication.getAppContext(),
+                                "发生错误:\n" + e.toString(),
+                                Toast.LENGTH_SHORT);
                       }
 
                       @Override
