@@ -143,7 +143,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
     @Override
     public boolean onFling(MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
       try {
-        if (e1 != null) {
+        if (e1 != null && e1.getPointerCount() == 1 && e2.getPointerCount() == 1) {
           float diffX = e2.getX() - e1.getX();
           float diffY = e2.getY() - e1.getY();
 
