@@ -151,8 +151,18 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
           if (Math.abs(diffX) > (Math.abs(diffY) + (float)SWIPE_THRESHOLD/2)
                   && Math.abs(diffX) > SWIPE_THRESHOLD
                   && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-
             int current = mViewPager.getCurrentItem();
+            View currentView = mPagerAdapter.mCurrentView;
+            boolean isZoomed = false;
+            if (currentView instanceof MyPhotoView) {
+              MyPhotoView photoView = (MyPhotoView) currentView;
+              isZoomed = photoView.getScale() > photoView.getMinimumScale();
+            }
+            // 如果图片放大，不执行退出操作
+            if (isZoomed) {
+              return false;
+            }
+
             if (diffX > 0) {
               // 右滑，上一张图片
               if (current > 0) {
