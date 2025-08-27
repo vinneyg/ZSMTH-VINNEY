@@ -143,13 +143,6 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
       }
       @Override
       public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-        int position = viewHolder.getBindingAdapterPosition();
-
-        Topic topic = TopicListContent.HOT_TOPICS.get(position);
-        TopicListContent.HOT_TOPICS.remove(position);
-        TopicListContent.HOT_TOPICS.add(position,topic);
-        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemRemoved(position);
-        Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(position);
         MainActivity mainActivity = (MainActivity) getActivity();
 
         if (direction == ItemTouchHelper.RIGHT) {
