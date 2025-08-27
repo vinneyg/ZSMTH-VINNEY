@@ -142,7 +142,7 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
         return false;
       }
       @Override
-      public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+      public void onSwiped(@androidx.annotation.NonNull final RecyclerView.ViewHolder viewHolder, int direction) {
         MainActivity mainActivity = (MainActivity) getActivity();
 
         if (direction == ItemTouchHelper.RIGHT) {
