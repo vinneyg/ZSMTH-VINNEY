@@ -9,7 +9,7 @@ ext {
 android {
 
     defaultConfig {
-        compileSdk rootProject.compileSdkVersion
+        compileSdkVersion rootProject.compileSdkVersion
         //buildToolsVersion rootProject.buildToolsVersion
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
@@ -71,20 +72,24 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
             public void showHTML(String html) {
                 runOnUiThread(() -> {
                     if (html.contains("您的用户名并不存在，或者您的密码错误")) {
-                        runOnUiThread(() -> {
-                            Intent resultIntent = new Intent();
-                            activity.setResult(Activity.RESULT_CANCELED, resultIntent);
-                            activity.finish();
-                            //Toast.makeText(WebviewLoginActivity.this, "您的用户名并不存在，\n或者您的密码错误!", Toast.LENGTH_LONG).show();
-                            NewToast.makeText(WebviewLoginActivity.this, "您的用户名并不存在，\n或者您的密码错误!", Toast.LENGTH_LONG);
-                        });
+                        Intent resultIntent = new Intent();
+                        activity.setResult(Activity.RESULT_CANCELED, resultIntent);
+                        activity.finish();
+                        //Toast.makeText(WebviewLoginActivity.this, "您的用户名并不存在，\n或者您的密码错误!", Toast.LENGTH_LONG).show();
+                        NewToast.makeText(WebviewLoginActivity.this, "您的用户名并不存在，\n或者您的密码错误!", Toast.LENGTH_LONG);
                     } else if (html.contains("登陆成功")){
-                        // 登录成功
-                        runOnUiThread(() -> {
-                            Intent resultIntent = new Intent();
-                            activity.setResult(Activity.RESULT_OK, resultIntent);
-                            activity.finish();
-                        });
+                        mWebView.setVisibility(WebView.GONE);
+                        Intent resultIntent = new Intent();
+                        activity.setResult(Activity.RESULT_OK, resultIntent);
+                        activity.finish();
+                    }  else if (html.contains("504 Gateway Time-out")) {
+                        // Handle 504 server timeout error
+                        NewToast.makeText(WebviewLoginActivity.this, "服务器网关超时，请稍后再试。", Toast.LENGTH_LONG);
+                        Intent resultIntent = new Intent();
+                        activity.setResult(Activity.RESULT_CANCELED, resultIntent);
+                        activity.finish();
+                    } else {
+                        Log.d("zSMTH-v",html);
                     }
                 });
             }
@@ -98,5 +103,15 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
         else if(SMTH_WWW_URL.contains("mysmth"))
             url= "https://m.mysmth.net/index";
         mWebView.loadUrl(url);
+    }
+
+    // === Handle no server response after login request ===
+    public void onLoginNoResponse() {
+        runOnUiThread(() -> {
+            NewToast.makeText(this, "登录请求无响应，请检查网络或重试", Toast.LENGTH_LONG);
+            Intent resultIntent = new Intent();
+            setResult(Activity.RESULT_CANCELED, resultIntent);
+            finish();
+        });
     }
 }

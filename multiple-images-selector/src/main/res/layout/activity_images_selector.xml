@@ -7,7 +7,8 @@
     <include
         layout="@layout/selector_custom_actionbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/top_actionbar_height"/>
+        android:layout_height="@dimen/top_actionbar_height"
+        android:layout_marginTop="?attr/actionBarSize"/>
 
     <FrameLayout
         android:id="@+id/selector_content"

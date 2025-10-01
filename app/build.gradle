@@ -18,9 +18,9 @@ android {
         applicationId "com.zfdang.zsmth_android"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
+        compileSdkVersion rootProject.compileSdkVersion
         versionCode gitVersion
         versionName appVersion
-        compileSdk rootProject.compileSdkVersion
         // Enabling multidex support.
         multiDexEnabled true
     }
@@ -112,9 +112,9 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.RXANDROID2_VERSION"
 
     // (Java only)
-    implementation "androidx.work:work-runtime:2.10.3"
+    implementation "androidx.work:work-runtime:2.10.4"
     // optional - RxJava2 support
-    implementation "androidx.work:work-rxjava2:2.10.3"
+    implementation "androidx.work:work-rxjava2:2.10.4"
     // OkHttp
     implementation "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
     implementation "com.squareup.okhttp3:logging-interceptor:$OKHTTP_VERSION"
@@ -131,7 +131,7 @@ dependencies {
 
     // other dependencies
     implementation 'com.github.maksim88:PasswordEditText:0.9'
-    implementation 'org.jsoup:jsoup:1.21.1'
+    implementation 'org.jsoup:jsoup:1.21.2'
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
     implementation 'me.relex:circleindicator:2.1.6'
 
