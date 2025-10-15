@@ -1,6 +1,9 @@
 package com.zfdang.zsmth_android;
 
 import android.app.Activity;
+import android.os.Handler;
+import android.os.Looper;
+import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
@@ -17,15 +20,21 @@ public class WebviewLoginClient extends WebViewClient {
     private final String password;
 
     Activity activity;
+    private final Handler loginTimeoutHandler;
+    private Runnable loginTimeoutRunnable;
 
     public WebviewLoginClient(Activity activity, String username, String password) {
         this.activity = activity;
         this.username = username;
         this.password = password;
+        // Initialize timeout handler
+        loginTimeoutHandler = new Handler(Looper.getMainLooper());
     }
+
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
         //Log.d(TAG, "shouldOverrideUrlLoading" + request.getUrl().toString());
+        cancelLoginTimeout();
         if (request.getUrl().toString().startsWith("https://m.newsmth.net/index?m=")
                 ||request.getUrl().toString().startsWith("https://m.mysmth.net/index?m=")){
             return false;
@@ -61,6 +70,17 @@ public class WebviewLoginClient extends WebViewClient {
                     "document.getElementById('TencentCaptcha').click();";
             view.evaluateJavascript(js, s -> {
             });
+            // === Add login timeout monitoring ===
+            // Cancel existing timeout (if any)
+            cancelLoginTimeout();
+            // Start new timeout: 10 seconds
+            loginTimeoutRunnable = () -> {
+                // Notify activity of no response
+                if (activity instanceof WebviewLoginActivity) {
+                    ((WebviewLoginActivity) activity).onLoginNoResponse();
+                }
+            };
+            loginTimeoutHandler.postDelayed(loginTimeoutRunnable, 50000);
 
         } else  if (url.equals("https://www.newsmth.net/nForum/login")) {
             final String js = "javascript: " +
@@ -79,11 +99,26 @@ public class WebviewLoginClient extends WebViewClient {
                 url.equals("https://m.mysmth.net/user/login")||
                 url.startsWith("https://m.newsmth.net/index?m=")||
                 url.startsWith("https://m.mysmth.net/index?m=")) {
-            view.setVisibility(WebView.GONE);
+            //view.setVisibility(WebView.GONE);
             final String js = "javascript: " +
                     "setTimeout(function() { window.HtmlViewer.showHTML(document.body.innerHTML); },100);";
             view.evaluateJavascript(js, null);
         }
         super.onPageFinished(view, url);
+    }
+
+    // === Helper method to cancel timeout ===
+    private void cancelLoginTimeout() {
+        if (loginTimeoutRunnable != null) {
+            loginTimeoutHandler.removeCallbacks(loginTimeoutRunnable);
+            loginTimeoutRunnable = null;
+        }
+    }
+
+    @Override
+    public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+        super.onReceivedError(view, request, error);
+        // === Cancel timeout on network error ===
+        cancelLoginTimeout();
     }
 }

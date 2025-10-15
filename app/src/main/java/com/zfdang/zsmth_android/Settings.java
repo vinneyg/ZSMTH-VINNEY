@@ -512,7 +512,7 @@ public class Settings {
       mEditor.commit();
     }
   }
-  
+
   private static final String OPEN_TOPIC_ADD = "OPEN_TOPIC_ADD";
   private boolean bOpenTopicAdd;
 
@@ -677,7 +677,7 @@ public class Settings {
   }
 
 
-    private SharedPreferences.Editor mEditor;
+  private SharedPreferences.Editor mEditor;
 
 
   // Singleton
@@ -694,8 +694,8 @@ public class Settings {
   // load all settings from SharedPreference
   private void initSettings() {
     // this
-      String preference_Name = "ZSMTH_Config";
-      SharedPreferences mPreference = SMTHApplication.getAppContext().getSharedPreferences(preference_Name, Activity.MODE_PRIVATE);
+    String preference_Name = "ZSMTH_Config";
+    SharedPreferences mPreference = SMTHApplication.getAppContext().getSharedPreferences(preference_Name, Activity.MODE_PRIVATE);
     mEditor = mPreference.edit();
 
     // load all values from preference to variables

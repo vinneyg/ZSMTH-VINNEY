@@ -11,11 +11,19 @@ public class NewToast {
 
     public static void makeText(Context context, String message, int duration) {
         int color = ContextCompat.getColor(context, R.color.colorPrimary);
-        makeText(context, message, duration, color);
+        String formattedMessage = message.replace("\\n", "\n");
+        if (formattedMessage.length() > 25) {
+            formattedMessage = formattedMessage.substring(0, 22) + "...";
+        }
+        makeText(context, formattedMessage, duration, color);
     }
 
     public static void makeText(Context context, String message, int duration, @ColorInt int backgroundColor) {
-        Toast toast = Toast.makeText(context, message, duration);
+        String formattedMessage = message.replace("\\n", "\n");
+        if (formattedMessage.length() > 25) {
+            formattedMessage = formattedMessage.substring(0, 22) + "...";
+        }
+        Toast toast = Toast.makeText(context, formattedMessage, duration);
         try {
             View view = toast.getView();
             if (view != null) {

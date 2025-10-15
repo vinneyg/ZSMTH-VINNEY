@@ -515,17 +515,17 @@ public class ComposePostActivity extends SMTHBaseActivity {
 
   public void onBackAction() {
     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ComposePostActivity.this,R.style.MyDialogStyle);
-    alertDialogBuilder.setTitle("退出确认")
-            .setMessage("结束编辑，或者停留在当前界面继续编辑？")
+    alertDialogBuilder.setTitle("放弃编辑")
+            .setMessage("将删除已录入的内容")
             .setCancelable(false)
-            .setPositiveButton("结束编辑", (dialog, id) -> {
+            .setNegativeButton("放弃编辑", (dialog, id) -> {
               // if this button is clicked, close current activity
               KeyboardLess.$hide(ComposePostActivity.this, mContent);
               mContent.setText("");
               clearPostContentCache();
               ComposePostActivity.this.finish();
             })
-            .setNegativeButton("继续编辑", (dialog, id) -> {
+            .setPositiveButton("继续编辑", (dialog, id) -> {
               // if this button is clicked, just close the dialog box and do nothing
               dialog.cancel();
             })
