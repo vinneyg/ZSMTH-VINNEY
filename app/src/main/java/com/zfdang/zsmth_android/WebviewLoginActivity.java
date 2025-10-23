@@ -3,10 +3,13 @@ package com.zfdang.zsmth_android;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -22,7 +25,6 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
     private final String SMTH_WWW_URL = SMTHApplication.getWebAddress();
     private String username;
     private String password;
-
     Activity activity;
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -49,6 +51,11 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
         mWebView.getSettings().setGeolocationEnabled(false);
         mWebView.getSettings().setJavaScriptEnabled(true);
 
+        //Update Cookie Manager
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        cookieManager.setAcceptThirdPartyCookies(mWebView, true);
+
         // https://stackoverflow.com/questions/9602124/enable-horizontal-scrolling-in-a-webview
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
@@ -65,7 +72,13 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
                 view.requestFocus();
             }
         });
-        mWebView.setWebViewClient(new WebviewLoginClient(this, username, password));
+
+        mWebView.setWebViewClient(new WebviewLoginClient(this, username, password) {
+            @Override
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                handler.proceed(); // 忽略 SSL 错误
+            }
+        });
 
         mWebView.addJavascriptInterface(new Object() {
             @JavascriptInterface
@@ -77,7 +90,7 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
                         activity.finish();
                         //Toast.makeText(WebviewLoginActivity.this, "您的用户名并不存在，\n或者您的密码错误!", Toast.LENGTH_LONG).show();
                         NewToast.makeText(WebviewLoginActivity.this, "您的用户名并不存在，\n或者您的密码错误!", Toast.LENGTH_LONG);
-                    } else if (html.contains("登陆成功")){
+                    } else if (html.contains("登陆成功")||html.contains("登录成功")){
                         mWebView.setVisibility(WebView.GONE);
                         Intent resultIntent = new Intent();
                         activity.setResult(Activity.RESULT_OK, resultIntent);

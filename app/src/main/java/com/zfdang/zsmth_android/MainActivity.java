@@ -1026,6 +1026,7 @@ public class MainActivity extends SMTHBaseActivity
     if (id == R.id.nav_user_avatar || id == R.id.nav_user_name) {
       if (mDrawer.isDrawerOpen(GravityCompat.START)) {
         mDrawer.closeDrawer(GravityCompat.START);
+        /*
         mDrawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
           @Override
           public void onDrawerClosed(View drawerView) {
@@ -1043,6 +1044,17 @@ public class MainActivity extends SMTHBaseActivity
             mDrawer.removeDrawerListener(this);
           }
         });
+
+        */
+        // 直接跳转，不等待抽屉完全关闭
+        if (SMTHApplication.activeUser != null && !SMTHApplication.activeUser.getId().equals("guest")) {
+          Intent intent = new Intent(MainActivity.this, QueryUserActivity.class);
+          intent.putExtra(SMTHApplication.QUERY_USER_INFO, SMTHApplication.activeUser.getId());
+          startActivity(intent);
+          overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        } else {
+          onLogin();
+        }
       }
     }else{
       if (SMTHApplication.activeUser != null && !SMTHApplication.activeUser.getId().equals("guest")) {
