@@ -746,7 +746,7 @@ public class Settings {
     bRef = mPreference.getBoolean(Target_Ref,false);
     bAtt = mPreference.getBoolean(Target_Att,false);
     bLeftNavSlide = mPreference.getBoolean(left_nav_slide,false);
-    bLoginWithVerification = mPreference.getBoolean(LOGIN_WITH_VERIFICATION, true);
+    bLoginWithVerification = mPreference.getBoolean(LOGIN_WITH_VERIFICATION, false);
     bSslVerification = mPreference.getBoolean(SSL_VERIFICATION, false);
   }
 }
