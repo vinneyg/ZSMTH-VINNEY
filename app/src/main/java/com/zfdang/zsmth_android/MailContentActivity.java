@@ -137,12 +137,16 @@ public class MailContentActivity extends AppCompatActivity {
         mViewGroup.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
         // 设置初始位置在屏幕右侧
-        mViewGroup.setTranslationX(mViewGroup.getWidth());
+        mViewGroup.setTranslationX((float) mViewGroup.getWidth() /3);
         // 执行从右到左的动画
+
+        mViewGroup.setAlpha(0f); // 初始透明度为0
         mViewGroup.animate()
-                .translationX(0) // 移动到正常位置
-                .setDuration(200) // 动画时长 500 毫秒
-                .setStartDelay(50) // 延迟 100 毫秒开始动画
+                .translationX(0)
+                .alpha(1f) // 最终透明度为1
+                .setDuration(300)
+                .setStartDelay(50)
+                .setInterpolator(new android.view.animation.DecelerateInterpolator())
                 .start();
       }
     });

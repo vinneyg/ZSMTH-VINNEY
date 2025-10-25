@@ -232,11 +232,15 @@ public class BoardTopicActivity extends SMTHBaseActivity
             @Override
             public void onGlobalLayout() {
                 // 添加 RecyclerView 从右往左的动画
-                mRecyclerView.setTranslationX(mRecyclerView.getWidth()); // 初始位置在屏幕右侧
+                mRecyclerView.setTranslationX((float) mRecyclerView.getWidth() /3); // 初始位置在屏幕右侧
+
+                mRecyclerView.setAlpha(0f); // 初始透明度为0
                 mRecyclerView.animate()
-                        .translationX(0) // 移动到正常位置
-                        .setDuration(200) // 动画时长 500 毫秒
-                        .setStartDelay(50) // 延迟 100 毫秒开始动画
+                        .translationX(0)
+                        .alpha(1f) // 最终透明度为1
+                        .setDuration(300)
+                        .setStartDelay(50)
+                        .setInterpolator(new android.view.animation.DecelerateInterpolator())
                         .start();
 
                 mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);

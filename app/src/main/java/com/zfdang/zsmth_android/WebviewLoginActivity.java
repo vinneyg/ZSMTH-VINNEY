@@ -26,6 +26,7 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
     private String username;
     private String password;
     Activity activity;
+    private boolean hasShownToast = false;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -63,17 +64,41 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
         mWebView.getSettings().setSupportZoom(true);
         mWebView.getSettings().setBuiltInZoomControls(true);
 
-        mWebView.setWebChromeClient(new WebChromeClient()
-        {
+        mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
-            public void onProgressChanged(WebView view, int newProgress)
-            {
+            public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
                 view.requestFocus();
             }
+
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, android.webkit.JsResult result) {
+                if (message.contains("用户名") || message.contains("密码") || message.contains("错误")) {
+                    // 取消alert弹窗
+                    result.cancel();
+
+                    runOnUiThread(() -> {
+                        if (!hasShownToast) {
+                            hasShownToast = true;
+                            NewToast.makeText(WebviewLoginActivity.this, "登录失败，请检查用户名和密码", Toast.LENGTH_LONG);
+                        }
+
+                        Intent resultIntent = new Intent();
+                        activity.setResult(Activity.RESULT_CANCELED, resultIntent);
+                        activity.finish();
+                    });
+
+                    return true; // 表示已处理该alert
+                }
+
+                // 对于其他alert，正常处理
+                return super.onJsAlert(view, url, message, result);
+            }
         });
 
+
         mWebView.setWebViewClient(new WebviewLoginClient(this, username, password) {
+            @SuppressLint("WebViewClientOnReceivedSslError")
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
                 handler.proceed(); // 忽略 SSL 错误
@@ -90,7 +115,7 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
                         activity.finish();
                         //Toast.makeText(WebviewLoginActivity.this, "您的用户名并不存在，\n或者您的密码错误!", Toast.LENGTH_LONG).show();
                         NewToast.makeText(WebviewLoginActivity.this, "您的用户名并不存在，\n或者您的密码错误!", Toast.LENGTH_LONG);
-                    } else if (html.contains("登陆成功")||html.contains("登录成功")){
+                    } else if (html.contains("登陆成功")||html.contains("登录成功")|| html.contains("退出登录")){
                         mWebView.setVisibility(WebView.GONE);
                         Intent resultIntent = new Intent();
                         activity.setResult(Activity.RESULT_OK, resultIntent);
@@ -115,6 +140,10 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
             url= "https://m.newsmth.net/index";
         else if(SMTH_WWW_URL.contains("mysmth"))
             url= "https://m.mysmth.net/index";
+
+        if(!Settings.getInstance().isLoginWithVerification())
+            url= "https://www.newsmth.net/index.html";
+
         mWebView.loadUrl(url);
     }
 
@@ -127,4 +156,5 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
             finish();
         });
     }
+
 }

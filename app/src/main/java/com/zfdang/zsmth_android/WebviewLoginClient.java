@@ -3,6 +3,8 @@ package com.zfdang.zsmth_android;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
+import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -35,6 +37,9 @@ public class WebviewLoginClient extends WebViewClient {
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
         //Log.d(TAG, "shouldOverrideUrlLoading" + request.getUrl().toString());
         cancelLoginTimeout();
+        if (request.getUrl().toString().contains("bbslogin1203.php")) {
+            return false;
+        }
         if (request.getUrl().toString().startsWith("https://m.newsmth.net/index?m=")
                 ||request.getUrl().toString().startsWith("https://m.mysmth.net/index?m=")){
             return false;
@@ -53,7 +58,7 @@ public class WebviewLoginClient extends WebViewClient {
 
     public void onPageFinished(WebView view, String url) {
         if (url == null || view == null) return;
-        // Log.d(TAG, "onPageFinished" + url);
+        //Log.d(TAG, "onPageFinished" + url);
         if (url.equals("https://m.newsmth.net/index")||url.equals("https://m.mysmth.net/index")) {
             // login page, input id and passwd automatically
             final String js = "javascript: " +
@@ -103,6 +108,38 @@ public class WebviewLoginClient extends WebViewClient {
             final String js = "javascript: " +
                     "setTimeout(function() { window.HtmlViewer.showHTML(document.body.innerHTML); },100);";
             view.evaluateJavascript(js, null);
+        } else if (url.startsWith("https://www.newsmth.net/nForum")) {
+            final String js = "javascript: " +
+                    "setTimeout(function() { window.HtmlViewer.showHTML(document.body.innerHTML); },100);";
+            view.evaluateJavascript(js, null);
+        } else if(url.equals("https://www.newsmth.net/index.html")){
+            final String js = "javascript: " +
+                    "setTimeout(function() {" +
+                    "  try {" +
+                    "    var mainFrame = window.frames['mainFrame'] || window.frames[0];" +
+                    "    if (mainFrame && mainFrame.document) {" +
+                    "      var frameDoc = mainFrame.document;" +
+                    "      var form = frameDoc.form1;" +
+                    "      if (form && form.id && form.passwd) {" +
+                    "        form.id.value = '" + this.username + "';" +
+                    "        form.passwd.value = '" + this.password + "';" +
+                    "        var submitBtn = frameDoc.getElementById('submit1');" +
+                    "        if (submitBtn) {" +
+                    "          submitBtn.click();" +
+                    "        }" +
+                    "      } else {" +
+                    "        console.log('Form elements not found in mainFrame');" +
+                    "      }" +
+                    "    } else {" +
+                    "      console.log('mainFrame or its document not accessible');" +
+                    "    }" +
+                    "  } catch(e) {" +
+                    "    console.log('Auto login error: ' + e);" +
+                    "  }" +
+                    "}, 100);";
+
+            view.evaluateJavascript(js, s -> {
+            });
         }
         super.onPageFinished(view, url);
     }

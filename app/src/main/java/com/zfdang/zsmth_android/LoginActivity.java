@@ -136,7 +136,7 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
                 NewToast.makeText(SMTHApplication.getAppContext(), "请输入用户名/密码！", Toast.LENGTH_SHORT);
             } else {
                 // use two methods for login: with verification, or simple login
-                if(Settings.getInstance().isLoginWithVerification()) {
+                //if(Settings.getInstance().isLoginWithVerification()) {
                     // login with gesture verification
                     // save info if selected
                     boolean saveinfo = mSaveInfo.isChecked();
@@ -158,12 +158,15 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
                     intent.putExtra(PASSWORD, password);
                     //startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
                     mActivityLoginResultLauncher.launch(intent);
-                } else {
+                //}
+                /*
+                else {
                     // simple login
                     Settings.getInstance().setSaveInfo(mSaveInfo.isChecked());
                     Settings.getInstance().setLastLoginSuccess(false);
                     attemptLoginFromWWW(username, password);
                 }
+                */
             }
         }
     }
