@@ -108,8 +108,9 @@ public class PostListActivity extends SMTHBaseActivity
     private String mFilterUser = null;
 
     private static Topic mTopic = null;
-    private static int lastOffset =0;
-    private static int lastPosition =0;
+
+    private static final HashMap<String, Integer> lastPositions = new HashMap<>();
+    private static final HashMap<String, Integer> lastOffsets = new HashMap<>();
 
     static private final int POST_PER_PAGE = 10;
 
@@ -156,18 +157,29 @@ public class PostListActivity extends SMTHBaseActivity
      */
 
     private void getPositionAndOffset() {
-        LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
-        //Get first visible view
-        View topView = Objects.requireNonNull(layoutManager).getChildAt(0);
-        if(topView != null) {
-            lastOffset = topView.getTop();
-            lastPosition = layoutManager.getPosition(topView);
+        if (mRecyclerView.getLayoutManager() != null && mTopic != null) {
+            LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+            View topView = layoutManager.getChildAt(0);
+            if (topView != null) {
+                int offset = topView.getTop();
+                int position = layoutManager.getPosition(topView);
+
+                lastPositions.put(mTopic.getTopicID(), position);
+                lastOffsets.put(mTopic.getTopicID(), offset);
+            }
         }
     }
 
     private void scrollToPosition() {
-        if(mRecyclerView.getLayoutManager() != null && lastPosition >= 0) {
-            ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(lastPosition, lastOffset);
+        if(mRecyclerView.getLayoutManager() != null && mTopic != null) {
+            String topicId = mTopic.getTopicID();
+            if (lastPositions.containsKey(topicId) && lastOffsets.containsKey(topicId)) {
+                Integer position = lastPositions.get(topicId);
+                Integer offset = lastOffsets.get(topicId);
+                if (position != null && offset != null) {
+                    ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position, offset);
+                }
+            }
         }
     }
 
@@ -292,11 +304,9 @@ public class PostListActivity extends SMTHBaseActivity
                 int firstVisiblePos = layoutManager.findFirstVisibleItemPosition();
                 if (firstVisiblePos == RecyclerView.NO_POSITION) return false;
 
-                // 获取对应的 View
                 View firstVisibleView = layoutManager.findViewByPosition(firstVisiblePos);
                 if (firstVisibleView == null) return false;
 
-                // 查找 post_author 控件
                 View targetView = firstVisibleView.findViewById(R.id.post_author);
                 if (targetView == null) return false;
 
@@ -316,19 +326,16 @@ public class PostListActivity extends SMTHBaseActivity
                     return false;
                 }
 
-                // 其他情况继续交给 GestureDetector 处理
                 mGestureDetector.onTouchEvent(e);
                 return false;
             }
 
             @Override
             public void onTouchEvent(@androidx.annotation.NonNull  RecyclerView rv, @androidx.annotation.NonNull MotionEvent e) {
-                // 可选实现
             }
 
             @Override
             public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-                // 可选实现
             }
         });
 
@@ -366,7 +373,6 @@ public class PostListActivity extends SMTHBaseActivity
                         getPositionAndOffset();
                     }
                     if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                        // 处理用户手动拖动列表的情况
                         if (mRefreshLayout.isLoading()) {
                             mRefreshLayout.finishLoadMore();
                         }
@@ -499,13 +505,6 @@ public class PostListActivity extends SMTHBaseActivity
             public void onGlobalLayout() {
                 // 添加 RecyclerView 从右往左的动画
                 mRecyclerView.setTranslationX(mRecyclerView.getWidth()); // 初始位置在屏幕右侧
-                /*
-                mRecyclerView.animate()
-                        .translationX(0) // 移动到正常位置
-                        .setDuration(200) // 动画时长 500 毫秒
-                        .setStartDelay(50) // 延迟 100 毫秒开始动画
-                        .start();
-                */
 
                 mRecyclerView.setAlpha(0f); // 初始透明度为0
                 mRecyclerView.animate()
@@ -873,6 +872,12 @@ public class PostListActivity extends SMTHBaseActivity
                                 clearLoadingHints();
                                 SMTHApplication.deletionCount++;
                                 isLoading = false;
+
+                                // 数据加载完成后恢复位置
+                                if (!PostListContent.POSTS.isEmpty()) {
+                                    scrollToPosition();
+                                }
+
 
                                 // 确保 RecyclerView 刷新
                                 Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
@@ -1911,5 +1916,11 @@ public class PostListActivity extends SMTHBaseActivity
         intent.putExtra(SMTHApplication.READ_MODE,mReadMode);
         mActivityPostResultLauncher.launch(intent);
         overridePendingTransition(0, 0);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getPositionAndOffset();
     }
 }
