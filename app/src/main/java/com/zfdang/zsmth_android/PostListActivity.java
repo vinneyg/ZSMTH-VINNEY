@@ -79,8 +79,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -109,9 +111,19 @@ public class PostListActivity extends SMTHBaseActivity
 
     private static Topic mTopic = null;
 
-    private static final HashMap<String, Integer> lastPositions = new HashMap<>();
-    private static final HashMap<String, Integer> lastOffsets = new HashMap<>();
-
+    private static final int MAX_CACHE_SIZE = 1000;
+    private static final LinkedHashMap<String, Integer> lastPositions = new LinkedHashMap<String, Integer>(512, 0.75f, true) {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<String, Integer> eldest) {
+            return size() > MAX_CACHE_SIZE;
+        }
+    };
+    private static final LinkedHashMap<String, Integer> lastOffsets = new LinkedHashMap<String, Integer>(512, 0.75f, true) {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<String, Integer> eldest) {
+            return size() > MAX_CACHE_SIZE;
+        }
+    };
     static private final int POST_PER_PAGE = 10;
 
     static {
@@ -164,8 +176,9 @@ public class PostListActivity extends SMTHBaseActivity
                 int offset = topView.getTop();
                 int position = layoutManager.getPosition(topView);
 
-                lastPositions.put(mTopic.getTopicID(), position);
-                lastOffsets.put(mTopic.getTopicID(), offset);
+                String topicId = mTopic.getTopicID();
+                lastPositions.put(topicId, position);
+                lastOffsets.put(topicId, offset);
             }
         }
     }
