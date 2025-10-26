@@ -21,7 +21,6 @@ android {
         compileSdkVersion rootProject.compileSdkVersion
         versionCode gitVersion
         versionName appVersion
-        // Enabling multidex support.
         multiDexEnabled true
     }
     signingConfigs {

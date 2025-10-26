@@ -10,7 +10,6 @@ android {
 
     defaultConfig {
         compileSdkVersion rootProject.compileSdkVersion
-        //buildToolsVersion rootProject.buildToolsVersion
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
     }
