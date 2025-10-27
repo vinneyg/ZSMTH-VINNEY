@@ -74,8 +74,8 @@
     <activity
         android:name=".PostListActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
+        android:hardwareAccelerated="false"
         android:label="@string/title_topic_detail"
-        android:launchMode="standard"
         android:theme="@style/AppTheme.NoActionBar" />
     <activity
         android:name=".ComposePostActivity"

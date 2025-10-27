@@ -224,10 +224,10 @@ public class PostListActivity extends SMTHBaseActivity
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 if (fragmentManager.getBackStackEntryCount() > 0) {
                     fragmentManager.popBackStack();
-                    overridePendingTransition(0, 0);
+                    //overridePendingTransition(0, 0);
                 } else {
                     PostListActivity.this.finish();
-                    overridePendingTransition(0, 0);
+                    //overridePendingTransition(0, 0);
                     //overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 }
             }
