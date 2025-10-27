@@ -19,6 +19,9 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -745,6 +748,12 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     @Override
     public void onResume() {
         super.onResume();
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            if (getListView() != null) {
+                getListView().invalidate();
+            }
+        }, 100);
+
         preferenceScrollPosition = loadScrollPosition();
 
         View rootView = getView();

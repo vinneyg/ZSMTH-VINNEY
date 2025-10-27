@@ -25,6 +25,8 @@
 
     <item name="windowActionBar">false</item>
     <item name="windowNoTitle">true</item>
+    <item name="android:statusBarColor">@color/colorPrimary</item>
+    <item name="preferenceTheme">@style/MyPreferenceThemeOverlay</item>
 
     <!-- Set theme colors from http://www.google.com/design/spec/style/color.html#color-color-palette-->
     <!-- colorPrimary is used for the default action bar background -->
@@ -124,6 +126,8 @@
     <item name="android:textColorSecondary">@color/colorPrimary</item>
     <item name="colorControlNormal">@color/colorPrimaryDark</item>
     <item name="colorControlActivated">@color/colorAccent</item>
+    <item name="android:textColorPrimary">@color/status_text_night</item>
+    <item name="colorAccent">@color/colorAccent</item>
   </style>
 
   <!--activity animation style-->

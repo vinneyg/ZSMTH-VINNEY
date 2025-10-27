@@ -721,7 +721,7 @@ public class Settings {
     mTarget = mPreference.getString(FORWARD_TAEGET, "");
     bUserOnline = mPreference.getBoolean(USER_ONLINE, false);
     bLoadOriginalImage = mPreference.getBoolean(LOAD_ORIGINAL_IMAGE, false);
-    bImageSourceCDN = mPreference.getBoolean(IMAGE_SOURCE_CDN, false);
+    bImageSourceCDN = mPreference.getBoolean(IMAGE_SOURCE_CDN, true);
     bNightMode = mPreference.getBoolean(NIGHT_MODE, false);
     bDiffReadTopic = mPreference.getBoolean(DIFF_READ_TOPIC, true);
     iLastVersion = mPreference.getInt(LAST_LAUNCH_VERSION, 0);
