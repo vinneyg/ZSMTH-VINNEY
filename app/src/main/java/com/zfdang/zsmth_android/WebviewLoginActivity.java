@@ -94,6 +94,7 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
                 // 对于其他alert，正常处理
                 return super.onJsAlert(view, url, message, result);
             }
+
         });
 
 
@@ -141,8 +142,9 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
         else if(SMTH_WWW_URL.contains("mysmth"))
             url= "https://m.mysmth.net/index";
 
-        if(!Settings.getInstance().isLoginWithVerification())
+        if(!Settings.getInstance().isLoginWithVerification()){
             url= "https://www.newsmth.net/index.html";
+        }
 
         mWebView.loadUrl(url);
     }

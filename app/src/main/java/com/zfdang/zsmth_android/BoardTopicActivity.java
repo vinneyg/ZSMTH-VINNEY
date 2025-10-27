@@ -12,7 +12,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.FragmentManager;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import androidx.appcompat.app.ActionBar;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,7 +23,6 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewTreeObserver;
 import android.widget.Toast;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.NewToast;
@@ -135,7 +133,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                 } else {
                     // 移除滑动状态检查直接执行关闭
                     BoardTopicActivity.this.finish();
-                    overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                    //overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 }
 
             }
@@ -200,8 +198,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
             Log.e(TAG, "mRecyclerView is null");
             return;
         }
-        //mRecyclerView.setItemAnimator(null);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setItemAnimator(null);
+        //mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL, 0));
         LinearLayoutManager linearLayoutManager = new WrapContentLinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -228,26 +226,6 @@ public class BoardTopicActivity extends SMTHBaseActivity
         };
         mRecyclerView.addOnScrollListener(mScrollListener);
 
-        mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                // 添加 RecyclerView 从右往左的动画
-                mRecyclerView.setTranslationX((float) mRecyclerView.getWidth() /3); // 初始位置在屏幕右侧
-
-                mRecyclerView.setAlpha(0f); // 初始透明度为0
-                mRecyclerView.animate()
-                        .translationX(0)
-                        .alpha(1f) // 最终透明度为1
-                        .setDuration(300)
-                        .setStartDelay(50)
-                        .setInterpolator(new android.view.animation.DecelerateInterpolator())
-                        .start();
-
-                mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
-        });
-
-
         ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
             @Override
             public int getMovementFlags(@androidx.annotation.NonNull @NonNull RecyclerView recyclerView, @androidx.annotation.NonNull @NonNull RecyclerView.ViewHolder viewHolder) {
@@ -265,7 +243,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                 if (direction == ItemTouchHelper.RIGHT || direction == ItemTouchHelper.LEFT) {
                     // 从左向右滑动，执行返回操作
                     BoardTopicActivity.this.finish();
-                    overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                    //overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 }
             }
 
@@ -370,7 +348,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
             } else {
                 // 移除滑动状态检查直接执行关闭
                 BoardTopicActivity.this.finish();
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                //overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
             return true;
         } else if (id == R.id.board_topic_action_sticky) {

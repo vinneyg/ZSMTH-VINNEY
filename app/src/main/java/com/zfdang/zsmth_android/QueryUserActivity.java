@@ -61,6 +61,7 @@ public class QueryUserActivity extends SMTHBaseActivity {
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_query_user);
+
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
@@ -119,7 +120,7 @@ public class QueryUserActivity extends SMTHBaseActivity {
           if (Math.abs(diffX) > (Math.abs(diffY) +(float)SWIPE_THRESHOLD/2)){
             if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
               finish();
-              overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+              //overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
           }
         } catch (Exception exception) {
@@ -171,7 +172,7 @@ public class QueryUserActivity extends SMTHBaseActivity {
     if (code == android.R.id.home) {
       //onBackPressed();
       finish();
-      overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+      //overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     } else if (code == R.id.query_user_action_message) {
       // write mail to current user
       ComposePostContext postContext = new ComposePostContext();

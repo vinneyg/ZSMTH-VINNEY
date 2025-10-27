@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -129,27 +128,6 @@ public class MailContentActivity extends AppCompatActivity {
     updateButtonVisibility();
     mPostMoreButton.setOnClickListener(v -> handleReplyMenuItem());
 
-    // 使用 ViewTreeObserver 确保在布局完成后执行动画
-    mViewGroup.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-      @Override
-      public void onGlobalLayout() {
-        // 移除监听器，避免重复触发
-        mViewGroup.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-        // 设置初始位置在屏幕右侧
-        mViewGroup.setTranslationX((float) mViewGroup.getWidth() /3);
-        // 执行从右到左的动画
-
-        mViewGroup.setAlpha(0f); // 初始透明度为0
-        mViewGroup.animate()
-                .translationX(0)
-                .alpha(1f) // 最终透明度为1
-                .setDuration(300)
-                .setStartDelay(50)
-                .setInterpolator(new android.view.animation.DecelerateInterpolator())
-                .start();
-      }
-    });
   }
 
   @Override
@@ -171,7 +149,7 @@ public class MailContentActivity extends AppCompatActivity {
                   && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD
                   && diffX != 0) {
             finish();
-            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+            //overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             return true;
           }
         }
@@ -378,12 +356,12 @@ public class MailContentActivity extends AppCompatActivity {
 
       Intent intent = createBoardTopicIntent(board);
       startActivity(intent);
-      overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+      //overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
       finish();
     } else {
       //onBackPressed();
       finish();
-      overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+      //overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
   }
 

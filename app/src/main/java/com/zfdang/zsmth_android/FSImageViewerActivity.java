@@ -169,7 +169,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
                 mViewPager.setCurrentItem(current - 1, true);
               } else {
                 finish(); // 第一张图片右滑退出
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                //overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
               }
             } else {
               // 左滑，下一张图片
@@ -177,7 +177,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
                 mViewPager.setCurrentItem(current + 1, true);
               } else {
                 finish(); // 最后一张图片左滑退出
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                //overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
               }
             }
             return true;

@@ -48,7 +48,7 @@ public class RecyclerViewGestureListener extends GestureDetector.SimpleOnGesture
                 Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD ) {
           isFinishing = true;
           activity.finish();
-          activity.overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+          //activity.overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
           return true;
         }
       }

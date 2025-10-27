@@ -18,7 +18,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -89,6 +88,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     }
     mRecyclerView.setAdapter(mAdapter);
 
+    /*
     mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
       @Override
       public void onGlobalLayout() {
@@ -107,6 +107,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
         mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
       }
     });
+    */
 
     SearchView mSearchView = view.findViewById(R.id.all_board_search);
     mSearchView.setIconifiedByDefault(false);

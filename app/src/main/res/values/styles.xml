@@ -25,6 +25,7 @@
 
     <item name="windowActionBar">false</item>
     <item name="windowNoTitle">true</item>
+    <item name="android:statusBarColor">@color/colorPrimary</item>
 
     <!-- Set theme colors from http://www.google.com/design/spec/style/color.html#color-color-palette-->
     <!-- colorPrimary is used for the default action bar background -->

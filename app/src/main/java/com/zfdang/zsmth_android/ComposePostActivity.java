@@ -96,7 +96,6 @@ public class ComposePostActivity extends SMTHBaseActivity {
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_compose_post);
-
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
@@ -503,7 +502,8 @@ public class ComposePostActivity extends SMTHBaseActivity {
                             ComposePostActivity.this.finish();
                           } else {
                             //Toast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT).show();
-                            NewToast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT);
+                              assert message != null;
+                              NewToast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT);
                             if(SMTHApplication.bNewMailSent)
                               SMTHApplication.bNewMailSent = false;
 

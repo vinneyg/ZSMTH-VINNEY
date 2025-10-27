@@ -23,7 +23,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.Toast;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
@@ -128,27 +127,6 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
     mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 0));
     mRecyclerView.setAdapter(new MailRecyclerViewAdapter(MailListContent.MAILS, mListener));
-
-    mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-      @Override
-      public void onGlobalLayout() {
-        mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-        if (!MailListContent.MAILS.isEmpty()) {
-          mRecyclerView.setTranslationX((float) mRecyclerView.getWidth() /3);
-
-          mRecyclerView.setAlpha(0f); // 初始透明度为0
-          mRecyclerView.animate()
-                  .translationX(0)
-                  .alpha(1f) // 最终透明度为1
-                  .setDuration(300)
-                  .setStartDelay(50)
-                  .setInterpolator(new android.view.animation.DecelerateInterpolator())
-                  .start();
-
-        }
-      }
-    });
 
     // enable endless loading
     mScrollListener = new EndlessRecyclerOnScrollListener(linearLayoutManager) {
@@ -440,28 +418,6 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
           mRefreshLayout.finishRefresh(true);
         }
 
-        mRecyclerView.smoothScrollToPosition(0);
-        if (!MailListContent.MAILS.isEmpty() && mRecyclerView != null) {
-          mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-              // 移除监听器，避免重复触发
-              mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-              mRecyclerView.setTranslationX((float) mRecyclerView.getWidth() /3);
-
-              mRecyclerView.setAlpha(0f); // 初始透明度为0
-              mRecyclerView.animate()
-                      .translationX(0)
-                      .alpha(1f) // 最终透明度为1
-                      .setDuration(300)
-                      .setStartDelay(50)
-                      .setInterpolator(new android.view.animation.DecelerateInterpolator())
-                      .start();
-            }
-          });
-        }
-
       }
     });
   }
@@ -508,26 +464,6 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
         clearLoadingHints();
         if (mRefreshLayout != null) {
           mRefreshLayout.finishRefresh(true);
-        }
-
-
-        mRecyclerView.smoothScrollToPosition(0);
-        if (!MailListContent.MAILS.isEmpty() && mRecyclerView != null) {
-          mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-              // 移除监听器，避免重复触发
-              mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-              mRecyclerView.setTranslationX(mRecyclerView.getWidth());
-
-              mRecyclerView.animate()
-                      .translationX(0)
-                      .setDuration(200)
-                      .setStartDelay(50)
-                      .start();
-            }
-          });
         }
       }
     });

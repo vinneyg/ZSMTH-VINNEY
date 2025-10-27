@@ -37,7 +37,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -225,9 +224,11 @@ public class PostListActivity extends SMTHBaseActivity
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 if (fragmentManager.getBackStackEntryCount() > 0) {
                     fragmentManager.popBackStack();
+                    overridePendingTransition(0, 0);
                 } else {
                     PostListActivity.this.finish();
-                    overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                    overridePendingTransition(0, 0);
+                    //overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 }
             }
         };
@@ -480,7 +481,6 @@ public class PostListActivity extends SMTHBaseActivity
             findViewById(R.id.post_list_go_page).setVisibility(View.GONE);
             findViewById(R.id.post_list_page_no).setVisibility(View.GONE);
 
-
         }
 
         if (mTopic == null || !mTopic.getTopicID().equals(topic.getTopicID()) || PostListContent.POSTS.isEmpty()) {
@@ -513,25 +513,6 @@ public class PostListActivity extends SMTHBaseActivity
                 clearLoadingHints();
             }
         }
-        mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                // 添加 RecyclerView 从右往左的动画
-                mRecyclerView.setTranslationX(mRecyclerView.getWidth()); // 初始位置在屏幕右侧
-
-                mRecyclerView.setAlpha(0f); // 初始透明度为0
-                mRecyclerView.animate()
-                        .translationX(0)
-                        .alpha(1f) // 最终透明度为1
-                        .setDuration(300)
-                        .setStartDelay(50)
-                        .setInterpolator(new android.view.animation.DecelerateInterpolator())
-                        .start();
-
-                mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
-        });
-
     }
 
     public void initPostNavigationButtons() {
@@ -1069,7 +1050,7 @@ public class PostListActivity extends SMTHBaseActivity
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
             PostListActivity.this.finish();
-            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+            //overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             return true;
         } else if (id == R.id.post_list_action_refresh) {
             reloadPostList();
@@ -1381,7 +1362,7 @@ public class PostListActivity extends SMTHBaseActivity
                 Intent intent = new Intent(this, QueryUserActivity.class);
                 intent.putExtra(SMTHApplication.QUERY_USER_INFO, post.getRawAuthor());
                 startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                //overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             } else if (which == 4) {
                 // read posts from current users only
                 if (mFilterUser == null) {
@@ -1928,7 +1909,7 @@ public class PostListActivity extends SMTHBaseActivity
         intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
         intent.putExtra(SMTHApplication.READ_MODE,mReadMode);
         mActivityPostResultLauncher.launch(intent);
-        overridePendingTransition(0, 0);
+        //overridePendingTransition(0, 0);
     }
 
     @Override
