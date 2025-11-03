@@ -7,7 +7,7 @@
     <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     <item name="colorAccent">@color/colorAccent</item>
 
-    <item name="android:windowIsTranslucent">false</item>
+    <item name="android:windowIsTranslucent">true</item>
     <item name="android:windowAnimationStyle">@style/ActivityAnimFade</item>
 
     <!--http://stackoverflow.com/questions/14462226/white-background-during-app-launch-->
@@ -39,7 +39,7 @@
   </style>
 
   <style name="AppTheme.NoActionBar.MainActivity" parent="AppTheme.NoActionBar">
-    <item name="android:windowIsTranslucent">false</item>
+    <item name="android:windowIsTranslucent">true</item>
     <item name="android:statusBarColor">@color/colorPrimary</item>
     <item name="preferenceTheme">@style/MyPreferenceThemeOverlay</item>
   </style>

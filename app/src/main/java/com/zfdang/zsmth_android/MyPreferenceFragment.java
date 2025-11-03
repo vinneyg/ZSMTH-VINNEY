@@ -712,6 +712,13 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     @Override
     public void onViewCreated(@androidx.annotation.NonNull @NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        view.post(() -> {
+            if (getListView() != null) {
+                getListView().invalidate();
+            }
+        });
+        
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@androidx.annotation.NonNull @NonNull Menu menu, @androidx.annotation.NonNull @NonNull MenuInflater menuInflater) {
