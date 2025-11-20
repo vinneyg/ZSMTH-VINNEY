@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
 import com.zfdang.zsmth_android.helpers.NewToast;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
@@ -111,6 +112,7 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
                         finish();
                     }
                 });
+        FragmentStatusBarUtil.adaptActDarkMode(this, false);
     }
 
     @Override public void onClick(View view) {

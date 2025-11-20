@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
 import com.zfdang.zsmth_android.helpers.NewToast;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
@@ -579,6 +580,7 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
   @Override
   public void onViewCreated(@androidx.annotation.NonNull @NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    FragmentStatusBarUtil.adaptDarkMode(this, false);
     requireActivity().addMenuProvider(new MenuProvider() {
       @Override
       public void onCreateMenu(@androidx.annotation.NonNull @NonNull Menu menu, @androidx.annotation.NonNull @NonNull MenuInflater menuInflater) {

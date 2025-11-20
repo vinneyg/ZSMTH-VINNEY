@@ -66,6 +66,7 @@ import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.umeng.analytics.MobclickAgent;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
+import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
 import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnMailInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
@@ -80,6 +81,7 @@ import com.zfdang.zsmth_android.newsmth.UserInfo;
 import com.zfdang.zsmth_android.services.KeepAliveService;
 import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
+import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Objects;
@@ -149,6 +151,7 @@ public class MainActivity extends SMTHBaseActivity
       AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
     super.onCreate(savedInstanceState);
+
     setContentView(R.layout.activity_main);
 
     Toolbar toolbar =  findViewById(R.id.toolbar);
@@ -379,8 +382,8 @@ public class MainActivity extends SMTHBaseActivity
         MobSDK.submitPolicyGrantResult(true);
       }, 3000);
     }
+    FragmentStatusBarUtil.adaptActDarkMode(this, false);
   }
-
 
   public void setApplicationNightMode() {
     boolean bNightMode = Settings.getInstance().isNightMode();
@@ -1230,8 +1233,6 @@ public class MainActivity extends SMTHBaseActivity
       SMTHApplication.bNewMailInNotification = false;
     }
   }
-
-
   private LayerDrawable createLayerDrawable(Drawable icon, String count) {
     int badgeSize = 72; // 调整角标的大小
     float textSize = getResources().getDimension(R.dimen.badge_text_size);

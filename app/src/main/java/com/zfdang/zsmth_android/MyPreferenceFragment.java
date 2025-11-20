@@ -35,6 +35,7 @@ import com.zfdang.zsmth_android.helpers.ActivityUtils;
 import com.zfdang.zsmth_android.helpers.FileLess;
 import com.zfdang.zsmth_android.helpers.FileSizeUtil;
 import com.zfdang.zsmth_android.helpers.NewToast;
+import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -710,8 +711,14 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     }
 
     @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+    }
+
+    @Override
     public void onViewCreated(@androidx.annotation.NonNull @NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        FragmentStatusBarUtil.adaptDarkMode(this, false);
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@androidx.annotation.NonNull @NonNull Menu menu, @androidx.annotation.NonNull @NonNull MenuInflater menuInflater) {

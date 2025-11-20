@@ -36,6 +36,7 @@ import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.MailListContent;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -555,6 +556,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
   @Override
   public void onViewCreated(@androidx.annotation.NonNull @NonNull View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    FragmentStatusBarUtil.adaptDarkMode(this, false);
     requireActivity().addMenuProvider(new MenuProvider() {
       @Override
       public void onCreateMenu(@androidx.annotation.NonNull @NonNull Menu menu, @androidx.annotation.NonNull @NonNull MenuInflater menuInflater) {

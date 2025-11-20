@@ -33,6 +33,7 @@ import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.FrescoUtils;
 import com.zfdang.zsmth_android.fresco.MyPhotoView;
 import com.zfdang.zsmth_android.helpers.FileSizeUtil;
+import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
 import com.zfdang.zsmth_android.helpers.NewToast;
 
 import java.io.BufferedInputStream;
@@ -132,6 +133,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
 
     hideSystemUI();
     gestureDetector = new GestureDetector(this, new SwipeGestureListener());
+    FragmentStatusBarUtil.adaptActDarkMode(this, false);
   }
 
   private class SwipeGestureListener extends GestureDetector.SimpleOnGestureListener {
