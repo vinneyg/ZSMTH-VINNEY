@@ -73,6 +73,7 @@ public class SMTHApplication extends Application {
   public static boolean bNewPost= false;
   public static boolean bNightModeChange= false;
   public static boolean bNewMailInNotification = false;
+  public static boolean bServerKick = false;
   public static String getWebAddress()
   {
     return Settings.getInstance().getWebAddr();

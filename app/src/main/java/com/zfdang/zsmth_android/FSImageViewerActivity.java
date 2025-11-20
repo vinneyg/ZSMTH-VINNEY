@@ -69,6 +69,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
     }
     window.setAttributes(lp);
     setContentView(R.layout.activity_fs_image_viewer);
+    getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
     mViewPager = findViewById(R.id.fullscreen_image_pager);
     // find parameters from parent
     mURLs = getIntent().getStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS);

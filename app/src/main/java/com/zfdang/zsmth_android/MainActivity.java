@@ -150,6 +150,7 @@ public class MainActivity extends SMTHBaseActivity
     }
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
 
     Toolbar toolbar =  findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
@@ -534,6 +535,7 @@ public class MainActivity extends SMTHBaseActivity
         stopService(keepAliveService);
         SMTHApplication.activeUser = null;
         SMTHApplication.displayedUserId = "guest";
+        SMTHApplication.bServerKick = true;
 
         runOnUiThread(() -> UpdateNavigationViewHeader());
 
@@ -1157,8 +1159,9 @@ public class MainActivity extends SMTHBaseActivity
   @Override
   protected void onRestart(){
     super.onRestart();
-    if(SMTHApplication.isValidUser()) {
-      onRelogin();
+    if(SMTHApplication.bServerKick) {
+      onLogin();
+      SMTHApplication.bServerKick = false;
     }
   }
 
