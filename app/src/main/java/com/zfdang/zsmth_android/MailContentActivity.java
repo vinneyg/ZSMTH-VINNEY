@@ -29,6 +29,7 @@ import androidx.core.content.ContextCompat;
 
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
+import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
 import com.zfdang.zsmth_android.helpers.NewToast;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.ComposePostContext;
@@ -131,7 +132,7 @@ public class MailContentActivity extends AppCompatActivity {
     mPostMoreButton = findViewById(R.id.btn_post_more);
     updateButtonVisibility();
     mPostMoreButton.setOnClickListener(v -> handleReplyMenuItem());
-
+    FragmentStatusBarUtil.adaptActDarkMode(this, false);
   }
 
   @Override

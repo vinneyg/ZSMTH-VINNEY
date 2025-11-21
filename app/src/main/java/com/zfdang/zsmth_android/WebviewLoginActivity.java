@@ -16,6 +16,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
 import com.zfdang.zsmth_android.helpers.NewToast;
 
 public class WebviewLoginActivity extends SMTHBaseActivity {
@@ -149,6 +150,7 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
         }
 
         mWebView.loadUrl(url);
+        FragmentStatusBarUtil.adaptActDarkMode(this, false);
     }
 
     // === Handle no server response after login request ===

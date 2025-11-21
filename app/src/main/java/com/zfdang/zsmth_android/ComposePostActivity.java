@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.zfdang.SMTHApplication;
 import com.zfdang.multiple_images_selector.ImagesSelectorActivity;
 import com.zfdang.multiple_images_selector.SelectorSettings;
+import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
 import com.zfdang.zsmth_android.helpers.KeyboardLess;
 import com.zfdang.zsmth_android.helpers.NewToast;
 import com.zfdang.zsmth_android.helpers.StringUtils;
@@ -203,6 +204,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
 
     // open keypads
     KeyboardLess.$show(this, mContent);
+    FragmentStatusBarUtil.adaptActDarkMode(this, false);
   }
 
   // three methods to manage content cache

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -53,6 +54,7 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.ClassicsHeader;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
 import com.zfdang.zsmth_android.helpers.NewToast;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.models.Attachment;
@@ -548,6 +550,7 @@ public class PostListActivity extends SMTHBaseActivity
                 clearLoadingHints();
             }
         }
+        FragmentStatusBarUtil.adaptActDarkMode(this, false);
     }
 
     public void initPostNavigationButtons() {
@@ -1913,10 +1916,31 @@ public class PostListActivity extends SMTHBaseActivity
             Window window = dialog.getWindow();
             if (window != null) {
                 WindowManager.LayoutParams params = window.getAttributes();
-                //params.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
-                params.width = (int) (getResources().getDisplayMetrics().widthPixels * 0.7);
-                //params.width = WindowManager.LayoutParams.MATCH_PARENT; // 宽度铺满
-                params.height = WindowManager.LayoutParams.WRAP_CONTENT; // 高度自适应
+
+                // 1. 解决黑边：窗口背景设为透明（必须打开这行）
+                window.setBackgroundDrawableResource(android.R.color.transparent);
+
+                // 2. 宽度设置：优化计算方式（考虑上下文有效性+四舍五入）
+                // 四舍五入减少1像素偏差
+                params.width = Math.round(getResources().getDisplayMetrics().widthPixels * 0.7f);
+
+                // 3. 高度自适应（保持不变）
+                params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+                // 4. 透明度优化：若只想让背景半透明，而非整个窗口
+                // 方式：用带透明度的背景色（如黑色半透明），而非设置alpha
+                if (Settings.getInstance().isNightMode()){
+                    window.setBackgroundDrawable(new ColorDrawable(0xEE666666)); // 0x88是透明度（00-FF），后六位是颜色
+                }
+                else {
+                    window.setBackgroundDrawable(new ColorDrawable(0xCCFFFFFF)); // 0x88是透明度（00-FF），后六位是颜色
+                }
+                // 若确实需要整个窗口半透明，保留alpha（但内容会变淡）
+                //params.alpha = 0.7f;
+
+                // 可选：设置窗口居中（如果需要）
+                params.gravity = Gravity.CENTER;
+
                 window.setAttributes(params);
             }
         });

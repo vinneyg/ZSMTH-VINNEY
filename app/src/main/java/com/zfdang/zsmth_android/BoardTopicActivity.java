@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
 import com.zfdang.zsmth_android.helpers.NewToast;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.listeners.EndlessRecyclerOnScrollListener;
@@ -118,6 +119,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         OnBackPressedDispatcher dispatcher = getOnBackPressedDispatcher();
 
         dispatcher.addCallback(this, new OnBackPressedCallback(true) {
@@ -323,7 +325,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
             RefreshBoardTopicsWithoutClear();
             //new Handler(Looper.getMainLooper()).postDelayed(this::RefreshBoardTopicsWithoutClear, 100);
         }
-
+        FragmentStatusBarUtil.adaptActDarkMode(this, false);
     }
 
     public static BoardTopicActivity getInstance () {

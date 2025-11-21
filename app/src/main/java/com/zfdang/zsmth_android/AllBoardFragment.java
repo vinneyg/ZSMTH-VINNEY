@@ -1,6 +1,7 @@
 package com.zfdang.zsmth_android;
 
 import android.annotation.SuppressLint;
+import android.app.UiModeManager;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -22,6 +23,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
 import com.zfdang.zsmth_android.helpers.NewToast;
 import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
@@ -133,6 +135,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     }
 
     return view;
+ 
   }
 
   public void showLoadingHints() {
@@ -250,6 +253,8 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
   @Override
   public void onViewCreated(@androidx.annotation.NonNull @NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    // 3. 深色模式适配（手动控制：true=强制深色，false=跟随系统）
+    FragmentStatusBarUtil.adaptDarkMode(this, false);
     requireActivity().addMenuProvider(new MenuProvider() {
       @Override
       public void onCreateMenu(@androidx.annotation.NonNull @NonNull Menu menu, @androidx.annotation.NonNull @NonNull MenuInflater menuInflater) {

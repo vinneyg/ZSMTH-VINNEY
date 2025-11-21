@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
+import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
 import com.zfdang.zsmth_android.helpers.KeyboardLess;
 import com.zfdang.zsmth_android.helpers.NewToast;
 import com.zfdang.zsmth_android.helpers.StringUtils;
@@ -103,7 +104,7 @@ public class QueryUserActivity extends SMTHBaseActivity {
         LoadUserInfo();
       }
     });
-
+    FragmentStatusBarUtil.adaptActDarkMode(this, false);
     // get Board information from launcher
     Intent intent = getIntent();
     String username = intent.getStringExtra(SMTHApplication.QUERY_USER_INFO);
