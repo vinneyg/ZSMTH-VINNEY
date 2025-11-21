@@ -22,6 +22,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -111,6 +112,7 @@ public class PostListActivity extends SMTHBaseActivity
     private String mFilterUser = null;
 
     private static Topic mTopic = null;
+    private boolean shouldSavePosition = true;
 
     private static final int MAX_CACHE_SIZE = 1000;
     private static final LinkedHashMap<String, Integer> lastPositions = new LinkedHashMap<String, Integer>(512, 0.75f, true) {
@@ -170,6 +172,16 @@ public class PostListActivity extends SMTHBaseActivity
      */
 
     private void getPositionAndOffset() {
+        if (!shouldSavePosition) return;
+
+        if (mRecyclerView.getScrollState() != RecyclerView.SCROLL_STATE_IDLE) {
+            return;
+        }
+
+        if (isLoading) {
+            return;
+        }
+
         if (mRecyclerView.getLayoutManager() != null && mTopic != null) {
             LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
             View topView = layoutManager.getChildAt(0);
@@ -201,6 +213,7 @@ public class PostListActivity extends SMTHBaseActivity
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_list);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
 
         Toolbar toolbar = findViewById(R.id.post_list_toolbar);
         setSupportActionBar(toolbar);
@@ -223,6 +236,10 @@ public class PostListActivity extends SMTHBaseActivity
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
+                // Save position before leaving
+                if (mRecyclerView != null && mRecyclerView.getLayoutManager() != null) {
+                    getPositionAndOffset();
+                }
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 if (fragmentManager.getBackStackEntryCount() > 0) {
                     fragmentManager.popBackStack();
@@ -270,7 +287,7 @@ public class PostListActivity extends SMTHBaseActivity
         // define swipe refresh function
         mRefreshLayout = findViewById(R.id.post_list_swipe_refresh_layout);
         mRefreshLayout.setEnableAutoLoadMore(false);
-        mRefreshLayout.setEnableScrollContentWhenLoaded(false);
+        mRefreshLayout.setEnableScrollContentWhenLoaded(true);
         mRefreshLayout.setEnableOverScrollBounce(false);
 
         mRefreshLayout.setOnRefreshListener(refreshLayout -> {
@@ -378,6 +395,7 @@ public class PostListActivity extends SMTHBaseActivity
 
             mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 boolean isSlidingToLast = false;
+                boolean isUserScrolling = false;
                 //int mIndex = 0;
 
                 @Override
@@ -385,14 +403,25 @@ public class PostListActivity extends SMTHBaseActivity
                     LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
                     super.onScrollStateChanged(recyclerView, newState);
-                    if (recyclerView.getLayoutManager() != null) {
-                        getPositionAndOffset();
+
+                    switch (newState) {
+                        case RecyclerView.SCROLL_STATE_IDLE:
+                            isUserScrolling = false;
+                            // Only save position when completely idle and allowed
+                            if (recyclerView.getLayoutManager() != null && shouldSavePosition && !isLoading) {
+                                getPositionAndOffset();
+                            }
+                            break;
+
+                        case RecyclerView.SCROLL_STATE_DRAGGING:
+                            isUserScrolling = true;
+                            break;
+
+                        case RecyclerView.SCROLL_STATE_SETTLING:
+                            // Keep isUserScrolling as true to indicate ongoing scroll animation
+                            break;
                     }
-                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                        if (mRefreshLayout.isLoading()) {
-                            mRefreshLayout.finishLoadMore();
-                        }
-                    }
+
                     if(!Settings.getInstance().isautoloadmore()) {
                         if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                             loadMoreIfNeeded(recyclerView, manager);
@@ -406,28 +435,34 @@ public class PostListActivity extends SMTHBaseActivity
                     super.onScrolled(recyclerView, dx, dy);
                     if(dy > 0){
                         isSlidingToLast = true;
-                        LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                        loadMoreIfNeeded(recyclerView, manager);
+                    } else if(dy < 0) {
+                        isSlidingToLast = false;
+                    }
+
+                    LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                    if (manager != null && isUserScrolling) {
+                        // Only trigger load more when scrolling down and not during dragging
+                        if (dy > 0 && recyclerView.getScrollState() != RecyclerView.SCROLL_STATE_DRAGGING) {
+                            loadMoreIfNeeded(recyclerView, manager);
+                        }
                     }
                 }
 
                 private void loadMoreIfNeeded(RecyclerView recyclerView, LinearLayoutManager manager) {
-                    if (isLoading) {
+                    if (isLoading || manager == null) {
                         return;
                     }
 
-                    if (manager == null) {
-                        return;
-                    }
-                    int lastVisiblePos = manager.findLastVisibleItemPosition();
-                    int totalItemCount = manager.getItemCount();
-                    int threshold = 3; // 预加载阈值，可根据实际情况调整
+                    if (recyclerView.getScrollState() != RecyclerView.SCROLL_STATE_DRAGGING) {
+                        int lastVisiblePos = manager.findLastVisibleItemPosition();
+                        int totalItemCount = manager.getItemCount();
+                        int threshold = 3;
 
-                    // 当接近列表底部时，预加载下一页数据
-                    if (lastVisiblePos >= totalItemCount - threshold && mCurrentPageNo < mTopic.getTotalPageNo()) {
-                        isLoading = true;
-                        mCurrentPageNo++;
-                        loadPostListByPages();
+                        if (lastVisiblePos >= totalItemCount - threshold && mCurrentPageNo < mTopic.getTotalPageNo()) {
+                            isLoading = true;
+                            mCurrentPageNo++;
+                            loadPostListByPages();
+                        }
                     }
                 }
 
@@ -786,6 +821,8 @@ public class PostListActivity extends SMTHBaseActivity
                 });
     }
     public void loadPostListByPages() {
+        shouldSavePosition = false; // Disable position saving during loading
+
         final SMTHHelper helper = SMTHHelper.getInstance();
 
         helper
@@ -870,11 +907,12 @@ public class PostListActivity extends SMTHBaseActivity
                                 SMTHApplication.deletionCount++;
                                 isLoading = false;
 
-                                // 数据加载完成后恢复位置
-                                if (!PostListContent.POSTS.isEmpty()) {
-                                    scrollToPosition();
+                                shouldSavePosition = true;
+                                if (mRecyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
+                                    if (!PostListContent.POSTS.isEmpty()) {
+                                        scrollToPosition();
+                                    }
                                 }
-
 
                                 // 确保 RecyclerView 刷新
                                 Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
@@ -1939,6 +1977,11 @@ public class PostListActivity extends SMTHBaseActivity
     @Override
     protected void onPause() {
         super.onPause();
-        getPositionAndOffset();
+        if (mRecyclerView != null &&
+                mRecyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE &&
+                shouldSavePosition &&
+                !isLoading) {
+            getPositionAndOffset();
+        }
     }
 }

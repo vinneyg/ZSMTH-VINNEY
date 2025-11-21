@@ -719,6 +719,13 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     public void onViewCreated(@androidx.annotation.NonNull @NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FragmentStatusBarUtil.adaptDarkMode(this, false);
+
+        view.post(() -> {
+            if (getListView() != null) {
+                getListView().invalidate();
+            }
+        });
+        
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@androidx.annotation.NonNull @NonNull Menu menu, @androidx.annotation.NonNull @NonNull MenuInflater menuInflater) {
