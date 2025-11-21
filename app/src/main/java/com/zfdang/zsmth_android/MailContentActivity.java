@@ -25,8 +25,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
 import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
@@ -80,7 +78,6 @@ public class MailContentActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.activity_mail_content);
-    getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
 
     gestureDetector = new GestureDetector(this, new SwipeGestureListener());
 

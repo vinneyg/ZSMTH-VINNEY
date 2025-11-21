@@ -81,7 +81,6 @@ import com.zfdang.zsmth_android.newsmth.UserInfo;
 import com.zfdang.zsmth_android.services.KeepAliveService;
 import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
-import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Objects;
@@ -153,7 +152,6 @@ public class MainActivity extends SMTHBaseActivity
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.activity_main);
-    getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
 
     Toolbar toolbar =  findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
