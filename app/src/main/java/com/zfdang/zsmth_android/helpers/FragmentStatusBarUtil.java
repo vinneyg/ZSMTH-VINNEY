@@ -18,7 +18,7 @@ public class FragmentStatusBarUtil {
     // 1. Fragment中设置状态栏颜色（自动适配图标深浅）
     public static void setStatusBarColor(Fragment fragment, int colorResId) {
         Activity activity = fragment.getActivity();
-        if (activity == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
+        if (activity == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return;
 
         Window window = activity.getWindow();
         // 设置状态栏颜色
@@ -60,14 +60,13 @@ public class FragmentStatusBarUtil {
     }
     public static boolean isSystemDarkMode(Activity activity) {
         UiModeManager uiModeManager = (UiModeManager) activity.getSystemService(Context.UI_MODE_SERVICE);
-        boolean isSystemDark = (activity.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
+        return (activity.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
                 == Configuration.UI_MODE_NIGHT_YES;
-        return isSystemDark;
     }
     // 3. 深色模式适配（跟随系统/手动控制）
     public static void adaptDarkMode(Fragment fragment, boolean isManualDarkMode) {
         Activity activity = fragment.getActivity();
-        if (activity == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
+        if (activity == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return;
 
         // 读取系统深色模式状态
         boolean isSystemDark = isSystemDarkMode(activity);
@@ -84,7 +83,7 @@ public class FragmentStatusBarUtil {
         }
     }
     public static void adaptActDarkMode(Activity activity, boolean isManualDarkMode) {
-        if (activity == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
+        if (activity == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return;
 
         // 读取系统深色模式状态
         boolean isSystemDark = isSystemDarkMode(activity);

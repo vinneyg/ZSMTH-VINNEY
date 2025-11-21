@@ -9,7 +9,6 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import androidx.appcompat.app.ActionBar;
@@ -145,9 +144,6 @@ public class BoardTopicActivity extends SMTHBaseActivity
         mActivity1  = this;
 
         setContentView(R.layout.activity_board_topic);
-
-        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
-
 
         Toolbar toolbar = findViewById(R.id.board_topic_toolbar);
         setSupportActionBar(toolbar);

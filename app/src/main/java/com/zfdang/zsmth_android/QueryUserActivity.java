@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -64,8 +62,6 @@ public class QueryUserActivity extends SMTHBaseActivity {
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_query_user);
-    getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
-
 
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);

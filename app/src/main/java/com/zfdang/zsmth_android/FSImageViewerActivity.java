@@ -35,7 +35,6 @@ import com.zfdang.zsmth_android.fresco.MyPhotoView;
 import com.zfdang.zsmth_android.helpers.FileSizeUtil;
 import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
 import com.zfdang.zsmth_android.helpers.NewToast;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -70,7 +69,6 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
     }
     window.setAttributes(lp);
     setContentView(R.layout.activity_fs_image_viewer);
-    getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
     mViewPager = findViewById(R.id.fullscreen_image_pager);
     // find parameters from parent
     mURLs = getIntent().getStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS);

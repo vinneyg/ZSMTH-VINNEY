@@ -1,7 +1,6 @@
 package com.zfdang.zsmth_android;
 
 import android.annotation.SuppressLint;
-import android.app.UiModeManager;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -89,27 +88,6 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
       mAdapter = new BoardRecyclerViewAdapter(BoardListContent.ALL_BOARDS, mListener);
     }
     mRecyclerView.setAdapter(mAdapter);
-
-    /*
-    mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-      @Override
-      public void onGlobalLayout() {
-        // 添加 RecyclerView 从右往左的动画
-        mRecyclerView.setTranslationX((float) mRecyclerView.getWidth() /3); // 初始位置在屏幕右侧
-
-        mRecyclerView.setAlpha(0f); // 初始透明度为0
-        mRecyclerView.animate()
-                .translationX(0)
-                .alpha(1f) // 最终透明度为1
-                .setDuration(300)
-                .setStartDelay(50)
-                .setInterpolator(new android.view.animation.DecelerateInterpolator())
-                .start();
-
-        mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-      }
-    });
-    */
 
     SearchView mSearchView = view.findViewById(R.id.all_board_search);
     mSearchView.setIconifiedByDefault(false);
