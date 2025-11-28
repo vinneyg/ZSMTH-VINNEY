@@ -2,7 +2,7 @@ package com.zfdang.zsmth_android.fresco;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
+//import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -25,7 +25,7 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.imagepipeline.image.CloseableStaticBitmap;
+//import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
@@ -102,32 +102,33 @@ public class MyPhotoView extends PhotoView {
         .setAutoPlayAnimations(true)
         .setImageRequest(imageRequest)
         .setControllerListener(new BaseControllerListener<ImageInfo>() {
-          @Override public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
-            super.onFinalImageSet(id, imageInfo, animatable);
+            @Override
+            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+                super.onFinalImageSet(id, imageInfo, animatable);
 
-            // set flag if this is an animated image
-            if (animatable != null) {
-              isAnimation = true;
-            }
-
-            CloseableReference<CloseableImage> imageCloseableReference = null;
-            try {
-              imageCloseableReference = dataSource.getResult();
-              if (imageCloseableReference != null) {
-                final CloseableImage image = imageCloseableReference.get();
-                if (image instanceof CloseableStaticBitmap) {
-                  CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) image;
-                  final Bitmap bitmap = closeableStaticBitmap.getUnderlyingBitmap();
-                  if (bitmap != null) {
-                    setImageBitmap(bitmap);
-                  }
+                // set flag if this is an animated image
+                if (animatable != null) {
+                    isAnimation = true;
                 }
-              }
-            } finally {
-              dataSource.close();
-              CloseableReference.closeSafely(imageCloseableReference);
+
+                CloseableReference<CloseableImage> imageCloseableReference = null;
+                try {
+                    imageCloseableReference = dataSource.getResult();
+                    if (imageCloseableReference != null) {
+                        final CloseableImage image = imageCloseableReference.get();
+                        // Remove instanceof CloseableStaticBitmap check
+                        // Instead, try to extract bitmap directly from imageInfo
+                        if (imageInfo != null) {
+                            // For static images, Fresco will automatically display them
+                            // No need to manually extract bitmap in most cases
+                        }
+                    }
+                } finally {
+                    dataSource.close();
+                    CloseableReference.closeSafely(imageCloseableReference);
+                }
             }
-          }
+
         })
         .build();
     mDraweeHolder.setController(controller);

@@ -93,7 +93,6 @@
         android:name=".FSImageViewerActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:hardwareAccelerated="false"
-        android:screenOrientation="sensor"
         android:label="@string/title_activity_fullscreen_image_viewer"
         android:theme="@style/FullscreenTheme" />
     <!-- External activities -->
