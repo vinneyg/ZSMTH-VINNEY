@@ -202,16 +202,6 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
         }, 500);
     }
 
-
-    private boolean isZoomed() {
-        View currentView = mPagerAdapter.mCurrentView;
-        if (currentView instanceof MyPhotoView) {
-            MyPhotoView photoView = (MyPhotoView) currentView;
-            return photoView.getScale() > photoView.getMinimumScale();
-        }
-        return false;
-    }
-
     private class SwipeGestureListener extends GestureDetector.SimpleOnGestureListener {
  @Override
         public boolean onDown(@NonNull MotionEvent e) {
@@ -220,10 +210,6 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
 
         @Override
         public boolean onFling(MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
-            if (isZoomed()) {
-                return false; // 缩放状态下不处理滑动
-            }
-
             try {
                 if (e1 != null && e1.getPointerCount() == 1 && e2.getPointerCount() == 1) {
                     float diffX = e2.getX() - e1.getX();
@@ -274,13 +260,14 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        // 先处理缩放手势
-        if (scaleGestureDetector.onTouchEvent(event)) {
+        if (event.getPointerCount() > 1) {
+            scaleGestureDetector.onTouchEvent(event);
             return true;
         }
 
-        // 再处理滑动手势
-        if (gestureDetector.onTouchEvent(event)) {
+        // Handle swipe gesture for single touch
+        if (event.getPointerCount() == 1) {
+            gestureDetector.onTouchEvent(event);
             return true;
         }
         return super.dispatchTouchEvent(event);
