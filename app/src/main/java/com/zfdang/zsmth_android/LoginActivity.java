@@ -53,7 +53,6 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         setContentView(R.layout.activity_login);
 
         // these two variables should be loaded from preference

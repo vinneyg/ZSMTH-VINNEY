@@ -45,7 +45,6 @@
         android:name=".MainActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:exported="true"
-        android:launchMode="standard"
         android:windowSoftInputMode="adjustPan"
         android:theme="@style/AppTheme.NoActionBar.MainActivity">
       <intent-filter>
