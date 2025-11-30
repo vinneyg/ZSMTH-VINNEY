@@ -20,6 +20,7 @@ import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -62,8 +63,40 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
     private LinearLayout layoutToolbar;
 
     private GestureDetector gestureDetector;
+    private ScaleGestureDetector scaleGestureDetector;
+
+
     private static final int SWIPE_THRESHOLD = 100;
     private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+
+    private class ScaleGestureListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        private float scaleFactor = 1.0f;
+
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            scaleFactor *= detector.getScaleFactor();
+            scaleFactor = Math.max(0.1f, Math.min(scaleFactor, 5.0f));
+
+            // 获取当前显示的视图并应用缩放
+            View currentView = mPagerAdapter.mCurrentView;
+            if (currentView != null) {
+                currentView.setScaleX(scaleFactor);
+                currentView.setScaleY(scaleFactor);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public boolean onScaleBegin(@NonNull ScaleGestureDetector detector) {
+            return true;
+        }
+
+        @Override
+        public void onScaleEnd(@NonNull ScaleGestureDetector detector) {
+            // 缩放结束时的处理
+        }
+    }
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,6 +175,10 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
         hideSystemUI();
         gestureDetector = new GestureDetector(this, new SwipeGestureListener());
         FragmentStatusBarUtil.adaptActDarkMode(this, false);
+
+        // 初始化缩放检测器
+        scaleGestureDetector = new ScaleGestureDetector(this, new ScaleGestureListener());
+
     }
 
     // Add this method to prefetch images
@@ -165,14 +202,28 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
         }, 500);
     }
 
+
+    private boolean isZoomed() {
+        View currentView = mPagerAdapter.mCurrentView;
+        if (currentView instanceof MyPhotoView) {
+            MyPhotoView photoView = (MyPhotoView) currentView;
+            return photoView.getScale() > photoView.getMinimumScale();
+        }
+        return false;
+    }
+
     private class SwipeGestureListener extends GestureDetector.SimpleOnGestureListener {
-        @Override
+ @Override
         public boolean onDown(@NonNull MotionEvent e) {
             return true;
         }
 
         @Override
         public boolean onFling(MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
+            if (isZoomed()) {
+                return false; // 缩放状态下不处理滑动
+            }
+
             try {
                 if (e1 != null && e1.getPointerCount() == 1 && e2.getPointerCount() == 1) {
                     float diffX = e2.getX() - e1.getX();
@@ -223,8 +274,15 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        // 先让 GestureDetector 处理事件
-        gestureDetector.onTouchEvent(event);
+        // 先处理缩放手势
+        if (scaleGestureDetector.onTouchEvent(event)) {
+            return true;
+        }
+
+        // 再处理滑动手势
+        if (gestureDetector.onTouchEvent(event)) {
+            return true;
+        }
         return super.dispatchTouchEvent(event);
     }
 
