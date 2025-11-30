@@ -150,9 +150,7 @@ public class MainActivity extends SMTHBaseActivity
       AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
     super.onCreate(savedInstanceState);
-
     setContentView(R.layout.activity_main);
-
     Toolbar toolbar =  findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
@@ -383,6 +381,7 @@ public class MainActivity extends SMTHBaseActivity
     }
     FragmentStatusBarUtil.adaptActDarkMode(this, false);
   }
+
 
   public void setApplicationNightMode() {
     boolean bNightMode = Settings.getInstance().isNightMode();
@@ -720,6 +719,7 @@ public class MainActivity extends SMTHBaseActivity
     super.onResume();
     MobclickAgent.onResume(this);
   }
+
 
   protected void initFragments() {
     hotTopicFragment = new HotTopicFragment();
