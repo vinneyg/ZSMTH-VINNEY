@@ -72,6 +72,11 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
     private int activePointerId = INVALID_POINTER_ID;
     private static final int INVALID_POINTER_ID = -1;
 
+    // Add these fields to track initial position
+    private float initialTranslationX = 0f;
+    private float initialTranslationY = 0f;
+    private boolean isInitialPositionStored = false;
+
 
     private class ScaleGestureListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 
@@ -110,6 +115,13 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
                             .setDuration(200)
                             .start();
                     scaleFactor = 1.0f;
+
+                    // Reset translation to center when returning to original scale
+                    currentView.animate()
+                            .translationX(initialTranslationX)
+                            .translationY(initialTranslationY)
+                            .setDuration(200)
+                            .start();
                 }
             }
 
@@ -240,17 +252,16 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
             currentView.animate()
                     .scaleX(scaleFactor)
                     .scaleY(scaleFactor)
+                    .translationX(initialTranslationX)
+                    .translationY(initialTranslationY)
                     .setDuration(200)
                     .start();
-            // Reset translation when returning to original scale
-            currentView.setTranslationX(0f);
-            currentView.setTranslationY(0f);
         }
     }
 
 
     private class SwipeGestureListener extends GestureDetector.SimpleOnGestureListener {
- @Override
+        @Override
         public boolean onDown(@NonNull MotionEvent e) {
             return true;
         }
@@ -325,6 +336,13 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
                     lastTouchX = event.getX();
                     lastTouchY = event.getY();
                     activePointerId = event.getPointerId(0);
+
+                    // Store initial position on first touch
+                    if (!isInitialPositionStored && currentView != null) {
+                        initialTranslationX = currentView.getTranslationX();
+                        initialTranslationY = currentView.getTranslationY();
+                        isInitialPositionStored = true;
+                    }
                     break;
                 }
 
