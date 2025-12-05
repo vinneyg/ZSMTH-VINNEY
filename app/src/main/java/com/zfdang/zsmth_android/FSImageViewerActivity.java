@@ -38,7 +38,7 @@ import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener;
 import com.github.chrisbanes.photoview.OnPhotoTapListener;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.FrescoUtils;
-import com.zfdang.zsmth_android.fresco.MyPhotoView;
+//import com.zfdang.zsmth_android.fresco.MyPhotoView;
 import com.zfdang.zsmth_android.helpers.FileSizeUtil;
 import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
 import com.zfdang.zsmth_android.helpers.NewToast;
@@ -68,14 +68,18 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
 
     private static final int SWIPE_THRESHOLD = 100;
     private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+    private float scaleFactor = 1.0f;   private float lastTouchX, lastTouchY;
+    private int activePointerId = INVALID_POINTER_ID;
+    private static final int INVALID_POINTER_ID = -1;
+
 
     private class ScaleGestureListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
-        private float scaleFactor = 1.0f;
 
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
+
             scaleFactor *= detector.getScaleFactor();
-            scaleFactor = Math.max(0.1f, Math.min(scaleFactor, 5.0f));
+            scaleFactor = Math.max(0.5f, Math.min(scaleFactor, 5.0f));
 
             // 获取当前显示的视图并应用缩放
             View currentView = mPagerAdapter.mCurrentView;
@@ -84,6 +88,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
                 currentView.setScaleY(scaleFactor);
                 return true;
             }
+
             return false;
         }
 
@@ -94,7 +99,21 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
 
         @Override
         public void onScaleEnd(@NonNull ScaleGestureDetector detector) {
-            // 缩放结束时的处理
+
+            // Still reset to original size when gesture ends
+            View currentView = mPagerAdapter.mCurrentView;
+            if (currentView != null) {
+                if (scaleFactor < 1.0f) {
+                    currentView.animate()
+                            .scaleX(1.0f)
+                            .scaleY(1.0f)
+                            .setDuration(200)
+                            .start();
+                    scaleFactor = 1.0f;
+                }
+            }
+
+
         }
     }
 
@@ -174,6 +193,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
 
         hideSystemUI();
         gestureDetector = new GestureDetector(this, new SwipeGestureListener());
+
         FragmentStatusBarUtil.adaptActDarkMode(this, false);
 
         // 初始化缩放检测器
@@ -202,9 +222,42 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
         }, 500);
     }
 
+    private void handleDoubleTap(MotionEvent e) {
+        View currentView = mPagerAdapter.mCurrentView;
+        if (currentView == null) return;
+
+        if (scaleFactor <= 1.0f) {
+            // Zoom in to 2x scale
+            scaleFactor = 2.0f;
+            currentView.animate()
+                    .scaleX(scaleFactor)
+                    .scaleY(scaleFactor)
+                    .setDuration(200)
+                    .start();
+        } else {
+            // Reset to original scale
+            scaleFactor = 1.0f;
+            currentView.animate()
+                    .scaleX(scaleFactor)
+                    .scaleY(scaleFactor)
+                    .setDuration(200)
+                    .start();
+            // Reset translation when returning to original scale
+            currentView.setTranslationX(0f);
+            currentView.setTranslationY(0f);
+        }
+    }
+
+
     private class SwipeGestureListener extends GestureDetector.SimpleOnGestureListener {
  @Override
         public boolean onDown(@NonNull MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public boolean onDoubleTap(@NonNull MotionEvent e) {
+            handleDoubleTap(e);
             return true;
         }
 
@@ -221,11 +274,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
                             && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                         int current = mViewPager.getCurrentItem();
                         View currentView = mPagerAdapter.mCurrentView;
-                        boolean isZoomed = false;
-                        if (currentView instanceof MyPhotoView) {
-                            MyPhotoView photoView = (MyPhotoView) currentView;
-                            isZoomed = photoView.getScale() > photoView.getMinimumScale();
-                        }
+                        boolean isZoomed = scaleFactor > 1.0f;
                         // 如果图片放大，不执行退出操作
                         if (isZoomed) {
                             return false;
@@ -262,16 +311,59 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getPointerCount() > 1) {
             scaleGestureDetector.onTouchEvent(event);
-            return true;
+            return super.dispatchTouchEvent(event);
         }
 
-        // Handle swipe gesture for single touch
-        if (event.getPointerCount() == 1) {
-            gestureDetector.onTouchEvent(event);
+        View currentView = mPagerAdapter.mCurrentView;
+        boolean isZoomed = scaleFactor > 1.0f;
+
+        if (isZoomed) {
+            mViewPager.requestDisallowInterceptTouchEvent(true);
+
+            switch (event.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN: {
+                    lastTouchX = event.getX();
+                    lastTouchY = event.getY();
+                    activePointerId = event.getPointerId(0);
+                    break;
+                }
+
+                case MotionEvent.ACTION_MOVE: {
+                    if (activePointerId != INVALID_POINTER_ID) {
+                        float x = event.getX();
+                        float y = event.getY();
+
+                        // Calculate movement delta
+                        float dx = x - lastTouchX;
+                        float dy = y - lastTouchY;
+
+                        // Apply translation to zoomed view
+                        if (currentView != null) {
+                            currentView.setTranslationX(currentView.getTranslationX() + dx);
+                            currentView.setTranslationY(currentView.getTranslationY() + dy);
+                        }
+
+                        lastTouchX = x;
+                        lastTouchY = y;
+                    }
+                    break;
+                }
+
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL: {
+                    activePointerId = INVALID_POINTER_ID;
+                    break;
+                }
+            }
             return true;
+        } else {
+            mViewPager.requestDisallowInterceptTouchEvent(false);
+            gestureDetector.onTouchEvent(event);
+            return super.dispatchTouchEvent(event);
         }
-        return super.dispatchTouchEvent(event);
     }
+
+
 
 
     public void realSaveImageToFile()

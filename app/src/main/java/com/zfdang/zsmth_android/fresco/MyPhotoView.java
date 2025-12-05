@@ -34,108 +34,108 @@ import com.zfdang.SMTHApplication;
 
 public class MyPhotoView extends PhotoView {
 
-  private DraweeHolder<GenericDraweeHierarchy> mDraweeHolder;
-  private boolean isAnimation = false;
+    private DraweeHolder<GenericDraweeHierarchy> mDraweeHolder;
+    private boolean isAnimation = false;
 
-  public MyPhotoView(Context context) {
-    this(context, null);
-  }
-
-  public MyPhotoView(Context context, AttributeSet attr) {
-    this(context, attr, 0);
-  }
-
-  public MyPhotoView(Context context, AttributeSet attr, int defStyle) {
-    super(context, attr, defStyle);
-    selfInit();
-  }
-
-  private void selfInit() {
-    if (mDraweeHolder == null) {
-      final GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(getResources()).setProgressBarImage(
-          new LoadingProgressDrawable(SMTHApplication.getAppContext())).setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER).build();
-
-      mDraweeHolder = DraweeHolder.create(hierarchy, getContext());
+    public MyPhotoView(Context context) {
+        this(context, null);
     }
-  }
 
-  @Override protected void onDetachedFromWindow() {
-    super.onDetachedFromWindow();
-    mDraweeHolder.onDetach();
-  }
+    public MyPhotoView(Context context, AttributeSet attr) {
+        this(context, attr, 0);
+    }
 
-  @Override protected void onAttachedToWindow() {
-    super.onAttachedToWindow();
-    mDraweeHolder.onAttach();
-  }
+    public MyPhotoView(Context context, AttributeSet attr, int defStyle) {
+        super(context, attr, defStyle);
+        selfInit();
+    }
 
-  @Override protected boolean verifyDrawable(@NonNull Drawable dr) {
-    super.verifyDrawable(dr);
-    return dr == mDraweeHolder.getHierarchy().getTopLevelDrawable();
-  }
+    private void selfInit() {
+        if (mDraweeHolder == null) {
+            final GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(getResources()).setProgressBarImage(
+                    new LoadingProgressDrawable(SMTHApplication.getAppContext())).setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER).build();
 
-  @Override public void onStartTemporaryDetach() {
-    super.onStartTemporaryDetach();
-    mDraweeHolder.onDetach();
-  }
+            mDraweeHolder = DraweeHolder.create(hierarchy, getContext());
+        }
+    }
 
-  @Override public void onFinishTemporaryDetach() {
-    super.onFinishTemporaryDetach();
-    mDraweeHolder.onAttach();
-  }
+    @Override protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mDraweeHolder.onDetach();
+    }
 
-  @SuppressLint("ClickableViewAccessibility")
-  @Override public boolean onTouchEvent(MotionEvent event) {
-    return mDraweeHolder.onTouchEvent(event) || super.onTouchEvent(event);
-  }
+    @Override protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mDraweeHolder.onAttach();
+    }
 
-  public void setImageUri(String uri) {
-    final ImageRequest imageRequest =
-        ImageRequestBuilder.newBuilderWithSource(Uri.parse(uri))
-                .setResizeOptions(new ResizeOptions(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE))
-                .setRotationOptions(RotationOptions.autoRotate())
-                .build();
-    final ImagePipeline imagePipeline = Fresco.getImagePipeline();
-    final DataSource<CloseableReference<CloseableImage>> dataSource = imagePipeline.fetchDecodedImage(imageRequest, this);
-    final DraweeController controller= Fresco.newDraweeControllerBuilder()
-        .setOldController(mDraweeHolder.getController())
-        .setAutoPlayAnimations(true)
-        .setImageRequest(imageRequest)
-        .setControllerListener(new BaseControllerListener<ImageInfo>() {
-            @Override
-            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
-                super.onFinalImageSet(id, imageInfo, animatable);
+    @Override protected boolean verifyDrawable(@NonNull Drawable dr) {
+        super.verifyDrawable(dr);
+        return dr == mDraweeHolder.getHierarchy().getTopLevelDrawable();
+    }
 
-                // set flag if this is an animated image
-                if (animatable != null) {
-                    isAnimation = true;
-                }
+    @Override public void onStartTemporaryDetach() {
+        super.onStartTemporaryDetach();
+        mDraweeHolder.onDetach();
+    }
 
-                CloseableReference<CloseableImage> imageCloseableReference = null;
-                try {
-                    imageCloseableReference = dataSource.getResult();
-                    if (imageCloseableReference != null) {
-                        final CloseableImage image = imageCloseableReference.get();
-                        // Remove instanceof CloseableStaticBitmap check
-                        // Instead, try to extract bitmap directly from imageInfo
-                        if (imageInfo != null) {
-                            // For static images, Fresco will automatically display them
-                            // No need to manually extract bitmap in most cases
+    @Override public void onFinishTemporaryDetach() {
+        super.onFinishTemporaryDetach();
+        mDraweeHolder.onAttach();
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override public boolean onTouchEvent(MotionEvent event) {
+        return mDraweeHolder.onTouchEvent(event) || super.onTouchEvent(event);
+    }
+
+    public void setImageUri(String uri) {
+        final ImageRequest imageRequest =
+                ImageRequestBuilder.newBuilderWithSource(Uri.parse(uri))
+                        .setResizeOptions(new ResizeOptions(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE))
+                        .setRotationOptions(RotationOptions.autoRotate())
+                        .build();
+        final ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        final DataSource<CloseableReference<CloseableImage>> dataSource = imagePipeline.fetchDecodedImage(imageRequest, this);
+        final DraweeController controller= Fresco.newDraweeControllerBuilder()
+                .setOldController(mDraweeHolder.getController())
+                .setAutoPlayAnimations(true)
+                .setImageRequest(imageRequest)
+                .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                    @Override
+                    public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+                        super.onFinalImageSet(id, imageInfo, animatable);
+
+                        // set flag if this is an animated image
+                        if (animatable != null) {
+                            isAnimation = true;
+                        }
+
+                        CloseableReference<CloseableImage> imageCloseableReference = null;
+                        try {
+                            imageCloseableReference = dataSource.getResult();
+                            if (imageCloseableReference != null) {
+                                final CloseableImage image = imageCloseableReference.get();
+                                // Remove instanceof CloseableStaticBitmap check
+                                // Instead, try to extract bitmap directly from imageInfo
+                                if (imageInfo != null) {
+                                    // For static images, Fresco will automatically display them
+                                    // No need to manually extract bitmap in most cases
+                                }
+                            }
+                        } finally {
+                            dataSource.close();
+                            CloseableReference.closeSafely(imageCloseableReference);
                         }
                     }
-                } finally {
-                    dataSource.close();
-                    CloseableReference.closeSafely(imageCloseableReference);
-                }
-            }
 
-        })
-        .build();
-    mDraweeHolder.setController(controller);
-    setImageDrawable(mDraweeHolder.getTopLevelDrawable());
-  }
+                })
+                .build();
+        mDraweeHolder.setController(controller);
+        setImageDrawable(mDraweeHolder.getTopLevelDrawable());
+    }
 
-  public boolean isAnimation() {
-    return isAnimation;
-  }
+    public boolean isAnimation() {
+        return isAnimation;
+    }
 }
