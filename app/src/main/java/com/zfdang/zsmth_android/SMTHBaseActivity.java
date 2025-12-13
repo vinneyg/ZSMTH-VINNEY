@@ -15,8 +15,6 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
-
 /**
  * Created by zfdang on 2016 - 5 - 10.
  * Modified by Vinney on 2025 - 11 - 30.

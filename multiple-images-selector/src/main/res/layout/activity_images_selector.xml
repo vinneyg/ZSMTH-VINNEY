@@ -28,15 +28,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="10dp"
+                android:fastScrollEnabled="true"
                 tools:listitem="@layout/recyclerview_image_item"/>
-
-            <xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller
-                android:id="@+id/recyclerview_fast_scroller"
-                android:layout_width="@dimen/recyclerview_fast_scroller_width"
-                android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="30dp"/>
 
             <RelativeLayout
                 android:id="@+id/selector_footer"

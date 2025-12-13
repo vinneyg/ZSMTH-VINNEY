@@ -3,7 +3,6 @@ package com.zfdang.zsmth_android;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.util.Log;
@@ -146,10 +145,12 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
 
         if(!Settings.getInstance().isLoginWithVerification()){
             url= "https://www.newsmth.net/index.html";
+            NewToast.makeText(this, "正在登录...", Toast.LENGTH_LONG);
         }
 
         mWebView.loadUrl(url);
         FragmentStatusBarUtil.adaptActDarkMode(this, false);
+
     }
 
     // === Handle no server response after login request ===

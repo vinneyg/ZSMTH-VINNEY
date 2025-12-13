@@ -49,8 +49,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
+import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public class ImagesSelectorActivity extends AppCompatActivity
         implements OnImageRecyclerViewInteractionListener, OnFolderRecyclerViewInteractionListener, View.OnClickListener{
@@ -156,12 +155,7 @@ public class ImagesSelectorActivity extends AppCompatActivity
             int mColumnCount = 3;
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             recyclerView.setAdapter(new ImageRecyclerViewAdapter(ImageListContent.IMAGES, this));
-
-            VerticalRecyclerViewFastScroller fastScroller = findViewById(R.id.recyclerview_fast_scroller);
-            // Connect the recycler to the scroller (to let the scroller scroll the list)
-            fastScroller.setRecyclerView(recyclerView);
-            // Connect the scroller to the recycler (to let the recycler scroll the scroller's handle)
-            recyclerView.addOnScrollListener(fastScroller.getOnScrollListener());
+            new FastScrollerBuilder(recyclerView).useMd2Style().build();
         }
 
         // popup windows will be anchored to this view

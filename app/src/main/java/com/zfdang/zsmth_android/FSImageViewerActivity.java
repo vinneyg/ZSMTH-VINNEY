@@ -82,9 +82,14 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
 
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
-
+            float oldScaleFactor = scaleFactor;
             scaleFactor *= detector.getScaleFactor();
-            scaleFactor = Math.max(0.5f, Math.min(scaleFactor, 5.0f));
+            scaleFactor = Math.max(0.5f, Math.min(scaleFactor, 10.0f));
+
+            // Show toast when reaching maximum zoom level
+            if (scaleFactor >= 10.0f && oldScaleFactor < 10.0f) {
+                NewToast.makeText(FSImageViewerActivity.this, "已经达到最大放大倍数", Toast.LENGTH_SHORT);
+            }
 
             // 获取当前显示的视图并应用缩放
             View currentView = mPagerAdapter.mCurrentView;
@@ -99,12 +104,13 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
 
         @Override
         public boolean onScaleBegin(@NonNull ScaleGestureDetector detector) {
+            mViewPager.requestDisallowInterceptTouchEvent(true);
             return true;
         }
 
         @Override
         public void onScaleEnd(@NonNull ScaleGestureDetector detector) {
-
+            mViewPager.requestDisallowInterceptTouchEvent(false);
             // Still reset to original size when gesture ends
             View currentView = mPagerAdapter.mCurrentView;
             if (currentView != null) {
@@ -238,14 +244,19 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
         View currentView = mPagerAdapter.mCurrentView;
         if (currentView == null) return;
 
-        if (scaleFactor <= 1.0f) {
-            // Zoom in to 2x scale
-            scaleFactor = 2.0f;
+        if (scaleFactor < 10.0f) {
+            // Zoom in by 2x increments, up to maximum of 10x
+            scaleFactor = Math.min(scaleFactor * 2.0f, 10.0f);
             currentView.animate()
                     .scaleX(scaleFactor)
                     .scaleY(scaleFactor)
                     .setDuration(200)
                     .start();
+
+            // Notify when reaching maximum zoom
+            if (scaleFactor >= 10.0f) {
+                NewToast.makeText(FSImageViewerActivity.this, "已经达到最大放大倍数", Toast.LENGTH_SHORT);
+            }
         } else {
             // Reset to original scale
             scaleFactor = 1.0f;
@@ -321,6 +332,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getPointerCount() > 1) {
+            mViewPager.requestDisallowInterceptTouchEvent(true);
             scaleGestureDetector.onTouchEvent(event);
             return super.dispatchTouchEvent(event);
         }

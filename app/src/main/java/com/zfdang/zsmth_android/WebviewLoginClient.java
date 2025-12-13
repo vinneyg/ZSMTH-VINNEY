@@ -35,6 +35,7 @@ public class WebviewLoginClient extends WebViewClient {
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
         //Log.d(TAG, "shouldOverrideUrlLoading" + request.getUrl().toString());
         cancelLoginTimeout();
+        /*
         if (request.getUrl().toString().contains("bbslogin1203.php")) {
             return false;
         }
@@ -42,6 +43,7 @@ public class WebviewLoginClient extends WebViewClient {
                 ||request.getUrl().toString().startsWith("https://m.mysmth.net/index?m=")){
             return false;
         }
+        */
         return false;
     }
 

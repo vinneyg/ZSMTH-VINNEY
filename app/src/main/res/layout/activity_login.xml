@@ -62,17 +62,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/input_layout_username"
+        app:endIconMode="password_toggle"
         >
 
-      <com.maksim88.passwordedittext.PasswordEditText
-          android:id="@+id/password_edit"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:hint="@string/login_label_password"
-          android:inputType="textPassword"
-          android:longClickable="true"
-          android:minHeight="48dp"
-          />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/login_label_password"
+            android:inputType="textPassword"
+            android:minHeight="48dp"
+            />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- 登录 button -->

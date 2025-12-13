@@ -19,9 +19,6 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -86,7 +83,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
     private  int preferenceScrollPosition = 0;
     private static final String PREF_SCROLL_POSITION = "preference_scroll_position";
-
+    private static boolean hasPerformedInitialRecreate = false;
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @Override public void onCreate(Bundle savedInstanceState) {
@@ -616,6 +613,23 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         updateOkHttp3Cache();
         updateFrescoCache();
         updateVersionInfo();
+
+        if(SMTHApplication.isValidUser()){
+            if (!hasPerformedInitialRecreate) {
+                hasPerformedInitialRecreate = true;
+
+                new android.os.Handler().post(() -> {
+                    Activity activity = getActivity();
+                    if (activity != null) {
+                        Intent intent = activity.getIntent();
+                        if (!intent.hasExtra("FRAGMENT")) {
+                            intent.putExtra("FRAGMENT", "PREFERENCE");
+                            activity.recreate();
+                        }
+                    }
+                });
+            }
+        }
     }
 
     @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -725,7 +739,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
                 getListView().invalidate();
             }
         });
-        
+
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@androidx.annotation.NonNull @NonNull Menu menu, @androidx.annotation.NonNull @NonNull MenuInflater menuInflater) {
@@ -762,14 +776,9 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     @Override
     public void onResume() {
         super.onResume();
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            if (getListView() != null) {
-                getListView().invalidate();
-            }
-        }, 100);
 
+        // 保留原有的滚动位置恢复逻辑
         preferenceScrollPosition = loadScrollPosition();
-
         View rootView = getView();
         if (rootView != null) {
             RecyclerView recyclerView = rootView.findViewById(androidx.preference.R.id.recycler_view);
@@ -779,6 +788,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
             }
         }
     }
+
+
 
     private int findClosestToCenter(RecyclerView recyclerView) {
         LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
