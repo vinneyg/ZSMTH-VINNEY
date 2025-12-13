@@ -7,11 +7,12 @@
     android:padding="16dp">
 
     <ProgressBar
+        style="@android:style/Widget.ProgressBar.Inverse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:indeterminateTint="@color/colorPrimaryLight"
-    android:indeterminate="true" />
+        android:indeterminate="true" />
 
     <TextView
         android:id="@+id/dialog_message"
