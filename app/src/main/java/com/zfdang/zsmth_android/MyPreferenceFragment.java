@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
@@ -614,22 +615,6 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         updateFrescoCache();
         updateVersionInfo();
 
-        if(SMTHApplication.isValidUser()){
-            if (!hasPerformedInitialRecreate) {
-                hasPerformedInitialRecreate = true;
-
-                new android.os.Handler().post(() -> {
-                    Activity activity = getActivity();
-                    if (activity != null) {
-                        Intent intent = activity.getIntent();
-                        if (!intent.hasExtra("FRAGMENT")) {
-                            intent.putExtra("FRAGMENT", "PREFERENCE");
-                            activity.recreate();
-                        }
-                    }
-                });
-            }
-        }
     }
 
     @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -734,6 +719,30 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         super.onViewCreated(view, savedInstanceState);
         FragmentStatusBarUtil.adaptDarkMode(this, false);
 
+        view.setVisibility(View.GONE);
+
+        if(SMTHApplication.isValidUser()) {
+            if (!hasPerformedInitialRecreate) {
+                hasPerformedInitialRecreate = true;
+
+                // 延迟执行 recreate，避免卡顿
+                view.postDelayed(() -> {
+                    if (getActivity() != null && getView() != null) {
+                        Activity activity = getActivity();
+                        Intent intent = activity.getIntent();
+                        if (!intent.hasExtra("FRAGMENT")) {
+                            intent.putExtra("FRAGMENT", "PREFERENCE");
+                            activity.recreate();
+                        }
+                    }
+                }, 200);
+            } else {
+                view.setVisibility(View.VISIBLE);
+            }
+        }else{
+            view.setVisibility(View.VISIBLE);
+        }
+
         view.post(() -> {
             if (getListView() != null) {
                 getListView().invalidate();
@@ -749,6 +758,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
                 newItem.setVisible(false);
             }
 
+
             @Override
             public boolean onMenuItemSelected(@androidx.annotation.NonNull @NonNull MenuItem menuItem) {
                 return false;
@@ -762,7 +772,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
         View rootView = getView();
         if (rootView != null) {
-            RecyclerView recyclerView = rootView.findViewById(androidx.preference.R.id.recycler_view);
+            // 使用通用方法查找RecyclerView
+            RecyclerView recyclerView = findRecyclerViewInHierarchy(rootView);
             if (recyclerView != null && recyclerView.getLayoutManager() != null) {
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 int position = layoutManager.findFirstVisibleItemPosition();
@@ -781,12 +792,40 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         preferenceScrollPosition = loadScrollPosition();
         View rootView = getView();
         if (rootView != null) {
-            RecyclerView recyclerView = rootView.findViewById(androidx.preference.R.id.recycler_view);
+            // 使用通用方法查找RecyclerView
+            RecyclerView recyclerView = findRecyclerViewInHierarchy(rootView);
             if (recyclerView != null && recyclerView.getLayoutManager() != null && preferenceScrollPosition >= 0) {
-                ((LinearLayoutManager) recyclerView.getLayoutManager())
-                        .scrollToPositionWithOffset(preferenceScrollPosition, 0);
+                final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+                // Post to message queue to ensure RecyclerView is fully laid out
+                recyclerView.post(() -> {
+                    if (preferenceScrollPosition != RecyclerView.NO_POSITION) {
+                        layoutManager.scrollToPositionWithOffset(preferenceScrollPosition, 0);
+                    }
+                });
             }
         }
+    }
+
+    // 添加辅助方法查找RecyclerView
+    private RecyclerView findRecyclerViewInHierarchy(View view) {
+        // 首先检查view本身是否就是RecyclerView
+        if (view instanceof RecyclerView) {
+            return (RecyclerView) view;
+        }
+
+        // 如果是ViewGroup，递归查找子视图
+        if (view instanceof ViewGroup) {
+            ViewGroup viewGroup = (ViewGroup) view;
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                RecyclerView result = findRecyclerViewInHierarchy(viewGroup.getChildAt(i));
+                if (result != null) {
+                    return result;
+                }
+            }
+        }
+
+        return null;
     }
 
 
