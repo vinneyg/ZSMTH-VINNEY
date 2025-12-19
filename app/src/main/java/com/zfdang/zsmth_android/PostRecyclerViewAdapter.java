@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;

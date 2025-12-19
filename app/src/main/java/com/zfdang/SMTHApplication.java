@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.mob.MobSDK;
 import com.umeng.commonsdk.UMConfigure;
@@ -18,6 +19,8 @@ import com.zfdang.zsmth_android.newsmth.UserStatus;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
 import okhttp3.OkHttpClient;
 import androidx.multidex.MultiDex;
+
+import java.net.CookieManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,14 +116,19 @@ public class SMTHApplication extends Application {
 
         // init Fresco
         OkHttpClient httpClient = SMTHHelper.getInstance().mHttpClient;
-        // init Fresco with enhanced cache configuration
-        ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
-                .setMainDiskCacheConfig(
-                        DiskCacheConfig.newBuilder(this)
-                                .setBaseDirectoryPath(getCacheDir())  // Keep custom cache directory
-                                .setBaseDirectoryName("fresco_cache")  // Keep custom cache folder name
-                                .build())
-                .build();
+
+        ImagePipelineConfig.Builder configBuilder = OkHttpImagePipelineConfigFactory
+                .newBuilder(this, httpClient);
+
+        configBuilder.setMainDiskCacheConfig(
+                DiskCacheConfig.newBuilder(this)
+                        .setBaseDirectoryPath(getCacheDir())
+                        .setBaseDirectoryName("fresco_cache")
+                        .build()
+        );
+
+        ImagePipelineConfig config = configBuilder.build();
+
         Fresco.initialize(context, config);
 
         boolean bNightMode = Settings.getInstance().isNightMode();

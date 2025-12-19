@@ -123,6 +123,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
             // clear cache, then update cache size
             ImagePipeline imagePipeline = Fresco.getImagePipeline();
             imagePipeline.clearDiskCaches();
+            imagePipeline.clearMemoryCaches();
 
             updateFrescoCache();
             return true;
@@ -662,7 +663,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     }
 
     public void updateFrescoCache() {
-        File frescoCacheDirectory = new File(SMTHApplication.getAppContext().getCacheDir(), "image_cache");
+        File frescoCacheDirectory = new File(SMTHApplication.getAppContext().getCacheDir(), "fresco_cache");
         // Log.d(TAG, "updateFrescoCache: " + frescoCacheDirectory.getAbsolutePath());
         updateCacheSize(frescoCacheDirectory.getAbsolutePath(), fresco_cache);
     }

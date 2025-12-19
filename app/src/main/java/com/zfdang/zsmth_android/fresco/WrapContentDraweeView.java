@@ -34,207 +34,195 @@ import java.util.ArrayList;
 
 /*
  * Created by zfdang on 2016-4-8.
- */
-
-// http://stackoverflow.com/questions/33955510/facebook-fresco-using-wrap-conent/34075281#34075281
-// http://blog.csdn.net/yuanhejie/article/details/49868131
-
-/**
- * Works when either height or width is set to wrap_content
- * The imageview will be resized after image was fetched;
- * this view is also capable of handling very long image:
- * it will split the long images into multiple bitmaps, and draw them one by one in OnDraw
+ *
+ * Modified by Vinney on 2025-12-19
  */
 
 public class WrapContentDraweeView extends SimpleDraweeView {
-  private static final String TAG = "DraweeView";
+    private static final String TAG = "DraweeView";
 
-  private int WindowWidth;
-  private Rect src;
-  private Rect dst;
-  private Paint paint;
-  private ArrayList<Bitmap> bmps;
+    private int WindowWidth;
+    private Rect src;
+    private Rect dst;
+    private Paint paint;
+    private ArrayList<Bitmap> bmps;
 
-  // we set a listener and update the view's aspect ratio depending on the loaded image
-  private final ControllerListener<ImageInfo> listener = new BaseControllerListener<ImageInfo>() {
-    @Override public void onIntermediateImageSet(String id, @Nullable ImageInfo imageInfo) {
-      updateViewSize(imageInfo);
+    public WrapContentDraweeView(Context context) {
+        super(context);
+        initDraweeView();
     }
 
-    @Override public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
-      if (imageInfo == null) {
-        return;
-      }
-      updateViewSize(imageInfo);
+    public WrapContentDraweeView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        initDraweeView();
     }
-  };
 
-  // update view's width & height after loading is done
-  void updateViewSize(@Nullable ImageInfo imageInfo) {
-    // since we have placeholder to show loading status, the height is 68dp, we need to reset height to WRAP_CONTENT
-    getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-
-    // set ratio, so that image view's height will be updated by Fresco (width = match_parent)
-    assert imageInfo != null;
-    setAspectRatio((float) imageInfo.getWidth() / imageInfo.getHeight());
-  }
-
-  public WrapContentDraweeView(Context context) {
-    super(context);
-    initDraweeView();
-  }
-
-  public WrapContentDraweeView(Context context, AttributeSet attrs) {
-    super(context, attrs);
-    initDraweeView();
-  }
-
-  public WrapContentDraweeView(Context context, AttributeSet attrs, int defStyle) {
-    super(context, attrs, defStyle);
-    initDraweeView();
-  }
-
-  public void initDraweeView() {
-    getHierarchy().setProgressBarImage(new LoadingProgressDrawable(SMTHApplication.getAppContext()));
-
-    WindowWidth = getResources().getDisplayMetrics().widthPixels;
-
-    paint = new Paint();
-    paint.setAntiAlias(true);
-    paint.setFilterBitmap(true);
-
-    src = new Rect();
-    dst = new Rect();
-  }
-
-  // getTimes(3, 4) == 0
-  // getTimes(4, 4) == 1
-  // getTimes(8, 4) == 2
-  // getTimes(9, 4) == 3
-  int getTimes(int actualNumber, int allowedMaxNumber) {
-    if (actualNumber < allowedMaxNumber) return 0;
-    int result = actualNumber / allowedMaxNumber;
-    if (result * allowedMaxNumber < actualNumber) {
-      result += 1;
+    public WrapContentDraweeView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        initDraweeView();
     }
-    return result;
-  }
 
-  @Override public void setImageURI(Uri uri, Object callerContext) {
-    // http://frescolib.org/docs/modifying-image.html
-    // this post process will do two things: 1. resize if image width is too large; 2. split if image height is too large
-    Postprocessor postProcessor = new BasePostprocessor() {
-      @Override public String getName() {
-        return "SplitLongImagePostProcessor";
-      }
+    public void initDraweeView() {
+        getHierarchy().setProgressBarImage(new LoadingProgressDrawable(SMTHApplication.getAppContext()));
+        WindowWidth = getResources().getDisplayMetrics().widthPixels;
+        paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setFilterBitmap(true);
+        src = new Rect();
+        dst = new Rect();
+    }
 
-      @Override public CloseableReference<Bitmap> process(Bitmap sourceBitmap, PlatformBitmapFactory bitmapFactory) {
-        CloseableReference<Bitmap> bitmapRef = null;
-
-        try {
-          // resize image if its width is too large: > windowWidth * 1.5
-          double ratio = 1.0;
-          if (sourceBitmap.getWidth() >= WindowWidth * 1.5) {
-            ratio = (double) WindowWidth / sourceBitmap.getWidth();
-          }
-          bitmapRef = bitmapFactory.createBitmap((int) (sourceBitmap.getWidth() * ratio), (int) (sourceBitmap.getHeight() * ratio));
-
-          Bitmap destBitmap = bitmapRef.get();
-          Canvas canvas = new Canvas(destBitmap);
-          Rect destRect = new Rect(0, 0, destBitmap.getWidth(), destBitmap.getHeight());
-          canvas.drawBitmap(sourceBitmap, null, destRect, paint);
-
-          // split images if its height is too large: > OpenGL max Height
-          try {
-            int imageTotalHeight = destBitmap.getHeight();
-            double imageAspectRatio = destBitmap.getWidth() / (double) WindowWidth;
-            int imageMaxAllowedHeight;
-            if (imageAspectRatio < 1) {
-              imageMaxAllowedHeight = (int) (ImageUtils.getMaxHeight() * imageAspectRatio) - 5;
-            } else {
-              imageMaxAllowedHeight = ImageUtils.getMaxHeight();
-            }
-            int imageCount = getTimes(imageTotalHeight, imageMaxAllowedHeight);
-            // Log.d(TAG, "process: h = " + imageTotalHeight + " w = " + destBitmap.getWidth() + " allowed: " + imageMaxAllowedHeight + " count: " + imageCount);
-            if (imageCount > 1) {
-              bmps = new ArrayList<>();
-              Rect bsrc = new Rect();
-
-              ByteArrayOutputStream baos = new ByteArrayOutputStream();
-              destBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-              InputStream isBm = new ByteArrayInputStream(baos.toByteArray());
-              BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(isBm, true);
-              for (int i = 0; i < imageCount; i++) {
-                bsrc.left = 0;
-                bsrc.top = i * imageMaxAllowedHeight;
-                bsrc.right = destBitmap.getWidth();
-                bsrc.bottom = Math.min(bsrc.top + imageMaxAllowedHeight, imageTotalHeight);
-                  assert decoder != null;
-                  Bitmap bmp = decoder.decodeRegion(bsrc, null);
-                bmps.add(bmp);
-              }
-            }
-          } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
-          }
-          return CloseableReference.cloneOrNull(bitmapRef);
-        } finally {
-          CloseableReference.closeSafely(bitmapRef);
+    int getTimes(int actualNumber, int allowedMaxNumber) {
+        if (actualNumber < allowedMaxNumber) return 0;
+        int result = actualNumber / allowedMaxNumber;
+        if (result * allowedMaxNumber < actualNumber) {
+            result += 1;
         }
-      }
-    };
-
-    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-        .setRotationOptions(RotationOptions.autoRotate())
-        // this will reduce image's size if it's wider than screen width
-        .setResizeOptions(new ResizeOptions(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE))
-        .setPostprocessor(postProcessor).build();
-
-    DraweeController controller = ((PipelineDraweeControllerBuilder) getControllerBuilder()).setImageRequest(request)
-        .setControllerListener(listener)
-        .setCallerContext(callerContext)
-        .setAutoPlayAnimations(true)
-        .setOldController(getController())
-        .build();
-    setController(controller);
-  }
-
-  @Override protected void onDraw(Canvas canvas) {
-    if (bmps == null || bmps.size() <= 1) {
-      // use super.onDraw
-      super.onDraw(canvas);
-    } else {
-      // this is a very large image, and it has been splitted into several small bitmaps
-      int accumulatedHeight = 0;
-      for (int i = 0; i < bmps.size(); i++) {
-        Bitmap bmp = bmps.get(i);
-        src.left = 0;
-        src.top = 0;
-        src.right = bmp.getWidth();
-        src.bottom = bmp.getHeight();
-
-        dst.left = 0;
-        dst.top = accumulatedHeight;
-        dst.right = getWidth();
-        dst.bottom = accumulatedHeight + (int) ((double) src.bottom / (double) src.right * getWidth());
-        canvas.drawBitmap(bmp, src, dst, paint);
-
-        accumulatedHeight = dst.bottom;
-      }
+        return result;
     }
-  }
 
-  // load image from string URL
-  public void setImageFromStringURL(final String url) {
-    if (url == null || url.isEmpty()) return;
-    this.setImageURI(Uri.parse(url));
-  }
+    @Override
+    public void setImageURI(Uri uri, Object callerContext) {
+        if (uri == null) {
+            Log.w(TAG, "setImageURI called with null URI");
+            return;
+        }
 
-  /*
-  // load image from local file
-  public void setImageFromLocalFilename(final String filename) {
-    this.setImageURI(Uri.fromFile(new File(filename)));
-  }
-  */
+        // ✅ Capture the real URL string for this request
+        final String currentUrl = uri.toString();
+        Log.d(TAG, "Start loading image: " + currentUrl);
+
+        Postprocessor postProcessor = new BasePostprocessor() {
+            @Override
+            public String getName() {
+                return "SplitLongImagePostProcessor";
+            }
+
+            @Override
+            public CloseableReference<Bitmap> process(Bitmap sourceBitmap, PlatformBitmapFactory bitmapFactory) {
+                CloseableReference<Bitmap> bitmapRef = null;
+                try {
+                    double ratio = 1.0;
+                    if (sourceBitmap.getWidth() >= WindowWidth * 1.5) {
+                        ratio = (double) WindowWidth / sourceBitmap.getWidth();
+                    }
+                    bitmapRef = bitmapFactory.createBitmap(
+                            (int) (sourceBitmap.getWidth() * ratio),
+                            (int) (sourceBitmap.getHeight() * ratio)
+                    );
+
+                    Bitmap destBitmap = bitmapRef.get();
+                    Canvas canvas = new Canvas(destBitmap);
+                    Rect destRect = new Rect(0, 0, destBitmap.getWidth(), destBitmap.getHeight());
+                    canvas.drawBitmap(sourceBitmap, null, destRect, paint);
+
+                    try {
+                        int imageTotalHeight = destBitmap.getHeight();
+                        double imageAspectRatio = destBitmap.getWidth() / (double) WindowWidth;
+                        int imageMaxAllowedHeight = (imageAspectRatio < 1)
+                                ? (int) (ImageUtils.getMaxHeight() * imageAspectRatio) - 5
+                                : ImageUtils.getMaxHeight();
+
+                        int imageCount = getTimes(imageTotalHeight, imageMaxAllowedHeight);
+                        if (imageCount > 1) {
+                            bmps = new ArrayList<>();
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            destBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                            InputStream isBm = new ByteArrayInputStream(baos.toByteArray());
+                            BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(isBm, true);
+                            for (int i = 0; i < imageCount; i++) {
+                                Rect bsrc = new Rect();
+                                bsrc.left = 0;
+                                bsrc.top = i * imageMaxAllowedHeight;
+                                bsrc.right = destBitmap.getWidth();
+                                bsrc.bottom = Math.min(bsrc.top + imageMaxAllowedHeight, imageTotalHeight);
+                                Bitmap bmp = null;
+                                if (decoder != null) {
+                                    bmp = decoder.decodeRegion(bsrc, null);
+                                }
+                                bmps.add(bmp);
+                            }
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error splitting image", e);
+                    }
+                    return CloseableReference.cloneOrNull(bitmapRef);
+                } finally {
+                    CloseableReference.closeSafely(bitmapRef);
+                }
+            }
+        };
+
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+                .setRotationOptions(RotationOptions.autoRotate())
+                .setResizeOptions(new ResizeOptions(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE))
+                .setPostprocessor(postProcessor)
+                .build();
+
+        // ✅ Create a new listener per request, capturing currentUrl
+        ControllerListener<ImageInfo> listener = new BaseControllerListener<ImageInfo>() {
+            @Override
+            public void onIntermediateImageSet(String id, @Nullable ImageInfo imageInfo) {
+                updateViewSize(imageInfo);
+            }
+
+            @Override
+            public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+                if (imageInfo != null) {
+                    updateViewSize(imageInfo);
+                }
+            }
+
+            @Override
+            public void onFailure(String id, Throwable throwable) {
+                String msg = (throwable.getMessage() != null) ? throwable.getMessage().toLowerCase() : "";
+                if (msg.contains("unknown image format") || msg.contains("decode")) {
+                    Log.e(TAG, "【图片格式错误】URL: " + currentUrl + " | id=" + id);
+                } else {
+                    Log.e(TAG, "【网络或下载失败】URL: " + currentUrl + " | id=" + id);
+                }
+            }
+        };
+
+        DraweeController controller = ((PipelineDraweeControllerBuilder) getControllerBuilder())
+                .setImageRequest(request)
+                .setControllerListener(listener)
+                .setCallerContext(callerContext)
+                .setAutoPlayAnimations(true)
+                .setOldController(getController())
+                .build();
+        setController(controller);
+    }
+
+    void updateViewSize(@Nullable ImageInfo imageInfo) {
+        if (imageInfo == null) return;
+        getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        setAspectRatio((float) imageInfo.getWidth() / imageInfo.getHeight());
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        if (bmps == null || bmps.size() <= 1) {
+            super.onDraw(canvas);
+        } else {
+            int accumulatedHeight = 0;
+            for (Bitmap bmp : bmps) {
+                src.set(0, 0, bmp.getWidth(), bmp.getHeight());
+                dst.set(0, accumulatedHeight,
+                        getWidth(),
+                        accumulatedHeight + (int) ((float) src.height() / src.width() * getWidth()));
+                canvas.drawBitmap(bmp, src, dst, paint);
+                accumulatedHeight = dst.bottom;
+            }
+        }
+    }
+
+    public void setImageFromStringURL(final String url) {
+        if (url == null || url.isEmpty()) {
+            Log.w(TAG, "setImageFromStringURL: url is null or empty");
+            return;
+        }
+        setImageURI(Uri.parse(url));
+    }
 
 }

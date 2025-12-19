@@ -10,7 +10,7 @@ import retrofit2.http.Query;
 import io.reactivex.Observable;
 
 /**
- * Created by zfdang on 2016-3-16.
+ * Created by Vinney on 2025-04-17.
  */
 
 public interface SMTHMService {
