@@ -16,10 +16,4 @@
 #   public *;
 #}
 
-# 强制保留该 Activity 及其所有方法、字段
--keep public class com.zfdang.multiple_images_selector.ImagesSelectorActivity {
-    public <init>();
-    public void *(...);
-}
-
 
