@@ -19,8 +19,6 @@ import com.zfdang.zsmth_android.newsmth.UserStatus;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
 import okhttp3.OkHttpClient;
 import androidx.multidex.MultiDex;
-
-import java.net.CookieManager;
 import java.util.ArrayList;
 import java.util.List;
 
