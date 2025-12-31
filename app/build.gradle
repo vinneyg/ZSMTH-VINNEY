@@ -1,4 +1,7 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+}
+
 apply from: 'MobSDK.gradle'
 
 // http://www.race604.com/android-auto-version/
@@ -87,7 +90,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 
     // Fresco
-    implementation "com.facebook.fresco:fresco:$rootProject.FRESCO_VERSION"
+    implementation("com.facebook.fresco:fresco:$rootProject.FRESCO_VERSION") {
+        exclude group: 'com.facebook.infer.annotation', module: 'infer-annotation'
+    }
     // For animated GIF support
     implementation "com.facebook.fresco:animated-gif:$rootProject.FRESCO_VERSION"
     // For WebP support, including animated WebP

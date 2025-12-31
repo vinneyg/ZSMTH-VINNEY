@@ -517,7 +517,6 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
         }
 
         if (imageFile == null) {
-            Log.d("Vinney", "200");
             NewToast.makeText(FSImageViewerActivity.this, "无法读取缓存文件！", Toast.LENGTH_SHORT);
             return;
         }

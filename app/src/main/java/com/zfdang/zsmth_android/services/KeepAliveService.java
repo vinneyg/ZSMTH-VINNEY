@@ -28,8 +28,8 @@ import java.util.concurrent.TimeUnit;
 public class KeepAliveService extends Service {
     private static final int notId = 1;
     private static final String channelId = "e729";
-    private final static int interval = 300; //  刷新的时间间隔，单位：秒
-    private final static int retry = 60; //  刷新失败后重试的时间间隔，单位：秒
+    private final static int interval = 180; //  刷新的时间间隔，单位：秒
+    private final static int retry = 10; //  刷新失败后重试的时间间隔，单位：秒
     private static int i = 0;
     private static int count = 0;           //  网络访问出错的次数
 
@@ -91,6 +91,9 @@ public class KeepAliveService extends Service {
         public Result doWork() {
             ++i;
             Log.d("KeepAliveService", "保持用户在线服务计数: " + i);
+            if (i > Integer.MAX_VALUE - 1000) {
+                i = 0;
+            }
 
             try {
                 //  因为这是在service线程中的网络访问，所以同步调用并不会影响UI

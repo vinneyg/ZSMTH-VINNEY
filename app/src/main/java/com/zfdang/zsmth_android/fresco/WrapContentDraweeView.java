@@ -32,6 +32,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+
 /*
  * Created by zfdang on 2016-4-8.
  *
@@ -179,7 +180,7 @@ public class WrapContentDraweeView extends SimpleDraweeView {
                 if (msg.contains("unknown image format") || msg.contains("decode")) {
                     Log.e(TAG, "【图片格式错误】URL: " + currentUrl + " | id=" + id);
                 } else {
-                    Log.e(TAG, "【网络或下载失败】URL: " + currentUrl + " | id=" + id);
+                    Log.e(TAG, "【网络或下载失败】URL: " + currentUrl + " | id=" + id +" " + msg);
                 }
             }
         };

@@ -39,7 +39,9 @@ public class FSImagePagerAdapter extends PagerAdapter {
 
     @NonNull
     @Override public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        final LayoutInflater inflater = (LayoutInflater) SMTHApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        // 使用 mListener (Activity) 作为 LayoutInflater 的 Context
+        final LayoutInflater inflater = (LayoutInflater) mListener.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         // Add the text layout to the parent layout
         MyPhotoView image = (MyPhotoView) inflater.inflate(R.layout.image_viewer_pager, container, false);
 
@@ -61,13 +63,13 @@ public class FSImagePagerAdapter extends PagerAdapter {
         }
 
         image.setOnPhotoTapListener((view, x, y) -> {
-            if (mListener != null && mListener instanceof OnPhotoTapListener) {
+            if (mListener instanceof OnPhotoTapListener) {
                 ((OnPhotoTapListener) mListener).onPhotoTap(view, x, y);
             }
         });
 
         image.setOnOutsidePhotoTapListener(imageView -> {
-            if (mListener != null && mListener instanceof OnOutsidePhotoTapListener) {
+            if (mListener instanceof OnOutsidePhotoTapListener) {
                 ((OnOutsidePhotoTapListener) mListener).onOutsidePhotoTap(imageView);
             }
         });

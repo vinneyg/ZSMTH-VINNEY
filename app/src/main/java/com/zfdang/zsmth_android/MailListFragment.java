@@ -59,7 +59,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class MailListFragment extends Fragment implements OnVolumeUpDownListener, View.OnClickListener {
 
-  //private static final String TAG = "MailListFragment";
+  private static final String TAG = "MailListFragment";
   public static final String INBOX_LABEL = "inbox";
   private static final String OUTBOX_LABEL = "outbox";
   private static final String DELETED_LABEL = "deleted";
@@ -337,7 +337,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
     String title = SMTHApplication.App_Title_Prefix;
 
     if (activity == null) {
-      Log.e("MailListFragment", "activity is null.");
+      Log.e(TAG, "activity is null.");
       return;
     }
     if (TextUtils.equals(currentFolder, INBOX_LABEL) || TextUtils.equals(currentFolder, OUTBOX_LABEL) || TextUtils.equals(currentFolder,
@@ -352,7 +352,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
       else if(TextUtils.equals(currentFolder,DELETED_LABEL)) {
         title += "回收站";
       }
-      Log.d("MailListFragment", "LOAD MAIL");
+      Log.d(TAG, "LOAD MAIL");
 
       activity.setTitle(title);
       LoadMails();
@@ -368,7 +368,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
         title += "LIKE我";
       }
       activity.setTitle(title);
-      Log.d("MailListFragment", "LOAD POST");
+      Log.d(TAG, "LOAD POST");
       LoadReferPosts();
     }
   }

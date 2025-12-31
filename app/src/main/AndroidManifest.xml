@@ -17,7 +17,6 @@
       tools:ignore="AllFilesAccessPolicy,ScopedStorage" />
   <uses-permission android:name="android.permission.WAKE_LOCK" />
   <uses-permission android:name="android.permission.CAMERA" />
-  <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE"
       tools:ignore="ForegroundServicesPolicy" />
 
@@ -29,10 +28,10 @@
       android:largeHeap="true"
       android:supportsRtl="true"
       android:theme="@style/AppTheme"
+      android:enableOnBackInvokedCallback="true"
       android:usesCleartextTraffic="true"
       android:requestLegacyExternalStorage="true"
       android:preserveLegacyExternalStorage="true"
-      tools:replace="android:name"
       tools:targetApi="r">
     <service
         android:name=".services.KeepAliveService"

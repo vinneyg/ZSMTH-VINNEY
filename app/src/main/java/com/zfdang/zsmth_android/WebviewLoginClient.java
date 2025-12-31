@@ -35,7 +35,13 @@ public class WebviewLoginClient extends WebViewClient {
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
         //Log.d(TAG, "shouldOverrideUrlLoading" + request.getUrl().toString());
         cancelLoginTimeout();
+        String url = request.getUrl().toString();
         /*
+        // 检查是否为登录过程中的中间页面
+        if (request.getUrl().toString().contains("frames.html")){
+            //view.setVisibility(View.GONE);
+            return false;
+        }
         if (request.getUrl().toString().contains("bbslogin1203.php")) {
             return false;
         }

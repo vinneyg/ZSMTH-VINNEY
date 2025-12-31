@@ -131,7 +131,7 @@ public class MaintainUserStatusWorker extends Worker {
                 if (stat.getId() == null) {
                     stat.setId("guest");
                 }
-                Log.d(TAG,stat.getId());
+                //Log.d(TAG,stat.getId());
                 return stat;
             } else {
                 return userStatus;
