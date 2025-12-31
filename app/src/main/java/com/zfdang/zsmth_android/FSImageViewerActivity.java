@@ -38,7 +38,6 @@ import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener;
 import com.github.chrisbanes.photoview.OnPhotoTapListener;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.FrescoUtils;
-//import com.zfdang.zsmth_android.fresco.MyPhotoView;
 import com.zfdang.zsmth_android.helpers.FileSizeUtil;
 import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
 import com.zfdang.zsmth_android.helpers.NewToast;
@@ -145,6 +144,10 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
         }
         window.setAttributes(lp);
         setContentView(R.layout.activity_fs_image_viewer);
+        //clear fresco caches
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        imagePipeline.clearCaches();
+
         mViewPager = findViewById(R.id.fullscreen_image_pager);
         // find parameters from parent
         mURLs = getIntent().getStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS);
@@ -402,7 +405,6 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
         final String imagePath = mURLs.get(position);
         boolean isAnimation = imagePath != null && imagePath.toLowerCase().endsWith(".gif");
         saveImageToFile(imagePath, isAnimation);
-
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -514,24 +516,43 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
             // Log detailed cache search information
             Log.d(TAG, "Primary cache lookup failed for: " + imagePath);
             // Try direct download or other approaches
-        }
+            FrescoUtils.downloadImageDirectlyAsync(Uri.parse(imagePath), FSImageViewerActivity.this, new FrescoUtils.DownloadCallback() {
+                @Override
+                public void onSuccess(File file) {
+                    // Download successful, continue with save operation
+                    performSaveOperation(file, imagePath, isAnimation);
+                }
 
+                @Override
+                public void onError(String error) {
+                    // Download failed, show error message
+                    Log.e(TAG, "Direct download failed: " + error);
+                    NewToast.makeText(FSImageViewerActivity.this, "无法读取缓存文件！", Toast.LENGTH_SHORT);
+                }
+            });
+        }
+        performSaveOperation(imageFile, imagePath, isAnimation);
+    }
+
+    // Extract the save operation to a separate method to avoid code duplication
+    private void performSaveOperation(File imageFile, String imagePath, boolean isAnimation) {
         if (imageFile == null) {
             NewToast.makeText(FSImageViewerActivity.this, "无法读取缓存文件！", Toast.LENGTH_SHORT);
             return;
         }
+
         // Log.d(TAG, "saveImageToFile: " + imageFile.getAbsolutePath());
 
         // save image to sdcard
         try {
             if (TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
-                String path = Environment.getExternalStorageDirectory().getPath() + "/zSMTH/";
+                String path = Environment.getExternalStorageDirectory().getPath() + "/zSMTH-v/";
                 File dir = new File(path);
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
 
-                String IMAGE_FILE_PREFIX = "zSMTH-";
+                String IMAGE_FILE_PREFIX = "zSMTH-v-";
                 String IMAGE_FILE_SUFFIX = ".jpg";
                 if (isAnimation) {
                     IMAGE_FILE_SUFFIX = ".gif";
@@ -541,9 +562,8 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
                 BufferedInputStream bufr = new BufferedInputStream(Files.newInputStream(imageFile.toPath()));
                 BufferedOutputStream bufw = new BufferedOutputStream(Files.newOutputStream(outFile.toPath()));
 
-
                 int len;
-                byte[] buf = new byte[1024];
+                byte[] buf = new byte[16384];
                 while ((len = bufr.read(buf)) != -1) {
                     bufw.write(buf, 0, len);
                     bufw.flush();
@@ -554,8 +574,9 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
                 // make sure the new file can be recognized soon
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(outFile)));
 
-                //Toast.makeText(FSImageViewerActivity.this, "图片已存为: /zSMTH/" + outFile.getName(), Toast.LENGTH_SHORT).show();
-                NewToast.makeText(FSImageViewerActivity.this, "图片已存为: /zSMTH/" + outFile.getName(), Toast.LENGTH_SHORT);
+                //Toast.makeText(FSImageViewerActivity.this, "图片已存为: /zSMTH-v/" + outFile.getName(), Toast.LENGTH_SHORT).show();
+                NewToast.makeText(FSImageViewerActivity.this, "图片已存为: /zSMTH-v/" + outFile.getName(), Toast.LENGTH_SHORT);
+
             }
         } catch (Exception e) {
             Log.e(TAG, "saveImageToFile: " + Log.getStackTraceString(e));

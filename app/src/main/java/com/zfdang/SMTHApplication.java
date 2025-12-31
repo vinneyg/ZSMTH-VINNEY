@@ -6,6 +6,7 @@ import android.content.Context;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.facebook.cache.disk.DiskCacheConfig;
+import com.facebook.common.util.ByteConstants;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
@@ -122,6 +123,9 @@ public class SMTHApplication extends Application {
                 DiskCacheConfig.newBuilder(this)
                         .setBaseDirectoryPath(getCacheDir())
                         .setBaseDirectoryName("fresco_cache")
+                        .setMaxCacheSize(50L * ByteConstants.MB)  // 设置最大缓存大小
+                        .setMaxCacheSizeOnLowDiskSpace(10L * ByteConstants.MB)  // 低磁盘空间时的最大缓存
+                        .setMaxCacheSizeOnVeryLowDiskSpace(5L * ByteConstants.MB)  // 极低磁盘空间时的最大缓存
                         .build()
         );
 
