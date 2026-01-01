@@ -563,7 +563,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
                 BufferedOutputStream bufw = new BufferedOutputStream(Files.newOutputStream(outFile.toPath()));
 
                 int len;
-                byte[] buf = new byte[16384];
+                byte[] buf = new byte[8192];
                 while ((len = bufr.read(buf)) != -1) {
                     bufw.write(buf, 0, len);
                     bufw.flush();
