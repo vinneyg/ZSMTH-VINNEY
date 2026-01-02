@@ -50,6 +50,7 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
 
         WebView mWebView = findViewById(R.id.webview_login);
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+        mWebView.clearCache(true);
         mWebView.getSettings().setGeolocationEnabled(false);
         mWebView.getSettings().setJavaScriptEnabled(true);
 

@@ -102,6 +102,7 @@ public class WrapContentDraweeView extends SimpleDraweeView {
             @Override
             public CloseableReference<Bitmap> process(Bitmap sourceBitmap, PlatformBitmapFactory bitmapFactory) {
                 CloseableReference<Bitmap> bitmapRef = null;
+                CloseableReference<Bitmap> resultRef = null;
                 try {
                     double ratio = 1.0;
                     if (sourceBitmap.getWidth() >= WindowWidth * 1.5) {
@@ -147,9 +148,18 @@ public class WrapContentDraweeView extends SimpleDraweeView {
                     } catch (Exception e) {
                         Log.e(TAG, "Error splitting image", e);
                     }
-                    return CloseableReference.cloneOrNull(bitmapRef);
+
+                    // 返回克隆的引用以避免资源冲突
+                    resultRef = CloseableReference.cloneOrNull(bitmapRef);
+                    return resultRef;
                 } finally {
+                    // 确保原始引用被关闭
                     CloseableReference.closeSafely(bitmapRef);
+                    // 如果结果引用与原始引用相同，则不再关闭结果引用
+                    if (resultRef != bitmapRef) {
+                        // 在外部调用时关闭 resultRef
+                        Log.d(TAG, "Returning cloned bitmap reference");
+                    }
                 }
             }
         };
