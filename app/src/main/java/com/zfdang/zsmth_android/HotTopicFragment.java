@@ -115,6 +115,7 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
 
     initItemHelper();
 
+    FragmentStatusBarUtil.adaptDarkMode(this, Settings.getInstance().isNightMode());
     return rootView;
   }
 
@@ -165,7 +166,6 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
   @Override
   public void onViewCreated(@androidx.annotation.NonNull @NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    FragmentStatusBarUtil.adaptDarkMode(this, false);
     requireActivity().addMenuProvider(new MenuProvider() {
       @Override
       public void onCreateMenu(@androidx.annotation.NonNull @NonNull Menu menu, @androidx.annotation.NonNull @NonNull MenuInflater menuInflater) {

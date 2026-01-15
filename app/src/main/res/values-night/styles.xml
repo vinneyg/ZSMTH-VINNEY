@@ -24,7 +24,6 @@
 
     <item name="windowActionBar">false</item>
     <item name="windowNoTitle">true</item>
-    <item name="android:statusBarColor">@color/colorPrimary</item>
     <item name="preferenceTheme">@style/MyPreferenceThemeOverlay</item>
 
     <!-- Set theme colors from http://www.google.com/design/spec/style/color.html#color-color-palette-->
@@ -39,7 +38,6 @@
 
   <style name="AppTheme.NoActionBar.MainActivity" parent="AppTheme.NoActionBar">
     <item name="android:windowIsTranslucent">true</item>
-    <item name="android:statusBarColor">@color/colorPrimary</item>
     <item name="preferenceTheme">@style/MyPreferenceThemeOverlay</item>
   </style>
 

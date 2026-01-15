@@ -12,7 +12,6 @@
 
     <!--http://stackoverflow.com/questions/14462226/white-background-during-app-launch-->
     <item name="android:windowBackground">@color/white</item>
-    <item name="android:statusBarColor">@color/colorPrimary</item>
     <item name="preferenceTheme">@style/MyPreferenceThemeOverlay</item>
   </style>
 
@@ -25,7 +24,6 @@
 
     <item name="windowActionBar">false</item>
     <item name="windowNoTitle">true</item>
-    <item name="android:statusBarColor">@color/colorPrimary</item>
     <item name="preferenceTheme">@style/MyPreferenceThemeOverlay</item>
 
     <!-- Set theme colors from http://www.google.com/design/spec/style/color.html#color-color-palette-->

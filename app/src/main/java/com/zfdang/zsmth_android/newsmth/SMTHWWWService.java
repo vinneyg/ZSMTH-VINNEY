@@ -68,12 +68,24 @@ public interface SMTHWWWService {
             @Query("t1") String keyword, @Query("au") String author, @Query("m") String elite, @Query("a") String attachment,
             @Query("b") String boardEngName);
 
+    /*
     // the header line is important, because newsmth will ignore it without this header
     @Headers("X-Requested-With:XMLHttpRequest")
     @GET("/nForum/user/query/{username}.json")
     //@GET("https://m.newsmth.net/user/query/{username}")
     Observable<UserInfo> queryUserInformation(
             @Path("username") String username);
+   */
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @GET("bbsqry.php")
+        //@GET("https://www.newsmth.net/bbsqry.php?userid={username}")
+    Observable<UserInfo> queryUserInformation(@Query("userid") String username);
+
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @GET("bbsqry.php")
+    //@GET("https://www.newsmth.net/bbsqry.php?userid={username}")
+    //Observable<String> getRawUserInformation(@Query("userid") String username);
+    Observable<ResponseBody> getRawUserInformationResponseBody(@Query("userid") String username);
 
     @Headers({"Content-Type: application/octet-stream", "X-Requested-With:XMLHttpRequest"})
     @POST("/nForum/att/{boardEngName}/ajax_add.json")

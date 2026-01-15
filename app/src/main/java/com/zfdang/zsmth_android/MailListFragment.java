@@ -182,8 +182,10 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
       if(SMTHApplication.bNewMailSent)
         SMTHApplication.bNewMailSent = false;
 
+      /*
       if(SMTHApplication.isValidUser())
         ( (MainActivity) requireActivity()).onRelogin();
+      */
     }
 
     // highlight the current folder
@@ -352,7 +354,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
       else if(TextUtils.equals(currentFolder,DELETED_LABEL)) {
         title += "回收站";
       }
-      Log.d(TAG, "LOAD MAIL");
+      //Log.d(TAG, "LOAD MAIL");
 
       activity.setTitle(title);
       LoadMails();
@@ -556,7 +558,6 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
   @Override
   public void onViewCreated(@androidx.annotation.NonNull @NonNull View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    FragmentStatusBarUtil.adaptDarkMode(this, false);
     requireActivity().addMenuProvider(new MenuProvider() {
       @Override
       public void onCreateMenu(@androidx.annotation.NonNull @NonNull Menu menu, @androidx.annotation.NonNull @NonNull MenuInflater menuInflater) {
@@ -599,6 +600,7 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
         return false;
       }
     }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+    FragmentStatusBarUtil.adaptDarkMode(this, Settings.getInstance().isNightMode());
   }
 
   @Override public void onClick(View v) {

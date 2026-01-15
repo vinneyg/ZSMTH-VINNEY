@@ -145,11 +145,13 @@ public class MainActivity extends SMTHBaseActivity
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @Override protected void onCreate(Bundle savedInstanceState) {
+        /*
         if (Settings.getInstance().isNightMode()) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
+        */
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar =  findViewById(R.id.toolbar);

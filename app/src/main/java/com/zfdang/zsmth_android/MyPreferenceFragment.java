@@ -124,6 +124,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
             ImagePipeline imagePipeline = Fresco.getImagePipeline();
             imagePipeline.clearDiskCaches();
             imagePipeline.clearMemoryCaches();
+            imagePipeline.clearCaches();
 
             updateFrescoCache();
             return true;

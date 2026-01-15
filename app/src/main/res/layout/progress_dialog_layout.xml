@@ -7,7 +7,7 @@
     android:padding="16dp">
 
     <ProgressBar
-        style="@android:style/Widget.ProgressBar.Inverse"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

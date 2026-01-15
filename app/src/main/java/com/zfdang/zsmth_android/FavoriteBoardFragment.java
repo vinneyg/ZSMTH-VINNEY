@@ -580,7 +580,6 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
   @Override
   public void onViewCreated(@androidx.annotation.NonNull @NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    FragmentStatusBarUtil.adaptDarkMode(this, false);
     requireActivity().addMenuProvider(new MenuProvider() {
       @Override
       public void onCreateMenu(@androidx.annotation.NonNull @NonNull Menu menu, @androidx.annotation.NonNull @NonNull MenuInflater menuInflater) {
@@ -597,6 +596,8 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
         return false;
       }
     }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+
+    FragmentStatusBarUtil.adaptDarkMode(this, Settings.getInstance().isNightMode());
   }
 
 
