@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.work.Constraints;
 import androidx.work.Data;
 import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
@@ -297,15 +299,21 @@ public class MaintainUserStatusWorker extends Worker {
         Data.Builder inputData = new Data.Builder();
         inputData.putBoolean(MaintainUserStatusWorker.REPEAT, true);
 
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .setRequiresBatteryNotLow(true)
+                .build();
+
         OneTimeWorkRequest userStatusWorkRequest =
                 new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class)
+                        .setConstraints(constraints)
                         .setInitialDelay(SMTHApplication.INTERVAL_TO_CHECK_MESSAGE, TimeUnit.MINUTES)
                         .setInputData(inputData.build())
                         .build();
 
         WorkManager.getInstance(getApplicationContext())
-                .enqueueUniqueWork(WORKER_ID, ExistingWorkPolicy.KEEP, userStatusWorkRequest);
-
+                .enqueueUniqueWork("maintain_user_status_worker", ExistingWorkPolicy.KEEP, userStatusWorkRequest);
     }
+
 
 }

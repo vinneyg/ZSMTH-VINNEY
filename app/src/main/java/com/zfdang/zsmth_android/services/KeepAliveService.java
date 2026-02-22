@@ -15,6 +15,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
@@ -125,9 +126,11 @@ public class KeepAliveService extends Service {
         OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(MyWork.class)
                 .setInitialDelay(delaySeconds, TimeUnit.SECONDS)
                 .build();
-        WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
+        WorkManager.getInstance(getApplicationContext())
+                .enqueueUniqueWork("keep_alive_task", ExistingWorkPolicy.KEEP, workRequest);
         Log.d("KeepAliveService", "计划下次任务，延迟: " + delaySeconds + "秒");
     }
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -245,8 +248,10 @@ public class KeepAliveService extends Service {
             OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(MyWork.class)
                     .setInitialDelay(delayInSeconds, TimeUnit.SECONDS)
                     .build();
-            WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
+            WorkManager.getInstance(getApplicationContext())
+                    .enqueueUniqueWork("keep_alive_next_task", ExistingWorkPolicy.KEEP, workRequest);
         }
+
     }
 
     public static void notifyUserActive(Context context) {

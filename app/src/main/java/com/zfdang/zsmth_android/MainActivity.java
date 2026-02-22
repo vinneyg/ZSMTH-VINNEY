@@ -51,11 +51,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.customview.widget.ViewDragHelper;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.work.Constraints;
 import androidx.work.Data;
 import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
@@ -355,21 +356,27 @@ public class MainActivity extends SMTHBaseActivity
             }
         });
 
-        WorkManager.getInstance(getApplicationContext()).cancelAllWorkByTag(MaintainUserStatusWorker.class.getName());
+        //WorkManager.getInstance(getApplicationContext()).cancelAllWorkByTag(MaintainUserStatusWorker.class.getName());
         // setup receiver to receive user status update from periodical background service
         setupUserStatusReceiver();
 
         // schedule the periodical background service
         Data.Builder inputData = new Data.Builder();
         inputData.putBoolean(MaintainUserStatusWorker.REPEAT, true);
+
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .setRequiresBatteryNotLow(true)
+                .build();
+
         OneTimeWorkRequest userStatusWorkRequest =
                 new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class)
+                        .setConstraints(constraints)
                         .setInitialDelay(SMTHApplication.INTERVAL_TO_CHECK_MESSAGE, TimeUnit.MINUTES)
                         .setInputData(inputData.build())
                         .build();
         WorkManager.getInstance(getApplicationContext())
-                .enqueueUniqueWork(MaintainUserStatusWorker.WORKER_ID, ExistingWorkPolicy.REPLACE,userStatusWorkRequest);
-
+                .enqueueUniqueWork("maintain_user_status_main", ExistingWorkPolicy.KEEP, userStatusWorkRequest);
         // run the background service now
         updateUserStatusNow();
         UpdateNavigationViewHeader();
@@ -503,11 +510,14 @@ public class MainActivity extends SMTHBaseActivity
 
     // triger the background service right now
     private void updateUserStatusNow() {
-        // run worker immediately for once
-        WorkRequest userStatusWorkRequest =
-                new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
-        WorkManager.getInstance(getApplicationContext()).enqueue(userStatusWorkRequest);
+        OneTimeWorkRequest userStatusWorkRequest =
+                new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class)
+                        .build();
+        WorkManager.getInstance(getApplicationContext())
+                .enqueueUniqueWork("maintain_user_status_immediate", ExistingWorkPolicy.KEEP, userStatusWorkRequest);
     }
+
+
 
     private void setupUserStatusReceiver() {
         UserStatusReceiver mReceiver = new UserStatusReceiver(new Handler());
