@@ -241,8 +241,7 @@ public class SMTHHelper {
                 .observeOn(Schedulers.io())
                 .map(userStatus -> {
                     String userid = userStatus.getId();
-                    Log.d("VINNEY",userid);
-                    if (userid != null && !userid.equals("guest")) {
+                    if (!userid.equals("guest")) {
                         // get correct faceURL
                         UserInfo user = helper.wService.queryUserInformation(userid).blockingFirst();
                         if (user != null) {

@@ -303,10 +303,8 @@ public class MaintainUserStatusWorker extends Worker {
                         .setInputData(inputData.build())
                         .build();
 
-        // 使用 enqueueUniqueWork 确保唯一性
-        String uniqueWorkName = WORKER_ID + "_" + System.currentTimeMillis();
         WorkManager.getInstance(getApplicationContext())
-                .enqueueUniqueWork(uniqueWorkName, ExistingWorkPolicy.REPLACE, userStatusWorkRequest);
+                .enqueueUniqueWork(WORKER_ID, ExistingWorkPolicy.KEEP, userStatusWorkRequest);
 
     }
 

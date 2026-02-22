@@ -116,9 +116,9 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.RXANDROID2_VERSION"
 
     // (Java only)
-    implementation "androidx.work:work-runtime:2.11.0"
+    implementation "androidx.work:work-runtime:2.11.1"
     // optional - RxJava2 support
-    implementation "androidx.work:work-rxjava2:2.11.0"
+    implementation "androidx.work:work-rxjava2:2.11.1"
     // OkHttp
     implementation "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
     implementation "com.squareup.okhttp3:logging-interceptor:$OKHTTP_VERSION"
@@ -134,7 +134,7 @@ dependencies {
     implementation  'com.umeng.sdk:analytics:7.5.3'
 
     // other dependencies
-    implementation 'org.jsoup:jsoup:1.21.2'
+    implementation 'org.jsoup:jsoup:1.22.1'
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
     implementation 'me.relex:circleindicator:2.1.6'
 
