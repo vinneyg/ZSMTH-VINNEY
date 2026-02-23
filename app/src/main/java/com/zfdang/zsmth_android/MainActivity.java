@@ -141,9 +141,6 @@ public class MainActivity extends SMTHBaseActivity
     private Button mailButtonInbox;
     private Drawable default_icon;
 
-    // 新增系统广播接收器
-    private BroadcastReceiver systemBroadcastReceiver;
-
     private final BroadcastReceiver userStatusReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -198,9 +195,6 @@ public class MainActivity extends SMTHBaseActivity
         } else {
             registerReceiver(userStatusReceiver, filter);
         }
-
-        // 注册系统广播接收器
-        registerSystemBroadcastReceiver();
 
         // how to adjust the height of toolbar
         // http://stackoverflow.com/questions/17439683/how-to-change-action-bar-size
@@ -416,38 +410,6 @@ public class MainActivity extends SMTHBaseActivity
         if(SMTHApplication.bNewMailInNotification)
             setBadgeCount(R.id.menu_message, "信");
         SMTHApplication.bNightModeChange = false;
-    }
-
-    // 添加系统广播接收器注册方法
-    private void registerSystemBroadcastReceiver() {
-        systemBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                Log.d(TAG, "收到系统广播: " + action);
-
-                // 使用正确的系统广播动作
-                if (Intent.ACTION_SCREEN_ON.equals(action) ||
-                        Intent.ACTION_USER_PRESENT.equals(action)) {
-                    // 屏幕亮起或用户解锁时检查保活服务状态
-                    new Handler().postDelayed(() -> {
-                        if (SMTHApplication.isValidUser()) {
-                            init_keep_alive_service();
-                        }
-                    }, 2000);
-                }
-            }
-        };
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_USER_PRESENT);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(systemBroadcastReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            registerReceiver(systemBroadcastReceiver, filter);
-        }
     }
 
     private void initBottomNavigation() {
@@ -805,6 +767,7 @@ public class MainActivity extends SMTHBaseActivity
     @Override protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+        checkKeepAliveServiceStatus();
     }
 
 
@@ -1306,9 +1269,7 @@ public class MainActivity extends SMTHBaseActivity
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(userStatusReceiver);
-        if (systemBroadcastReceiver != null) {
-            unregisterReceiver(systemBroadcastReceiver);
-        }
+        // systemBroadcastReceiver 相关代码已删除，因为锁屏监听功能由 ScreenMonitorService 处理
     }
 
     public void setBadgeCount(int itemId, String count) {
@@ -1466,5 +1427,28 @@ public class MainActivity extends SMTHBaseActivity
         if (mDrawer != null) {
             mDrawer.openDrawer(GravityCompat.START);
         }
+    }
+
+    private void checkKeepAliveServiceStatus() {
+        if (keepAliveService != null) {
+            boolean isRunning = isKeepAliveServiceRunning();
+            Log.d("ServiceCheck", "KeepAliveService 运行状态: " + isRunning);
+
+            if (!isRunning && SMTHApplication.isValidUser()) {
+                // 服务意外停止，重新启动
+                init_keep_alive_service();
+            }
+        }
+    }
+
+    private void monitorKeepAliveService() {
+        // 定期检查服务状态
+        new Handler().postDelayed(() -> {
+            if (SMTHApplication.isValidUser() && !isKeepAliveServiceRunning()) {
+                Log.w("ServiceMonitor", "检测到 KeepAliveService 已停止，重新启动");
+                init_keep_alive_service();
+            }
+            monitorKeepAliveService();
+        }, 120000);
     }
 }

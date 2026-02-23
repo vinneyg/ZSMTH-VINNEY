@@ -14,6 +14,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
@@ -89,8 +90,9 @@ public class KeepAliveService extends Service {
         lastUserActiveTime = System.currentTimeMillis();
 
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        
+
         startHybridKeepAlive();
+        heartbeatHandler.post(heartbeatRunnable);
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -381,4 +383,13 @@ public class KeepAliveService extends Service {
         Intent intent = new Intent(ACTION_FORCE_REFRESH);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
+
+    private final Handler heartbeatHandler = new Handler();
+    private final Runnable heartbeatRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Log.d("KeepAliveService", "服务仍在运行 - " + System.currentTimeMillis());
+            heartbeatHandler.postDelayed(this, 60000); // 每分钟打印一次
+        }
+    };
 }

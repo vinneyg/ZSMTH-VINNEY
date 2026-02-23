@@ -103,7 +103,9 @@ public class FragmentStatusBarUtil {
     }
 
     public static void adaptConsistentMode(Fragment fragment) {
-        adaptDarkMode(fragment, false);
+        Activity activity = fragment.getActivity();
+        if (activity == null) return;
+        adaptActDarkMode(activity, false);
     }
     public static void adaptConsistentMode(Activity activity) {
         adaptActDarkMode(activity, false);

@@ -19,6 +19,8 @@
   <uses-permission android:name="android.permission.CAMERA" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE"
       tools:ignore="ForegroundServicesPolicy" />
+  <!-- 添加数据同步类型的前台服务权限 -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
   <application
       android:name="com.zfdang.SMTHApplication"
@@ -32,15 +34,20 @@
       android:usesCleartextTraffic="true"
       android:requestLegacyExternalStorage="true"
       android:preserveLegacyExternalStorage="true"
-      tools:targetApi="r">
+      tools:targetApi="33">
+
+    <service
+        android:name=".services.ScreenMonitorService"
+        android:enabled="true"
+        android:exported="false"
+        android:foregroundServiceType="dataSync" />
+
     <service
         android:name=".services.KeepAliveService"
         android:enabled="true"
         android:exported="false"
-        android:foregroundServiceType= "specialUse"
-        android:permission= "android.permission.FOREGROUND_SERVICE_SPECIAL_USE"
-        tools:ignore="ForegroundServicePermission">
-    </service>
+        android:foregroundServiceType="dataSync" />
+
     <activity
         android:name=".MainActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
@@ -52,6 +59,8 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+
+    <!-- 其他 activity 声明保持不变 -->
     <activity
         android:name=".LoginActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
@@ -69,8 +78,6 @@
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:label="@string/title_activity_mail_content"
         android:theme="@style/AppTheme.NoActionBar" />
-    <!-- // OpenGLRenderer: Shape too large to be rendered into a texture (1428x42739, max=8192x8192) -->
-    <!-- so we disable hardwareAccelerated for postListActivity & FSImageViewer -->
     <activity
         android:name=".PostListActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
@@ -87,19 +94,16 @@
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:label="@string/title_activity_query_user"
         android:theme="@style/AppTheme.NoActionBar" />
-    <!-- full screen activities -->
     <activity
         android:name=".FSImageViewerActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:hardwareAccelerated="false"
         android:label="@string/title_activity_fullscreen_image_viewer"
         android:theme="@style/FullscreenTheme" />
-    <!-- External activities -->
     <activity
         android:name="com.zfdang.multiple_images_selector.ImagesSelectorActivity"
         android:configChanges="orientation|screenSize" />
-    <!-- service -->
-    <!-- aadapt to S8 and Mix2 -->
+
     <meta-data
         android:name="android.max_aspect"
         android:value="2.5" />
