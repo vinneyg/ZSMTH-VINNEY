@@ -1,15 +1,21 @@
 package com.zfdang.zsmth_android.services;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -39,6 +45,10 @@ public class KeepAliveService extends Service {
     private final static int MAX_RETRY_COUNT = 3;
     private final static int USER_ACTIVE_DELAY = 300;
 
+    // 新增常量
+    private static final String ALARM_ACTION = "com.zfdang.zsmth_android.KEEP_ALIVE_ALARM";
+    private static final long MIN_ALARM_INTERVAL = 5 * 60 * 1000L; // 最小5分钟间隔
+
     public static final String ACTION_USER_ACTIVE = "com.zfdang.zsmth_android.USER_ACTIVE";
     public static final String ACTION_FORCE_REFRESH = "com.zfdang.zsmth_android.FORCE_REFRESH";
 
@@ -50,6 +60,9 @@ public class KeepAliveService extends Service {
     private static boolean isUserActive = false;
 
     private BroadcastReceiver userActivityReceiver;
+    private BroadcastReceiver alarmReceiver;
+    private AlarmManager alarmManager;
+    private PowerManager.WakeLock wakeLock;
 
     @SuppressLint({"NotificationId0", "ForegroundServiceType"})
     @Override
@@ -67,12 +80,109 @@ public class KeepAliveService extends Service {
         startForeground(notId, notification);
 
         registerUserActivityReceiver();
+        registerAlarmReceiver();
+
+        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "SMTH:KeepAliveWakeLock");
 
         lastRefreshTime = System.currentTimeMillis();
         lastUserActiveTime = System.currentTimeMillis();
 
-        scheduleKeepAliveTask(getNextCheckInterval());
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        
+        startHybridKeepAlive();
     }
+
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    private void registerAlarmReceiver() {
+        alarmReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (ALARM_ACTION.equals(intent.getAction())) {
+                    handleAlarmTrigger();
+                }
+            }
+        };
+
+        IntentFilter filter = new IntentFilter(ALARM_ACTION);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(alarmReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(alarmReceiver, filter);
+        }
+
+    }
+
+    private void handleAlarmTrigger() {
+        Log.d("KeepAliveService", "收到Alarm触发");
+
+        if (wakeLock != null && !wakeLock.isHeld()) {
+            wakeLock.acquire(60*1000L); // 最多持锁60秒
+        }
+
+        scheduleKeepAliveTask(0);
+
+        if (wakeLock != null && wakeLock.isHeld()) {
+            wakeLock.release();
+        }
+    }
+
+    private void startHybridKeepAlive() {
+        scheduleKeepAliveTask(getNextCheckInterval());
+        scheduleAlarmTask(getNextCheckInterval());
+        registerSystemReceivers();
+    }
+
+    private void registerSystemReceivers() {
+        BroadcastReceiver systemReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                Log.d("KeepAliveService", "收到系统广播: " + action);
+
+                // 网络状态变化时立即检查
+                if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
+                    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                    if (activeNetwork != null && activeNetwork.isConnected()) {
+                        scheduleKeepAliveTask(30); // 网络恢复后30秒检查
+                        scheduleAlarmTask(30);
+                    }
+                }
+                // 屏幕亮起时检查
+                else if (Intent.ACTION_SCREEN_ON.equals(action)) {
+                    scheduleKeepAliveTask(10); // 屏幕亮起后10秒检查
+                    scheduleAlarmTask(10);
+                }
+                // 用户解锁时检查
+                else if (Intent.ACTION_USER_PRESENT.equals(action)) {
+                    scheduleKeepAliveTask(5); // 解锁后5秒检查
+                    scheduleAlarmTask(5);
+                }
+            }
+        };
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_USER_PRESENT);
+        filter.addAction(Intent.ACTION_POWER_CONNECTED);
+        registerReceiver(systemReceiver, filter);
+    }
+
+    private void scheduleAlarmTask(int delaySeconds) {
+        Intent intent = new Intent(ALARM_ACTION);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        long triggerTime = System.currentTimeMillis() + delaySeconds * 1000L;
+        triggerTime = Math.max(triggerTime, System.currentTimeMillis() + MIN_ALARM_INTERVAL);
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
+
+        Log.d("KeepAliveService", "设置Alarm任务，延迟: " + delaySeconds + "秒");
+    }
+
 
     private void registerUserActivityReceiver() {
         userActivityReceiver = new BroadcastReceiver() {
@@ -100,15 +210,18 @@ public class KeepAliveService extends Service {
 
         Log.d("KeepAliveService", "检测到用户活跃");
 
+        // 用户活跃时同时更新两种保活机制
         if (currentTime - lastRefreshTime >= REFRESH_THRESHOLD * 1000L) {
             Log.d("KeepAliveService", "用户活跃且需要刷新，安排延迟刷新");
             scheduleKeepAliveTask(USER_ACTIVE_DELAY);
+            scheduleAlarmTask(USER_ACTIVE_DELAY);
         }
     }
 
     private void forceRefresh() {
         Log.d("KeepAliveService", "收到强制刷新请求");
         scheduleKeepAliveTask(0);
+        scheduleAlarmTask(0);
     }
 
     private static int getNextCheckInterval() {
@@ -128,9 +241,8 @@ public class KeepAliveService extends Service {
                 .build();
         WorkManager.getInstance(getApplicationContext())
                 .enqueueUniqueWork("keep_alive_task", ExistingWorkPolicy.KEEP, workRequest);
-        Log.d("KeepAliveService", "计划下次任务，延迟: " + delaySeconds + "秒");
+        Log.d("KeepAliveService", "计划WorkManager任务，延迟: " + delaySeconds + "秒");
     }
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -155,6 +267,12 @@ public class KeepAliveService extends Service {
         super.onDestroy();
         if (userActivityReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(userActivityReceiver);
+        }
+        if (alarmReceiver != null) {
+            unregisterReceiver(alarmReceiver);
+        }
+        if (wakeLock != null && wakeLock.isHeld()) {
+            wakeLock.release();
         }
         stopForeground(true);
         Log.d("KeepAliveService", "服务已销毁");

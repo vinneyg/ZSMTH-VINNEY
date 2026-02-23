@@ -719,7 +719,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     @Override
     public void onViewCreated(@androidx.annotation.NonNull @NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        FragmentStatusBarUtil.adaptDarkMode(this, false);
+        FragmentStatusBarUtil.adaptConsistentMode(this);
 
         view.setVisibility(View.GONE);
 

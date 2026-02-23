@@ -112,7 +112,8 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
       LoadAllBoards();
     }
 
-    FragmentStatusBarUtil.adaptDarkMode(this, Settings.getInstance().isNightMode());
+
+    FragmentStatusBarUtil.adaptConsistentMode(this);
 
 
     return view;

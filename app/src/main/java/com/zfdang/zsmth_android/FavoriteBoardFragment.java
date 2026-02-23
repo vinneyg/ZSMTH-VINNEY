@@ -597,7 +597,8 @@ public class FavoriteBoardFragment extends Fragment  implements OnVolumeUpDownLi
       }
     }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
-    FragmentStatusBarUtil.adaptDarkMode(this, Settings.getInstance().isNightMode());
+
+    FragmentStatusBarUtil.adaptConsistentMode(this);
   }
 
 

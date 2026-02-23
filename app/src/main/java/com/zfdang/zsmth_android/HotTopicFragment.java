@@ -115,7 +115,8 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
 
     initItemHelper();
 
-    FragmentStatusBarUtil.adaptDarkMode(this, Settings.getInstance().isNightMode());
+
+    FragmentStatusBarUtil.adaptConsistentMode(this);
     return rootView;
   }
 

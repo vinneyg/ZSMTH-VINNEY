@@ -600,7 +600,8 @@ public class MailListFragment extends Fragment implements OnVolumeUpDownListener
         return false;
       }
     }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
-    FragmentStatusBarUtil.adaptDarkMode(this, Settings.getInstance().isNightMode());
+
+    FragmentStatusBarUtil.adaptConsistentMode(this);
   }
 
   @Override public void onClick(View v) {

@@ -17,6 +17,8 @@ import android.content.BroadcastReceiver;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -35,6 +37,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
 import androidx.activity.result.ActivityResultLauncher;
@@ -57,6 +60,7 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
@@ -83,10 +87,12 @@ import com.zfdang.zsmth_android.newsmth.UserInfo;
 import com.zfdang.zsmth_android.services.KeepAliveService;
 import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
+
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -105,7 +111,7 @@ public class MainActivity extends SMTHBaseActivity
     private static final String KEY_CURRENT_FRAGMENT = "current_fragment";
     private int currentFragmentId;
 
-    // keep aive service
+    // keep alive service
     private Intent keepAliveService;
     // guidance fragment: display hot topics
     // this fragment is using RecyclerView to show all hot topics
@@ -134,6 +140,9 @@ public class MainActivity extends SMTHBaseActivity
     private ActivityResultLauncher<Intent> mActivityLoginResultLauncher;
     private Button mailButtonInbox;
     private Drawable default_icon;
+
+    // 新增系统广播接收器
+    private BroadcastReceiver systemBroadcastReceiver;
 
     private final BroadcastReceiver userStatusReceiver = new BroadcastReceiver() {
         @Override
@@ -180,7 +189,7 @@ public class MainActivity extends SMTHBaseActivity
                     }
                 });
 
-        // 注册广播接收器
+        // 注册用户状态广播接收器
         IntentFilter filter = new IntentFilter();
         filter.addAction("com.zfdang.zsmth_android.UPDATE_USER_STATUS");
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
@@ -189,6 +198,9 @@ public class MainActivity extends SMTHBaseActivity
         } else {
             registerReceiver(userStatusReceiver, filter);
         }
+
+        // 注册系统广播接收器
+        registerSystemBroadcastReceiver();
 
         // how to adjust the height of toolbar
         // http://stackoverflow.com/questions/17439683/how-to-change-action-bar-size
@@ -406,6 +418,37 @@ public class MainActivity extends SMTHBaseActivity
         SMTHApplication.bNightModeChange = false;
     }
 
+    // 添加系统广播接收器注册方法
+    private void registerSystemBroadcastReceiver() {
+        systemBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                Log.d(TAG, "收到系统广播: " + action);
+
+                // 使用正确的系统广播动作
+                if (Intent.ACTION_SCREEN_ON.equals(action) ||
+                        Intent.ACTION_USER_PRESENT.equals(action)) {
+                    // 屏幕亮起或用户解锁时检查保活服务状态
+                    new Handler().postDelayed(() -> {
+                        if (SMTHApplication.isValidUser()) {
+                            init_keep_alive_service();
+                        }
+                    }, 2000);
+                }
+            }
+        };
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_USER_PRESENT);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(systemBroadcastReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(systemBroadcastReceiver, filter);
+        }
+    }
 
     private void initBottomNavigation() {
         mBottomNavigationView.setItemIconTintList(null);
@@ -508,7 +551,7 @@ public class MainActivity extends SMTHBaseActivity
                 .build();
     }
 
-    // triger the background service right now
+    // trigger the background service right now
     private void updateUserStatusNow() {
         OneTimeWorkRequest userStatusWorkRequest =
                 new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class)
@@ -516,7 +559,6 @@ public class MainActivity extends SMTHBaseActivity
         WorkManager.getInstance(getApplicationContext())
                 .enqueueUniqueWork("maintain_user_status_immediate", ExistingWorkPolicy.KEEP, userStatusWorkRequest);
     }
-
 
 
     private void setupUserStatusReceiver() {
@@ -594,10 +636,42 @@ public class MainActivity extends SMTHBaseActivity
     private void init_keep_alive_service() {
         if (keepAliveService == null)
             keepAliveService = new Intent(this, KeepAliveService.class);
-        if (!isKeepAliveServiceRunning()) {
-            startForegroundService(keepAliveService);
+
+        if (checkKeepAlivePermissions()) {
+            if (!isKeepAliveServiceRunning()) {
+                startForegroundService(keepAliveService);
+                Log.d(TAG, "已启动KeepAliveService");
+            }
+        } else {
+            requestKeepAlivePermissions();
         }
     }
+
+    private boolean checkKeepAlivePermissions() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            return checkSelfPermission(android.Manifest.permission.FOREGROUND_SERVICE) == PackageManager.PERMISSION_GRANTED;
+        }
+        return true;
+    }
+
+    private void requestKeepAlivePermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("需要权限")
+                    .setMessage("为了保持水木社区连接，需要前台服务权限")
+                    .setPositiveButton("去设置", (dialog, which) -> {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getPackageName(), null);
+                        intent.setData(uri);
+                        startActivity(intent);
+                    })
+                    .setNegativeButton("取消", null)
+                    .show();
+        }
+    }
+
     public Boolean isKeepAliveServiceRunning() {
         ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = activityManager.getRunningAppProcesses();
@@ -1232,6 +1306,9 @@ public class MainActivity extends SMTHBaseActivity
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(userStatusReceiver);
+        if (systemBroadcastReceiver != null) {
+            unregisterReceiver(systemBroadcastReceiver);
+        }
     }
 
     public void setBadgeCount(int itemId, String count) {

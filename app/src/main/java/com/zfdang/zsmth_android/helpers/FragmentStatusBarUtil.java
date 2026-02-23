@@ -13,6 +13,8 @@ import android.app.UiModeManager;
 import androidx.fragment.app.Fragment;
 import android.view.WindowInsets;
 
+//import com.zfdang.zsmth_android.Settings;
+
 public class FragmentStatusBarUtil {
 
     // 1. Fragment中设置状态栏颜色（自动适配图标深浅）
@@ -98,5 +100,12 @@ public class FragmentStatusBarUtil {
             int appearance = isDarkMode ? 0 : WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS;
             insetsController.setSystemBarsAppearance(appearance, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
         }
+    }
+
+    public static void adaptConsistentMode(Fragment fragment) {
+        adaptDarkMode(fragment, false);
+    }
+    public static void adaptConsistentMode(Activity activity) {
+        adaptActDarkMode(activity, false);
     }
 }
