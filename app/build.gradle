@@ -134,7 +134,7 @@ dependencies {
     implementation  'com.umeng.sdk:analytics:7.5.3'
 
     // other dependencies
-    implementation 'org.jsoup:jsoup:1.22.1'
+    implementation 'org.jsoup:jsoup:1.22.2'
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
     implementation 'me.relex:circleindicator:2.1.6'
 
