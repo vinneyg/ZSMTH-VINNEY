@@ -182,6 +182,8 @@ public class MainActivity extends SMTHBaseActivity
                 result -> {
                     if(result.getResultCode() == Activity.RESULT_OK)
                     {
+                        // 立即刷新导航头，避免在 Android 17 等版本依赖后台 Worker 导致更新延迟/失效
+                        UpdateNavigationViewHeader();
                         updateUserStatusNow();
                     }
                 });
@@ -519,7 +521,7 @@ public class MainActivity extends SMTHBaseActivity
                 new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class)
                         .build();
         WorkManager.getInstance(getApplicationContext())
-                .enqueueUniqueWork("maintain_user_status_immediate", ExistingWorkPolicy.KEEP, userStatusWorkRequest);
+                .enqueueUniqueWork("maintain_user_status_immediate", ExistingWorkPolicy.REPLACE, userStatusWorkRequest);
     }
 
 
@@ -814,6 +816,9 @@ public class MainActivity extends SMTHBaseActivity
             String faceURL = SMTHApplication.activeUser.getFace_url();
             if (faceURL != null) {
                 mAvatar.setImageFromStringURL(faceURL);
+            } else {
+                // 尚无头像 URL 时重置为默认头像，避免显示旧用户头像
+                mAvatar.setImageResource(R.drawable.ic_person_black_48dp);
             }
             SMTHApplication.displayedUserId = SMTHApplication.activeUser.getId();
             init_keep_alive_service();

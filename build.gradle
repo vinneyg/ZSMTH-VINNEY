@@ -59,7 +59,7 @@ ext {
     compileSdkVersion = 37
     // https://developer.android.com/studio/releases/build-tools
     buildToolsVersion = '37.0.0'
-    FRESCO_VERSION = '3.6.0'
+    FRESCO_VERSION = '3.7.0'
     RXJAVA2_VERSION = '2.2.21'
     RXANDROID2_VERSION = '2.1.1'
 }
