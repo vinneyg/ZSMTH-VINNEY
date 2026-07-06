@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.FragmentStatusBarUtil;
 import com.zfdang.zsmth_android.helpers.NewToast;
+import com.zfdang.zsmth_android.newsmth.UserStatus;
 
 public class WebviewLoginActivity extends SMTHBaseActivity {
 
@@ -27,7 +28,7 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
     private String username;
     private String password;
     Activity activity;
-    private boolean hasShownToast = false;
+    private boolean loginResultHandled = false; // 防止 onJsAlert 和 onLoginResult 重复处理
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -80,14 +81,13 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
                     result.cancel();
 
                     runOnUiThread(() -> {
-                        if (!hasShownToast) {
-                            hasShownToast = true;
+                        if (!loginResultHandled) {
+                            loginResultHandled = true;
                             NewToast.makeText(WebviewLoginActivity.this, "登录失败，请检查用户名和密码", Toast.LENGTH_LONG);
+                            Intent resultIntent = new Intent();
+                            activity.setResult(Activity.RESULT_CANCELED, resultIntent);
+                            activity.finish();
                         }
-
-                        Intent resultIntent = new Intent();
-                        activity.setResult(Activity.RESULT_CANCELED, resultIntent);
-                        activity.finish();
                     });
 
                     return true; // 表示已处理该alert
@@ -110,27 +110,36 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
 
         mWebView.addJavascriptInterface(new Object() {
             @JavascriptInterface
-            public void showHTML(String html) {
+            public void onLoginResult(String result) {
                 runOnUiThread(() -> {
-                    if (html.contains("您的用户名并不存在，或者您的密码错误")) {
+                    if (loginResultHandled) return;
+                    loginResultHandled = true;
+
+                    if ("ERROR".equals(result)) {
                         Intent resultIntent = new Intent();
                         activity.setResult(Activity.RESULT_CANCELED, resultIntent);
                         activity.finish();
-                        //Toast.makeText(WebviewLoginActivity.this, "您的用户名并不存在，\n或者您的密码错误!", Toast.LENGTH_LONG).show();
                         NewToast.makeText(WebviewLoginActivity.this, "您的用户名并不存在，\n或者您的密码错误!", Toast.LENGTH_LONG);
-                    } else if (html.contains("登陆成功")||html.contains("登录成功")|| html.contains("退出登录")){
+                    } else if ("SUCCESS".equals(result)) {
                         mWebView.setVisibility(WebView.GONE);
                         Intent resultIntent = new Intent();
+
+                        // 登录成功后立即设置当前用户，避免导航头更新完全依赖后台 Worker
+                        if (username != null && !username.isEmpty()) {
+                            UserStatus userStatus = new UserStatus();
+                            userStatus.setId(username);
+                            SMTHApplication.activeUser = userStatus;
+                        }
+
                         activity.setResult(Activity.RESULT_OK, resultIntent);
                         activity.finish();
-                    }  else if (html.contains("504 Gateway Time-out")) {
-                        // Handle 504 server timeout error
+                    } else if ("TIMEOUT".equals(result)) {
                         NewToast.makeText(WebviewLoginActivity.this, "服务器网关超时，请稍后再试。", Toast.LENGTH_LONG);
                         Intent resultIntent = new Intent();
                         activity.setResult(Activity.RESULT_CANCELED, resultIntent);
                         activity.finish();
                     } else {
-                        Log.d("zSMTH-v",html);
+                        Log.d("zSMTH-v", "onLoginResult: " + result);
                     }
                 });
             }

@@ -22,6 +22,7 @@ public class WebviewLoginClient extends WebViewClient {
     Activity activity;
     private final Handler loginTimeoutHandler;
     private Runnable loginTimeoutRunnable;
+    private boolean webViewHidden = false;
 
     public WebviewLoginClient(Activity activity, String username, String password) {
         this.activity = activity;
@@ -29,6 +30,14 @@ public class WebviewLoginClient extends WebViewClient {
         this.password = password;
         // Initialize timeout handler
         loginTimeoutHandler = new Handler(Looper.getMainLooper());
+    }
+
+    // 首次页面加载完成后隐藏 WebView，后续不再显示，避免中间页面闪烁
+    private void hideWebViewOnce(WebView view) {
+        if (!webViewHidden && view != null) {
+            webViewHidden = true;
+            view.post(() -> view.setVisibility(android.view.View.GONE));
+        }
     }
 
     @Override
@@ -110,13 +119,39 @@ public class WebviewLoginClient extends WebViewClient {
                 url.equals("https://m.mysmth.net/user/login")||
                 url.startsWith("https://m.newsmth.net/index?m=")||
                 url.startsWith("https://m.mysmth.net/index?m=")) {
-            //view.setVisibility(WebView.GONE);
+
+            // 立即隐藏 WebView，避免登录结果页面的 HTML 闪现
+            hideWebViewOnce(view);
+
+            // 直接在 JS 层判断登录结果，只传状态给 Java，不传整个 HTML
             final String js = "javascript: " +
-                    "setTimeout(function() { window.HtmlViewer.showHTML(document.body.innerHTML); },100);";
+                    "setTimeout(function() {" +
+                    "  var html = document.body.innerText || document.body.innerHTML || '';" +
+                    "  if (html.indexOf('用户名') !== -1 && (html.indexOf('不存在') !== -1 || html.indexOf('错误') !== -1 || html.indexOf('密码') !== -1)) {" +
+                    "    window.HtmlViewer.onLoginResult('ERROR');" +
+                    "  } else if (html.indexOf('登陆成功') !== -1 || html.indexOf('登录成功') !== -1 || html.indexOf('退出登录') !== -1) {" +
+                    "    window.HtmlViewer.onLoginResult('SUCCESS');" +
+                    "  } else if (html.indexOf('504 Gateway Time-out') !== -1) {" +
+                    "    window.HtmlViewer.onLoginResult('TIMEOUT');" +
+                    "  }" +
+                    "}, 100);";
             view.evaluateJavascript(js, null);
         } else if (url.startsWith("https://www.newsmth.net/nForum")) {
+            // 立即隐藏 WebView，避免 nForum 结果页面闪现
+            hideWebViewOnce(view);
+
+            // 直接在 JS 层判断登录结果，只传状态给 Java，不传整个 HTML
             final String js = "javascript: " +
-                    "setTimeout(function() { window.HtmlViewer.showHTML(document.body.innerHTML); },100);";
+                    "setTimeout(function() {" +
+                    "  var html = document.body.innerText || document.body.innerHTML || '';" +
+                    "  if (html.indexOf('用户名') !== -1 && (html.indexOf('不存在') !== -1 || html.indexOf('错误') !== -1 || html.indexOf('密码') !== -1)) {" +
+                    "    window.HtmlViewer.onLoginResult('ERROR');" +
+                    "  } else if (html.indexOf('登陆成功') !== -1 || html.indexOf('登录成功') !== -1 || html.indexOf('退出登录') !== -1) {" +
+                    "    window.HtmlViewer.onLoginResult('SUCCESS');" +
+                    "  } else if (html.indexOf('504 Gateway Time-out') !== -1) {" +
+                    "    window.HtmlViewer.onLoginResult('TIMEOUT');" +
+                    "  }" +
+                    "}, 100);";
             view.evaluateJavascript(js, null);
         } else if(url.equals("https://www.newsmth.net/index.html")){
             final String js = "javascript: " +

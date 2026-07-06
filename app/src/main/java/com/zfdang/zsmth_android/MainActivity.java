@@ -134,8 +134,12 @@ public class MainActivity extends SMTHBaseActivity
     private NavigationView mNavigationView;
 
     private static final int notificationID = 273;
+    private static final String NOTIFICATION_CHANNEL_ID = "zSMTHvNotification";
+    private static boolean notificationChannelCreated = false;
 
     private BottomNavigationView mBottomNavigationView;
+
+    private boolean isDrawerHeaderUpdating = false; // 防止 Drawer 滑动时频繁更新头部
 
     private ActivityResultLauncher<Intent> mActivityLoginResultLauncher;
     private Button mailButtonInbox;
@@ -161,6 +165,10 @@ public class MainActivity extends SMTHBaseActivity
         */
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // 提前初始化 Handler，供后续 monitorKeepAliveService 等使用
+        mHandler = new Handler(Looper.getMainLooper());
+
         Toolbar toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -228,8 +236,12 @@ public class MainActivity extends SMTHBaseActivity
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
-                if (slideOffset > 0) {
+                // 只在开始滑动时触发一次，避免滑动过程中频繁调用
+                if (slideOffset > 0 && !isDrawerHeaderUpdating) {
+                    isDrawerHeaderUpdating = true;
                     UpdateNavigationViewHeader();
+                } else if (slideOffset == 0) {
+                    isDrawerHeaderUpdating = false;
                 }
             }
             @Override
@@ -241,7 +253,14 @@ public class MainActivity extends SMTHBaseActivity
                 menu.findItem(R.id.read_board2).setTitle(SMTHApplication.ReadBoard2);
                 menu.findItem(R.id.read_board3).setTitle(SMTHApplication.ReadBoard3);
 
+                isDrawerHeaderUpdating = false;
                 super.onDrawerOpened(drawerView);
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                isDrawerHeaderUpdating = false;
+                super.onDrawerClosed(drawerView);
             }
         });
 
@@ -388,6 +407,9 @@ public class MainActivity extends SMTHBaseActivity
         // run the background service now
         updateUserStatusNow();
         UpdateNavigationViewHeader();
+
+        // 启动定期服务监控
+        monitorKeepAliveService();
 
         if (Settings.getInstance().isFirstRun()) {
             // show info dialog after 5 seconds for the first run
@@ -638,15 +660,18 @@ public class MainActivity extends SMTHBaseActivity
 
     public Boolean isKeepAliveServiceRunning() {
         ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = activityManager.getRunningAppProcesses();
-        if (runningAppProcesses != null) {
-            for (ActivityManager.RunningAppProcessInfo processInfo : runningAppProcesses) {
-                if (processInfo.processName.equals(KeepAliveService.class.getName())) {
+        if (activityManager == null) return false;
+
+        // Android 8.0+ getRunningServices 不再可靠，改用服务类名判断
+        List<ActivityManager.RunningServiceInfo> runningServices = activityManager.getRunningServices(Integer.MAX_VALUE);
+        if (runningServices != null) {
+            String serviceClassName = KeepAliveService.class.getName();
+            for (ActivityManager.RunningServiceInfo serviceInfo : runningServices) {
+                if (serviceClassName.equals(serviceInfo.service.getClassName())) {
                     return true;
                 }
             }
         }
-
         return false;
     }
 
@@ -663,12 +688,15 @@ public class MainActivity extends SMTHBaseActivity
 
             NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
+            // 只在首次创建 NotificationChannel
+            if (!notificationChannelCreated) {
+                NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "zSMTH-v通知消息",
+                        NotificationManager.IMPORTANCE_DEFAULT);
+                mNotifyMgr.createNotificationChannel(notificationChannel);
+                notificationChannelCreated = true;
+            }
 
-            NotificationChannel notificationChannel = new NotificationChannel("newChan","zSMTH-v通知消息",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            mNotifyMgr.createNotificationChannel(notificationChannel);
-
-            Notification notification = new NotificationCompat.Builder(this,"newChan")
+            Notification notification = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_launcher)
                     .setContentTitle("zSMTH-v提醒")
                     .setWhen(System.currentTimeMillis())
@@ -852,7 +880,7 @@ public class MainActivity extends SMTHBaseActivity
             // return to hot topic if we are not there yet
             String title = "首页";
             FragmentManager fm = getSupportFragmentManager();
-            fm.beginTransaction().replace(R.id.content_frame, hotTopicFragment).commit();
+            fm.beginTransaction().replace(R.id.content_frame, hotTopicFragment).commitAllowingStateLoss();
             setTitle(SMTHApplication.App_Title_Prefix + title);
             return;
         }
@@ -988,23 +1016,30 @@ public class MainActivity extends SMTHBaseActivity
                     public void onError(@NonNull Throwable e) {
                         //Toast.makeText(MainActivity.this, "退出登录失败!" , Toast.LENGTH_SHORT).show();
                         NewToast.makeText(MainActivity.this, "退出登录失败!" , Toast.LENGTH_SHORT);
+                        // 即使网络请求失败，也要清除本地状态
+                        clearLocalLoginState();
                     }
 
                     @Override
                     public void onComplete() {
-                        Settings.getInstance().setAutoLogin(false);
-                        Settings.getInstance().setUserOnline(false);
-
-                        Intent intent = new Intent("com.zfdang.zsmth_android.PREFERENCE_CLICKED");
-                        intent.putExtra("preference_key", "setting_fresco_cache");
-                        sendBroadcast(intent);
-
-                        intent = new Intent("com.zfdang.zsmth_android.PREFERENCE_CLICKED");
-                        intent.putExtra("preference_key", "setting_okhttp3_cache");
-                        sendBroadcast(intent);
+                        clearLocalLoginState();
                     }
                 });
 
+    }
+
+    private void clearLocalLoginState() {
+        Settings.getInstance().setAutoLogin(false);
+        Settings.getInstance().setUserOnline(false);
+
+        // 发送缓存清除广播
+        Intent frescoIntent = new Intent("com.zfdang.zsmth_android.PREFERENCE_CLICKED");
+        frescoIntent.putExtra("preference_key", "setting_fresco_cache");
+        sendBroadcast(frescoIntent);
+
+        Intent okhttpIntent = new Intent("com.zfdang.zsmth_android.PREFERENCE_CLICKED");
+        okhttpIntent.putExtra("preference_key", "setting_okhttp3_cache");
+        sendBroadcast(okhttpIntent);
     }
 
     //@SuppressWarnings("StatementWithEmptyBody")
@@ -1274,6 +1309,9 @@ public class MainActivity extends SMTHBaseActivity
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(userStatusReceiver);
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
         // systemBroadcastReceiver 相关代码已删除，因为锁屏监听功能由 ScreenMonitorService 处理
     }
 
@@ -1435,25 +1473,35 @@ public class MainActivity extends SMTHBaseActivity
     }
 
     private void checkKeepAliveServiceStatus() {
-        if (keepAliveService != null) {
-            boolean isRunning = isKeepAliveServiceRunning();
-            Log.d("ServiceCheck", "KeepAliveService 运行状态: " + isRunning);
+        if (!SMTHApplication.isValidUser()) return;
 
-            if (!isRunning && SMTHApplication.isValidUser()) {
-                // 服务意外停止，重新启动
-                init_keep_alive_service();
-            }
+        if (keepAliveService == null) {
+            keepAliveService = new Intent(this, KeepAliveService.class);
+        }
+
+        boolean isRunning = isKeepAliveServiceRunning();
+        Log.d(TAG, "KeepAliveService 运行状态: " + isRunning);
+
+        if (!isRunning) {
+            // 服务意外停止，重新启动
+            init_keep_alive_service();
         }
     }
 
     private void monitorKeepAliveService() {
-        // 定期检查服务状态
-        new Handler().postDelayed(() -> {
-            if (SMTHApplication.isValidUser() && !isKeepAliveServiceRunning()) {
-                Log.w("ServiceMonitor", "检测到 KeepAliveService 已停止，重新启动");
-                init_keep_alive_service();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!SMTHApplication.isValidUser()) {
+                    // 无效用户时不再继续监控
+                    return;
+                }
+                if (!isKeepAliveServiceRunning()) {
+                    Log.w(TAG, "检测到 KeepAliveService 已停止，重新启动");
+                    init_keep_alive_service();
+                }
+                mHandler.postDelayed(this, 120000); // 复用同一个 Handler
             }
-            monitorKeepAliveService();
         }, 120000);
     }
 }
